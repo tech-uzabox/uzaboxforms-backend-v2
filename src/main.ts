@@ -1,15 +1,16 @@
-import { RequestMethod } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
-import { cleanupOpenApiDoc } from 'nestjs-zod';
 import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core';
+import { RequestMethod } from '@nestjs/common';
+import { cleanupOpenApiDoc } from 'nestjs-zod';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
-      origin: '*',
+      origin: ['http://localhost:5173'],
+      credentials: true,
     },
     rawBody: true,
   });
@@ -17,9 +18,9 @@ async function bootstrap() {
 
   app.useBodyParser('json', { limit: '50mb' });
   app.use(compression());
-  // app.setGlobalPrefix('api/v1', {
-  //   exclude: [{ path: 'health', method: RequestMethod.GET }],
-  // });
+  app.setGlobalPrefix('api/v1', {
+    exclude: [{ path: 'health', method: RequestMethod.GET }],
+  });
   const openApiDoc = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()

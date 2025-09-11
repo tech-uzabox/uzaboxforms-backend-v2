@@ -580,7 +580,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\aurum\\work\\uzaform\\ref-backend\\src\\generated\\prisma",
+      "value": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -589,7 +589,7 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
@@ -599,7 +599,7 @@ const config = {
       "queryCompiler",
       "relationJoins"
     ],
-    "sourceFilePath": "D:\\aurum\\work\\uzaform\\ref-backend\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -613,6 +613,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
