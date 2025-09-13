@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   Req,
   Res,
   UseGuards,
@@ -30,6 +31,10 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import type { AuthenticatedUser } from './decorators/get-user.decorator';
 import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { ValidateEmailDto } from './dto/validate-email.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ValidateTokenDto } from './dto/validate-token.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -66,7 +71,7 @@ export class AuthController {
   })
   async login(@Req() req: Request & { user: User }, @Res() res: Response) {
     const tokens = await this.authService.login(req.user, req);
-    
+
     // Set JWT tokens in cookies (httpOnly: true for security)
     res.cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
@@ -98,13 +103,13 @@ export class AuthController {
     @Res() res: Response,
   ) {
     const refreshToken = req.cookies?.refreshToken;
-    
+
     if (!refreshToken) {
       return res.status(401).json({ message: 'No refresh token provided' });
     }
 
     const tokens = await this.authService.refreshTokens(refreshToken);
-    
+
     // Set new JWT tokens in cookies
     res.cookie('accessToken', tokens.accessToken, {
       httpOnly: true,
@@ -207,5 +212,58 @@ export class AuthController {
 
     // Return success response
     res.status(HttpStatus.OK).json({ message: 'Logged out successfully' });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Change user password' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid current password or user not found.' })
+  async changePassword(
+    @Body(new ZodValidationPipe(ChangePasswordDto)) dto: ChangePasswordDto,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    return this.authService.changePassword(user.sub, dto.currentPassword, dto.newPassword);
+  }
+
+  @Post('validate/email')
+  @ApiOperation({ summary: 'Validate email with OTP' })
+  @ApiResponse({ status: 200, description: 'Email validated and role assigned.' })
+  @ApiResponse({ status: 400, description: 'Invalid OTP or user not found.' })
+  async validateEmail(
+    @Body(new ZodValidationPipe(ValidateEmailDto)) dto: ValidateEmailDto,
+  ) {
+    return this.authService.validateEmail(dto.email, dto.otp);
+  }
+
+  @Post('validate/token')
+  @ApiOperation({ summary: 'Validate JWT token' })
+  @ApiResponse({ status: 200, description: 'Token is valid.' })
+  @ApiResponse({ status: 401, description: 'Invalid token.' })
+  async validateToken(
+    @Body(new ZodValidationPipe(ValidateTokenDto)) dto: ValidateTokenDto,
+  ) {
+    return this.authService.validateToken(dto.token);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('profile')
+  @ApiOperation({ summary: 'Update user profile' })
+  @ApiResponse({ status: 200, description: 'Profile updated successfully.' })
+  async updateProfile(
+    @GetUser() user: AuthenticatedUser,
+    @Body(new ZodValidationPipe(UpdateProfileDto)) dto: UpdateProfileDto,
+  ) {
+    return this.authService.updateProfile(user.sub, dto);
+  }
+
+  @Get('google/failed')
+  @ApiOperation({ summary: 'Google OAuth failure redirect' })
+  @ApiResponse({ status: 200, description: 'Google authentication failed.' })
+  async googleAuthFailed(@Res() res: Response) {
+    // Redirect to frontend failure URL
+    const loginUrl = process.env.FRONTEND_LOGIN_URL || 'http://localhost:3001/auth/login';
+    res.redirect(`${loginUrl}?error=google_auth_failed`);
   }
 }

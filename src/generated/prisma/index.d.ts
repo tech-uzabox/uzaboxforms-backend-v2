@@ -2899,23 +2899,23 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    roles: number
-    files: number
+    applicantProcesses: number
     auditLogs: number
+    files: number
     createdForms: number
     createdGroups: number
     createdProcesses: number
-    applicantProcesses: number
+    roles: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roles?: boolean | UserCountOutputTypeCountRolesArgs
-    files?: boolean | UserCountOutputTypeCountFilesArgs
+    applicantProcesses?: boolean | UserCountOutputTypeCountApplicantProcessesArgs
     auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+    files?: boolean | UserCountOutputTypeCountFilesArgs
     createdForms?: boolean | UserCountOutputTypeCountCreatedFormsArgs
     createdGroups?: boolean | UserCountOutputTypeCountCreatedGroupsArgs
     createdProcesses?: boolean | UserCountOutputTypeCountCreatedProcessesArgs
-    applicantProcesses?: boolean | UserCountOutputTypeCountApplicantProcessesArgs
+    roles?: boolean | UserCountOutputTypeCountRolesArgs
   }
 
   // Custom InputTypes
@@ -2932,15 +2932,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserRoleWhereInput
-  }
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FileWhereInput
+  export type UserCountOutputTypeCountApplicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicantProcessWhereInput
   }
 
   /**
@@ -2948,6 +2941,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AuditLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FileWhereInput
   }
 
   /**
@@ -2974,8 +2974,8 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountApplicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicantProcessWhereInput
+  export type UserCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserRoleWhereInput
   }
 
 
@@ -2984,15 +2984,15 @@ export namespace Prisma {
    */
 
   export type RoleCountOutputType = {
-    users: number
     groups: number
     processes: number
+    users: number
   }
 
   export type RoleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | RoleCountOutputTypeCountUsersArgs
     groups?: boolean | RoleCountOutputTypeCountGroupsArgs
     processes?: boolean | RoleCountOutputTypeCountProcessesArgs
+    users?: boolean | RoleCountOutputTypeCountUsersArgs
   }
 
   // Custom InputTypes
@@ -3009,13 +3009,6 @@ export namespace Prisma {
   /**
    * RoleCountOutputType without action
    */
-  export type RoleCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: UserRoleWhereInput
-  }
-
-  /**
-   * RoleCountOutputType without action
-   */
   export type RoleCountOutputTypeCountGroupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GroupRoleWhereInput
   }
@@ -3025,6 +3018,13 @@ export namespace Prisma {
    */
   export type RoleCountOutputTypeCountProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProcessRoleWhereInput
+  }
+
+  /**
+   * RoleCountOutputType without action
+   */
+  export type RoleCountOutputTypeCountUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserRoleWhereInput
   }
 
 
@@ -3073,17 +3073,17 @@ export namespace Prisma {
    */
 
   export type ProcessCountOutputType = {
-    roles: number
-    forms: number
     applicantProcesses: number
     formResponses: number
+    forms: number
+    roles: number
   }
 
   export type ProcessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roles?: boolean | ProcessCountOutputTypeCountRolesArgs
-    forms?: boolean | ProcessCountOutputTypeCountFormsArgs
     applicantProcesses?: boolean | ProcessCountOutputTypeCountApplicantProcessesArgs
     formResponses?: boolean | ProcessCountOutputTypeCountFormResponsesArgs
+    forms?: boolean | ProcessCountOutputTypeCountFormsArgs
+    roles?: boolean | ProcessCountOutputTypeCountRolesArgs
   }
 
   // Custom InputTypes
@@ -3100,8 +3100,15 @@ export namespace Prisma {
   /**
    * ProcessCountOutputType without action
    */
-  export type ProcessCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ProcessRoleWhereInput
+  export type ProcessCountOutputTypeCountApplicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ApplicantProcessWhereInput
+  }
+
+  /**
+   * ProcessCountOutputType without action
+   */
+  export type ProcessCountOutputTypeCountFormResponsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FormResponseWhereInput
   }
 
   /**
@@ -3114,15 +3121,8 @@ export namespace Prisma {
   /**
    * ProcessCountOutputType without action
    */
-  export type ProcessCountOutputTypeCountApplicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: ApplicantProcessWhereInput
-  }
-
-  /**
-   * ProcessCountOutputType without action
-   */
-  export type ProcessCountOutputTypeCountFormResponsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: FormResponseWhereInput
+  export type ProcessCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessRoleWhereInput
   }
 
 
@@ -3485,14 +3485,14 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    roles?: boolean | User$rolesArgs<ExtArgs>
-    files?: boolean | User$filesArgs<ExtArgs>
+    applicantProcesses?: boolean | User$applicantProcessesArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    files?: boolean | User$filesArgs<ExtArgs>
     createdForms?: boolean | User$createdFormsArgs<ExtArgs>
     createdGroups?: boolean | User$createdGroupsArgs<ExtArgs>
-    createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
     organization?: boolean | User$organizationArgs<ExtArgs>
-    applicantProcesses?: boolean | User$applicantProcessesArgs<ExtArgs>
+    createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
+    roles?: boolean | User$rolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3537,14 +3537,14 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "photo" | "googleId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    roles?: boolean | User$rolesArgs<ExtArgs>
-    files?: boolean | User$filesArgs<ExtArgs>
+    applicantProcesses?: boolean | User$applicantProcessesArgs<ExtArgs>
     auditLogs?: boolean | User$auditLogsArgs<ExtArgs>
+    files?: boolean | User$filesArgs<ExtArgs>
     createdForms?: boolean | User$createdFormsArgs<ExtArgs>
     createdGroups?: boolean | User$createdGroupsArgs<ExtArgs>
-    createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
     organization?: boolean | User$organizationArgs<ExtArgs>
-    applicantProcesses?: boolean | User$applicantProcessesArgs<ExtArgs>
+    createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
+    roles?: boolean | User$rolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3553,14 +3553,14 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      roles: Prisma.$UserRolePayload<ExtArgs>[]
-      files: Prisma.$FilePayload<ExtArgs>[]
+      applicantProcesses: Prisma.$ApplicantProcessPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+      files: Prisma.$FilePayload<ExtArgs>[]
       createdForms: Prisma.$FormPayload<ExtArgs>[]
       createdGroups: Prisma.$GroupPayload<ExtArgs>[]
-      createdProcesses: Prisma.$ProcessPayload<ExtArgs>[]
       organization: Prisma.$OrganizationUserPayload<ExtArgs> | null
-      applicantProcesses: Prisma.$ApplicantProcessPayload<ExtArgs>[]
+      createdProcesses: Prisma.$ProcessPayload<ExtArgs>[]
+      roles: Prisma.$UserRolePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3967,14 +3967,14 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    files<T extends User$filesArgs<ExtArgs> = {}>(args?: Subset<T, User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    applicantProcesses<T extends User$applicantProcessesArgs<ExtArgs> = {}>(args?: Subset<T, User$applicantProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends User$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    files<T extends User$filesArgs<ExtArgs> = {}>(args?: Subset<T, User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdForms<T extends User$createdFormsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdFormsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     createdGroups<T extends User$createdGroupsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    createdProcesses<T extends User$createdProcessesArgs<ExtArgs> = {}>(args?: Subset<T, User$createdProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     organization<T extends User$organizationArgs<ExtArgs> = {}>(args?: Subset<T, User$organizationArgs<ExtArgs>>): Prisma__OrganizationUserClient<$Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    applicantProcesses<T extends User$applicantProcessesArgs<ExtArgs> = {}>(args?: Subset<T, User$applicantProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdProcesses<T extends User$createdProcessesArgs<ExtArgs> = {}>(args?: Subset<T, User$createdProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4411,51 +4411,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.roles
+   * User.applicantProcesses
    */
-  export type User$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$applicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the UserRole
+     * Select specific fields to fetch from the ApplicantProcess
      */
-    select?: UserRoleSelect<ExtArgs> | null
+    select?: ApplicantProcessSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the UserRole
+     * Omit specific fields from the ApplicantProcess
      */
-    omit?: UserRoleOmit<ExtArgs> | null
+    omit?: ApplicantProcessOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: UserRoleInclude<ExtArgs> | null
-    where?: UserRoleWhereInput
-    orderBy?: UserRoleOrderByWithRelationInput | UserRoleOrderByWithRelationInput[]
-    cursor?: UserRoleWhereUniqueInput
+    include?: ApplicantProcessInclude<ExtArgs> | null
+    where?: ApplicantProcessWhereInput
+    orderBy?: ApplicantProcessOrderByWithRelationInput | ApplicantProcessOrderByWithRelationInput[]
+    cursor?: ApplicantProcessWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
-  }
-
-  /**
-   * User.files
-   */
-  export type User$filesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the File
-     */
-    select?: FileSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the File
-     */
-    omit?: FileOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: FileInclude<ExtArgs> | null
-    where?: FileWhereInput
-    orderBy?: FileOrderByWithRelationInput | FileOrderByWithRelationInput[]
-    cursor?: FileWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
+    distinct?: ApplicantProcessScalarFieldEnum | ApplicantProcessScalarFieldEnum[]
   }
 
   /**
@@ -4480,6 +4456,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.files
+   */
+  export type User$filesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the File
+     */
+    select?: FileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the File
+     */
+    omit?: FileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FileInclude<ExtArgs> | null
+    where?: FileWhereInput
+    orderBy?: FileOrderByWithRelationInput | FileOrderByWithRelationInput[]
+    cursor?: FileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
   }
 
   /**
@@ -4531,6 +4531,25 @@ export namespace Prisma {
   }
 
   /**
+   * User.organization
+   */
+  export type User$organizationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrganizationUser
+     */
+    select?: OrganizationUserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrganizationUser
+     */
+    omit?: OrganizationUserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrganizationUserInclude<ExtArgs> | null
+    where?: OrganizationUserWhereInput
+  }
+
+  /**
    * User.createdProcesses
    */
   export type User$createdProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4555,46 +4574,27 @@ export namespace Prisma {
   }
 
   /**
-   * User.organization
+   * User.roles
    */
-  export type User$organizationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the OrganizationUser
+     * Select specific fields to fetch from the UserRole
      */
-    select?: OrganizationUserSelect<ExtArgs> | null
+    select?: UserRoleSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the OrganizationUser
+     * Omit specific fields from the UserRole
      */
-    omit?: OrganizationUserOmit<ExtArgs> | null
+    omit?: UserRoleOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: OrganizationUserInclude<ExtArgs> | null
-    where?: OrganizationUserWhereInput
-  }
-
-  /**
-   * User.applicantProcesses
-   */
-  export type User$applicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ApplicantProcess
-     */
-    select?: ApplicantProcessSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ApplicantProcess
-     */
-    omit?: ApplicantProcessOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ApplicantProcessInclude<ExtArgs> | null
-    where?: ApplicantProcessWhereInput
-    orderBy?: ApplicantProcessOrderByWithRelationInput | ApplicantProcessOrderByWithRelationInput[]
-    cursor?: ApplicantProcessWhereUniqueInput
+    include?: UserRoleInclude<ExtArgs> | null
+    where?: UserRoleWhereInput
+    orderBy?: UserRoleOrderByWithRelationInput | UserRoleOrderByWithRelationInput[]
+    cursor?: UserRoleWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: ApplicantProcessScalarFieldEnum | ApplicantProcessScalarFieldEnum[]
+    distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
   }
 
   /**
@@ -4788,9 +4788,9 @@ export namespace Prisma {
     status?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    users?: boolean | Role$usersArgs<ExtArgs>
     groups?: boolean | Role$groupsArgs<ExtArgs>
     processes?: boolean | Role$processesArgs<ExtArgs>
+    users?: boolean | Role$usersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["role"]>
 
@@ -4823,9 +4823,9 @@ export namespace Prisma {
 
   export type RoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["role"]>
   export type RoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    users?: boolean | Role$usersArgs<ExtArgs>
     groups?: boolean | Role$groupsArgs<ExtArgs>
     processes?: boolean | Role$processesArgs<ExtArgs>
+    users?: boolean | Role$usersArgs<ExtArgs>
     _count?: boolean | RoleCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type RoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4834,9 +4834,9 @@ export namespace Prisma {
   export type $RolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Role"
     objects: {
-      users: Prisma.$UserRolePayload<ExtArgs>[]
       groups: Prisma.$GroupRolePayload<ExtArgs>[]
       processes: Prisma.$ProcessRolePayload<ExtArgs>[]
+      users: Prisma.$UserRolePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -5239,9 +5239,9 @@ export namespace Prisma {
    */
   export interface Prisma__RoleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    users<T extends Role$usersArgs<ExtArgs> = {}>(args?: Subset<T, Role$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     groups<T extends Role$groupsArgs<ExtArgs> = {}>(args?: Subset<T, Role$groupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     processes<T extends Role$processesArgs<ExtArgs> = {}>(args?: Subset<T, Role$processesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    users<T extends Role$usersArgs<ExtArgs> = {}>(args?: Subset<T, Role$usersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5674,30 +5674,6 @@ export namespace Prisma {
   }
 
   /**
-   * Role.users
-   */
-  export type Role$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the UserRole
-     */
-    select?: UserRoleSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the UserRole
-     */
-    omit?: UserRoleOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: UserRoleInclude<ExtArgs> | null
-    where?: UserRoleWhereInput
-    orderBy?: UserRoleOrderByWithRelationInput | UserRoleOrderByWithRelationInput[]
-    cursor?: UserRoleWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
-  }
-
-  /**
    * Role.groups
    */
   export type Role$groupsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5743,6 +5719,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProcessRoleScalarFieldEnum | ProcessRoleScalarFieldEnum[]
+  }
+
+  /**
+   * Role.users
+   */
+  export type Role$usersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserRole
+     */
+    select?: UserRoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserRole
+     */
+    omit?: UserRoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserRoleInclude<ExtArgs> | null
+    where?: UserRoleWhereInput
+    orderBy?: UserRoleOrderByWithRelationInput | UserRoleOrderByWithRelationInput[]
+    cursor?: UserRoleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
   }
 
   /**
@@ -5912,24 +5912,24 @@ export namespace Prisma {
     userId?: boolean
     roleId?: boolean
     status?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userRole"]>
 
   export type UserRoleSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     roleId?: boolean
     status?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userRole"]>
 
   export type UserRoleSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
     roleId?: boolean
     status?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["userRole"]>
 
   export type UserRoleSelectScalar = {
@@ -5940,23 +5940,23 @@ export namespace Prisma {
 
   export type UserRoleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "roleId" | "status", ExtArgs["result"]["userRole"]>
   export type UserRoleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type UserRoleIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type UserRoleIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     role?: boolean | RoleDefaultArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $UserRolePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "UserRole"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       role: Prisma.$RolePayload<ExtArgs>
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       userId: string
@@ -6356,8 +6356,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserRoleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     role<T extends RoleDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RoleDefaultArgs<ExtArgs>>): Prisma__RoleClient<$Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9285,8 +9285,8 @@ export namespace Prisma {
     creatorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    creator?: boolean | UserDefaultArgs<ExtArgs>
     roles?: boolean | Group$rolesArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
     processes?: boolean | Group$processesArgs<ExtArgs>
     _count?: boolean | GroupCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["group"]>
@@ -9322,8 +9322,8 @@ export namespace Prisma {
 
   export type GroupOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "status" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["group"]>
   export type GroupInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    creator?: boolean | UserDefaultArgs<ExtArgs>
     roles?: boolean | Group$rolesArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
     processes?: boolean | Group$processesArgs<ExtArgs>
     _count?: boolean | GroupCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -9337,8 +9337,8 @@ export namespace Prisma {
   export type $GroupPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Group"
     objects: {
-      creator: Prisma.$UserPayload<ExtArgs>
       roles: Prisma.$GroupRolePayload<ExtArgs>[]
+      creator: Prisma.$UserPayload<ExtArgs>
       processes: Prisma.$ProcessPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -9742,8 +9742,8 @@ export namespace Prisma {
    */
   export interface Prisma__GroupClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     roles<T extends Group$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Group$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     processes<T extends Group$processesArgs<ExtArgs> = {}>(args?: Subset<T, Group$processesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -11512,12 +11512,12 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    group?: boolean | GroupDefaultArgs<ExtArgs>
-    creator?: boolean | UserDefaultArgs<ExtArgs>
-    roles?: boolean | Process$rolesArgs<ExtArgs>
-    forms?: boolean | Process$formsArgs<ExtArgs>
     applicantProcesses?: boolean | Process$applicantProcessesArgs<ExtArgs>
     formResponses?: boolean | Process$formResponsesArgs<ExtArgs>
+    forms?: boolean | Process$formsArgs<ExtArgs>
+    roles?: boolean | Process$rolesArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    group?: boolean | GroupDefaultArgs<ExtArgs>
     _count?: boolean | ProcessCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["process"]>
 
@@ -11533,8 +11533,8 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    group?: boolean | GroupDefaultArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
+    group?: boolean | GroupDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["process"]>
 
   export type ProcessSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11549,8 +11549,8 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    group?: boolean | GroupDefaultArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
+    group?: boolean | GroupDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["process"]>
 
   export type ProcessSelectScalar = {
@@ -11569,32 +11569,32 @@ export namespace Prisma {
 
   export type ProcessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "groupId" | "creatorId" | "status" | "archived" | "staffViewForms" | "applicantViewProcessLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["process"]>
   export type ProcessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    group?: boolean | GroupDefaultArgs<ExtArgs>
-    creator?: boolean | UserDefaultArgs<ExtArgs>
-    roles?: boolean | Process$rolesArgs<ExtArgs>
-    forms?: boolean | Process$formsArgs<ExtArgs>
     applicantProcesses?: boolean | Process$applicantProcessesArgs<ExtArgs>
     formResponses?: boolean | Process$formResponsesArgs<ExtArgs>
+    forms?: boolean | Process$formsArgs<ExtArgs>
+    roles?: boolean | Process$rolesArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+    group?: boolean | GroupDefaultArgs<ExtArgs>
     _count?: boolean | ProcessCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProcessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    group?: boolean | GroupDefaultArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
+    group?: boolean | GroupDefaultArgs<ExtArgs>
   }
   export type ProcessIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    group?: boolean | GroupDefaultArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
+    group?: boolean | GroupDefaultArgs<ExtArgs>
   }
 
   export type $ProcessPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Process"
     objects: {
-      group: Prisma.$GroupPayload<ExtArgs>
-      creator: Prisma.$UserPayload<ExtArgs>
-      roles: Prisma.$ProcessRolePayload<ExtArgs>[]
-      forms: Prisma.$ProcessFormPayload<ExtArgs>[]
       applicantProcesses: Prisma.$ApplicantProcessPayload<ExtArgs>[]
       formResponses: Prisma.$FormResponsePayload<ExtArgs>[]
+      forms: Prisma.$ProcessFormPayload<ExtArgs>[]
+      roles: Prisma.$ProcessRolePayload<ExtArgs>[]
+      creator: Prisma.$UserPayload<ExtArgs>
+      group: Prisma.$GroupPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -12002,12 +12002,12 @@ export namespace Prisma {
    */
   export interface Prisma__ProcessClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    group<T extends GroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDefaultArgs<ExtArgs>>): Prisma__GroupClient<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    roles<T extends Process$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Process$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    forms<T extends Process$formsArgs<ExtArgs> = {}>(args?: Subset<T, Process$formsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     applicantProcesses<T extends Process$applicantProcessesArgs<ExtArgs> = {}>(args?: Subset<T, Process$applicantProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     formResponses<T extends Process$formResponsesArgs<ExtArgs> = {}>(args?: Subset<T, Process$formResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    forms<T extends Process$formsArgs<ExtArgs> = {}>(args?: Subset<T, Process$formsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roles<T extends Process$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Process$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    group<T extends GroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDefaultArgs<ExtArgs>>): Prisma__GroupClient<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12453,54 +12453,6 @@ export namespace Prisma {
   }
 
   /**
-   * Process.roles
-   */
-  export type Process$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProcessRole
-     */
-    select?: ProcessRoleSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProcessRole
-     */
-    omit?: ProcessRoleOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProcessRoleInclude<ExtArgs> | null
-    where?: ProcessRoleWhereInput
-    orderBy?: ProcessRoleOrderByWithRelationInput | ProcessRoleOrderByWithRelationInput[]
-    cursor?: ProcessRoleWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ProcessRoleScalarFieldEnum | ProcessRoleScalarFieldEnum[]
-  }
-
-  /**
-   * Process.forms
-   */
-  export type Process$formsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the ProcessForm
-     */
-    select?: ProcessFormSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the ProcessForm
-     */
-    omit?: ProcessFormOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: ProcessFormInclude<ExtArgs> | null
-    where?: ProcessFormWhereInput
-    orderBy?: ProcessFormOrderByWithRelationInput | ProcessFormOrderByWithRelationInput[]
-    cursor?: ProcessFormWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: ProcessFormScalarFieldEnum | ProcessFormScalarFieldEnum[]
-  }
-
-  /**
    * Process.applicantProcesses
    */
   export type Process$applicantProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12546,6 +12498,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FormResponseScalarFieldEnum | FormResponseScalarFieldEnum[]
+  }
+
+  /**
+   * Process.forms
+   */
+  export type Process$formsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessForm
+     */
+    select?: ProcessFormSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessForm
+     */
+    omit?: ProcessFormOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessFormInclude<ExtArgs> | null
+    where?: ProcessFormWhereInput
+    orderBy?: ProcessFormOrderByWithRelationInput | ProcessFormOrderByWithRelationInput[]
+    cursor?: ProcessFormWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessFormScalarFieldEnum | ProcessFormScalarFieldEnum[]
+  }
+
+  /**
+   * Process.roles
+   */
+  export type Process$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessRole
+     */
+    select?: ProcessRoleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessRole
+     */
+    omit?: ProcessRoleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessRoleInclude<ExtArgs> | null
+    where?: ProcessRoleWhereInput
+    orderBy?: ProcessRoleOrderByWithRelationInput | ProcessRoleOrderByWithRelationInput[]
+    cursor?: ProcessRoleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessRoleScalarFieldEnum | ProcessRoleScalarFieldEnum[]
   }
 
   /**
@@ -13808,8 +13808,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     design?: boolean
-    creator?: boolean | UserDefaultArgs<ExtArgs>
     responses?: boolean | Form$responsesArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
     processForms?: boolean | Form$processFormsArgs<ExtArgs>
     _count?: boolean | FormCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["form"]>
@@ -13854,8 +13854,8 @@ export namespace Prisma {
 
   export type FormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "status" | "archived" | "creatorId" | "createdAt" | "updatedAt" | "design", ExtArgs["result"]["form"]>
   export type FormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    creator?: boolean | UserDefaultArgs<ExtArgs>
     responses?: boolean | Form$responsesArgs<ExtArgs>
+    creator?: boolean | UserDefaultArgs<ExtArgs>
     processForms?: boolean | Form$processFormsArgs<ExtArgs>
     _count?: boolean | FormCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -13869,8 +13869,8 @@ export namespace Prisma {
   export type $FormPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Form"
     objects: {
-      creator: Prisma.$UserPayload<ExtArgs>
       responses: Prisma.$FormResponsePayload<ExtArgs>[]
+      creator: Prisma.$UserPayload<ExtArgs>
       processForms: Prisma.$ProcessFormPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -14277,8 +14277,8 @@ export namespace Prisma {
    */
   export interface Prisma__FormClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     responses<T extends Form$responsesArgs<ExtArgs> = {}>(args?: Subset<T, Form$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     processForms<T extends Form$processFormsArgs<ExtArgs> = {}>(args?: Subset<T, Form$processFormsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -14802,26 +14802,26 @@ export namespace Prisma {
   export type FormResponseMinAggregateOutputType = {
     id: string | null
     formId: string | null
-    processId: string | null
     applicantProcessId: string | null
     createdAt: Date | null
+    processId: string | null
   }
 
   export type FormResponseMaxAggregateOutputType = {
     id: string | null
     formId: string | null
-    processId: string | null
     applicantProcessId: string | null
     createdAt: Date | null
+    processId: string | null
   }
 
   export type FormResponseCountAggregateOutputType = {
     id: number
     formId: number
-    processId: number
     applicantProcessId: number
     responses: number
     createdAt: number
+    processId: number
     _all: number
   }
 
@@ -14829,26 +14829,26 @@ export namespace Prisma {
   export type FormResponseMinAggregateInputType = {
     id?: true
     formId?: true
-    processId?: true
     applicantProcessId?: true
     createdAt?: true
+    processId?: true
   }
 
   export type FormResponseMaxAggregateInputType = {
     id?: true
     formId?: true
-    processId?: true
     applicantProcessId?: true
     createdAt?: true
+    processId?: true
   }
 
   export type FormResponseCountAggregateInputType = {
     id?: true
     formId?: true
-    processId?: true
     applicantProcessId?: true
     responses?: true
     createdAt?: true
+    processId?: true
     _all?: true
   }
 
@@ -14927,10 +14927,10 @@ export namespace Prisma {
   export type FormResponseGroupByOutputType = {
     id: string
     formId: string
-    processId: string
     applicantProcessId: string
     responses: JsonValue
     createdAt: Date
+    processId: string
     _count: FormResponseCountAggregateOutputType | null
     _min: FormResponseMinAggregateOutputType | null
     _max: FormResponseMaxAggregateOutputType | null
@@ -14953,79 +14953,79 @@ export namespace Prisma {
   export type FormResponseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     formId?: boolean
-    processId?: boolean
     applicantProcessId?: boolean
     responses?: boolean
     createdAt?: boolean
+    processId?: boolean
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formResponse"]>
 
   export type FormResponseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     formId?: boolean
-    processId?: boolean
     applicantProcessId?: boolean
     responses?: boolean
     createdAt?: boolean
+    processId?: boolean
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formResponse"]>
 
   export type FormResponseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     formId?: boolean
-    processId?: boolean
     applicantProcessId?: boolean
     responses?: boolean
     createdAt?: boolean
+    processId?: boolean
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["formResponse"]>
 
   export type FormResponseSelectScalar = {
     id?: boolean
     formId?: boolean
-    processId?: boolean
     applicantProcessId?: boolean
     responses?: boolean
     createdAt?: boolean
+    processId?: boolean
   }
 
-  export type FormResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "formId" | "processId" | "applicantProcessId" | "responses" | "createdAt", ExtArgs["result"]["formResponse"]>
+  export type FormResponseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "formId" | "applicantProcessId" | "responses" | "createdAt" | "processId", ExtArgs["result"]["formResponse"]>
   export type FormResponseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }
   export type FormResponseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }
   export type FormResponseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }
 
   export type $FormResponsePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "FormResponse"
     objects: {
+      applicantProcess: Prisma.$ApplicantProcessPayload<ExtArgs>
       form: Prisma.$FormPayload<ExtArgs>
       process: Prisma.$ProcessPayload<ExtArgs>
-      applicantProcess: Prisma.$ApplicantProcessPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       formId: string
-      processId: string
       applicantProcessId: string
       responses: Prisma.JsonValue
       createdAt: Date
+      processId: string
     }, ExtArgs["result"]["formResponse"]>
     composites: {}
   }
@@ -15420,9 +15420,9 @@ export namespace Prisma {
    */
   export interface Prisma__FormResponseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    applicantProcess<T extends ApplicantProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcessDefaultArgs<ExtArgs>>): Prisma__ApplicantProcessClient<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     form<T extends FormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FormDefaultArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    applicantProcess<T extends ApplicantProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcessDefaultArgs<ExtArgs>>): Prisma__ApplicantProcessClient<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -15454,10 +15454,10 @@ export namespace Prisma {
   interface FormResponseFieldRefs {
     readonly id: FieldRef<"FormResponse", 'String'>
     readonly formId: FieldRef<"FormResponse", 'String'>
-    readonly processId: FieldRef<"FormResponse", 'String'>
     readonly applicantProcessId: FieldRef<"FormResponse", 'String'>
     readonly responses: FieldRef<"FormResponse", 'Json'>
     readonly createdAt: FieldRef<"FormResponse", 'DateTime'>
+    readonly processId: FieldRef<"FormResponse", 'String'>
   }
     
 
@@ -15913,6 +15913,8 @@ export namespace Prisma {
     notificationComment: string | null
     notifyApplicant: boolean | null
     applicantNotificationContent: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProcessFormMaxAggregateOutputType = {
@@ -15927,6 +15929,8 @@ export namespace Prisma {
     notificationComment: string | null
     notifyApplicant: boolean | null
     applicantNotificationContent: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProcessFormCountAggregateOutputType = {
@@ -15943,6 +15947,8 @@ export namespace Prisma {
     notificationComment: number
     notifyApplicant: number
     applicantNotificationContent: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -15967,6 +15973,8 @@ export namespace Prisma {
     notificationComment?: true
     notifyApplicant?: true
     applicantNotificationContent?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type ProcessFormMaxAggregateInputType = {
@@ -15981,6 +15989,8 @@ export namespace Prisma {
     notificationComment?: true
     notifyApplicant?: true
     applicantNotificationContent?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type ProcessFormCountAggregateInputType = {
@@ -15997,6 +16007,8 @@ export namespace Prisma {
     notificationComment?: true
     notifyApplicant?: true
     applicantNotificationContent?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -16100,6 +16112,8 @@ export namespace Prisma {
     notificationComment: string | null
     notifyApplicant: boolean
     applicantNotificationContent: string | null
+    createdAt: Date
+    updatedAt: Date
     _count: ProcessFormCountAggregateOutputType | null
     _avg: ProcessFormAvgAggregateOutputType | null
     _sum: ProcessFormSumAggregateOutputType | null
@@ -16135,8 +16149,10 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
-    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    createdAt?: boolean
+    updatedAt?: boolean
     form?: boolean | FormDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["processForm"]>
 
   export type ProcessFormSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16153,8 +16169,10 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
-    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    createdAt?: boolean
+    updatedAt?: boolean
     form?: boolean | FormDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["processForm"]>
 
   export type ProcessFormSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16171,8 +16189,10 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
-    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    createdAt?: boolean
+    updatedAt?: boolean
     form?: boolean | FormDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["processForm"]>
 
   export type ProcessFormSelectScalar = {
@@ -16189,27 +16209,29 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type ProcessFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "formId" | "order" | "nextStepType" | "nextStepRoles" | "nextStaffId" | "notificationType" | "notificationRoles" | "notificationToId" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent", ExtArgs["result"]["processForm"]>
+  export type ProcessFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "formId" | "order" | "nextStepType" | "nextStepRoles" | "nextStaffId" | "notificationType" | "notificationRoles" | "notificationToId" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent" | "createdAt" | "updatedAt", ExtArgs["result"]["processForm"]>
   export type ProcessFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    process?: boolean | ProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }
   export type ProcessFormIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    process?: boolean | ProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }
   export type ProcessFormIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    process?: boolean | ProcessDefaultArgs<ExtArgs>
     form?: boolean | FormDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
   }
 
   export type $ProcessFormPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ProcessForm"
     objects: {
-      process: Prisma.$ProcessPayload<ExtArgs>
       form: Prisma.$FormPayload<ExtArgs>
+      process: Prisma.$ProcessPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -16225,6 +16247,8 @@ export namespace Prisma {
       notificationComment: string | null
       notifyApplicant: boolean
       applicantNotificationContent: string | null
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["processForm"]>
     composites: {}
   }
@@ -16619,8 +16643,8 @@ export namespace Prisma {
    */
   export interface Prisma__ProcessFormClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     form<T extends FormDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FormDefaultArgs<ExtArgs>>): Prisma__FormClient<$Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16663,6 +16687,8 @@ export namespace Prisma {
     readonly notificationComment: FieldRef<"ProcessForm", 'String'>
     readonly notifyApplicant: FieldRef<"ProcessForm", 'Boolean'>
     readonly applicantNotificationContent: FieldRef<"ProcessForm", 'String'>
+    readonly createdAt: FieldRef<"ProcessForm", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProcessForm", 'DateTime'>
   }
     
 
@@ -17250,9 +17276,9 @@ export namespace Prisma {
     processId?: boolean
     status?: boolean
     createdAt?: boolean
+    completedForms?: boolean | ApplicantProcess$completedFormsArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    completedForms?: boolean | ApplicantProcess$completedFormsArgs<ExtArgs>
     responses?: boolean | ApplicantProcess$responsesArgs<ExtArgs>
     comments?: boolean | ApplicantProcess$commentsArgs<ExtArgs>
     _count?: boolean | ApplicantProcessCountOutputTypeDefaultArgs<ExtArgs>
@@ -17288,9 +17314,9 @@ export namespace Prisma {
 
   export type ApplicantProcessOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicantId" | "processId" | "status" | "createdAt", ExtArgs["result"]["applicantProcess"]>
   export type ApplicantProcessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    completedForms?: boolean | ApplicantProcess$completedFormsArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
-    completedForms?: boolean | ApplicantProcess$completedFormsArgs<ExtArgs>
     responses?: boolean | ApplicantProcess$responsesArgs<ExtArgs>
     comments?: boolean | ApplicantProcess$commentsArgs<ExtArgs>
     _count?: boolean | ApplicantProcessCountOutputTypeDefaultArgs<ExtArgs>
@@ -17307,9 +17333,9 @@ export namespace Prisma {
   export type $ApplicantProcessPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ApplicantProcess"
     objects: {
+      completedForms: Prisma.$APCompletedFormPayload<ExtArgs>[]
       applicant: Prisma.$UserPayload<ExtArgs>
       process: Prisma.$ProcessPayload<ExtArgs>
-      completedForms: Prisma.$APCompletedFormPayload<ExtArgs>[]
       responses: Prisma.$FormResponsePayload<ExtArgs>[]
       comments: Prisma.$ProcessCommentPayload<ExtArgs>[]
     }
@@ -17713,9 +17739,9 @@ export namespace Prisma {
    */
   export interface Prisma__ApplicantProcessClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    completedForms<T extends ApplicantProcess$completedFormsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$completedFormsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$APCompletedFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     applicant<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    completedForms<T extends ApplicantProcess$completedFormsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$completedFormsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$APCompletedFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     responses<T extends ApplicantProcess$responsesArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends ApplicantProcess$commentsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -20537,9 +20563,9 @@ export namespace Prisma {
     userId?: boolean
     superiorId?: boolean
     title?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     superior?: boolean | OrganizationUser$superiorArgs<ExtArgs>
     subordinates?: boolean | OrganizationUser$subordinatesArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | OrganizationUserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organizationUser"]>
 
@@ -20548,8 +20574,8 @@ export namespace Prisma {
     userId?: boolean
     superiorId?: boolean
     title?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     superior?: boolean | OrganizationUser$superiorArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organizationUser"]>
 
   export type OrganizationUserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -20557,8 +20583,8 @@ export namespace Prisma {
     userId?: boolean
     superiorId?: boolean
     title?: boolean
-    user?: boolean | UserDefaultArgs<ExtArgs>
     superior?: boolean | OrganizationUser$superiorArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organizationUser"]>
 
   export type OrganizationUserSelectScalar = {
@@ -20570,26 +20596,26 @@ export namespace Prisma {
 
   export type OrganizationUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "superiorId" | "title", ExtArgs["result"]["organizationUser"]>
   export type OrganizationUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     superior?: boolean | OrganizationUser$superiorArgs<ExtArgs>
     subordinates?: boolean | OrganizationUser$subordinatesArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
     _count?: boolean | OrganizationUserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationUserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     superior?: boolean | OrganizationUser$superiorArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type OrganizationUserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    user?: boolean | UserDefaultArgs<ExtArgs>
     superior?: boolean | OrganizationUser$superiorArgs<ExtArgs>
+    user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
   export type $OrganizationUserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OrganizationUser"
     objects: {
-      user: Prisma.$UserPayload<ExtArgs>
       superior: Prisma.$OrganizationUserPayload<ExtArgs> | null
       subordinates: Prisma.$OrganizationUserPayload<ExtArgs>[]
+      user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -20990,9 +21016,9 @@ export namespace Prisma {
    */
   export interface Prisma__OrganizationUserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     superior<T extends OrganizationUser$superiorArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationUser$superiorArgs<ExtArgs>>): Prisma__OrganizationUserClient<$Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subordinates<T extends OrganizationUser$subordinatesArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationUser$subordinatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -27927,10 +27953,10 @@ export namespace Prisma {
   export const FormResponseScalarFieldEnum: {
     id: 'id',
     formId: 'formId',
-    processId: 'processId',
     applicantProcessId: 'applicantProcessId',
     responses: 'responses',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    processId: 'processId'
   };
 
   export type FormResponseScalarFieldEnum = (typeof FormResponseScalarFieldEnum)[keyof typeof FormResponseScalarFieldEnum]
@@ -27949,7 +27975,9 @@ export namespace Prisma {
     notificationToId: 'notificationToId',
     notificationComment: 'notificationComment',
     notifyApplicant: 'notifyApplicant',
-    applicantNotificationContent: 'applicantNotificationContent'
+    applicantNotificationContent: 'applicantNotificationContent',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ProcessFormScalarFieldEnum = (typeof ProcessFormScalarFieldEnum)[keyof typeof ProcessFormScalarFieldEnum]
@@ -28222,8 +28250,8 @@ export namespace Prisma {
   export const FormResponseOrderByRelevanceFieldEnum: {
     id: 'id',
     formId: 'formId',
-    processId: 'processId',
-    applicantProcessId: 'applicantProcessId'
+    applicantProcessId: 'applicantProcessId',
+    processId: 'processId'
   };
 
   export type FormResponseOrderByRelevanceFieldEnum = (typeof FormResponseOrderByRelevanceFieldEnum)[keyof typeof FormResponseOrderByRelevanceFieldEnum]
@@ -28579,14 +28607,14 @@ export namespace Prisma {
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    roles?: UserRoleListRelationFilter
-    files?: FileListRelationFilter
+    applicantProcesses?: ApplicantProcessListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    files?: FileListRelationFilter
     createdForms?: FormListRelationFilter
     createdGroups?: GroupListRelationFilter
-    createdProcesses?: ProcessListRelationFilter
     organization?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
-    applicantProcesses?: ApplicantProcessListRelationFilter
+    createdProcesses?: ProcessListRelationFilter
+    roles?: UserRoleListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -28600,14 +28628,14 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    roles?: UserRoleOrderByRelationAggregateInput
-    files?: FileOrderByRelationAggregateInput
+    applicantProcesses?: ApplicantProcessOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
+    files?: FileOrderByRelationAggregateInput
     createdForms?: FormOrderByRelationAggregateInput
     createdGroups?: GroupOrderByRelationAggregateInput
-    createdProcesses?: ProcessOrderByRelationAggregateInput
     organization?: OrganizationUserOrderByWithRelationInput
-    applicantProcesses?: ApplicantProcessOrderByRelationAggregateInput
+    createdProcesses?: ProcessOrderByRelationAggregateInput
+    roles?: UserRoleOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -28625,14 +28653,14 @@ export namespace Prisma {
     status?: EnumUserStatusFilter<"User"> | $Enums.UserStatus
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    roles?: UserRoleListRelationFilter
-    files?: FileListRelationFilter
+    applicantProcesses?: ApplicantProcessListRelationFilter
     auditLogs?: AuditLogListRelationFilter
+    files?: FileListRelationFilter
     createdForms?: FormListRelationFilter
     createdGroups?: GroupListRelationFilter
-    createdProcesses?: ProcessListRelationFilter
     organization?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
-    applicantProcesses?: ApplicantProcessListRelationFilter
+    createdProcesses?: ProcessListRelationFilter
+    roles?: UserRoleListRelationFilter
   }, "id" | "email" | "googleId">
 
   export type UserOrderByWithAggregationInput = {
@@ -28677,9 +28705,9 @@ export namespace Prisma {
     status?: EnumRoleStatusFilter<"Role"> | $Enums.RoleStatus
     createdAt?: DateTimeFilter<"Role"> | Date | string
     updatedAt?: DateTimeFilter<"Role"> | Date | string
-    users?: UserRoleListRelationFilter
     groups?: GroupRoleListRelationFilter
     processes?: ProcessRoleListRelationFilter
+    users?: UserRoleListRelationFilter
   }
 
   export type RoleOrderByWithRelationInput = {
@@ -28689,9 +28717,9 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    users?: UserRoleOrderByRelationAggregateInput
     groups?: GroupRoleOrderByRelationAggregateInput
     processes?: ProcessRoleOrderByRelationAggregateInput
+    users?: UserRoleOrderByRelationAggregateInput
     _relevance?: RoleOrderByRelevanceInput
   }
 
@@ -28705,9 +28733,9 @@ export namespace Prisma {
     status?: EnumRoleStatusFilter<"Role"> | $Enums.RoleStatus
     createdAt?: DateTimeFilter<"Role"> | Date | string
     updatedAt?: DateTimeFilter<"Role"> | Date | string
-    users?: UserRoleListRelationFilter
     groups?: GroupRoleListRelationFilter
     processes?: ProcessRoleListRelationFilter
+    users?: UserRoleListRelationFilter
   }, "id" | "name">
 
   export type RoleOrderByWithAggregationInput = {
@@ -28741,16 +28769,16 @@ export namespace Prisma {
     userId?: UuidFilter<"UserRole"> | string
     roleId?: UuidFilter<"UserRole"> | string
     status?: EnumRoleStatusFilter<"UserRole"> | $Enums.RoleStatus
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type UserRoleOrderByWithRelationInput = {
     userId?: SortOrder
     roleId?: SortOrder
     status?: SortOrder
-    user?: UserOrderByWithRelationInput
     role?: RoleOrderByWithRelationInput
+    user?: UserOrderByWithRelationInput
     _relevance?: UserRoleOrderByRelevanceInput
   }
 
@@ -28762,8 +28790,8 @@ export namespace Prisma {
     userId?: UuidFilter<"UserRole"> | string
     roleId?: UuidFilter<"UserRole"> | string
     status?: EnumRoleStatusFilter<"UserRole"> | $Enums.RoleStatus
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     role?: XOR<RoleScalarRelationFilter, RoleWhereInput>
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "userId_roleId">
 
   export type UserRoleOrderByWithAggregationInput = {
@@ -28953,8 +28981,8 @@ export namespace Prisma {
     creatorId?: UuidFilter<"Group"> | string
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
-    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     roles?: GroupRoleListRelationFilter
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     processes?: ProcessListRelationFilter
   }
 
@@ -28965,8 +28993,8 @@ export namespace Prisma {
     creatorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    creator?: UserOrderByWithRelationInput
     roles?: GroupRoleOrderByRelationAggregateInput
+    creator?: UserOrderByWithRelationInput
     processes?: ProcessOrderByRelationAggregateInput
     _relevance?: GroupOrderByRelevanceInput
   }
@@ -28981,8 +29009,8 @@ export namespace Prisma {
     creatorId?: UuidFilter<"Group"> | string
     createdAt?: DateTimeFilter<"Group"> | Date | string
     updatedAt?: DateTimeFilter<"Group"> | Date | string
-    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     roles?: GroupRoleListRelationFilter
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     processes?: ProcessListRelationFilter
   }, "id" | "name">
 
@@ -29075,12 +29103,12 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFilter<"Process"> | boolean
     createdAt?: DateTimeFilter<"Process"> | Date | string
     updatedAt?: DateTimeFilter<"Process"> | Date | string
-    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
-    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
-    roles?: ProcessRoleListRelationFilter
-    forms?: ProcessFormListRelationFilter
     applicantProcesses?: ApplicantProcessListRelationFilter
     formResponses?: FormResponseListRelationFilter
+    forms?: ProcessFormListRelationFilter
+    roles?: ProcessRoleListRelationFilter
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
   }
 
   export type ProcessOrderByWithRelationInput = {
@@ -29095,12 +29123,12 @@ export namespace Prisma {
     applicantViewProcessLevel?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    group?: GroupOrderByWithRelationInput
-    creator?: UserOrderByWithRelationInput
-    roles?: ProcessRoleOrderByRelationAggregateInput
-    forms?: ProcessFormOrderByRelationAggregateInput
     applicantProcesses?: ApplicantProcessOrderByRelationAggregateInput
     formResponses?: FormResponseOrderByRelationAggregateInput
+    forms?: ProcessFormOrderByRelationAggregateInput
+    roles?: ProcessRoleOrderByRelationAggregateInput
+    creator?: UserOrderByWithRelationInput
+    group?: GroupOrderByWithRelationInput
     _relevance?: ProcessOrderByRelevanceInput
   }
 
@@ -29119,12 +29147,12 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFilter<"Process"> | boolean
     createdAt?: DateTimeFilter<"Process"> | Date | string
     updatedAt?: DateTimeFilter<"Process"> | Date | string
-    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
-    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
-    roles?: ProcessRoleListRelationFilter
-    forms?: ProcessFormListRelationFilter
     applicantProcesses?: ApplicantProcessListRelationFilter
     formResponses?: FormResponseListRelationFilter
+    forms?: ProcessFormListRelationFilter
+    roles?: ProcessRoleListRelationFilter
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
+    group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
   }, "id">
 
   export type ProcessOrderByWithAggregationInput = {
@@ -29224,8 +29252,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Form"> | Date | string
     updatedAt?: DateTimeFilter<"Form"> | Date | string
     design?: JsonNullableFilter<"Form">
-    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     responses?: FormResponseListRelationFilter
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     processForms?: ProcessFormListRelationFilter
   }
 
@@ -29239,8 +29267,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     design?: SortOrderInput | SortOrder
-    creator?: UserOrderByWithRelationInput
     responses?: FormResponseOrderByRelationAggregateInput
+    creator?: UserOrderByWithRelationInput
     processForms?: ProcessFormOrderByRelationAggregateInput
     _relevance?: FormOrderByRelevanceInput
   }
@@ -29258,8 +29286,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Form"> | Date | string
     updatedAt?: DateTimeFilter<"Form"> | Date | string
     design?: JsonNullableFilter<"Form">
-    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     responses?: FormResponseListRelationFilter
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     processForms?: ProcessFormListRelationFilter
   }, "id">
 
@@ -29299,25 +29327,25 @@ export namespace Prisma {
     NOT?: FormResponseWhereInput | FormResponseWhereInput[]
     id?: UuidFilter<"FormResponse"> | string
     formId?: UuidFilter<"FormResponse"> | string
-    processId?: UuidFilter<"FormResponse"> | string
     applicantProcessId?: UuidFilter<"FormResponse"> | string
     responses?: JsonFilter<"FormResponse">
     createdAt?: DateTimeFilter<"FormResponse"> | Date | string
+    processId?: UuidFilter<"FormResponse"> | string
+    applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
     form?: XOR<FormScalarRelationFilter, FormWhereInput>
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
-    applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
   }
 
   export type FormResponseOrderByWithRelationInput = {
     id?: SortOrder
     formId?: SortOrder
-    processId?: SortOrder
     applicantProcessId?: SortOrder
     responses?: SortOrder
     createdAt?: SortOrder
+    processId?: SortOrder
+    applicantProcess?: ApplicantProcessOrderByWithRelationInput
     form?: FormOrderByWithRelationInput
     process?: ProcessOrderByWithRelationInput
-    applicantProcess?: ApplicantProcessOrderByWithRelationInput
     _relevance?: FormResponseOrderByRelevanceInput
   }
 
@@ -29328,22 +29356,22 @@ export namespace Prisma {
     OR?: FormResponseWhereInput[]
     NOT?: FormResponseWhereInput | FormResponseWhereInput[]
     formId?: UuidFilter<"FormResponse"> | string
-    processId?: UuidFilter<"FormResponse"> | string
     applicantProcessId?: UuidFilter<"FormResponse"> | string
     responses?: JsonFilter<"FormResponse">
     createdAt?: DateTimeFilter<"FormResponse"> | Date | string
+    processId?: UuidFilter<"FormResponse"> | string
+    applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
     form?: XOR<FormScalarRelationFilter, FormWhereInput>
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
-    applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
   }, "id" | "formId_applicantProcessId">
 
   export type FormResponseOrderByWithAggregationInput = {
     id?: SortOrder
     formId?: SortOrder
-    processId?: SortOrder
     applicantProcessId?: SortOrder
     responses?: SortOrder
     createdAt?: SortOrder
+    processId?: SortOrder
     _count?: FormResponseCountOrderByAggregateInput
     _max?: FormResponseMaxOrderByAggregateInput
     _min?: FormResponseMinOrderByAggregateInput
@@ -29355,10 +29383,10 @@ export namespace Prisma {
     NOT?: FormResponseScalarWhereWithAggregatesInput | FormResponseScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"FormResponse"> | string
     formId?: UuidWithAggregatesFilter<"FormResponse"> | string
-    processId?: UuidWithAggregatesFilter<"FormResponse"> | string
     applicantProcessId?: UuidWithAggregatesFilter<"FormResponse"> | string
     responses?: JsonWithAggregatesFilter<"FormResponse">
     createdAt?: DateTimeWithAggregatesFilter<"FormResponse"> | Date | string
+    processId?: UuidWithAggregatesFilter<"FormResponse"> | string
   }
 
   export type ProcessFormWhereInput = {
@@ -29378,8 +29406,10 @@ export namespace Prisma {
     notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
-    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    createdAt?: DateTimeFilter<"ProcessForm"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
     form?: XOR<FormScalarRelationFilter, FormWhereInput>
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
   }
 
   export type ProcessFormOrderByWithRelationInput = {
@@ -29396,8 +29426,10 @@ export namespace Prisma {
     notificationComment?: SortOrderInput | SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrderInput | SortOrder
-    process?: ProcessOrderByWithRelationInput
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     form?: FormOrderByWithRelationInput
+    process?: ProcessOrderByWithRelationInput
     _relevance?: ProcessFormOrderByRelevanceInput
   }
 
@@ -29418,8 +29450,10 @@ export namespace Prisma {
     notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
-    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    createdAt?: DateTimeFilter<"ProcessForm"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
     form?: XOR<FormScalarRelationFilter, FormWhereInput>
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
   }, "id">
 
   export type ProcessFormOrderByWithAggregationInput = {
@@ -29436,6 +29470,8 @@ export namespace Prisma {
     notificationComment?: SortOrderInput | SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ProcessFormCountOrderByAggregateInput
     _avg?: ProcessFormAvgOrderByAggregateInput
     _max?: ProcessFormMaxOrderByAggregateInput
@@ -29460,6 +29496,8 @@ export namespace Prisma {
     notificationComment?: StringNullableWithAggregatesFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolWithAggregatesFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableWithAggregatesFilter<"ProcessForm"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ProcessForm"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProcessForm"> | Date | string
   }
 
   export type ApplicantProcessWhereInput = {
@@ -29471,9 +29509,9 @@ export namespace Prisma {
     processId?: UuidFilter<"ApplicantProcess"> | string
     status?: EnumProcessStatusFilter<"ApplicantProcess"> | $Enums.ProcessStatus
     createdAt?: DateTimeFilter<"ApplicantProcess"> | Date | string
+    completedForms?: APCompletedFormListRelationFilter
     applicant?: XOR<UserScalarRelationFilter, UserWhereInput>
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
-    completedForms?: APCompletedFormListRelationFilter
     responses?: FormResponseListRelationFilter
     comments?: ProcessCommentListRelationFilter
   }
@@ -29484,9 +29522,9 @@ export namespace Prisma {
     processId?: SortOrder
     status?: SortOrder
     createdAt?: SortOrder
+    completedForms?: APCompletedFormOrderByRelationAggregateInput
     applicant?: UserOrderByWithRelationInput
     process?: ProcessOrderByWithRelationInput
-    completedForms?: APCompletedFormOrderByRelationAggregateInput
     responses?: FormResponseOrderByRelationAggregateInput
     comments?: ProcessCommentOrderByRelationAggregateInput
     _relevance?: ApplicantProcessOrderByRelevanceInput
@@ -29501,9 +29539,9 @@ export namespace Prisma {
     processId?: UuidFilter<"ApplicantProcess"> | string
     status?: EnumProcessStatusFilter<"ApplicantProcess"> | $Enums.ProcessStatus
     createdAt?: DateTimeFilter<"ApplicantProcess"> | Date | string
+    completedForms?: APCompletedFormListRelationFilter
     applicant?: XOR<UserScalarRelationFilter, UserWhereInput>
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
-    completedForms?: APCompletedFormListRelationFilter
     responses?: FormResponseListRelationFilter
     comments?: ProcessCommentListRelationFilter
   }, "id">
@@ -29650,9 +29688,9 @@ export namespace Prisma {
     userId?: UuidFilter<"OrganizationUser"> | string
     superiorId?: UuidNullableFilter<"OrganizationUser"> | string | null
     title?: StringFilter<"OrganizationUser"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     superior?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
     subordinates?: OrganizationUserListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type OrganizationUserOrderByWithRelationInput = {
@@ -29660,9 +29698,9 @@ export namespace Prisma {
     userId?: SortOrder
     superiorId?: SortOrderInput | SortOrder
     title?: SortOrder
-    user?: UserOrderByWithRelationInput
     superior?: OrganizationUserOrderByWithRelationInput
     subordinates?: OrganizationUserOrderByRelationAggregateInput
+    user?: UserOrderByWithRelationInput
     _relevance?: OrganizationUserOrderByRelevanceInput
   }
 
@@ -29674,9 +29712,9 @@ export namespace Prisma {
     NOT?: OrganizationUserWhereInput | OrganizationUserWhereInput[]
     superiorId?: UuidNullableFilter<"OrganizationUser"> | string | null
     title?: StringFilter<"OrganizationUser"> | string
-    user?: XOR<UserScalarRelationFilter, UserWhereInput>
     superior?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
     subordinates?: OrganizationUserListRelationFilter
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "userId">
 
   export type OrganizationUserOrderByWithAggregationInput = {
@@ -30076,14 +30114,14 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    files?: FileCreateNestedManyWithoutUserInput
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
     createdForms?: FormCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -30097,14 +30135,14 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
     createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -30118,14 +30156,14 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    files?: FileUpdateManyWithoutUserNestedInput
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
     createdForms?: FormUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -30139,14 +30177,14 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
     createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -30195,9 +30233,9 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserRoleCreateNestedManyWithoutRoleInput
     groups?: GroupRoleCreateNestedManyWithoutRoleInput
     processes?: ProcessRoleCreateNestedManyWithoutRoleInput
+    users?: UserRoleCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateInput = {
@@ -30207,9 +30245,9 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserRoleUncheckedCreateNestedManyWithoutRoleInput
     groups?: GroupRoleUncheckedCreateNestedManyWithoutRoleInput
     processes?: ProcessRoleUncheckedCreateNestedManyWithoutRoleInput
+    users?: UserRoleUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUpdateInput = {
@@ -30219,9 +30257,9 @@ export namespace Prisma {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserRoleUpdateManyWithoutRoleNestedInput
     groups?: GroupRoleUpdateManyWithoutRoleNestedInput
     processes?: ProcessRoleUpdateManyWithoutRoleNestedInput
+    users?: UserRoleUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateInput = {
@@ -30231,9 +30269,9 @@ export namespace Prisma {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserRoleUncheckedUpdateManyWithoutRoleNestedInput
     groups?: GroupRoleUncheckedUpdateManyWithoutRoleNestedInput
     processes?: ProcessRoleUncheckedUpdateManyWithoutRoleNestedInput
+    users?: UserRoleUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleCreateManyInput = {
@@ -30265,8 +30303,8 @@ export namespace Prisma {
 
   export type UserRoleCreateInput = {
     status?: $Enums.RoleStatus
-    user: UserCreateNestedOneWithoutRolesInput
     role: RoleCreateNestedOneWithoutUsersInput
+    user: UserCreateNestedOneWithoutRolesInput
   }
 
   export type UserRoleUncheckedCreateInput = {
@@ -30277,8 +30315,8 @@ export namespace Prisma {
 
   export type UserRoleUpdateInput = {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-    user?: UserUpdateOneRequiredWithoutRolesNestedInput
     role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+    user?: UserUpdateOneRequiredWithoutRolesNestedInput
   }
 
   export type UserRoleUncheckedUpdateInput = {
@@ -30482,8 +30520,8 @@ export namespace Prisma {
     status?: $Enums.GroupStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    creator: UserCreateNestedOneWithoutCreatedGroupsInput
     roles?: GroupRoleCreateNestedManyWithoutGroupInput
+    creator: UserCreateNestedOneWithoutCreatedGroupsInput
     processes?: ProcessCreateNestedManyWithoutGroupInput
   }
 
@@ -30504,8 +30542,8 @@ export namespace Prisma {
     status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    creator?: UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
     roles?: GroupRoleUpdateManyWithoutGroupNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
     processes?: ProcessUpdateManyWithoutGroupNestedInput
   }
 
@@ -30596,12 +30634,12 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutProcessesInput
-    creator: UserCreateNestedOneWithoutCreatedProcessesInput
-    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
+    group: GroupCreateNestedOneWithoutProcessesInput
   }
 
   export type ProcessUncheckedCreateInput = {
@@ -30616,10 +30654,10 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessUpdateInput = {
@@ -30632,12 +30670,12 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
-    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
-    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
 
   export type ProcessUncheckedUpdateInput = {
@@ -30652,10 +30690,10 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type ProcessCreateManyInput = {
@@ -30747,8 +30785,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     design?: NullableJsonNullValueInput | InputJsonValue
-    creator: UserCreateNestedOneWithoutCreatedFormsInput
     responses?: FormResponseCreateNestedManyWithoutFormInput
+    creator: UserCreateNestedOneWithoutCreatedFormsInput
     processForms?: ProcessFormCreateNestedManyWithoutFormInput
   }
 
@@ -30775,8 +30813,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     design?: NullableJsonNullValueInput | InputJsonValue
-    creator?: UserUpdateOneRequiredWithoutCreatedFormsNestedInput
     responses?: FormResponseUpdateManyWithoutFormNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedFormsNestedInput
     processForms?: ProcessFormUpdateManyWithoutFormNestedInput
   }
 
@@ -30833,45 +30871,45 @@ export namespace Prisma {
     id?: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    applicantProcess: ApplicantProcessCreateNestedOneWithoutResponsesInput
     form: FormCreateNestedOneWithoutResponsesInput
     process: ProcessCreateNestedOneWithoutFormResponsesInput
-    applicantProcess: ApplicantProcessCreateNestedOneWithoutResponsesInput
   }
 
   export type FormResponseUncheckedCreateInput = {
     id?: string
     formId: string
-    processId: string
     applicantProcessId: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    processId: string
   }
 
   export type FormResponseUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutResponsesNestedInput
     form?: FormUpdateOneRequiredWithoutResponsesNestedInput
     process?: ProcessUpdateOneRequiredWithoutFormResponsesNestedInput
-    applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutResponsesNestedInput
   }
 
   export type FormResponseUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     applicantProcessId?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processId?: StringFieldUpdateOperationsInput | string
   }
 
   export type FormResponseCreateManyInput = {
     id?: string
     formId: string
-    processId: string
     applicantProcessId: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    processId: string
   }
 
   export type FormResponseUpdateManyMutationInput = {
@@ -30883,10 +30921,10 @@ export namespace Prisma {
   export type FormResponseUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     applicantProcessId?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProcessFormCreateInput = {
@@ -30901,8 +30939,10 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
-    process: ProcessCreateNestedOneWithoutFormsInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
     form: FormCreateNestedOneWithoutProcessFormsInput
+    process: ProcessCreateNestedOneWithoutFormsInput
   }
 
   export type ProcessFormUncheckedCreateInput = {
@@ -30919,6 +30959,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProcessFormUpdateInput = {
@@ -30933,8 +30975,10 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
-    process?: ProcessUpdateOneRequiredWithoutFormsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     form?: FormUpdateOneRequiredWithoutProcessFormsNestedInput
+    process?: ProcessUpdateOneRequiredWithoutFormsNestedInput
   }
 
   export type ProcessFormUncheckedUpdateInput = {
@@ -30951,6 +30995,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessFormCreateManyInput = {
@@ -30967,6 +31013,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProcessFormUpdateManyMutationInput = {
@@ -30981,6 +31029,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessFormUncheckedUpdateManyInput = {
@@ -30997,15 +31047,17 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ApplicantProcessCreateInput = {
     id?: string
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
+    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
-    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
@@ -31025,9 +31077,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
-    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -31178,9 +31230,9 @@ export namespace Prisma {
   export type OrganizationUserCreateInput = {
     id?: string
     title: string
-    user: UserCreateNestedOneWithoutOrganizationInput
     superior?: OrganizationUserCreateNestedOneWithoutSubordinatesInput
     subordinates?: OrganizationUserCreateNestedManyWithoutSuperiorInput
+    user: UserCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUserUncheckedCreateInput = {
@@ -31194,9 +31246,9 @@ export namespace Prisma {
   export type OrganizationUserUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutOrganizationNestedInput
     superior?: OrganizationUserUpdateOneWithoutSubordinatesNestedInput
     subordinates?: OrganizationUserUpdateManyWithoutSuperiorNestedInput
+    user?: UserUpdateOneRequiredWithoutOrganizationNestedInput
   }
 
   export type OrganizationUserUncheckedUpdateInput = {
@@ -31684,22 +31736,22 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type UserRoleListRelationFilter = {
-    every?: UserRoleWhereInput
-    some?: UserRoleWhereInput
-    none?: UserRoleWhereInput
-  }
-
-  export type FileListRelationFilter = {
-    every?: FileWhereInput
-    some?: FileWhereInput
-    none?: FileWhereInput
+  export type ApplicantProcessListRelationFilter = {
+    every?: ApplicantProcessWhereInput
+    some?: ApplicantProcessWhereInput
+    none?: ApplicantProcessWhereInput
   }
 
   export type AuditLogListRelationFilter = {
     every?: AuditLogWhereInput
     some?: AuditLogWhereInput
     none?: AuditLogWhereInput
+  }
+
+  export type FileListRelationFilter = {
+    every?: FileWhereInput
+    some?: FileWhereInput
+    none?: FileWhereInput
   }
 
   export type FormListRelationFilter = {
@@ -31714,21 +31766,21 @@ export namespace Prisma {
     none?: GroupWhereInput
   }
 
+  export type OrganizationUserNullableScalarRelationFilter = {
+    is?: OrganizationUserWhereInput | null
+    isNot?: OrganizationUserWhereInput | null
+  }
+
   export type ProcessListRelationFilter = {
     every?: ProcessWhereInput
     some?: ProcessWhereInput
     none?: ProcessWhereInput
   }
 
-  export type OrganizationUserNullableScalarRelationFilter = {
-    is?: OrganizationUserWhereInput | null
-    isNot?: OrganizationUserWhereInput | null
-  }
-
-  export type ApplicantProcessListRelationFilter = {
-    every?: ApplicantProcessWhereInput
-    some?: ApplicantProcessWhereInput
-    none?: ApplicantProcessWhereInput
+  export type UserRoleListRelationFilter = {
+    every?: UserRoleWhereInput
+    some?: UserRoleWhereInput
+    none?: UserRoleWhereInput
   }
 
   export type SortOrderInput = {
@@ -31736,15 +31788,15 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type UserRoleOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type FileOrderByRelationAggregateInput = {
+  export type ApplicantProcessOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type AuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FileOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31760,7 +31812,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type ApplicantProcessOrderByRelationAggregateInput = {
+  export type UserRoleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -31957,14 +32009,14 @@ export namespace Prisma {
     _max?: NestedEnumRoleStatusFilter<$PrismaModel>
   }
 
-  export type UserScalarRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
   export type RoleScalarRelationFilter = {
     is?: RoleWhereInput
     isNot?: RoleWhereInput
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
   }
 
   export type UserRoleOrderByRelevanceInput = {
@@ -32310,23 +32362,23 @@ export namespace Prisma {
     not?: NestedEnumProcessStatusFilter<$PrismaModel> | $Enums.ProcessStatus
   }
 
-  export type ProcessFormListRelationFilter = {
-    every?: ProcessFormWhereInput
-    some?: ProcessFormWhereInput
-    none?: ProcessFormWhereInput
-  }
-
   export type FormResponseListRelationFilter = {
     every?: FormResponseWhereInput
     some?: FormResponseWhereInput
     none?: FormResponseWhereInput
   }
 
-  export type ProcessFormOrderByRelationAggregateInput = {
-    _count?: SortOrder
+  export type ProcessFormListRelationFilter = {
+    every?: ProcessFormWhereInput
+    some?: ProcessFormWhereInput
+    none?: ProcessFormWhereInput
   }
 
   export type FormResponseOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProcessFormOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32529,14 +32581,14 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type FormScalarRelationFilter = {
-    is?: FormWhereInput
-    isNot?: FormWhereInput
-  }
-
   export type ApplicantProcessScalarRelationFilter = {
     is?: ApplicantProcessWhereInput
     isNot?: ApplicantProcessWhereInput
+  }
+
+  export type FormScalarRelationFilter = {
+    is?: FormWhereInput
+    isNot?: FormWhereInput
   }
 
   export type FormResponseOrderByRelevanceInput = {
@@ -32553,26 +32605,26 @@ export namespace Prisma {
   export type FormResponseCountOrderByAggregateInput = {
     id?: SortOrder
     formId?: SortOrder
-    processId?: SortOrder
     applicantProcessId?: SortOrder
     responses?: SortOrder
     createdAt?: SortOrder
+    processId?: SortOrder
   }
 
   export type FormResponseMaxOrderByAggregateInput = {
     id?: SortOrder
     formId?: SortOrder
-    processId?: SortOrder
     applicantProcessId?: SortOrder
     createdAt?: SortOrder
+    processId?: SortOrder
   }
 
   export type FormResponseMinOrderByAggregateInput = {
     id?: SortOrder
     formId?: SortOrder
-    processId?: SortOrder
     applicantProcessId?: SortOrder
     createdAt?: SortOrder
+    processId?: SortOrder
   }
   export type JsonWithAggregatesFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -32636,6 +32688,8 @@ export namespace Prisma {
     notificationComment?: SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProcessFormAvgOrderByAggregateInput = {
@@ -32654,6 +32708,8 @@ export namespace Prisma {
     notificationComment?: SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProcessFormMinOrderByAggregateInput = {
@@ -32668,6 +32724,8 @@ export namespace Prisma {
     notificationComment?: SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProcessFormSumOrderByAggregateInput = {
@@ -33082,18 +33140,11 @@ export namespace Prisma {
     _max?: NestedEnumAddToDatabaseStatusFilter<$PrismaModel>
   }
 
-  export type UserRoleCreateNestedManyWithoutUserInput = {
-    create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
-    createMany?: UserRoleCreateManyUserInputEnvelope
-    connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-  }
-
-  export type FileCreateNestedManyWithoutUserInput = {
-    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
-    createMany?: FileCreateManyUserInputEnvelope
-    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+  export type ApplicantProcessCreateNestedManyWithoutApplicantInput = {
+    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
+    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
+    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
   }
 
   export type AuditLogCreateNestedManyWithoutUserInput = {
@@ -33101,6 +33152,13 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutUserInput | AuditLogCreateOrConnectWithoutUserInput[]
     createMany?: AuditLogCreateManyUserInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  }
+
+  export type FileCreateNestedManyWithoutUserInput = {
+    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
+    createMany?: FileCreateManyUserInputEnvelope
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
   }
 
   export type FormCreateNestedManyWithoutCreatorInput = {
@@ -33117,6 +33175,12 @@ export namespace Prisma {
     connect?: GroupWhereUniqueInput | GroupWhereUniqueInput[]
   }
 
+  export type OrganizationUserCreateNestedOneWithoutUserInput = {
+    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
+    connect?: OrganizationUserWhereUniqueInput
+  }
+
   export type ProcessCreateNestedManyWithoutCreatorInput = {
     create?: XOR<ProcessCreateWithoutCreatorInput, ProcessUncheckedCreateWithoutCreatorInput> | ProcessCreateWithoutCreatorInput[] | ProcessUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: ProcessCreateOrConnectWithoutCreatorInput | ProcessCreateOrConnectWithoutCreatorInput[]
@@ -33124,31 +33188,18 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
   }
 
-  export type OrganizationUserCreateNestedOneWithoutUserInput = {
-    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
-    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
-    connect?: OrganizationUserWhereUniqueInput
-  }
-
-  export type ApplicantProcessCreateNestedManyWithoutApplicantInput = {
-    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
-    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
-    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
-    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-  }
-
-  export type UserRoleUncheckedCreateNestedManyWithoutUserInput = {
+  export type UserRoleCreateNestedManyWithoutUserInput = {
     create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
     createMany?: UserRoleCreateManyUserInputEnvelope
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
   }
 
-  export type FileUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
-    createMany?: FileCreateManyUserInputEnvelope
-    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+  export type ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput = {
+    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
+    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
+    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
   }
 
   export type AuditLogUncheckedCreateNestedManyWithoutUserInput = {
@@ -33156,6 +33207,13 @@ export namespace Prisma {
     connectOrCreate?: AuditLogCreateOrConnectWithoutUserInput | AuditLogCreateOrConnectWithoutUserInput[]
     createMany?: AuditLogCreateManyUserInputEnvelope
     connect?: AuditLogWhereUniqueInput | AuditLogWhereUniqueInput[]
+  }
+
+  export type FileUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
+    createMany?: FileCreateManyUserInputEnvelope
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
   }
 
   export type FormUncheckedCreateNestedManyWithoutCreatorInput = {
@@ -33172,6 +33230,12 @@ export namespace Prisma {
     connect?: GroupWhereUniqueInput | GroupWhereUniqueInput[]
   }
 
+  export type OrganizationUserUncheckedCreateNestedOneWithoutUserInput = {
+    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
+    connect?: OrganizationUserWhereUniqueInput
+  }
+
   export type ProcessUncheckedCreateNestedManyWithoutCreatorInput = {
     create?: XOR<ProcessCreateWithoutCreatorInput, ProcessUncheckedCreateWithoutCreatorInput> | ProcessCreateWithoutCreatorInput[] | ProcessUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: ProcessCreateOrConnectWithoutCreatorInput | ProcessCreateOrConnectWithoutCreatorInput[]
@@ -33179,17 +33243,11 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
   }
 
-  export type OrganizationUserUncheckedCreateNestedOneWithoutUserInput = {
-    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
-    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
-    connect?: OrganizationUserWhereUniqueInput
-  }
-
-  export type ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput = {
-    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
-    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
-    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
-    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+  export type UserRoleUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
+    createMany?: UserRoleCreateManyUserInputEnvelope
+    connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -33208,32 +33266,18 @@ export namespace Prisma {
     set?: Date | string
   }
 
-  export type UserRoleUpdateManyWithoutUserNestedInput = {
-    create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
-    upsert?: UserRoleUpsertWithWhereUniqueWithoutUserInput | UserRoleUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: UserRoleCreateManyUserInputEnvelope
-    set?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    disconnect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    delete?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    update?: UserRoleUpdateWithWhereUniqueWithoutUserInput | UserRoleUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: UserRoleUpdateManyWithWhereWithoutUserInput | UserRoleUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
-  }
-
-  export type FileUpdateManyWithoutUserNestedInput = {
-    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
-    upsert?: FileUpsertWithWhereUniqueWithoutUserInput | FileUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: FileCreateManyUserInputEnvelope
-    set?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    disconnect?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    delete?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    update?: FileUpdateWithWhereUniqueWithoutUserInput | FileUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: FileUpdateManyWithWhereWithoutUserInput | FileUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
+  export type ApplicantProcessUpdateManyWithoutApplicantNestedInput = {
+    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
+    upsert?: ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput[]
+    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
+    set?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    disconnect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    delete?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    update?: ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput[]
+    updateMany?: ApplicantProcessUpdateManyWithWhereWithoutApplicantInput | ApplicantProcessUpdateManyWithWhereWithoutApplicantInput[]
+    deleteMany?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
   }
 
   export type AuditLogUpdateManyWithoutUserNestedInput = {
@@ -33248,6 +33292,20 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutUserInput | AuditLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutUserInput | AuditLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+  }
+
+  export type FileUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
+    upsert?: FileUpsertWithWhereUniqueWithoutUserInput | FileUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FileCreateManyUserInputEnvelope
+    set?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    disconnect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    delete?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    update?: FileUpdateWithWhereUniqueWithoutUserInput | FileUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FileUpdateManyWithWhereWithoutUserInput | FileUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
   export type FormUpdateManyWithoutCreatorNestedInput = {
@@ -33278,6 +33336,16 @@ export namespace Prisma {
     deleteMany?: GroupScalarWhereInput | GroupScalarWhereInput[]
   }
 
+  export type OrganizationUserUpdateOneWithoutUserNestedInput = {
+    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
+    upsert?: OrganizationUserUpsertWithoutUserInput
+    disconnect?: OrganizationUserWhereInput | boolean
+    delete?: OrganizationUserWhereInput | boolean
+    connect?: OrganizationUserWhereUniqueInput
+    update?: XOR<XOR<OrganizationUserUpdateToOneWithWhereWithoutUserInput, OrganizationUserUpdateWithoutUserInput>, OrganizationUserUncheckedUpdateWithoutUserInput>
+  }
+
   export type ProcessUpdateManyWithoutCreatorNestedInput = {
     create?: XOR<ProcessCreateWithoutCreatorInput, ProcessUncheckedCreateWithoutCreatorInput> | ProcessCreateWithoutCreatorInput[] | ProcessUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: ProcessCreateOrConnectWithoutCreatorInput | ProcessCreateOrConnectWithoutCreatorInput[]
@@ -33292,31 +33360,7 @@ export namespace Prisma {
     deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
   }
 
-  export type OrganizationUserUpdateOneWithoutUserNestedInput = {
-    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
-    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
-    upsert?: OrganizationUserUpsertWithoutUserInput
-    disconnect?: OrganizationUserWhereInput | boolean
-    delete?: OrganizationUserWhereInput | boolean
-    connect?: OrganizationUserWhereUniqueInput
-    update?: XOR<XOR<OrganizationUserUpdateToOneWithWhereWithoutUserInput, OrganizationUserUpdateWithoutUserInput>, OrganizationUserUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ApplicantProcessUpdateManyWithoutApplicantNestedInput = {
-    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
-    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
-    upsert?: ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput[]
-    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
-    set?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    disconnect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    delete?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    update?: ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput[]
-    updateMany?: ApplicantProcessUpdateManyWithWhereWithoutApplicantInput | ApplicantProcessUpdateManyWithWhereWithoutApplicantInput[]
-    deleteMany?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
-  }
-
-  export type UserRoleUncheckedUpdateManyWithoutUserNestedInput = {
+  export type UserRoleUpdateManyWithoutUserNestedInput = {
     create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
     upsert?: UserRoleUpsertWithWhereUniqueWithoutUserInput | UserRoleUpsertWithWhereUniqueWithoutUserInput[]
@@ -33330,18 +33374,18 @@ export namespace Prisma {
     deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
   }
 
-  export type FileUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
-    upsert?: FileUpsertWithWhereUniqueWithoutUserInput | FileUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: FileCreateManyUserInputEnvelope
-    set?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    disconnect?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    delete?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
-    update?: FileUpdateWithWhereUniqueWithoutUserInput | FileUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: FileUpdateManyWithWhereWithoutUserInput | FileUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
+  export type ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput = {
+    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
+    upsert?: ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput[]
+    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
+    set?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    disconnect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    delete?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
+    update?: ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput[]
+    updateMany?: ApplicantProcessUpdateManyWithWhereWithoutApplicantInput | ApplicantProcessUpdateManyWithWhereWithoutApplicantInput[]
+    deleteMany?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
   }
 
   export type AuditLogUncheckedUpdateManyWithoutUserNestedInput = {
@@ -33356,6 +33400,20 @@ export namespace Prisma {
     update?: AuditLogUpdateWithWhereUniqueWithoutUserInput | AuditLogUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: AuditLogUpdateManyWithWhereWithoutUserInput | AuditLogUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+  }
+
+  export type FileUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<FileCreateWithoutUserInput, FileUncheckedCreateWithoutUserInput> | FileCreateWithoutUserInput[] | FileUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: FileCreateOrConnectWithoutUserInput | FileCreateOrConnectWithoutUserInput[]
+    upsert?: FileUpsertWithWhereUniqueWithoutUserInput | FileUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: FileCreateManyUserInputEnvelope
+    set?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    disconnect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    delete?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    connect?: FileWhereUniqueInput | FileWhereUniqueInput[]
+    update?: FileUpdateWithWhereUniqueWithoutUserInput | FileUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: FileUpdateManyWithWhereWithoutUserInput | FileUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: FileScalarWhereInput | FileScalarWhereInput[]
   }
 
   export type FormUncheckedUpdateManyWithoutCreatorNestedInput = {
@@ -33386,6 +33444,16 @@ export namespace Prisma {
     deleteMany?: GroupScalarWhereInput | GroupScalarWhereInput[]
   }
 
+  export type OrganizationUserUncheckedUpdateOneWithoutUserNestedInput = {
+    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
+    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
+    upsert?: OrganizationUserUpsertWithoutUserInput
+    disconnect?: OrganizationUserWhereInput | boolean
+    delete?: OrganizationUserWhereInput | boolean
+    connect?: OrganizationUserWhereUniqueInput
+    update?: XOR<XOR<OrganizationUserUpdateToOneWithWhereWithoutUserInput, OrganizationUserUpdateWithoutUserInput>, OrganizationUserUncheckedUpdateWithoutUserInput>
+  }
+
   export type ProcessUncheckedUpdateManyWithoutCreatorNestedInput = {
     create?: XOR<ProcessCreateWithoutCreatorInput, ProcessUncheckedCreateWithoutCreatorInput> | ProcessCreateWithoutCreatorInput[] | ProcessUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: ProcessCreateOrConnectWithoutCreatorInput | ProcessCreateOrConnectWithoutCreatorInput[]
@@ -33400,35 +33468,18 @@ export namespace Prisma {
     deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
   }
 
-  export type OrganizationUserUncheckedUpdateOneWithoutUserNestedInput = {
-    create?: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
-    connectOrCreate?: OrganizationUserCreateOrConnectWithoutUserInput
-    upsert?: OrganizationUserUpsertWithoutUserInput
-    disconnect?: OrganizationUserWhereInput | boolean
-    delete?: OrganizationUserWhereInput | boolean
-    connect?: OrganizationUserWhereUniqueInput
-    update?: XOR<XOR<OrganizationUserUpdateToOneWithWhereWithoutUserInput, OrganizationUserUpdateWithoutUserInput>, OrganizationUserUncheckedUpdateWithoutUserInput>
-  }
-
-  export type ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput = {
-    create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
-    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
-    upsert?: ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput[]
-    createMany?: ApplicantProcessCreateManyApplicantInputEnvelope
-    set?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    disconnect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    delete?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    connect?: ApplicantProcessWhereUniqueInput | ApplicantProcessWhereUniqueInput[]
-    update?: ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput | ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput[]
-    updateMany?: ApplicantProcessUpdateManyWithWhereWithoutApplicantInput | ApplicantProcessUpdateManyWithWhereWithoutApplicantInput[]
-    deleteMany?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
-  }
-
-  export type UserRoleCreateNestedManyWithoutRoleInput = {
-    create?: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput> | UserRoleCreateWithoutRoleInput[] | UserRoleUncheckedCreateWithoutRoleInput[]
-    connectOrCreate?: UserRoleCreateOrConnectWithoutRoleInput | UserRoleCreateOrConnectWithoutRoleInput[]
-    createMany?: UserRoleCreateManyRoleInputEnvelope
+  export type UserRoleUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
+    upsert?: UserRoleUpsertWithWhereUniqueWithoutUserInput | UserRoleUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserRoleCreateManyUserInputEnvelope
+    set?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    disconnect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    delete?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    update?: UserRoleUpdateWithWhereUniqueWithoutUserInput | UserRoleUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserRoleUpdateManyWithWhereWithoutUserInput | UserRoleUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
   }
 
   export type GroupRoleCreateNestedManyWithoutRoleInput = {
@@ -33445,7 +33496,7 @@ export namespace Prisma {
     connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
   }
 
-  export type UserRoleUncheckedCreateNestedManyWithoutRoleInput = {
+  export type UserRoleCreateNestedManyWithoutRoleInput = {
     create?: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput> | UserRoleCreateWithoutRoleInput[] | UserRoleUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutRoleInput | UserRoleCreateOrConnectWithoutRoleInput[]
     createMany?: UserRoleCreateManyRoleInputEnvelope
@@ -33466,22 +33517,15 @@ export namespace Prisma {
     connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
   }
 
-  export type EnumRoleStatusFieldUpdateOperationsInput = {
-    set?: $Enums.RoleStatus
-  }
-
-  export type UserRoleUpdateManyWithoutRoleNestedInput = {
+  export type UserRoleUncheckedCreateNestedManyWithoutRoleInput = {
     create?: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput> | UserRoleCreateWithoutRoleInput[] | UserRoleUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutRoleInput | UserRoleCreateOrConnectWithoutRoleInput[]
-    upsert?: UserRoleUpsertWithWhereUniqueWithoutRoleInput | UserRoleUpsertWithWhereUniqueWithoutRoleInput[]
     createMany?: UserRoleCreateManyRoleInputEnvelope
-    set?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    disconnect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    delete?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
-    update?: UserRoleUpdateWithWhereUniqueWithoutRoleInput | UserRoleUpdateWithWhereUniqueWithoutRoleInput[]
-    updateMany?: UserRoleUpdateManyWithWhereWithoutRoleInput | UserRoleUpdateManyWithWhereWithoutRoleInput[]
-    deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
+  }
+
+  export type EnumRoleStatusFieldUpdateOperationsInput = {
+    set?: $Enums.RoleStatus
   }
 
   export type GroupRoleUpdateManyWithoutRoleNestedInput = {
@@ -33512,7 +33556,7 @@ export namespace Prisma {
     deleteMany?: ProcessRoleScalarWhereInput | ProcessRoleScalarWhereInput[]
   }
 
-  export type UserRoleUncheckedUpdateManyWithoutRoleNestedInput = {
+  export type UserRoleUpdateManyWithoutRoleNestedInput = {
     create?: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput> | UserRoleCreateWithoutRoleInput[] | UserRoleUncheckedCreateWithoutRoleInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutRoleInput | UserRoleCreateOrConnectWithoutRoleInput[]
     upsert?: UserRoleUpsertWithWhereUniqueWithoutRoleInput | UserRoleUpsertWithWhereUniqueWithoutRoleInput[]
@@ -33554,10 +33598,18 @@ export namespace Prisma {
     deleteMany?: ProcessRoleScalarWhereInput | ProcessRoleScalarWhereInput[]
   }
 
-  export type UserCreateNestedOneWithoutRolesInput = {
-    create?: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutRolesInput
-    connect?: UserWhereUniqueInput
+  export type UserRoleUncheckedUpdateManyWithoutRoleNestedInput = {
+    create?: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput> | UserRoleCreateWithoutRoleInput[] | UserRoleUncheckedCreateWithoutRoleInput[]
+    connectOrCreate?: UserRoleCreateOrConnectWithoutRoleInput | UserRoleCreateOrConnectWithoutRoleInput[]
+    upsert?: UserRoleUpsertWithWhereUniqueWithoutRoleInput | UserRoleUpsertWithWhereUniqueWithoutRoleInput[]
+    createMany?: UserRoleCreateManyRoleInputEnvelope
+    set?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    disconnect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    delete?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+    update?: UserRoleUpdateWithWhereUniqueWithoutRoleInput | UserRoleUpdateWithWhereUniqueWithoutRoleInput[]
+    updateMany?: UserRoleUpdateManyWithWhereWithoutRoleInput | UserRoleUpdateManyWithWhereWithoutRoleInput[]
+    deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
   }
 
   export type RoleCreateNestedOneWithoutUsersInput = {
@@ -33566,12 +33618,10 @@ export namespace Prisma {
     connect?: RoleWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutRolesNestedInput = {
+  export type UserCreateNestedOneWithoutRolesInput = {
     create?: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
     connectOrCreate?: UserCreateOrConnectWithoutRolesInput
-    upsert?: UserUpsertWithoutRolesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRolesInput, UserUpdateWithoutRolesInput>, UserUncheckedUpdateWithoutRolesInput>
   }
 
   export type RoleUpdateOneRequiredWithoutUsersNestedInput = {
@@ -33580,6 +33630,14 @@ export namespace Prisma {
     upsert?: RoleUpsertWithoutUsersInput
     connect?: RoleWhereUniqueInput
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutUsersInput, RoleUpdateWithoutUsersInput>, RoleUncheckedUpdateWithoutUsersInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutRolesNestedInput = {
+    create?: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRolesInput
+    upsert?: UserUpsertWithoutRolesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRolesInput, UserUpdateWithoutRolesInput>, UserUncheckedUpdateWithoutRolesInput>
   }
 
   export type UserCreateNestedOneWithoutFilesInput = {
@@ -33624,17 +33682,17 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
   }
 
-  export type UserCreateNestedOneWithoutCreatedGroupsInput = {
-    create?: XOR<UserCreateWithoutCreatedGroupsInput, UserUncheckedCreateWithoutCreatedGroupsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCreatedGroupsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type GroupRoleCreateNestedManyWithoutGroupInput = {
     create?: XOR<GroupRoleCreateWithoutGroupInput, GroupRoleUncheckedCreateWithoutGroupInput> | GroupRoleCreateWithoutGroupInput[] | GroupRoleUncheckedCreateWithoutGroupInput[]
     connectOrCreate?: GroupRoleCreateOrConnectWithoutGroupInput | GroupRoleCreateOrConnectWithoutGroupInput[]
     createMany?: GroupRoleCreateManyGroupInputEnvelope
     connect?: GroupRoleWhereUniqueInput | GroupRoleWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutCreatedGroupsInput = {
+    create?: XOR<UserCreateWithoutCreatedGroupsInput, UserUncheckedCreateWithoutCreatedGroupsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedGroupsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type ProcessCreateNestedManyWithoutGroupInput = {
@@ -33662,14 +33720,6 @@ export namespace Prisma {
     set?: $Enums.GroupStatus
   }
 
-  export type UserUpdateOneRequiredWithoutCreatedGroupsNestedInput = {
-    create?: XOR<UserCreateWithoutCreatedGroupsInput, UserUncheckedCreateWithoutCreatedGroupsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCreatedGroupsInput
-    upsert?: UserUpsertWithoutCreatedGroupsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedGroupsInput, UserUpdateWithoutCreatedGroupsInput>, UserUncheckedUpdateWithoutCreatedGroupsInput>
-  }
-
   export type GroupRoleUpdateManyWithoutGroupNestedInput = {
     create?: XOR<GroupRoleCreateWithoutGroupInput, GroupRoleUncheckedCreateWithoutGroupInput> | GroupRoleCreateWithoutGroupInput[] | GroupRoleUncheckedCreateWithoutGroupInput[]
     connectOrCreate?: GroupRoleCreateOrConnectWithoutGroupInput | GroupRoleCreateOrConnectWithoutGroupInput[]
@@ -33682,6 +33732,14 @@ export namespace Prisma {
     update?: GroupRoleUpdateWithWhereUniqueWithoutGroupInput | GroupRoleUpdateWithWhereUniqueWithoutGroupInput[]
     updateMany?: GroupRoleUpdateManyWithWhereWithoutGroupInput | GroupRoleUpdateManyWithWhereWithoutGroupInput[]
     deleteMany?: GroupRoleScalarWhereInput | GroupRoleScalarWhereInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedGroupsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedGroupsInput, UserUncheckedCreateWithoutCreatedGroupsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedGroupsInput
+    upsert?: UserUpsertWithoutCreatedGroupsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedGroupsInput, UserUpdateWithoutCreatedGroupsInput>, UserUncheckedUpdateWithoutCreatedGroupsInput>
   }
 
   export type ProcessUpdateManyWithoutGroupNestedInput = {
@@ -33754,32 +33812,6 @@ export namespace Prisma {
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutGroupsInput, RoleUpdateWithoutGroupsInput>, RoleUncheckedUpdateWithoutGroupsInput>
   }
 
-  export type GroupCreateNestedOneWithoutProcessesInput = {
-    create?: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
-    connectOrCreate?: GroupCreateOrConnectWithoutProcessesInput
-    connect?: GroupWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutCreatedProcessesInput = {
-    create?: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCreatedProcessesInput
-    connect?: UserWhereUniqueInput
-  }
-
-  export type ProcessRoleCreateNestedManyWithoutProcessInput = {
-    create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
-    connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
-    createMany?: ProcessRoleCreateManyProcessInputEnvelope
-    connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
-  }
-
-  export type ProcessFormCreateNestedManyWithoutProcessInput = {
-    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
-    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
-    createMany?: ProcessFormCreateManyProcessInputEnvelope
-    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-  }
-
   export type ApplicantProcessCreateNestedManyWithoutProcessInput = {
     create?: XOR<ApplicantProcessCreateWithoutProcessInput, ApplicantProcessUncheckedCreateWithoutProcessInput> | ApplicantProcessCreateWithoutProcessInput[] | ApplicantProcessUncheckedCreateWithoutProcessInput[]
     connectOrCreate?: ApplicantProcessCreateOrConnectWithoutProcessInput | ApplicantProcessCreateOrConnectWithoutProcessInput[]
@@ -33794,18 +33826,30 @@ export namespace Prisma {
     connect?: FormResponseWhereUniqueInput | FormResponseWhereUniqueInput[]
   }
 
-  export type ProcessRoleUncheckedCreateNestedManyWithoutProcessInput = {
+  export type ProcessFormCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessFormCreateManyProcessInputEnvelope
+    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+  }
+
+  export type ProcessRoleCreateNestedManyWithoutProcessInput = {
     create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
     connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
     createMany?: ProcessRoleCreateManyProcessInputEnvelope
     connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
   }
 
-  export type ProcessFormUncheckedCreateNestedManyWithoutProcessInput = {
-    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
-    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
-    createMany?: ProcessFormCreateManyProcessInputEnvelope
-    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+  export type UserCreateNestedOneWithoutCreatedProcessesInput = {
+    create?: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedProcessesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type GroupCreateNestedOneWithoutProcessesInput = {
+    create?: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
+    connectOrCreate?: GroupCreateOrConnectWithoutProcessesInput
+    connect?: GroupWhereUniqueInput
   }
 
   export type ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput = {
@@ -33822,56 +33866,26 @@ export namespace Prisma {
     connect?: FormResponseWhereUniqueInput | FormResponseWhereUniqueInput[]
   }
 
+  export type ProcessFormUncheckedCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessFormCreateManyProcessInputEnvelope
+    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+  }
+
+  export type ProcessRoleUncheckedCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessRoleCreateManyProcessInputEnvelope
+    connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
+  }
+
   export type EnumProcessTypeFieldUpdateOperationsInput = {
     set?: $Enums.ProcessType
   }
 
   export type EnumProcessStatusFieldUpdateOperationsInput = {
     set?: $Enums.ProcessStatus
-  }
-
-  export type GroupUpdateOneRequiredWithoutProcessesNestedInput = {
-    create?: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
-    connectOrCreate?: GroupCreateOrConnectWithoutProcessesInput
-    upsert?: GroupUpsertWithoutProcessesInput
-    connect?: GroupWhereUniqueInput
-    update?: XOR<XOR<GroupUpdateToOneWithWhereWithoutProcessesInput, GroupUpdateWithoutProcessesInput>, GroupUncheckedUpdateWithoutProcessesInput>
-  }
-
-  export type UserUpdateOneRequiredWithoutCreatedProcessesNestedInput = {
-    create?: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCreatedProcessesInput
-    upsert?: UserUpsertWithoutCreatedProcessesInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedProcessesInput, UserUpdateWithoutCreatedProcessesInput>, UserUncheckedUpdateWithoutCreatedProcessesInput>
-  }
-
-  export type ProcessRoleUpdateManyWithoutProcessNestedInput = {
-    create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
-    connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
-    upsert?: ProcessRoleUpsertWithWhereUniqueWithoutProcessInput | ProcessRoleUpsertWithWhereUniqueWithoutProcessInput[]
-    createMany?: ProcessRoleCreateManyProcessInputEnvelope
-    set?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
-    disconnect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
-    delete?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
-    connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
-    update?: ProcessRoleUpdateWithWhereUniqueWithoutProcessInput | ProcessRoleUpdateWithWhereUniqueWithoutProcessInput[]
-    updateMany?: ProcessRoleUpdateManyWithWhereWithoutProcessInput | ProcessRoleUpdateManyWithWhereWithoutProcessInput[]
-    deleteMany?: ProcessRoleScalarWhereInput | ProcessRoleScalarWhereInput[]
-  }
-
-  export type ProcessFormUpdateManyWithoutProcessNestedInput = {
-    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
-    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
-    upsert?: ProcessFormUpsertWithWhereUniqueWithoutProcessInput | ProcessFormUpsertWithWhereUniqueWithoutProcessInput[]
-    createMany?: ProcessFormCreateManyProcessInputEnvelope
-    set?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    disconnect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    delete?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    update?: ProcessFormUpdateWithWhereUniqueWithoutProcessInput | ProcessFormUpdateWithWhereUniqueWithoutProcessInput[]
-    updateMany?: ProcessFormUpdateManyWithWhereWithoutProcessInput | ProcessFormUpdateManyWithWhereWithoutProcessInput[]
-    deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
   }
 
   export type ApplicantProcessUpdateManyWithoutProcessNestedInput = {
@@ -33902,7 +33916,21 @@ export namespace Prisma {
     deleteMany?: FormResponseScalarWhereInput | FormResponseScalarWhereInput[]
   }
 
-  export type ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput = {
+  export type ProcessFormUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessFormUpsertWithWhereUniqueWithoutProcessInput | ProcessFormUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessFormCreateManyProcessInputEnvelope
+    set?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    disconnect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    delete?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    update?: ProcessFormUpdateWithWhereUniqueWithoutProcessInput | ProcessFormUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessFormUpdateManyWithWhereWithoutProcessInput | ProcessFormUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+  }
+
+  export type ProcessRoleUpdateManyWithoutProcessNestedInput = {
     create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
     connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
     upsert?: ProcessRoleUpsertWithWhereUniqueWithoutProcessInput | ProcessRoleUpsertWithWhereUniqueWithoutProcessInput[]
@@ -33916,18 +33944,20 @@ export namespace Prisma {
     deleteMany?: ProcessRoleScalarWhereInput | ProcessRoleScalarWhereInput[]
   }
 
-  export type ProcessFormUncheckedUpdateManyWithoutProcessNestedInput = {
-    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
-    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
-    upsert?: ProcessFormUpsertWithWhereUniqueWithoutProcessInput | ProcessFormUpsertWithWhereUniqueWithoutProcessInput[]
-    createMany?: ProcessFormCreateManyProcessInputEnvelope
-    set?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    disconnect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    delete?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
-    update?: ProcessFormUpdateWithWhereUniqueWithoutProcessInput | ProcessFormUpdateWithWhereUniqueWithoutProcessInput[]
-    updateMany?: ProcessFormUpdateManyWithWhereWithoutProcessInput | ProcessFormUpdateManyWithWhereWithoutProcessInput[]
-    deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+  export type UserUpdateOneRequiredWithoutCreatedProcessesNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedProcessesInput
+    upsert?: UserUpsertWithoutCreatedProcessesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedProcessesInput, UserUpdateWithoutCreatedProcessesInput>, UserUncheckedUpdateWithoutCreatedProcessesInput>
+  }
+
+  export type GroupUpdateOneRequiredWithoutProcessesNestedInput = {
+    create?: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
+    connectOrCreate?: GroupCreateOrConnectWithoutProcessesInput
+    upsert?: GroupUpsertWithoutProcessesInput
+    connect?: GroupWhereUniqueInput
+    update?: XOR<XOR<GroupUpdateToOneWithWhereWithoutProcessesInput, GroupUpdateWithoutProcessesInput>, GroupUncheckedUpdateWithoutProcessesInput>
   }
 
   export type ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput = {
@@ -33958,6 +33988,34 @@ export namespace Prisma {
     deleteMany?: FormResponseScalarWhereInput | FormResponseScalarWhereInput[]
   }
 
+  export type ProcessFormUncheckedUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput> | ProcessFormCreateWithoutProcessInput[] | ProcessFormUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessFormUpsertWithWhereUniqueWithoutProcessInput | ProcessFormUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessFormCreateManyProcessInputEnvelope
+    set?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    disconnect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    delete?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+    update?: ProcessFormUpdateWithWhereUniqueWithoutProcessInput | ProcessFormUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessFormUpdateManyWithWhereWithoutProcessInput | ProcessFormUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+  }
+
+  export type ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessRoleUpsertWithWhereUniqueWithoutProcessInput | ProcessRoleUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessRoleCreateManyProcessInputEnvelope
+    set?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
+    disconnect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
+    delete?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
+    connect?: ProcessRoleWhereUniqueInput | ProcessRoleWhereUniqueInput[]
+    update?: ProcessRoleUpdateWithWhereUniqueWithoutProcessInput | ProcessRoleUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessRoleUpdateManyWithWhereWithoutProcessInput | ProcessRoleUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessRoleScalarWhereInput | ProcessRoleScalarWhereInput[]
+  }
+
   export type ProcessCreateNestedOneWithoutRolesInput = {
     create?: XOR<ProcessCreateWithoutRolesInput, ProcessUncheckedCreateWithoutRolesInput>
     connectOrCreate?: ProcessCreateOrConnectWithoutRolesInput
@@ -33986,17 +34044,17 @@ export namespace Prisma {
     update?: XOR<XOR<RoleUpdateToOneWithWhereWithoutProcessesInput, RoleUpdateWithoutProcessesInput>, RoleUncheckedUpdateWithoutProcessesInput>
   }
 
-  export type UserCreateNestedOneWithoutCreatedFormsInput = {
-    create?: XOR<UserCreateWithoutCreatedFormsInput, UserUncheckedCreateWithoutCreatedFormsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCreatedFormsInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type FormResponseCreateNestedManyWithoutFormInput = {
     create?: XOR<FormResponseCreateWithoutFormInput, FormResponseUncheckedCreateWithoutFormInput> | FormResponseCreateWithoutFormInput[] | FormResponseUncheckedCreateWithoutFormInput[]
     connectOrCreate?: FormResponseCreateOrConnectWithoutFormInput | FormResponseCreateOrConnectWithoutFormInput[]
     createMany?: FormResponseCreateManyFormInputEnvelope
     connect?: FormResponseWhereUniqueInput | FormResponseWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutCreatedFormsInput = {
+    create?: XOR<UserCreateWithoutCreatedFormsInput, UserUncheckedCreateWithoutCreatedFormsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedFormsInput
+    connect?: UserWhereUniqueInput
   }
 
   export type ProcessFormCreateNestedManyWithoutFormInput = {
@@ -34028,14 +34086,6 @@ export namespace Prisma {
     set?: $Enums.FormStatus
   }
 
-  export type UserUpdateOneRequiredWithoutCreatedFormsNestedInput = {
-    create?: XOR<UserCreateWithoutCreatedFormsInput, UserUncheckedCreateWithoutCreatedFormsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutCreatedFormsInput
-    upsert?: UserUpsertWithoutCreatedFormsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedFormsInput, UserUpdateWithoutCreatedFormsInput>, UserUncheckedUpdateWithoutCreatedFormsInput>
-  }
-
   export type FormResponseUpdateManyWithoutFormNestedInput = {
     create?: XOR<FormResponseCreateWithoutFormInput, FormResponseUncheckedCreateWithoutFormInput> | FormResponseCreateWithoutFormInput[] | FormResponseUncheckedCreateWithoutFormInput[]
     connectOrCreate?: FormResponseCreateOrConnectWithoutFormInput | FormResponseCreateOrConnectWithoutFormInput[]
@@ -34048,6 +34098,14 @@ export namespace Prisma {
     update?: FormResponseUpdateWithWhereUniqueWithoutFormInput | FormResponseUpdateWithWhereUniqueWithoutFormInput[]
     updateMany?: FormResponseUpdateManyWithWhereWithoutFormInput | FormResponseUpdateManyWithWhereWithoutFormInput[]
     deleteMany?: FormResponseScalarWhereInput | FormResponseScalarWhereInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutCreatedFormsNestedInput = {
+    create?: XOR<UserCreateWithoutCreatedFormsInput, UserUncheckedCreateWithoutCreatedFormsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCreatedFormsInput
+    upsert?: UserUpsertWithoutCreatedFormsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCreatedFormsInput, UserUpdateWithoutCreatedFormsInput>, UserUncheckedUpdateWithoutCreatedFormsInput>
   }
 
   export type ProcessFormUpdateManyWithoutFormNestedInput = {
@@ -34092,6 +34150,12 @@ export namespace Prisma {
     deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
   }
 
+  export type ApplicantProcessCreateNestedOneWithoutResponsesInput = {
+    create?: XOR<ApplicantProcessCreateWithoutResponsesInput, ApplicantProcessUncheckedCreateWithoutResponsesInput>
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutResponsesInput
+    connect?: ApplicantProcessWhereUniqueInput
+  }
+
   export type FormCreateNestedOneWithoutResponsesInput = {
     create?: XOR<FormCreateWithoutResponsesInput, FormUncheckedCreateWithoutResponsesInput>
     connectOrCreate?: FormCreateOrConnectWithoutResponsesInput
@@ -34104,10 +34168,12 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput
   }
 
-  export type ApplicantProcessCreateNestedOneWithoutResponsesInput = {
+  export type ApplicantProcessUpdateOneRequiredWithoutResponsesNestedInput = {
     create?: XOR<ApplicantProcessCreateWithoutResponsesInput, ApplicantProcessUncheckedCreateWithoutResponsesInput>
     connectOrCreate?: ApplicantProcessCreateOrConnectWithoutResponsesInput
+    upsert?: ApplicantProcessUpsertWithoutResponsesInput
     connect?: ApplicantProcessWhereUniqueInput
+    update?: XOR<XOR<ApplicantProcessUpdateToOneWithWhereWithoutResponsesInput, ApplicantProcessUpdateWithoutResponsesInput>, ApplicantProcessUncheckedUpdateWithoutResponsesInput>
   }
 
   export type FormUpdateOneRequiredWithoutResponsesNestedInput = {
@@ -34126,14 +34192,6 @@ export namespace Prisma {
     update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutFormResponsesInput, ProcessUpdateWithoutFormResponsesInput>, ProcessUncheckedUpdateWithoutFormResponsesInput>
   }
 
-  export type ApplicantProcessUpdateOneRequiredWithoutResponsesNestedInput = {
-    create?: XOR<ApplicantProcessCreateWithoutResponsesInput, ApplicantProcessUncheckedCreateWithoutResponsesInput>
-    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutResponsesInput
-    upsert?: ApplicantProcessUpsertWithoutResponsesInput
-    connect?: ApplicantProcessWhereUniqueInput
-    update?: XOR<XOR<ApplicantProcessUpdateToOneWithWhereWithoutResponsesInput, ApplicantProcessUpdateWithoutResponsesInput>, ApplicantProcessUncheckedUpdateWithoutResponsesInput>
-  }
-
   export type ProcessFormCreatenextStepRolesInput = {
     set: string[]
   }
@@ -34142,16 +34200,16 @@ export namespace Prisma {
     set: string[]
   }
 
-  export type ProcessCreateNestedOneWithoutFormsInput = {
-    create?: XOR<ProcessCreateWithoutFormsInput, ProcessUncheckedCreateWithoutFormsInput>
-    connectOrCreate?: ProcessCreateOrConnectWithoutFormsInput
-    connect?: ProcessWhereUniqueInput
-  }
-
   export type FormCreateNestedOneWithoutProcessFormsInput = {
     create?: XOR<FormCreateWithoutProcessFormsInput, FormUncheckedCreateWithoutProcessFormsInput>
     connectOrCreate?: FormCreateOrConnectWithoutProcessFormsInput
     connect?: FormWhereUniqueInput
+  }
+
+  export type ProcessCreateNestedOneWithoutFormsInput = {
+    create?: XOR<ProcessCreateWithoutFormsInput, ProcessUncheckedCreateWithoutFormsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutFormsInput
+    connect?: ProcessWhereUniqueInput
   }
 
   export type EnumNextStepTypeFieldUpdateOperationsInput = {
@@ -34168,6 +34226,14 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type FormUpdateOneRequiredWithoutProcessFormsNestedInput = {
+    create?: XOR<FormCreateWithoutProcessFormsInput, FormUncheckedCreateWithoutProcessFormsInput>
+    connectOrCreate?: FormCreateOrConnectWithoutProcessFormsInput
+    upsert?: FormUpsertWithoutProcessFormsInput
+    connect?: FormWhereUniqueInput
+    update?: XOR<XOR<FormUpdateToOneWithWhereWithoutProcessFormsInput, FormUpdateWithoutProcessFormsInput>, FormUncheckedUpdateWithoutProcessFormsInput>
+  }
+
   export type ProcessUpdateOneRequiredWithoutFormsNestedInput = {
     create?: XOR<ProcessCreateWithoutFormsInput, ProcessUncheckedCreateWithoutFormsInput>
     connectOrCreate?: ProcessCreateOrConnectWithoutFormsInput
@@ -34176,12 +34242,11 @@ export namespace Prisma {
     update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutFormsInput, ProcessUpdateWithoutFormsInput>, ProcessUncheckedUpdateWithoutFormsInput>
   }
 
-  export type FormUpdateOneRequiredWithoutProcessFormsNestedInput = {
-    create?: XOR<FormCreateWithoutProcessFormsInput, FormUncheckedCreateWithoutProcessFormsInput>
-    connectOrCreate?: FormCreateOrConnectWithoutProcessFormsInput
-    upsert?: FormUpsertWithoutProcessFormsInput
-    connect?: FormWhereUniqueInput
-    update?: XOR<XOR<FormUpdateToOneWithWhereWithoutProcessFormsInput, FormUpdateWithoutProcessFormsInput>, FormUncheckedUpdateWithoutProcessFormsInput>
+  export type APCompletedFormCreateNestedManyWithoutApplicantProcessInput = {
+    create?: XOR<APCompletedFormCreateWithoutApplicantProcessInput, APCompletedFormUncheckedCreateWithoutApplicantProcessInput> | APCompletedFormCreateWithoutApplicantProcessInput[] | APCompletedFormUncheckedCreateWithoutApplicantProcessInput[]
+    connectOrCreate?: APCompletedFormCreateOrConnectWithoutApplicantProcessInput | APCompletedFormCreateOrConnectWithoutApplicantProcessInput[]
+    createMany?: APCompletedFormCreateManyApplicantProcessInputEnvelope
+    connect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
   }
 
   export type UserCreateNestedOneWithoutApplicantProcessesInput = {
@@ -34194,13 +34259,6 @@ export namespace Prisma {
     create?: XOR<ProcessCreateWithoutApplicantProcessesInput, ProcessUncheckedCreateWithoutApplicantProcessesInput>
     connectOrCreate?: ProcessCreateOrConnectWithoutApplicantProcessesInput
     connect?: ProcessWhereUniqueInput
-  }
-
-  export type APCompletedFormCreateNestedManyWithoutApplicantProcessInput = {
-    create?: XOR<APCompletedFormCreateWithoutApplicantProcessInput, APCompletedFormUncheckedCreateWithoutApplicantProcessInput> | APCompletedFormCreateWithoutApplicantProcessInput[] | APCompletedFormUncheckedCreateWithoutApplicantProcessInput[]
-    connectOrCreate?: APCompletedFormCreateOrConnectWithoutApplicantProcessInput | APCompletedFormCreateOrConnectWithoutApplicantProcessInput[]
-    createMany?: APCompletedFormCreateManyApplicantProcessInputEnvelope
-    connect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
   }
 
   export type FormResponseCreateNestedManyWithoutApplicantProcessInput = {
@@ -34238,6 +34296,20 @@ export namespace Prisma {
     connect?: ProcessCommentWhereUniqueInput | ProcessCommentWhereUniqueInput[]
   }
 
+  export type APCompletedFormUpdateManyWithoutApplicantProcessNestedInput = {
+    create?: XOR<APCompletedFormCreateWithoutApplicantProcessInput, APCompletedFormUncheckedCreateWithoutApplicantProcessInput> | APCompletedFormCreateWithoutApplicantProcessInput[] | APCompletedFormUncheckedCreateWithoutApplicantProcessInput[]
+    connectOrCreate?: APCompletedFormCreateOrConnectWithoutApplicantProcessInput | APCompletedFormCreateOrConnectWithoutApplicantProcessInput[]
+    upsert?: APCompletedFormUpsertWithWhereUniqueWithoutApplicantProcessInput | APCompletedFormUpsertWithWhereUniqueWithoutApplicantProcessInput[]
+    createMany?: APCompletedFormCreateManyApplicantProcessInputEnvelope
+    set?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
+    disconnect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
+    delete?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
+    connect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
+    update?: APCompletedFormUpdateWithWhereUniqueWithoutApplicantProcessInput | APCompletedFormUpdateWithWhereUniqueWithoutApplicantProcessInput[]
+    updateMany?: APCompletedFormUpdateManyWithWhereWithoutApplicantProcessInput | APCompletedFormUpdateManyWithWhereWithoutApplicantProcessInput[]
+    deleteMany?: APCompletedFormScalarWhereInput | APCompletedFormScalarWhereInput[]
+  }
+
   export type UserUpdateOneRequiredWithoutApplicantProcessesNestedInput = {
     create?: XOR<UserCreateWithoutApplicantProcessesInput, UserUncheckedCreateWithoutApplicantProcessesInput>
     connectOrCreate?: UserCreateOrConnectWithoutApplicantProcessesInput
@@ -34252,20 +34324,6 @@ export namespace Prisma {
     upsert?: ProcessUpsertWithoutApplicantProcessesInput
     connect?: ProcessWhereUniqueInput
     update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutApplicantProcessesInput, ProcessUpdateWithoutApplicantProcessesInput>, ProcessUncheckedUpdateWithoutApplicantProcessesInput>
-  }
-
-  export type APCompletedFormUpdateManyWithoutApplicantProcessNestedInput = {
-    create?: XOR<APCompletedFormCreateWithoutApplicantProcessInput, APCompletedFormUncheckedCreateWithoutApplicantProcessInput> | APCompletedFormCreateWithoutApplicantProcessInput[] | APCompletedFormUncheckedCreateWithoutApplicantProcessInput[]
-    connectOrCreate?: APCompletedFormCreateOrConnectWithoutApplicantProcessInput | APCompletedFormCreateOrConnectWithoutApplicantProcessInput[]
-    upsert?: APCompletedFormUpsertWithWhereUniqueWithoutApplicantProcessInput | APCompletedFormUpsertWithWhereUniqueWithoutApplicantProcessInput[]
-    createMany?: APCompletedFormCreateManyApplicantProcessInputEnvelope
-    set?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
-    disconnect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
-    delete?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
-    connect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
-    update?: APCompletedFormUpdateWithWhereUniqueWithoutApplicantProcessInput | APCompletedFormUpdateWithWhereUniqueWithoutApplicantProcessInput[]
-    updateMany?: APCompletedFormUpdateManyWithWhereWithoutApplicantProcessInput | APCompletedFormUpdateManyWithWhereWithoutApplicantProcessInput[]
-    deleteMany?: APCompletedFormScalarWhereInput | APCompletedFormScalarWhereInput[]
   }
 
   export type FormResponseUpdateManyWithoutApplicantProcessNestedInput = {
@@ -34366,12 +34424,6 @@ export namespace Prisma {
     update?: XOR<XOR<ApplicantProcessUpdateToOneWithWhereWithoutCommentsInput, ApplicantProcessUpdateWithoutCommentsInput>, ApplicantProcessUncheckedUpdateWithoutCommentsInput>
   }
 
-  export type UserCreateNestedOneWithoutOrganizationInput = {
-    create?: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
-    connectOrCreate?: UserCreateOrConnectWithoutOrganizationInput
-    connect?: UserWhereUniqueInput
-  }
-
   export type OrganizationUserCreateNestedOneWithoutSubordinatesInput = {
     create?: XOR<OrganizationUserCreateWithoutSubordinatesInput, OrganizationUserUncheckedCreateWithoutSubordinatesInput>
     connectOrCreate?: OrganizationUserCreateOrConnectWithoutSubordinatesInput
@@ -34385,19 +34437,17 @@ export namespace Prisma {
     connect?: OrganizationUserWhereUniqueInput | OrganizationUserWhereUniqueInput[]
   }
 
+  export type UserCreateNestedOneWithoutOrganizationInput = {
+    create?: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOrganizationInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type OrganizationUserUncheckedCreateNestedManyWithoutSuperiorInput = {
     create?: XOR<OrganizationUserCreateWithoutSuperiorInput, OrganizationUserUncheckedCreateWithoutSuperiorInput> | OrganizationUserCreateWithoutSuperiorInput[] | OrganizationUserUncheckedCreateWithoutSuperiorInput[]
     connectOrCreate?: OrganizationUserCreateOrConnectWithoutSuperiorInput | OrganizationUserCreateOrConnectWithoutSuperiorInput[]
     createMany?: OrganizationUserCreateManySuperiorInputEnvelope
     connect?: OrganizationUserWhereUniqueInput | OrganizationUserWhereUniqueInput[]
-  }
-
-  export type UserUpdateOneRequiredWithoutOrganizationNestedInput = {
-    create?: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
-    connectOrCreate?: UserCreateOrConnectWithoutOrganizationInput
-    upsert?: UserUpsertWithoutOrganizationInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOrganizationInput, UserUpdateWithoutOrganizationInput>, UserUncheckedUpdateWithoutOrganizationInput>
   }
 
   export type OrganizationUserUpdateOneWithoutSubordinatesNestedInput = {
@@ -34422,6 +34472,14 @@ export namespace Prisma {
     update?: OrganizationUserUpdateWithWhereUniqueWithoutSuperiorInput | OrganizationUserUpdateWithWhereUniqueWithoutSuperiorInput[]
     updateMany?: OrganizationUserUpdateManyWithWhereWithoutSuperiorInput | OrganizationUserUpdateManyWithWhereWithoutSuperiorInput[]
     deleteMany?: OrganizationUserScalarWhereInput | OrganizationUserScalarWhereInput[]
+  }
+
+  export type UserUpdateOneRequiredWithoutOrganizationNestedInput = {
+    create?: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOrganizationInput
+    upsert?: UserUpsertWithoutOrganizationInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOrganizationInput, UserUpdateWithoutOrganizationInput>, UserUncheckedUpdateWithoutOrganizationInput>
   }
 
   export type OrganizationUserUncheckedUpdateManyWithoutSuperiorNestedInput = {
@@ -34943,23 +35001,65 @@ export namespace Prisma {
     _max?: NestedEnumAddToDatabaseStatusFilter<$PrismaModel>
   }
 
-  export type UserRoleCreateWithoutUserInput = {
-    status?: $Enums.RoleStatus
-    role: RoleCreateNestedOneWithoutUsersInput
+  export type ApplicantProcessCreateWithoutApplicantInput = {
+    id?: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
+    process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
+    comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
 
-  export type UserRoleUncheckedCreateWithoutUserInput = {
-    roleId: string
-    status?: $Enums.RoleStatus
+  export type ApplicantProcessUncheckedCreateWithoutApplicantInput = {
+    id?: string
+    processId: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+    completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
+    comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
 
-  export type UserRoleCreateOrConnectWithoutUserInput = {
-    where: UserRoleWhereUniqueInput
-    create: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput>
+  export type ApplicantProcessCreateOrConnectWithoutApplicantInput = {
+    where: ApplicantProcessWhereUniqueInput
+    create: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput>
   }
 
-  export type UserRoleCreateManyUserInputEnvelope = {
-    data: UserRoleCreateManyUserInput | UserRoleCreateManyUserInput[]
+  export type ApplicantProcessCreateManyApplicantInputEnvelope = {
+    data: ApplicantProcessCreateManyApplicantInput | ApplicantProcessCreateManyApplicantInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AuditLogCreateWithoutUserInput = {
+    id?: string
+    timestamp?: Date | string
+    action: string
+    resource?: string | null
+    resourceId?: string | null
+    details?: NullableJsonNullValueInput | InputJsonValue
+    status: string
+    errorMessage?: string | null
+  }
+
+  export type AuditLogUncheckedCreateWithoutUserInput = {
+    id?: string
+    timestamp?: Date | string
+    action: string
+    resource?: string | null
+    resourceId?: string | null
+    details?: NullableJsonNullValueInput | InputJsonValue
+    status: string
+    errorMessage?: string | null
+  }
+
+  export type AuditLogCreateOrConnectWithoutUserInput = {
+    where: AuditLogWhereUniqueInput
+    create: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type AuditLogCreateManyUserInputEnvelope = {
+    data: AuditLogCreateManyUserInput | AuditLogCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -34994,38 +35094,6 @@ export namespace Prisma {
 
   export type FileCreateManyUserInputEnvelope = {
     data: FileCreateManyUserInput | FileCreateManyUserInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type AuditLogCreateWithoutUserInput = {
-    id?: string
-    timestamp?: Date | string
-    action: string
-    resource?: string | null
-    resourceId?: string | null
-    details?: NullableJsonNullValueInput | InputJsonValue
-    status: string
-    errorMessage?: string | null
-  }
-
-  export type AuditLogUncheckedCreateWithoutUserInput = {
-    id?: string
-    timestamp?: Date | string
-    action: string
-    resource?: string | null
-    resourceId?: string | null
-    details?: NullableJsonNullValueInput | InputJsonValue
-    status: string
-    errorMessage?: string | null
-  }
-
-  export type AuditLogCreateOrConnectWithoutUserInput = {
-    where: AuditLogWhereUniqueInput
-    create: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput>
-  }
-
-  export type AuditLogCreateManyUserInputEnvelope = {
-    data: AuditLogCreateManyUserInput | AuditLogCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -35095,50 +35163,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ProcessCreateWithoutCreatorInput = {
-    id?: string
-    name: string
-    type?: $Enums.ProcessType
-    status?: $Enums.ProcessStatus
-    archived?: boolean
-    staffViewForms?: boolean
-    applicantViewProcessLevel?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutProcessesInput
-    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormCreateNestedManyWithoutProcessInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
-    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
-  }
-
-  export type ProcessUncheckedCreateWithoutCreatorInput = {
-    id?: string
-    name: string
-    type?: $Enums.ProcessType
-    groupId: string
-    status?: $Enums.ProcessStatus
-    archived?: boolean
-    staffViewForms?: boolean
-    applicantViewProcessLevel?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
-    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
-  }
-
-  export type ProcessCreateOrConnectWithoutCreatorInput = {
-    where: ProcessWhereUniqueInput
-    create: XOR<ProcessCreateWithoutCreatorInput, ProcessUncheckedCreateWithoutCreatorInput>
-  }
-
-  export type ProcessCreateManyCreatorInputEnvelope = {
-    data: ProcessCreateManyCreatorInput | ProcessCreateManyCreatorInput[]
-    skipDuplicates?: boolean
-  }
-
   export type OrganizationUserCreateWithoutUserInput = {
     id?: string
     title: string
@@ -35158,59 +35182,126 @@ export namespace Prisma {
     create: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
   }
 
-  export type ApplicantProcessCreateWithoutApplicantInput = {
+  export type ProcessCreateWithoutCreatorInput = {
     id?: string
+    name: string
+    type?: $Enums.ProcessType
     status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
     createdAt?: Date | string
-    process: ProcessCreateNestedOneWithoutApplicantProcessesInput
-    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
-    responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
-    comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
+    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    group: GroupCreateNestedOneWithoutProcessesInput
   }
 
-  export type ApplicantProcessUncheckedCreateWithoutApplicantInput = {
+  export type ProcessUncheckedCreateWithoutCreatorInput = {
     id?: string
-    processId: string
+    name: string
+    type?: $Enums.ProcessType
+    groupId: string
     status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
     createdAt?: Date | string
-    completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
-    responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
-    comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
+    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
-  export type ApplicantProcessCreateOrConnectWithoutApplicantInput = {
-    where: ApplicantProcessWhereUniqueInput
-    create: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput>
+  export type ProcessCreateOrConnectWithoutCreatorInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutCreatorInput, ProcessUncheckedCreateWithoutCreatorInput>
   }
 
-  export type ApplicantProcessCreateManyApplicantInputEnvelope = {
-    data: ApplicantProcessCreateManyApplicantInput | ApplicantProcessCreateManyApplicantInput[]
+  export type ProcessCreateManyCreatorInputEnvelope = {
+    data: ProcessCreateManyCreatorInput | ProcessCreateManyCreatorInput[]
     skipDuplicates?: boolean
   }
 
-  export type UserRoleUpsertWithWhereUniqueWithoutUserInput = {
+  export type UserRoleCreateWithoutUserInput = {
+    status?: $Enums.RoleStatus
+    role: RoleCreateNestedOneWithoutUsersInput
+  }
+
+  export type UserRoleUncheckedCreateWithoutUserInput = {
+    roleId: string
+    status?: $Enums.RoleStatus
+  }
+
+  export type UserRoleCreateOrConnectWithoutUserInput = {
     where: UserRoleWhereUniqueInput
-    update: XOR<UserRoleUpdateWithoutUserInput, UserRoleUncheckedUpdateWithoutUserInput>
     create: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput>
   }
 
-  export type UserRoleUpdateWithWhereUniqueWithoutUserInput = {
-    where: UserRoleWhereUniqueInput
-    data: XOR<UserRoleUpdateWithoutUserInput, UserRoleUncheckedUpdateWithoutUserInput>
+  export type UserRoleCreateManyUserInputEnvelope = {
+    data: UserRoleCreateManyUserInput | UserRoleCreateManyUserInput[]
+    skipDuplicates?: boolean
   }
 
-  export type UserRoleUpdateManyWithWhereWithoutUserInput = {
-    where: UserRoleScalarWhereInput
-    data: XOR<UserRoleUpdateManyMutationInput, UserRoleUncheckedUpdateManyWithoutUserInput>
+  export type ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput = {
+    where: ApplicantProcessWhereUniqueInput
+    update: XOR<ApplicantProcessUpdateWithoutApplicantInput, ApplicantProcessUncheckedUpdateWithoutApplicantInput>
+    create: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput>
   }
 
-  export type UserRoleScalarWhereInput = {
-    AND?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
-    OR?: UserRoleScalarWhereInput[]
-    NOT?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
-    userId?: UuidFilter<"UserRole"> | string
-    roleId?: UuidFilter<"UserRole"> | string
-    status?: EnumRoleStatusFilter<"UserRole"> | $Enums.RoleStatus
+  export type ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput = {
+    where: ApplicantProcessWhereUniqueInput
+    data: XOR<ApplicantProcessUpdateWithoutApplicantInput, ApplicantProcessUncheckedUpdateWithoutApplicantInput>
+  }
+
+  export type ApplicantProcessUpdateManyWithWhereWithoutApplicantInput = {
+    where: ApplicantProcessScalarWhereInput
+    data: XOR<ApplicantProcessUpdateManyMutationInput, ApplicantProcessUncheckedUpdateManyWithoutApplicantInput>
+  }
+
+  export type ApplicantProcessScalarWhereInput = {
+    AND?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
+    OR?: ApplicantProcessScalarWhereInput[]
+    NOT?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
+    id?: UuidFilter<"ApplicantProcess"> | string
+    applicantId?: UuidFilter<"ApplicantProcess"> | string
+    processId?: UuidFilter<"ApplicantProcess"> | string
+    status?: EnumProcessStatusFilter<"ApplicantProcess"> | $Enums.ProcessStatus
+    createdAt?: DateTimeFilter<"ApplicantProcess"> | Date | string
+  }
+
+  export type AuditLogUpsertWithWhereUniqueWithoutUserInput = {
+    where: AuditLogWhereUniqueInput
+    update: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
+    create: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type AuditLogUpdateWithWhereUniqueWithoutUserInput = {
+    where: AuditLogWhereUniqueInput
+    data: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AuditLogUpdateManyWithWhereWithoutUserInput = {
+    where: AuditLogScalarWhereInput
+    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AuditLogScalarWhereInput = {
+    AND?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+    OR?: AuditLogScalarWhereInput[]
+    NOT?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
+    id?: UuidFilter<"AuditLog"> | string
+    timestamp?: DateTimeFilter<"AuditLog"> | Date | string
+    userId?: UuidNullableFilter<"AuditLog"> | string | null
+    action?: StringFilter<"AuditLog"> | string
+    resource?: StringNullableFilter<"AuditLog"> | string | null
+    resourceId?: StringNullableFilter<"AuditLog"> | string | null
+    details?: JsonNullableFilter<"AuditLog">
+    status?: StringFilter<"AuditLog"> | string
+    errorMessage?: StringNullableFilter<"AuditLog"> | string | null
   }
 
   export type FileUpsertWithWhereUniqueWithoutUserInput = {
@@ -35243,37 +35334,6 @@ export namespace Prisma {
     fileType?: StringFilter<"File"> | string
     createdAt?: DateTimeFilter<"File"> | Date | string
     updatedAt?: DateTimeFilter<"File"> | Date | string
-  }
-
-  export type AuditLogUpsertWithWhereUniqueWithoutUserInput = {
-    where: AuditLogWhereUniqueInput
-    update: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
-    create: XOR<AuditLogCreateWithoutUserInput, AuditLogUncheckedCreateWithoutUserInput>
-  }
-
-  export type AuditLogUpdateWithWhereUniqueWithoutUserInput = {
-    where: AuditLogWhereUniqueInput
-    data: XOR<AuditLogUpdateWithoutUserInput, AuditLogUncheckedUpdateWithoutUserInput>
-  }
-
-  export type AuditLogUpdateManyWithWhereWithoutUserInput = {
-    where: AuditLogScalarWhereInput
-    data: XOR<AuditLogUpdateManyMutationInput, AuditLogUncheckedUpdateManyWithoutUserInput>
-  }
-
-  export type AuditLogScalarWhereInput = {
-    AND?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-    OR?: AuditLogScalarWhereInput[]
-    NOT?: AuditLogScalarWhereInput | AuditLogScalarWhereInput[]
-    id?: UuidFilter<"AuditLog"> | string
-    timestamp?: DateTimeFilter<"AuditLog"> | Date | string
-    userId?: UuidNullableFilter<"AuditLog"> | string | null
-    action?: StringFilter<"AuditLog"> | string
-    resource?: StringNullableFilter<"AuditLog"> | string | null
-    resourceId?: StringNullableFilter<"AuditLog"> | string | null
-    details?: JsonNullableFilter<"AuditLog">
-    status?: StringFilter<"AuditLog"> | string
-    errorMessage?: StringNullableFilter<"AuditLog"> | string | null
   }
 
   export type FormUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -35335,6 +35395,31 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Group"> | Date | string
   }
 
+  export type OrganizationUserUpsertWithoutUserInput = {
+    update: XOR<OrganizationUserUpdateWithoutUserInput, OrganizationUserUncheckedUpdateWithoutUserInput>
+    create: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
+    where?: OrganizationUserWhereInput
+  }
+
+  export type OrganizationUserUpdateToOneWithWhereWithoutUserInput = {
+    where?: OrganizationUserWhereInput
+    data: XOR<OrganizationUserUpdateWithoutUserInput, OrganizationUserUncheckedUpdateWithoutUserInput>
+  }
+
+  export type OrganizationUserUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    superior?: OrganizationUserUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: OrganizationUserUpdateManyWithoutSuperiorNestedInput
+  }
+
+  export type OrganizationUserUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    superiorId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    subordinates?: OrganizationUserUncheckedUpdateManyWithoutSuperiorNestedInput
+  }
+
   export type ProcessUpsertWithWhereUniqueWithoutCreatorInput = {
     where: ProcessWhereUniqueInput
     update: XOR<ProcessUpdateWithoutCreatorInput, ProcessUncheckedUpdateWithoutCreatorInput>
@@ -35368,76 +35453,29 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Process"> | Date | string
   }
 
-  export type OrganizationUserUpsertWithoutUserInput = {
-    update: XOR<OrganizationUserUpdateWithoutUserInput, OrganizationUserUncheckedUpdateWithoutUserInput>
-    create: XOR<OrganizationUserCreateWithoutUserInput, OrganizationUserUncheckedCreateWithoutUserInput>
-    where?: OrganizationUserWhereInput
-  }
-
-  export type OrganizationUserUpdateToOneWithWhereWithoutUserInput = {
-    where?: OrganizationUserWhereInput
-    data: XOR<OrganizationUserUpdateWithoutUserInput, OrganizationUserUncheckedUpdateWithoutUserInput>
-  }
-
-  export type OrganizationUserUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    title?: StringFieldUpdateOperationsInput | string
-    superior?: OrganizationUserUpdateOneWithoutSubordinatesNestedInput
-    subordinates?: OrganizationUserUpdateManyWithoutSuperiorNestedInput
-  }
-
-  export type OrganizationUserUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    superiorId?: NullableStringFieldUpdateOperationsInput | string | null
-    title?: StringFieldUpdateOperationsInput | string
-    subordinates?: OrganizationUserUncheckedUpdateManyWithoutSuperiorNestedInput
-  }
-
-  export type ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput = {
-    where: ApplicantProcessWhereUniqueInput
-    update: XOR<ApplicantProcessUpdateWithoutApplicantInput, ApplicantProcessUncheckedUpdateWithoutApplicantInput>
-    create: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput>
-  }
-
-  export type ApplicantProcessUpdateWithWhereUniqueWithoutApplicantInput = {
-    where: ApplicantProcessWhereUniqueInput
-    data: XOR<ApplicantProcessUpdateWithoutApplicantInput, ApplicantProcessUncheckedUpdateWithoutApplicantInput>
-  }
-
-  export type ApplicantProcessUpdateManyWithWhereWithoutApplicantInput = {
-    where: ApplicantProcessScalarWhereInput
-    data: XOR<ApplicantProcessUpdateManyMutationInput, ApplicantProcessUncheckedUpdateManyWithoutApplicantInput>
-  }
-
-  export type ApplicantProcessScalarWhereInput = {
-    AND?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
-    OR?: ApplicantProcessScalarWhereInput[]
-    NOT?: ApplicantProcessScalarWhereInput | ApplicantProcessScalarWhereInput[]
-    id?: UuidFilter<"ApplicantProcess"> | string
-    applicantId?: UuidFilter<"ApplicantProcess"> | string
-    processId?: UuidFilter<"ApplicantProcess"> | string
-    status?: EnumProcessStatusFilter<"ApplicantProcess"> | $Enums.ProcessStatus
-    createdAt?: DateTimeFilter<"ApplicantProcess"> | Date | string
-  }
-
-  export type UserRoleCreateWithoutRoleInput = {
-    status?: $Enums.RoleStatus
-    user: UserCreateNestedOneWithoutRolesInput
-  }
-
-  export type UserRoleUncheckedCreateWithoutRoleInput = {
-    userId: string
-    status?: $Enums.RoleStatus
-  }
-
-  export type UserRoleCreateOrConnectWithoutRoleInput = {
+  export type UserRoleUpsertWithWhereUniqueWithoutUserInput = {
     where: UserRoleWhereUniqueInput
-    create: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput>
+    update: XOR<UserRoleUpdateWithoutUserInput, UserRoleUncheckedUpdateWithoutUserInput>
+    create: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput>
   }
 
-  export type UserRoleCreateManyRoleInputEnvelope = {
-    data: UserRoleCreateManyRoleInput | UserRoleCreateManyRoleInput[]
-    skipDuplicates?: boolean
+  export type UserRoleUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserRoleWhereUniqueInput
+    data: XOR<UserRoleUpdateWithoutUserInput, UserRoleUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserRoleUpdateManyWithWhereWithoutUserInput = {
+    where: UserRoleScalarWhereInput
+    data: XOR<UserRoleUpdateManyMutationInput, UserRoleUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserRoleScalarWhereInput = {
+    AND?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
+    OR?: UserRoleScalarWhereInput[]
+    NOT?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
+    userId?: UuidFilter<"UserRole"> | string
+    roleId?: UuidFilter<"UserRole"> | string
+    status?: EnumRoleStatusFilter<"UserRole"> | $Enums.RoleStatus
   }
 
   export type GroupRoleCreateWithoutRoleInput = {
@@ -35480,20 +35518,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserRoleUpsertWithWhereUniqueWithoutRoleInput = {
+  export type UserRoleCreateWithoutRoleInput = {
+    status?: $Enums.RoleStatus
+    user: UserCreateNestedOneWithoutRolesInput
+  }
+
+  export type UserRoleUncheckedCreateWithoutRoleInput = {
+    userId: string
+    status?: $Enums.RoleStatus
+  }
+
+  export type UserRoleCreateOrConnectWithoutRoleInput = {
     where: UserRoleWhereUniqueInput
-    update: XOR<UserRoleUpdateWithoutRoleInput, UserRoleUncheckedUpdateWithoutRoleInput>
     create: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput>
   }
 
-  export type UserRoleUpdateWithWhereUniqueWithoutRoleInput = {
-    where: UserRoleWhereUniqueInput
-    data: XOR<UserRoleUpdateWithoutRoleInput, UserRoleUncheckedUpdateWithoutRoleInput>
-  }
-
-  export type UserRoleUpdateManyWithWhereWithoutRoleInput = {
-    where: UserRoleScalarWhereInput
-    data: XOR<UserRoleUpdateManyMutationInput, UserRoleUncheckedUpdateManyWithoutRoleInput>
+  export type UserRoleCreateManyRoleInputEnvelope = {
+    data: UserRoleCreateManyRoleInput | UserRoleCreateManyRoleInput[]
+    skipDuplicates?: boolean
   }
 
   export type GroupRoleUpsertWithWhereUniqueWithoutRoleInput = {
@@ -35546,49 +35588,20 @@ export namespace Prisma {
     status?: EnumRoleStatusFilter<"ProcessRole"> | $Enums.RoleStatus
   }
 
-  export type UserCreateWithoutRolesInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    files?: FileCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    createdForms?: FormCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+  export type UserRoleUpsertWithWhereUniqueWithoutRoleInput = {
+    where: UserRoleWhereUniqueInput
+    update: XOR<UserRoleUpdateWithoutRoleInput, UserRoleUncheckedUpdateWithoutRoleInput>
+    create: XOR<UserRoleCreateWithoutRoleInput, UserRoleUncheckedCreateWithoutRoleInput>
   }
 
-  export type UserUncheckedCreateWithoutRolesInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  export type UserRoleUpdateWithWhereUniqueWithoutRoleInput = {
+    where: UserRoleWhereUniqueInput
+    data: XOR<UserRoleUpdateWithoutRoleInput, UserRoleUncheckedUpdateWithoutRoleInput>
   }
 
-  export type UserCreateOrConnectWithoutRolesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
+  export type UserRoleUpdateManyWithWhereWithoutRoleInput = {
+    where: UserRoleScalarWhereInput
+    data: XOR<UserRoleUpdateManyMutationInput, UserRoleUncheckedUpdateManyWithoutRoleInput>
   }
 
   export type RoleCreateWithoutUsersInput = {
@@ -35618,55 +35631,49 @@ export namespace Prisma {
     create: XOR<RoleCreateWithoutUsersInput, RoleUncheckedCreateWithoutUsersInput>
   }
 
-  export type UserUpsertWithoutRolesInput = {
-    update: XOR<UserUpdateWithoutRolesInput, UserUncheckedUpdateWithoutRolesInput>
+  export type UserCreateWithoutRolesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+  }
+
+  export type UserUncheckedCreateWithoutRolesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  }
+
+  export type UserCreateOrConnectWithoutRolesInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutRolesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutRolesInput, UserUncheckedUpdateWithoutRolesInput>
-  }
-
-  export type UserUpdateWithoutRolesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    files?: FileUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    createdForms?: FormUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutRolesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
   }
 
   export type RoleUpsertWithoutUsersInput = {
@@ -35702,6 +35709,57 @@ export namespace Prisma {
     processes?: ProcessRoleUncheckedUpdateManyWithoutRoleNestedInput
   }
 
+  export type UserUpsertWithoutRolesInput = {
+    update: XOR<UserUpdateWithoutRolesInput, UserUncheckedUpdateWithoutRolesInput>
+    create: XOR<UserCreateWithoutRolesInput, UserUncheckedCreateWithoutRolesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRolesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRolesInput, UserUncheckedUpdateWithoutRolesInput>
+  }
+
+  export type UserUpdateWithoutRolesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRolesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  }
+
   export type UserCreateWithoutFilesInput = {
     id?: string
     email: string
@@ -35713,13 +35771,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     createdForms?: FormCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFilesInput = {
@@ -35733,13 +35791,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFilesInput = {
@@ -35769,13 +35827,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     createdForms?: FormUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFilesInput = {
@@ -35789,13 +35847,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -35809,13 +35867,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
     files?: FileCreateNestedManyWithoutUserInput
     createdForms?: FormCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -35829,13 +35887,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
     files?: FileUncheckedCreateNestedManyWithoutUserInput
     createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -35865,13 +35923,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
     files?: FileUpdateManyWithoutUserNestedInput
     createdForms?: FormUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -35885,58 +35943,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
     files?: FileUncheckedUpdateManyWithoutUserNestedInput
     createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type UserCreateWithoutCreatedGroupsInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    files?: FileCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    createdForms?: FormCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
-  }
-
-  export type UserUncheckedCreateWithoutCreatedGroupsInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
-  }
-
-  export type UserCreateOrConnectWithoutCreatedGroupsInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutCreatedGroupsInput, UserUncheckedCreateWithoutCreatedGroupsInput>
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type GroupRoleCreateWithoutGroupInput = {
@@ -35959,6 +35972,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserCreateWithoutCreatedGroupsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedGroupsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedGroupsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedGroupsInput, UserUncheckedCreateWithoutCreatedGroupsInput>
+  }
+
   export type ProcessCreateWithoutGroupInput = {
     id?: string
     name: string
@@ -35969,11 +36027,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    creator: UserCreateNestedOneWithoutCreatedProcessesInput
-    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
   }
 
   export type ProcessUncheckedCreateWithoutGroupInput = {
@@ -35987,10 +36045,10 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessCreateOrConnectWithoutGroupInput = {
@@ -36001,6 +36059,22 @@ export namespace Prisma {
   export type ProcessCreateManyGroupInputEnvelope = {
     data: ProcessCreateManyGroupInput | ProcessCreateManyGroupInput[]
     skipDuplicates?: boolean
+  }
+
+  export type GroupRoleUpsertWithWhereUniqueWithoutGroupInput = {
+    where: GroupRoleWhereUniqueInput
+    update: XOR<GroupRoleUpdateWithoutGroupInput, GroupRoleUncheckedUpdateWithoutGroupInput>
+    create: XOR<GroupRoleCreateWithoutGroupInput, GroupRoleUncheckedCreateWithoutGroupInput>
+  }
+
+  export type GroupRoleUpdateWithWhereUniqueWithoutGroupInput = {
+    where: GroupRoleWhereUniqueInput
+    data: XOR<GroupRoleUpdateWithoutGroupInput, GroupRoleUncheckedUpdateWithoutGroupInput>
+  }
+
+  export type GroupRoleUpdateManyWithWhereWithoutGroupInput = {
+    where: GroupRoleScalarWhereInput
+    data: XOR<GroupRoleUpdateManyMutationInput, GroupRoleUncheckedUpdateManyWithoutGroupInput>
   }
 
   export type UserUpsertWithoutCreatedGroupsInput = {
@@ -36025,13 +36099,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    files?: FileUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    createdForms?: FormUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
@@ -36045,29 +36119,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type GroupRoleUpsertWithWhereUniqueWithoutGroupInput = {
-    where: GroupRoleWhereUniqueInput
-    update: XOR<GroupRoleUpdateWithoutGroupInput, GroupRoleUncheckedUpdateWithoutGroupInput>
-    create: XOR<GroupRoleCreateWithoutGroupInput, GroupRoleUncheckedCreateWithoutGroupInput>
-  }
-
-  export type GroupRoleUpdateWithWhereUniqueWithoutGroupInput = {
-    where: GroupRoleWhereUniqueInput
-    data: XOR<GroupRoleUpdateWithoutGroupInput, GroupRoleUncheckedUpdateWithoutGroupInput>
-  }
-
-  export type GroupRoleUpdateManyWithWhereWithoutGroupInput = {
-    where: GroupRoleScalarWhereInput
-    data: XOR<GroupRoleUpdateManyMutationInput, GroupRoleUncheckedUpdateManyWithoutGroupInput>
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProcessUpsertWithWhereUniqueWithoutGroupInput = {
@@ -36118,8 +36176,8 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserRoleCreateNestedManyWithoutRoleInput
     processes?: ProcessRoleCreateNestedManyWithoutRoleInput
+    users?: UserRoleCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutGroupsInput = {
@@ -36129,8 +36187,8 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserRoleUncheckedCreateNestedManyWithoutRoleInput
     processes?: ProcessRoleUncheckedCreateNestedManyWithoutRoleInput
+    users?: UserRoleUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutGroupsInput = {
@@ -36187,8 +36245,8 @@ export namespace Prisma {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserRoleUpdateManyWithoutRoleNestedInput
     processes?: ProcessRoleUpdateManyWithoutRoleNestedInput
+    users?: UserRoleUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutGroupsInput = {
@@ -36198,146 +36256,16 @@ export namespace Prisma {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserRoleUncheckedUpdateManyWithoutRoleNestedInput
     processes?: ProcessRoleUncheckedUpdateManyWithoutRoleNestedInput
-  }
-
-  export type GroupCreateWithoutProcessesInput = {
-    id?: string
-    name: string
-    status?: $Enums.GroupStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    creator: UserCreateNestedOneWithoutCreatedGroupsInput
-    roles?: GroupRoleCreateNestedManyWithoutGroupInput
-  }
-
-  export type GroupUncheckedCreateWithoutProcessesInput = {
-    id?: string
-    name: string
-    status?: $Enums.GroupStatus
-    creatorId: string
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: GroupRoleUncheckedCreateNestedManyWithoutGroupInput
-  }
-
-  export type GroupCreateOrConnectWithoutProcessesInput = {
-    where: GroupWhereUniqueInput
-    create: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
-  }
-
-  export type UserCreateWithoutCreatedProcessesInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    files?: FileCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    createdForms?: FormCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
-  }
-
-  export type UserUncheckedCreateWithoutCreatedProcessesInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
-  }
-
-  export type UserCreateOrConnectWithoutCreatedProcessesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
-  }
-
-  export type ProcessRoleCreateWithoutProcessInput = {
-    status?: $Enums.RoleStatus
-    role: RoleCreateNestedOneWithoutProcessesInput
-  }
-
-  export type ProcessRoleUncheckedCreateWithoutProcessInput = {
-    roleId: string
-    status?: $Enums.RoleStatus
-  }
-
-  export type ProcessRoleCreateOrConnectWithoutProcessInput = {
-    where: ProcessRoleWhereUniqueInput
-    create: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput>
-  }
-
-  export type ProcessRoleCreateManyProcessInputEnvelope = {
-    data: ProcessRoleCreateManyProcessInput | ProcessRoleCreateManyProcessInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type ProcessFormCreateWithoutProcessInput = {
-    id?: string
-    order: number
-    nextStepType?: $Enums.NextStepType
-    nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
-    nextStaffId?: string | null
-    notificationType?: $Enums.NextStepType
-    notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
-    notificationToId?: string | null
-    notificationComment?: string | null
-    notifyApplicant?: boolean
-    applicantNotificationContent?: string | null
-    form: FormCreateNestedOneWithoutProcessFormsInput
-  }
-
-  export type ProcessFormUncheckedCreateWithoutProcessInput = {
-    id?: string
-    formId: string
-    order: number
-    nextStepType?: $Enums.NextStepType
-    nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
-    nextStaffId?: string | null
-    notificationType?: $Enums.NextStepType
-    notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
-    notificationToId?: string | null
-    notificationComment?: string | null
-    notifyApplicant?: boolean
-    applicantNotificationContent?: string | null
-  }
-
-  export type ProcessFormCreateOrConnectWithoutProcessInput = {
-    where: ProcessFormWhereUniqueInput
-    create: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput>
-  }
-
-  export type ProcessFormCreateManyProcessInputEnvelope = {
-    data: ProcessFormCreateManyProcessInput | ProcessFormCreateManyProcessInput[]
-    skipDuplicates?: boolean
+    users?: UserRoleUncheckedUpdateManyWithoutRoleNestedInput
   }
 
   export type ApplicantProcessCreateWithoutProcessInput = {
     id?: string
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
-    applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
+    applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
@@ -36366,8 +36294,8 @@ export namespace Prisma {
     id?: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
-    form: FormCreateNestedOneWithoutResponsesInput
     applicantProcess: ApplicantProcessCreateNestedOneWithoutResponsesInput
+    form: FormCreateNestedOneWithoutResponsesInput
   }
 
   export type FormResponseUncheckedCreateWithoutProcessInput = {
@@ -36388,137 +36316,138 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type GroupUpsertWithoutProcessesInput = {
-    update: XOR<GroupUpdateWithoutProcessesInput, GroupUncheckedUpdateWithoutProcessesInput>
-    create: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
-    where?: GroupWhereInput
+  export type ProcessFormCreateWithoutProcessInput = {
+    id?: string
+    order: number
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
+    nextStaffId?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
+    notificationToId?: string | null
+    notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    form: FormCreateNestedOneWithoutProcessFormsInput
   }
 
-  export type GroupUpdateToOneWithWhereWithoutProcessesInput = {
-    where?: GroupWhereInput
-    data: XOR<GroupUpdateWithoutProcessesInput, GroupUncheckedUpdateWithoutProcessesInput>
+  export type ProcessFormUncheckedCreateWithoutProcessInput = {
+    id?: string
+    formId: string
+    order: number
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
+    nextStaffId?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
+    notificationToId?: string | null
+    notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type GroupUpdateWithoutProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    creator?: UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
-    roles?: GroupRoleUpdateManyWithoutGroupNestedInput
-  }
-
-  export type GroupUncheckedUpdateWithoutProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
-    creatorId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: GroupRoleUncheckedUpdateManyWithoutGroupNestedInput
-  }
-
-  export type UserUpsertWithoutCreatedProcessesInput = {
-    update: XOR<UserUpdateWithoutCreatedProcessesInput, UserUncheckedUpdateWithoutCreatedProcessesInput>
-    create: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutCreatedProcessesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutCreatedProcessesInput, UserUncheckedUpdateWithoutCreatedProcessesInput>
-  }
-
-  export type UserUpdateWithoutCreatedProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    files?: FileUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    createdForms?: FormUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
-    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type ProcessRoleUpsertWithWhereUniqueWithoutProcessInput = {
-    where: ProcessRoleWhereUniqueInput
-    update: XOR<ProcessRoleUpdateWithoutProcessInput, ProcessRoleUncheckedUpdateWithoutProcessInput>
-    create: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput>
-  }
-
-  export type ProcessRoleUpdateWithWhereUniqueWithoutProcessInput = {
-    where: ProcessRoleWhereUniqueInput
-    data: XOR<ProcessRoleUpdateWithoutProcessInput, ProcessRoleUncheckedUpdateWithoutProcessInput>
-  }
-
-  export type ProcessRoleUpdateManyWithWhereWithoutProcessInput = {
-    where: ProcessRoleScalarWhereInput
-    data: XOR<ProcessRoleUpdateManyMutationInput, ProcessRoleUncheckedUpdateManyWithoutProcessInput>
-  }
-
-  export type ProcessFormUpsertWithWhereUniqueWithoutProcessInput = {
+  export type ProcessFormCreateOrConnectWithoutProcessInput = {
     where: ProcessFormWhereUniqueInput
-    update: XOR<ProcessFormUpdateWithoutProcessInput, ProcessFormUncheckedUpdateWithoutProcessInput>
     create: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput>
   }
 
-  export type ProcessFormUpdateWithWhereUniqueWithoutProcessInput = {
-    where: ProcessFormWhereUniqueInput
-    data: XOR<ProcessFormUpdateWithoutProcessInput, ProcessFormUncheckedUpdateWithoutProcessInput>
+  export type ProcessFormCreateManyProcessInputEnvelope = {
+    data: ProcessFormCreateManyProcessInput | ProcessFormCreateManyProcessInput[]
+    skipDuplicates?: boolean
   }
 
-  export type ProcessFormUpdateManyWithWhereWithoutProcessInput = {
-    where: ProcessFormScalarWhereInput
-    data: XOR<ProcessFormUpdateManyMutationInput, ProcessFormUncheckedUpdateManyWithoutProcessInput>
+  export type ProcessRoleCreateWithoutProcessInput = {
+    status?: $Enums.RoleStatus
+    role: RoleCreateNestedOneWithoutProcessesInput
   }
 
-  export type ProcessFormScalarWhereInput = {
-    AND?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
-    OR?: ProcessFormScalarWhereInput[]
-    NOT?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
-    id?: UuidFilter<"ProcessForm"> | string
-    processId?: UuidFilter<"ProcessForm"> | string
-    formId?: UuidFilter<"ProcessForm"> | string
-    order?: IntFilter<"ProcessForm"> | number
-    nextStepType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
-    nextStepRoles?: StringNullableListFilter<"ProcessForm">
-    nextStaffId?: UuidNullableFilter<"ProcessForm"> | string | null
-    notificationType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
-    notificationRoles?: StringNullableListFilter<"ProcessForm">
-    notificationToId?: UuidNullableFilter<"ProcessForm"> | string | null
-    notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
-    notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
-    applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
+  export type ProcessRoleUncheckedCreateWithoutProcessInput = {
+    roleId: string
+    status?: $Enums.RoleStatus
+  }
+
+  export type ProcessRoleCreateOrConnectWithoutProcessInput = {
+    where: ProcessRoleWhereUniqueInput
+    create: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessRoleCreateManyProcessInputEnvelope = {
+    data: ProcessRoleCreateManyProcessInput | ProcessRoleCreateManyProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutCreatedProcessesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCreatedProcessesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCreatedProcessesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
+  }
+
+  export type GroupCreateWithoutProcessesInput = {
+    id?: string
+    name: string
+    status?: $Enums.GroupStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    roles?: GroupRoleCreateNestedManyWithoutGroupInput
+    creator: UserCreateNestedOneWithoutCreatedGroupsInput
+  }
+
+  export type GroupUncheckedCreateWithoutProcessesInput = {
+    id?: string
+    name: string
+    status?: $Enums.GroupStatus
+    creatorId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    roles?: GroupRoleUncheckedCreateNestedManyWithoutGroupInput
+  }
+
+  export type GroupCreateOrConnectWithoutProcessesInput = {
+    where: GroupWhereUniqueInput
+    create: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
   }
 
   export type ApplicantProcessUpsertWithWhereUniqueWithoutProcessInput = {
@@ -36559,10 +36488,145 @@ export namespace Prisma {
     NOT?: FormResponseScalarWhereInput | FormResponseScalarWhereInput[]
     id?: UuidFilter<"FormResponse"> | string
     formId?: UuidFilter<"FormResponse"> | string
-    processId?: UuidFilter<"FormResponse"> | string
     applicantProcessId?: UuidFilter<"FormResponse"> | string
     responses?: JsonFilter<"FormResponse">
     createdAt?: DateTimeFilter<"FormResponse"> | Date | string
+    processId?: UuidFilter<"FormResponse"> | string
+  }
+
+  export type ProcessFormUpsertWithWhereUniqueWithoutProcessInput = {
+    where: ProcessFormWhereUniqueInput
+    update: XOR<ProcessFormUpdateWithoutProcessInput, ProcessFormUncheckedUpdateWithoutProcessInput>
+    create: XOR<ProcessFormCreateWithoutProcessInput, ProcessFormUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessFormUpdateWithWhereUniqueWithoutProcessInput = {
+    where: ProcessFormWhereUniqueInput
+    data: XOR<ProcessFormUpdateWithoutProcessInput, ProcessFormUncheckedUpdateWithoutProcessInput>
+  }
+
+  export type ProcessFormUpdateManyWithWhereWithoutProcessInput = {
+    where: ProcessFormScalarWhereInput
+    data: XOR<ProcessFormUpdateManyMutationInput, ProcessFormUncheckedUpdateManyWithoutProcessInput>
+  }
+
+  export type ProcessFormScalarWhereInput = {
+    AND?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+    OR?: ProcessFormScalarWhereInput[]
+    NOT?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+    id?: UuidFilter<"ProcessForm"> | string
+    processId?: UuidFilter<"ProcessForm"> | string
+    formId?: UuidFilter<"ProcessForm"> | string
+    order?: IntFilter<"ProcessForm"> | number
+    nextStepType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
+    nextStepRoles?: StringNullableListFilter<"ProcessForm">
+    nextStaffId?: UuidNullableFilter<"ProcessForm"> | string | null
+    notificationType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
+    notificationRoles?: StringNullableListFilter<"ProcessForm">
+    notificationToId?: UuidNullableFilter<"ProcessForm"> | string | null
+    notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
+    notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
+    applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
+    createdAt?: DateTimeFilter<"ProcessForm"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
+  }
+
+  export type ProcessRoleUpsertWithWhereUniqueWithoutProcessInput = {
+    where: ProcessRoleWhereUniqueInput
+    update: XOR<ProcessRoleUpdateWithoutProcessInput, ProcessRoleUncheckedUpdateWithoutProcessInput>
+    create: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessRoleUpdateWithWhereUniqueWithoutProcessInput = {
+    where: ProcessRoleWhereUniqueInput
+    data: XOR<ProcessRoleUpdateWithoutProcessInput, ProcessRoleUncheckedUpdateWithoutProcessInput>
+  }
+
+  export type ProcessRoleUpdateManyWithWhereWithoutProcessInput = {
+    where: ProcessRoleScalarWhereInput
+    data: XOR<ProcessRoleUpdateManyMutationInput, ProcessRoleUncheckedUpdateManyWithoutProcessInput>
+  }
+
+  export type UserUpsertWithoutCreatedProcessesInput = {
+    update: XOR<UserUpdateWithoutCreatedProcessesInput, UserUncheckedUpdateWithoutCreatedProcessesInput>
+    create: XOR<UserCreateWithoutCreatedProcessesInput, UserUncheckedCreateWithoutCreatedProcessesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCreatedProcessesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCreatedProcessesInput, UserUncheckedUpdateWithoutCreatedProcessesInput>
+  }
+
+  export type UserUpdateWithoutCreatedProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type GroupUpsertWithoutProcessesInput = {
+    update: XOR<GroupUpdateWithoutProcessesInput, GroupUncheckedUpdateWithoutProcessesInput>
+    create: XOR<GroupCreateWithoutProcessesInput, GroupUncheckedCreateWithoutProcessesInput>
+    where?: GroupWhereInput
+  }
+
+  export type GroupUpdateToOneWithWhereWithoutProcessesInput = {
+    where?: GroupWhereInput
+    data: XOR<GroupUpdateWithoutProcessesInput, GroupUncheckedUpdateWithoutProcessesInput>
+  }
+
+  export type GroupUpdateWithoutProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    roles?: GroupRoleUpdateManyWithoutGroupNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedGroupsNestedInput
+  }
+
+  export type GroupUncheckedUpdateWithoutProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    status?: EnumGroupStatusFieldUpdateOperationsInput | $Enums.GroupStatus
+    creatorId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    roles?: GroupRoleUncheckedUpdateManyWithoutGroupNestedInput
   }
 
   export type ProcessCreateWithoutRolesInput = {
@@ -36575,11 +36639,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutProcessesInput
-    creator: UserCreateNestedOneWithoutCreatedProcessesInput
-    forms?: ProcessFormCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
+    group: GroupCreateNestedOneWithoutProcessesInput
   }
 
   export type ProcessUncheckedCreateWithoutRolesInput = {
@@ -36594,9 +36658,9 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessCreateOrConnectWithoutRolesInput = {
@@ -36611,8 +36675,8 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserRoleCreateNestedManyWithoutRoleInput
     groups?: GroupRoleCreateNestedManyWithoutRoleInput
+    users?: UserRoleCreateNestedManyWithoutRoleInput
   }
 
   export type RoleUncheckedCreateWithoutProcessesInput = {
@@ -36622,8 +36686,8 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserRoleUncheckedCreateNestedManyWithoutRoleInput
     groups?: GroupRoleUncheckedCreateNestedManyWithoutRoleInput
+    users?: UserRoleUncheckedCreateNestedManyWithoutRoleInput
   }
 
   export type RoleCreateOrConnectWithoutProcessesInput = {
@@ -36652,11 +36716,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
-    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
-    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutRolesInput = {
@@ -36671,9 +36735,9 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type RoleUpsertWithoutProcessesInput = {
@@ -36694,8 +36758,8 @@ export namespace Prisma {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserRoleUpdateManyWithoutRoleNestedInput
     groups?: GroupRoleUpdateManyWithoutRoleNestedInput
+    users?: UserRoleUpdateManyWithoutRoleNestedInput
   }
 
   export type RoleUncheckedUpdateWithoutProcessesInput = {
@@ -36705,8 +36769,34 @@ export namespace Prisma {
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserRoleUncheckedUpdateManyWithoutRoleNestedInput
     groups?: GroupRoleUncheckedUpdateManyWithoutRoleNestedInput
+    users?: UserRoleUncheckedUpdateManyWithoutRoleNestedInput
+  }
+
+  export type FormResponseCreateWithoutFormInput = {
+    id?: string
+    responses: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    applicantProcess: ApplicantProcessCreateNestedOneWithoutResponsesInput
+    process: ProcessCreateNestedOneWithoutFormResponsesInput
+  }
+
+  export type FormResponseUncheckedCreateWithoutFormInput = {
+    id?: string
+    applicantProcessId: string
+    responses: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    processId: string
+  }
+
+  export type FormResponseCreateOrConnectWithoutFormInput = {
+    where: FormResponseWhereUniqueInput
+    create: XOR<FormResponseCreateWithoutFormInput, FormResponseUncheckedCreateWithoutFormInput>
+  }
+
+  export type FormResponseCreateManyFormInputEnvelope = {
+    data: FormResponseCreateManyFormInput | FormResponseCreateManyFormInput[]
+    skipDuplicates?: boolean
   }
 
   export type UserCreateWithoutCreatedFormsInput = {
@@ -36720,13 +36810,13 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    files?: FileCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserCreateNestedOneWithoutUserInput
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCreatedFormsInput = {
@@ -36740,44 +36830,18 @@ export namespace Prisma {
     status?: $Enums.UserStatus
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCreatedFormsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutCreatedFormsInput, UserUncheckedCreateWithoutCreatedFormsInput>
-  }
-
-  export type FormResponseCreateWithoutFormInput = {
-    id?: string
-    responses: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    process: ProcessCreateNestedOneWithoutFormResponsesInput
-    applicantProcess: ApplicantProcessCreateNestedOneWithoutResponsesInput
-  }
-
-  export type FormResponseUncheckedCreateWithoutFormInput = {
-    id?: string
-    processId: string
-    applicantProcessId: string
-    responses: JsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-  }
-
-  export type FormResponseCreateOrConnectWithoutFormInput = {
-    where: FormResponseWhereUniqueInput
-    create: XOR<FormResponseCreateWithoutFormInput, FormResponseUncheckedCreateWithoutFormInput>
-  }
-
-  export type FormResponseCreateManyFormInputEnvelope = {
-    data: FormResponseCreateManyFormInput | FormResponseCreateManyFormInput[]
-    skipDuplicates?: boolean
   }
 
   export type ProcessFormCreateWithoutFormInput = {
@@ -36792,6 +36856,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     process: ProcessCreateNestedOneWithoutFormsInput
   }
 
@@ -36808,6 +36874,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProcessFormCreateOrConnectWithoutFormInput = {
@@ -36818,6 +36886,22 @@ export namespace Prisma {
   export type ProcessFormCreateManyFormInputEnvelope = {
     data: ProcessFormCreateManyFormInput | ProcessFormCreateManyFormInput[]
     skipDuplicates?: boolean
+  }
+
+  export type FormResponseUpsertWithWhereUniqueWithoutFormInput = {
+    where: FormResponseWhereUniqueInput
+    update: XOR<FormResponseUpdateWithoutFormInput, FormResponseUncheckedUpdateWithoutFormInput>
+    create: XOR<FormResponseCreateWithoutFormInput, FormResponseUncheckedCreateWithoutFormInput>
+  }
+
+  export type FormResponseUpdateWithWhereUniqueWithoutFormInput = {
+    where: FormResponseWhereUniqueInput
+    data: XOR<FormResponseUpdateWithoutFormInput, FormResponseUncheckedUpdateWithoutFormInput>
+  }
+
+  export type FormResponseUpdateManyWithWhereWithoutFormInput = {
+    where: FormResponseScalarWhereInput
+    data: XOR<FormResponseUpdateManyMutationInput, FormResponseUncheckedUpdateManyWithoutFormInput>
   }
 
   export type UserUpsertWithoutCreatedFormsInput = {
@@ -36842,13 +36926,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    files?: FileUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedFormsInput = {
@@ -36862,29 +36946,13 @@ export namespace Prisma {
     status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type FormResponseUpsertWithWhereUniqueWithoutFormInput = {
-    where: FormResponseWhereUniqueInput
-    update: XOR<FormResponseUpdateWithoutFormInput, FormResponseUncheckedUpdateWithoutFormInput>
-    create: XOR<FormResponseCreateWithoutFormInput, FormResponseUncheckedCreateWithoutFormInput>
-  }
-
-  export type FormResponseUpdateWithWhereUniqueWithoutFormInput = {
-    where: FormResponseWhereUniqueInput
-    data: XOR<FormResponseUpdateWithoutFormInput, FormResponseUncheckedUpdateWithoutFormInput>
-  }
-
-  export type FormResponseUpdateManyWithWhereWithoutFormInput = {
-    where: FormResponseScalarWhereInput
-    data: XOR<FormResponseUpdateManyMutationInput, FormResponseUncheckedUpdateManyWithoutFormInput>
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProcessFormUpsertWithWhereUniqueWithoutFormInput = {
@@ -36901,6 +36969,31 @@ export namespace Prisma {
   export type ProcessFormUpdateManyWithWhereWithoutFormInput = {
     where: ProcessFormScalarWhereInput
     data: XOR<ProcessFormUpdateManyMutationInput, ProcessFormUncheckedUpdateManyWithoutFormInput>
+  }
+
+  export type ApplicantProcessCreateWithoutResponsesInput = {
+    id?: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
+    applicant: UserCreateNestedOneWithoutApplicantProcessesInput
+    process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  }
+
+  export type ApplicantProcessUncheckedCreateWithoutResponsesInput = {
+    id?: string
+    applicantId: string
+    processId: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+    completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  }
+
+  export type ApplicantProcessCreateOrConnectWithoutResponsesInput = {
+    where: ApplicantProcessWhereUniqueInput
+    create: XOR<ApplicantProcessCreateWithoutResponsesInput, ApplicantProcessUncheckedCreateWithoutResponsesInput>
   }
 
   export type FormCreateWithoutResponsesInput = {
@@ -36944,11 +37037,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutProcessesInput
-    creator: UserCreateNestedOneWithoutCreatedProcessesInput
-    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
+    group: GroupCreateNestedOneWithoutProcessesInput
   }
 
   export type ProcessUncheckedCreateWithoutFormResponsesInput = {
@@ -36963,9 +37056,9 @@ export namespace Prisma {
     applicantViewProcessLevel?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessCreateOrConnectWithoutFormResponsesInput = {
@@ -36973,29 +37066,35 @@ export namespace Prisma {
     create: XOR<ProcessCreateWithoutFormResponsesInput, ProcessUncheckedCreateWithoutFormResponsesInput>
   }
 
-  export type ApplicantProcessCreateWithoutResponsesInput = {
-    id?: string
-    status?: $Enums.ProcessStatus
-    createdAt?: Date | string
-    applicant: UserCreateNestedOneWithoutApplicantProcessesInput
-    process: ProcessCreateNestedOneWithoutApplicantProcessesInput
-    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
-    comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
-  }
-
-  export type ApplicantProcessUncheckedCreateWithoutResponsesInput = {
-    id?: string
-    applicantId: string
-    processId: string
-    status?: $Enums.ProcessStatus
-    createdAt?: Date | string
-    completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
-    comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
-  }
-
-  export type ApplicantProcessCreateOrConnectWithoutResponsesInput = {
-    where: ApplicantProcessWhereUniqueInput
+  export type ApplicantProcessUpsertWithoutResponsesInput = {
+    update: XOR<ApplicantProcessUpdateWithoutResponsesInput, ApplicantProcessUncheckedUpdateWithoutResponsesInput>
     create: XOR<ApplicantProcessCreateWithoutResponsesInput, ApplicantProcessUncheckedCreateWithoutResponsesInput>
+    where?: ApplicantProcessWhereInput
+  }
+
+  export type ApplicantProcessUpdateToOneWithWhereWithoutResponsesInput = {
+    where?: ApplicantProcessWhereInput
+    data: XOR<ApplicantProcessUpdateWithoutResponsesInput, ApplicantProcessUncheckedUpdateWithoutResponsesInput>
+  }
+
+  export type ApplicantProcessUpdateWithoutResponsesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
+    applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  }
+
+  export type ApplicantProcessUncheckedUpdateWithoutResponsesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicantId?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
 
   export type FormUpsertWithoutResponsesInput = {
@@ -37056,11 +37155,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
-    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
-    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutFormResponsesInput = {
@@ -37075,79 +37174,9 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
-  }
-
-  export type ApplicantProcessUpsertWithoutResponsesInput = {
-    update: XOR<ApplicantProcessUpdateWithoutResponsesInput, ApplicantProcessUncheckedUpdateWithoutResponsesInput>
-    create: XOR<ApplicantProcessCreateWithoutResponsesInput, ApplicantProcessUncheckedCreateWithoutResponsesInput>
-    where?: ApplicantProcessWhereInput
-  }
-
-  export type ApplicantProcessUpdateToOneWithWhereWithoutResponsesInput = {
-    where?: ApplicantProcessWhereInput
-    data: XOR<ApplicantProcessUpdateWithoutResponsesInput, ApplicantProcessUncheckedUpdateWithoutResponsesInput>
-  }
-
-  export type ApplicantProcessUpdateWithoutResponsesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
-    process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
-    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
-    comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
-  }
-
-  export type ApplicantProcessUncheckedUpdateWithoutResponsesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    applicantId?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
-    comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
-  }
-
-  export type ProcessCreateWithoutFormsInput = {
-    id?: string
-    name: string
-    type?: $Enums.ProcessType
-    status?: $Enums.ProcessStatus
-    archived?: boolean
-    staffViewForms?: boolean
-    applicantViewProcessLevel?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutProcessesInput
-    creator: UserCreateNestedOneWithoutCreatedProcessesInput
-    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
-    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
-  }
-
-  export type ProcessUncheckedCreateWithoutFormsInput = {
-    id?: string
-    name: string
-    type?: $Enums.ProcessType
-    groupId: string
-    creatorId: string
-    status?: $Enums.ProcessStatus
-    archived?: boolean
-    staffViewForms?: boolean
-    applicantViewProcessLevel?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
-    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
-  }
-
-  export type ProcessCreateOrConnectWithoutFormsInput = {
-    where: ProcessWhereUniqueInput
-    create: XOR<ProcessCreateWithoutFormsInput, ProcessUncheckedCreateWithoutFormsInput>
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type FormCreateWithoutProcessFormsInput = {
@@ -37159,8 +37188,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     design?: NullableJsonNullValueInput | InputJsonValue
-    creator: UserCreateNestedOneWithoutCreatedFormsInput
     responses?: FormResponseCreateNestedManyWithoutFormInput
+    creator: UserCreateNestedOneWithoutCreatedFormsInput
   }
 
   export type FormUncheckedCreateWithoutProcessFormsInput = {
@@ -37179,6 +37208,82 @@ export namespace Prisma {
   export type FormCreateOrConnectWithoutProcessFormsInput = {
     where: FormWhereUniqueInput
     create: XOR<FormCreateWithoutProcessFormsInput, FormUncheckedCreateWithoutProcessFormsInput>
+  }
+
+  export type ProcessCreateWithoutFormsInput = {
+    id?: string
+    name: string
+    type?: $Enums.ProcessType
+    status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
+    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
+    group: GroupCreateNestedOneWithoutProcessesInput
+  }
+
+  export type ProcessUncheckedCreateWithoutFormsInput = {
+    id?: string
+    name: string
+    type?: $Enums.ProcessType
+    groupId: string
+    creatorId: string
+    status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
+    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessCreateOrConnectWithoutFormsInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutFormsInput, ProcessUncheckedCreateWithoutFormsInput>
+  }
+
+  export type FormUpsertWithoutProcessFormsInput = {
+    update: XOR<FormUpdateWithoutProcessFormsInput, FormUncheckedUpdateWithoutProcessFormsInput>
+    create: XOR<FormCreateWithoutProcessFormsInput, FormUncheckedCreateWithoutProcessFormsInput>
+    where?: FormWhereInput
+  }
+
+  export type FormUpdateToOneWithWhereWithoutProcessFormsInput = {
+    where?: FormWhereInput
+    data: XOR<FormUpdateWithoutProcessFormsInput, FormUncheckedUpdateWithoutProcessFormsInput>
+  }
+
+  export type FormUpdateWithoutProcessFormsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
+    status?: EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
+    archived?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    design?: NullableJsonNullValueInput | InputJsonValue
+    responses?: FormResponseUpdateManyWithoutFormNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedFormsNestedInput
+  }
+
+  export type FormUncheckedUpdateWithoutProcessFormsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
+    status?: EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
+    archived?: BoolFieldUpdateOperationsInput | boolean
+    creatorId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    design?: NullableJsonNullValueInput | InputJsonValue
+    responses?: FormResponseUncheckedUpdateManyWithoutFormNestedInput
   }
 
   export type ProcessUpsertWithoutFormsInput = {
@@ -37202,11 +37307,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
-    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
-    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutFormsInput = {
@@ -37221,130 +37326,9 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
-  }
-
-  export type FormUpsertWithoutProcessFormsInput = {
-    update: XOR<FormUpdateWithoutProcessFormsInput, FormUncheckedUpdateWithoutProcessFormsInput>
-    create: XOR<FormCreateWithoutProcessFormsInput, FormUncheckedCreateWithoutProcessFormsInput>
-    where?: FormWhereInput
-  }
-
-  export type FormUpdateToOneWithWhereWithoutProcessFormsInput = {
-    where?: FormWhereInput
-    data: XOR<FormUpdateWithoutProcessFormsInput, FormUncheckedUpdateWithoutProcessFormsInput>
-  }
-
-  export type FormUpdateWithoutProcessFormsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
-    status?: EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
-    archived?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    design?: NullableJsonNullValueInput | InputJsonValue
-    creator?: UserUpdateOneRequiredWithoutCreatedFormsNestedInput
-    responses?: FormResponseUpdateManyWithoutFormNestedInput
-  }
-
-  export type FormUncheckedUpdateWithoutProcessFormsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
-    status?: EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
-    archived?: BoolFieldUpdateOperationsInput | boolean
-    creatorId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    design?: NullableJsonNullValueInput | InputJsonValue
-    responses?: FormResponseUncheckedUpdateManyWithoutFormNestedInput
-  }
-
-  export type UserCreateWithoutApplicantProcessesInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    files?: FileCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    createdForms?: FormCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserCreateNestedOneWithoutUserInput
-  }
-
-  export type UserUncheckedCreateWithoutApplicantProcessesInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
-    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
-  }
-
-  export type UserCreateOrConnectWithoutApplicantProcessesInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutApplicantProcessesInput, UserUncheckedCreateWithoutApplicantProcessesInput>
-  }
-
-  export type ProcessCreateWithoutApplicantProcessesInput = {
-    id?: string
-    name: string
-    type?: $Enums.ProcessType
-    status?: $Enums.ProcessStatus
-    archived?: boolean
-    staffViewForms?: boolean
-    applicantViewProcessLevel?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    group: GroupCreateNestedOneWithoutProcessesInput
-    creator: UserCreateNestedOneWithoutCreatedProcessesInput
-    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormCreateNestedManyWithoutProcessInput
-    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
-  }
-
-  export type ProcessUncheckedCreateWithoutApplicantProcessesInput = {
-    id?: string
-    name: string
-    type?: $Enums.ProcessType
-    groupId: string
-    creatorId: string
-    status?: $Enums.ProcessStatus
-    archived?: boolean
-    staffViewForms?: boolean
-    applicantViewProcessLevel?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
-    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
-    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
-  }
-
-  export type ProcessCreateOrConnectWithoutApplicantProcessesInput = {
-    where: ProcessWhereUniqueInput
-    create: XOR<ProcessCreateWithoutApplicantProcessesInput, ProcessUncheckedCreateWithoutApplicantProcessesInput>
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type APCompletedFormCreateWithoutApplicantProcessInput = {
@@ -37371,6 +37355,90 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserCreateWithoutApplicantProcessesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutApplicantProcessesInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutApplicantProcessesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutApplicantProcessesInput, UserUncheckedCreateWithoutApplicantProcessesInput>
+  }
+
+  export type ProcessCreateWithoutApplicantProcessesInput = {
+    id?: string
+    name: string
+    type?: $Enums.ProcessType
+    status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
+    group: GroupCreateNestedOneWithoutProcessesInput
+  }
+
+  export type ProcessUncheckedCreateWithoutApplicantProcessesInput = {
+    id?: string
+    name: string
+    type?: $Enums.ProcessType
+    groupId: string
+    creatorId: string
+    status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessCreateOrConnectWithoutApplicantProcessesInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutApplicantProcessesInput, ProcessUncheckedCreateWithoutApplicantProcessesInput>
+  }
+
   export type FormResponseCreateWithoutApplicantProcessInput = {
     id?: string
     responses: JsonNullValueInput | InputJsonValue
@@ -37382,9 +37450,9 @@ export namespace Prisma {
   export type FormResponseUncheckedCreateWithoutApplicantProcessInput = {
     id?: string
     formId: string
-    processId: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    processId: string
   }
 
   export type FormResponseCreateOrConnectWithoutApplicantProcessInput = {
@@ -37421,102 +37489,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutApplicantProcessesInput = {
-    update: XOR<UserUpdateWithoutApplicantProcessesInput, UserUncheckedUpdateWithoutApplicantProcessesInput>
-    create: XOR<UserCreateWithoutApplicantProcessesInput, UserUncheckedCreateWithoutApplicantProcessesInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutApplicantProcessesInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutApplicantProcessesInput, UserUncheckedUpdateWithoutApplicantProcessesInput>
-  }
-
-  export type UserUpdateWithoutApplicantProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    files?: FileUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    createdForms?: FormUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
-    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
-  }
-
-  export type ProcessUpsertWithoutApplicantProcessesInput = {
-    update: XOR<ProcessUpdateWithoutApplicantProcessesInput, ProcessUncheckedUpdateWithoutApplicantProcessesInput>
-    create: XOR<ProcessCreateWithoutApplicantProcessesInput, ProcessUncheckedCreateWithoutApplicantProcessesInput>
-    where?: ProcessWhereInput
-  }
-
-  export type ProcessUpdateToOneWithWhereWithoutApplicantProcessesInput = {
-    where?: ProcessWhereInput
-    data: XOR<ProcessUpdateWithoutApplicantProcessesInput, ProcessUncheckedUpdateWithoutApplicantProcessesInput>
-  }
-
-  export type ProcessUpdateWithoutApplicantProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    archived?: BoolFieldUpdateOperationsInput | boolean
-    staffViewForms?: BoolFieldUpdateOperationsInput | boolean
-    applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
-    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
-    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
-    formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
-  }
-
-  export type ProcessUncheckedUpdateWithoutApplicantProcessesInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    type?: EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
-    groupId?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    archived?: BoolFieldUpdateOperationsInput | boolean
-    staffViewForms?: BoolFieldUpdateOperationsInput | boolean
-    applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
-    formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
-  }
-
   export type APCompletedFormUpsertWithWhereUniqueWithoutApplicantProcessInput = {
     where: APCompletedFormWhereUniqueInput
     update: XOR<APCompletedFormUpdateWithoutApplicantProcessInput, APCompletedFormUncheckedUpdateWithoutApplicantProcessInput>
@@ -37542,6 +37514,102 @@ export namespace Prisma {
     formId?: UuidFilter<"APCompletedForm"> | string
     reviewerId?: UuidNullableFilter<"APCompletedForm"> | string | null
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
+  }
+
+  export type UserUpsertWithoutApplicantProcessesInput = {
+    update: XOR<UserUpdateWithoutApplicantProcessesInput, UserUncheckedUpdateWithoutApplicantProcessesInput>
+    create: XOR<UserCreateWithoutApplicantProcessesInput, UserUncheckedCreateWithoutApplicantProcessesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutApplicantProcessesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutApplicantProcessesInput, UserUncheckedUpdateWithoutApplicantProcessesInput>
+  }
+
+  export type UserUpdateWithoutApplicantProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ProcessUpsertWithoutApplicantProcessesInput = {
+    update: XOR<ProcessUpdateWithoutApplicantProcessesInput, ProcessUncheckedUpdateWithoutApplicantProcessesInput>
+    create: XOR<ProcessCreateWithoutApplicantProcessesInput, ProcessUncheckedCreateWithoutApplicantProcessesInput>
+    where?: ProcessWhereInput
+  }
+
+  export type ProcessUpdateToOneWithWhereWithoutApplicantProcessesInput = {
+    where?: ProcessWhereInput
+    data: XOR<ProcessUpdateWithoutApplicantProcessesInput, ProcessUncheckedUpdateWithoutApplicantProcessesInput>
+  }
+
+  export type ProcessUpdateWithoutApplicantProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    archived?: BoolFieldUpdateOperationsInput | boolean
+    staffViewForms?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
+  }
+
+  export type ProcessUncheckedUpdateWithoutApplicantProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+    groupId?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    archived?: BoolFieldUpdateOperationsInput | boolean
+    staffViewForms?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type FormResponseUpsertWithWhereUniqueWithoutApplicantProcessInput = {
@@ -37647,9 +37715,9 @@ export namespace Prisma {
     id?: string
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
+    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
-    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
   }
 
@@ -37683,9 +37751,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
-    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
   }
 
@@ -37699,56 +37767,11 @@ export namespace Prisma {
     responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
 
-  export type UserCreateWithoutOrganizationInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleCreateNestedManyWithoutUserInput
-    files?: FileCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
-    createdForms?: FormCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
-    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
-  }
-
-  export type UserUncheckedCreateWithoutOrganizationInput = {
-    id?: string
-    email: string
-    password: string
-    firstName?: string | null
-    lastName?: string | null
-    photo?: string | null
-    googleId?: string | null
-    status?: $Enums.UserStatus
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
-    files?: FileUncheckedCreateNestedManyWithoutUserInput
-    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
-    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
-    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
-    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
-    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
-  }
-
-  export type UserCreateOrConnectWithoutOrganizationInput = {
-    where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
-  }
-
   export type OrganizationUserCreateWithoutSubordinatesInput = {
     id?: string
     title: string
-    user: UserCreateNestedOneWithoutOrganizationInput
     superior?: OrganizationUserCreateNestedOneWithoutSubordinatesInput
+    user: UserCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUserUncheckedCreateWithoutSubordinatesInput = {
@@ -37766,8 +37789,8 @@ export namespace Prisma {
   export type OrganizationUserCreateWithoutSuperiorInput = {
     id?: string
     title: string
-    user: UserCreateNestedOneWithoutOrganizationInput
     subordinates?: OrganizationUserCreateNestedManyWithoutSuperiorInput
+    user: UserCreateNestedOneWithoutOrganizationInput
   }
 
   export type OrganizationUserUncheckedCreateWithoutSuperiorInput = {
@@ -37787,55 +37810,49 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutOrganizationInput = {
-    update: XOR<UserUpdateWithoutOrganizationInput, UserUncheckedUpdateWithoutOrganizationInput>
+  export type UserCreateWithoutOrganizationInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOrganizationInput = {
+    where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
-    where?: UserWhereInput
-  }
-
-  export type UserUpdateToOneWithWhereWithoutOrganizationInput = {
-    where?: UserWhereInput
-    data: XOR<UserUpdateWithoutOrganizationInput, UserUncheckedUpdateWithoutOrganizationInput>
-  }
-
-  export type UserUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUpdateManyWithoutUserNestedInput
-    files?: FileUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
-    createdForms?: FormUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
-    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
-  }
-
-  export type UserUncheckedUpdateWithoutOrganizationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
-    firstName?: NullableStringFieldUpdateOperationsInput | string | null
-    lastName?: NullableStringFieldUpdateOperationsInput | string | null
-    photo?: NullableStringFieldUpdateOperationsInput | string | null
-    googleId?: NullableStringFieldUpdateOperationsInput | string | null
-    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
-    files?: FileUncheckedUpdateManyWithoutUserNestedInput
-    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
-    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
-    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
-    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
-    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
   }
 
   export type OrganizationUserUpsertWithoutSubordinatesInput = {
@@ -37852,8 +37869,8 @@ export namespace Prisma {
   export type OrganizationUserUpdateWithoutSubordinatesInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutOrganizationNestedInput
     superior?: OrganizationUserUpdateOneWithoutSubordinatesNestedInput
+    user?: UserUpdateOneRequiredWithoutOrganizationNestedInput
   }
 
   export type OrganizationUserUncheckedUpdateWithoutSubordinatesInput = {
@@ -37887,6 +37904,57 @@ export namespace Prisma {
     userId?: UuidFilter<"OrganizationUser"> | string
     superiorId?: UuidNullableFilter<"OrganizationUser"> | string | null
     title?: StringFilter<"OrganizationUser"> | string
+  }
+
+  export type UserUpsertWithoutOrganizationInput = {
+    update: XOR<UserUpdateWithoutOrganizationInput, UserUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<UserCreateWithoutOrganizationInput, UserUncheckedCreateWithoutOrganizationInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOrganizationInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOrganizationInput, UserUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type UserUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WidgetCreateWithoutDashboardInput = {
@@ -38009,9 +38077,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserRoleCreateManyUserInput = {
-    roleId: string
-    status?: $Enums.RoleStatus
+  export type ApplicantProcessCreateManyApplicantInput = {
+    id?: string
+    processId: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+  }
+
+  export type AuditLogCreateManyUserInput = {
+    id?: string
+    timestamp?: Date | string
+    action: string
+    resource?: string | null
+    resourceId?: string | null
+    details?: NullableJsonNullValueInput | InputJsonValue
+    status: string
+    errorMessage?: string | null
   }
 
   export type FileCreateManyUserInput = {
@@ -38024,17 +38105,6 @@ export namespace Prisma {
     fileType: string
     createdAt?: Date | string
     updatedAt?: Date | string
-  }
-
-  export type AuditLogCreateManyUserInput = {
-    id?: string
-    timestamp?: Date | string
-    action: string
-    resource?: string | null
-    resourceId?: string | null
-    details?: NullableJsonNullValueInput | InputJsonValue
-    status: string
-    errorMessage?: string | null
   }
 
   export type FormCreateManyCreatorInput = {
@@ -38069,26 +38139,69 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type ApplicantProcessCreateManyApplicantInput = {
-    id?: string
-    processId: string
-    status?: $Enums.ProcessStatus
-    createdAt?: Date | string
+  export type UserRoleCreateManyUserInput = {
+    roleId: string
+    status?: $Enums.RoleStatus
   }
 
-  export type UserRoleUpdateWithoutUserInput = {
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
+  export type ApplicantProcessUpdateWithoutApplicantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
+    process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
+    comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
 
-  export type UserRoleUncheckedUpdateWithoutUserInput = {
-    roleId?: StringFieldUpdateOperationsInput | string
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  export type ApplicantProcessUncheckedUpdateWithoutApplicantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
 
-  export type UserRoleUncheckedUpdateManyWithoutUserInput = {
-    roleId?: StringFieldUpdateOperationsInput | string
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  export type ApplicantProcessUncheckedUpdateManyWithoutApplicantInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AuditLogUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    action?: StringFieldUpdateOperationsInput | string
+    resource?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AuditLogUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    action?: StringFieldUpdateOperationsInput | string
+    resource?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AuditLogUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
+    action?: StringFieldUpdateOperationsInput | string
+    resource?: NullableStringFieldUpdateOperationsInput | string | null
+    resourceId?: NullableStringFieldUpdateOperationsInput | string | null
+    details?: NullableJsonNullValueInput | InputJsonValue
+    status?: StringFieldUpdateOperationsInput | string
+    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FileUpdateWithoutUserInput = {
@@ -38125,39 +38238,6 @@ export namespace Prisma {
     fileType?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type AuditLogUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    action?: StringFieldUpdateOperationsInput | string
-    resource?: NullableStringFieldUpdateOperationsInput | string | null
-    resourceId?: NullableStringFieldUpdateOperationsInput | string | null
-    details?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
-    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type AuditLogUncheckedUpdateWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    action?: StringFieldUpdateOperationsInput | string
-    resource?: NullableStringFieldUpdateOperationsInput | string | null
-    resourceId?: NullableStringFieldUpdateOperationsInput | string | null
-    details?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
-    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type AuditLogUncheckedUpdateManyWithoutUserInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    timestamp?: DateTimeFieldUpdateOperationsInput | Date | string
-    action?: StringFieldUpdateOperationsInput | string
-    resource?: NullableStringFieldUpdateOperationsInput | string | null
-    resourceId?: NullableStringFieldUpdateOperationsInput | string | null
-    details?: NullableJsonNullValueInput | InputJsonValue
-    status?: StringFieldUpdateOperationsInput | string
-    errorMessage?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type FormUpdateWithoutCreatorInput = {
@@ -38235,11 +38315,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
-    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutCreatorInput = {
@@ -38253,10 +38333,10 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type ProcessUncheckedUpdateManyWithoutCreatorInput = {
@@ -38272,36 +38352,19 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type ApplicantProcessUpdateWithoutApplicantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
-    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
-    responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
-    comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  export type UserRoleUpdateWithoutUserInput = {
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+    role?: RoleUpdateOneRequiredWithoutUsersNestedInput
   }
 
-  export type ApplicantProcessUncheckedUpdateWithoutApplicantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
-    responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
-    comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  export type UserRoleUncheckedUpdateWithoutUserInput = {
+    roleId?: StringFieldUpdateOperationsInput | string
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
   }
 
-  export type ApplicantProcessUncheckedUpdateManyWithoutApplicantInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
-    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserRoleCreateManyRoleInput = {
-    userId: string
-    status?: $Enums.RoleStatus
+  export type UserRoleUncheckedUpdateManyWithoutUserInput = {
+    roleId?: StringFieldUpdateOperationsInput | string
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
   }
 
   export type GroupRoleCreateManyRoleInput = {
@@ -38314,19 +38377,9 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
   }
 
-  export type UserRoleUpdateWithoutRoleInput = {
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-    user?: UserUpdateOneRequiredWithoutRolesNestedInput
-  }
-
-  export type UserRoleUncheckedUpdateWithoutRoleInput = {
-    userId?: StringFieldUpdateOperationsInput | string
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-  }
-
-  export type UserRoleUncheckedUpdateManyWithoutRoleInput = {
-    userId?: StringFieldUpdateOperationsInput | string
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  export type UserRoleCreateManyRoleInput = {
+    userId: string
+    status?: $Enums.RoleStatus
   }
 
   export type GroupRoleUpdateWithoutRoleInput = {
@@ -38356,6 +38409,21 @@ export namespace Prisma {
 
   export type ProcessRoleUncheckedUpdateManyWithoutRoleInput = {
     processId?: StringFieldUpdateOperationsInput | string
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  }
+
+  export type UserRoleUpdateWithoutRoleInput = {
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+    user?: UserUpdateOneRequiredWithoutRolesNestedInput
+  }
+
+  export type UserRoleUncheckedUpdateWithoutRoleInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  }
+
+  export type UserRoleUncheckedUpdateManyWithoutRoleInput = {
+    userId?: StringFieldUpdateOperationsInput | string
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
   }
 
@@ -38402,11 +38470,11 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
-    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   }
 
   export type ProcessUncheckedUpdateWithoutGroupInput = {
@@ -38420,10 +38488,10 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
-    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type ProcessUncheckedUpdateManyWithoutGroupInput = {
@@ -38437,26 +38505,6 @@ export namespace Prisma {
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type ProcessRoleCreateManyProcessInput = {
-    roleId: string
-    status?: $Enums.RoleStatus
-  }
-
-  export type ProcessFormCreateManyProcessInput = {
-    id?: string
-    formId: string
-    order: number
-    nextStepType?: $Enums.NextStepType
-    nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
-    nextStaffId?: string | null
-    notificationType?: $Enums.NextStepType
-    notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
-    notificationToId?: string | null
-    notificationComment?: string | null
-    notifyApplicant?: boolean
-    applicantNotificationContent?: string | null
   }
 
   export type ApplicantProcessCreateManyProcessInput = {
@@ -38474,72 +38522,34 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
-  export type ProcessRoleUpdateWithoutProcessInput = {
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-    role?: RoleUpdateOneRequiredWithoutProcessesNestedInput
+  export type ProcessFormCreateManyProcessInput = {
+    id?: string
+    formId: string
+    order: number
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
+    nextStaffId?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
+    notificationToId?: string | null
+    notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
-  export type ProcessRoleUncheckedUpdateWithoutProcessInput = {
-    roleId?: StringFieldUpdateOperationsInput | string
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-  }
-
-  export type ProcessRoleUncheckedUpdateManyWithoutProcessInput = {
-    roleId?: StringFieldUpdateOperationsInput | string
-    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
-  }
-
-  export type ProcessFormUpdateWithoutProcessInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    order?: IntFieldUpdateOperationsInput | number
-    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
-    nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
-    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
-    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
-    notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
-    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
-    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
-    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
-    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
-    form?: FormUpdateOneRequiredWithoutProcessFormsNestedInput
-  }
-
-  export type ProcessFormUncheckedUpdateWithoutProcessInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    formId?: StringFieldUpdateOperationsInput | string
-    order?: IntFieldUpdateOperationsInput | number
-    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
-    nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
-    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
-    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
-    notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
-    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
-    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
-    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
-    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type ProcessFormUncheckedUpdateManyWithoutProcessInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    formId?: StringFieldUpdateOperationsInput | string
-    order?: IntFieldUpdateOperationsInput | number
-    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
-    nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
-    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
-    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
-    notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
-    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
-    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
-    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
-    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+  export type ProcessRoleCreateManyProcessInput = {
+    roleId: string
+    status?: $Enums.RoleStatus
   }
 
   export type ApplicantProcessUpdateWithoutProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
+    applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -38565,8 +38575,8 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    form?: FormUpdateOneRequiredWithoutResponsesNestedInput
     applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutResponsesNestedInput
+    form?: FormUpdateOneRequiredWithoutResponsesNestedInput
   }
 
   export type FormResponseUncheckedUpdateWithoutProcessInput = {
@@ -38585,12 +38595,78 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProcessFormUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    form?: FormUpdateOneRequiredWithoutProcessFormsNestedInput
+  }
+
+  export type ProcessFormUncheckedUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessFormUncheckedUpdateManyWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessRoleUpdateWithoutProcessInput = {
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+    role?: RoleUpdateOneRequiredWithoutProcessesNestedInput
+  }
+
+  export type ProcessRoleUncheckedUpdateWithoutProcessInput = {
+    roleId?: StringFieldUpdateOperationsInput | string
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  }
+
+  export type ProcessRoleUncheckedUpdateManyWithoutProcessInput = {
+    roleId?: StringFieldUpdateOperationsInput | string
+    status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  }
+
   export type FormResponseCreateManyFormInput = {
     id?: string
-    processId: string
     applicantProcessId: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    processId: string
   }
 
   export type ProcessFormCreateManyFormInput = {
@@ -38606,30 +38682,32 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FormResponseUpdateWithoutFormInput = {
     id?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    process?: ProcessUpdateOneRequiredWithoutFormResponsesNestedInput
     applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutResponsesNestedInput
+    process?: ProcessUpdateOneRequiredWithoutFormResponsesNestedInput
   }
 
   export type FormResponseUncheckedUpdateWithoutFormInput = {
     id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     applicantProcessId?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processId?: StringFieldUpdateOperationsInput | string
   }
 
   export type FormResponseUncheckedUpdateManyWithoutFormInput = {
     id?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     applicantProcessId?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProcessFormUpdateWithoutFormInput = {
@@ -38644,6 +38722,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     process?: ProcessUpdateOneRequiredWithoutFormsNestedInput
   }
 
@@ -38660,6 +38740,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProcessFormUncheckedUpdateManyWithoutFormInput = {
@@ -38675,6 +38757,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type APCompletedFormCreateManyApplicantProcessInput = {
@@ -38687,9 +38771,9 @@ export namespace Prisma {
   export type FormResponseCreateManyApplicantProcessInput = {
     id?: string
     formId: string
-    processId: string
     responses: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
+    processId: string
   }
 
   export type ProcessCommentCreateManyApplicantProcessInput = {
@@ -38731,17 +38815,17 @@ export namespace Prisma {
   export type FormResponseUncheckedUpdateWithoutApplicantProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processId?: StringFieldUpdateOperationsInput | string
   }
 
   export type FormResponseUncheckedUpdateManyWithoutApplicantProcessInput = {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
-    processId?: StringFieldUpdateOperationsInput | string
     responses?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ProcessCommentUpdateWithoutApplicantProcessInput = {
@@ -38774,8 +38858,8 @@ export namespace Prisma {
   export type OrganizationUserUpdateWithoutSuperiorInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
-    user?: UserUpdateOneRequiredWithoutOrganizationNestedInput
     subordinates?: OrganizationUserUpdateManyWithoutSuperiorNestedInput
+    user?: UserUpdateOneRequiredWithoutOrganizationNestedInput
   }
 
   export type OrganizationUserUncheckedUpdateWithoutSuperiorInput = {

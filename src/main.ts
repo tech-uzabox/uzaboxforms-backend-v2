@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import morgan from 'morgan';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -21,7 +22,7 @@ async function bootstrap() {
   app.useBodyParser('json', { limit: '50mb' });
   app.use(compression());
   app.use(cookieParser());
-  
+
   // Morgan logging middleware
   app.use(morgan('tiny'));
   app.setGlobalPrefix('api/v1', {

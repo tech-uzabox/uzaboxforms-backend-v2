@@ -228,10 +228,10 @@ exports.Prisma.FormScalarFieldEnum = {
 exports.Prisma.FormResponseScalarFieldEnum = {
   id: 'id',
   formId: 'formId',
-  processId: 'processId',
   applicantProcessId: 'applicantProcessId',
   responses: 'responses',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  processId: 'processId'
 };
 
 exports.Prisma.ProcessFormScalarFieldEnum = {
@@ -247,7 +247,9 @@ exports.Prisma.ProcessFormScalarFieldEnum = {
   notificationToId: 'notificationToId',
   notificationComment: 'notificationComment',
   notifyApplicant: 'notifyApplicant',
-  applicantNotificationContent: 'applicantNotificationContent'
+  applicantNotificationContent: 'applicantNotificationContent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ApplicantProcessScalarFieldEnum = {
@@ -439,8 +441,8 @@ exports.Prisma.FormOrderByRelevanceFieldEnum = {
 exports.Prisma.FormResponseOrderByRelevanceFieldEnum = {
   id: 'id',
   formId: 'formId',
-  processId: 'processId',
-  applicantProcessId: 'applicantProcessId'
+  applicantProcessId: 'applicantProcessId',
+  processId: 'processId'
 };
 
 exports.Prisma.ProcessFormOrderByRelevanceFieldEnum = {

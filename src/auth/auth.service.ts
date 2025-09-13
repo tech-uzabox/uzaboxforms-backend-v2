@@ -18,6 +18,7 @@ import { RoleService } from '../role/role.service';
 import { UserRoleService } from '../user-role/user-role.service';
 import { UserService } from '../user/user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 export interface JwtPayload {
   sub: string;
@@ -210,5 +211,90 @@ export class AuthService {
       this.logger.warn(`Refresh token validation failed: ${error.message}`);
       throw error;
     }
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<{ message: string }> {
+    const user = await this.userService.findOne(userId);
+    if (!user) {
+      throw new BadRequestException('User not found.');
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('Current password is incorrect.');
+    }
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await this.userService.update(userId, { password: hashedNewPassword });
+    return { message: 'Password changed successfully' };
+  }
+
+  async validateToken(token: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
+        secret: this.configService.get<string>('jwt.secret'),
+      });
+      const user = await this.userService.findOne(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException();
+      }
+      const userRoles = await this.userRoleService.findByUserId(payload.sub);
+      const roles = await Promise.all(
+        userRoles.map(async (ur) => {
+          const role = await this.roleService.findOne(ur.roleId);
+          return {
+            roleName: role?.name,
+            status: role?.status === RoleStatus.ENABLED && ur.status === RoleStatus.ENABLED ? 'ENABLED' : 'DISABLED',
+          };
+        }),
+      );
+      const { password, ...userWithoutPass } = user;
+      return { success: true, message: 'Token is valid', user: userWithoutPass, roles };
+    } catch (error) {
+      throw new BadRequestException('Unauthorized');
+    }
+  }
+
+  async validateEmail(email: string, otp: string) {
+    await this.otpService.validateOtp(email, otp);
+
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    let userRole = await this.roleService.findOneByName('USER');
+    if (!userRole) {
+      userRole = await this.roleService.create({
+        name: 'USER',
+        description: 'Standard User',
+        status: RoleStatus.ENABLED,
+      });
+    }
+
+    const pendingRole = await this.roleService.findOneByName('PENDING');
+    if (pendingRole) {
+      const existingPending = await this.userRoleService.findOne(user.id, pendingRole.id);
+      if (existingPending) {
+        await this.userRoleService.remove(user.id, pendingRole.id);
+      }
+    }
+
+    const existingUserRole = await this.userRoleService.findOne(user.id, userRole.id);
+    if (!existingUserRole) {
+      await this.userRoleService.create(user.id, userRole.id);
+    }
+
+    return { success: true, message: 'Email verified and role assigned' };
+  }
+
+  async updateProfile(userId: string, profile: UpdateProfileDto) {
+    const updateData: any = {};
+    if (profile.firstName != null) updateData.firstName = profile.firstName;
+    if (profile.lastName != null) updateData.lastName = profile.lastName;
+    if (profile.photo != null) updateData.photo = profile.photo;
+    await this.userService.update(userId, updateData);
+    const updated = await this.userService.findOne(userId);
+    if (!updated) throw new BadRequestException('User not found after update');
+    const { password, ...result } = updated;
+    return result;
   }
 }

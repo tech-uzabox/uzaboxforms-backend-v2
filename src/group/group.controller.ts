@@ -1,8 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GroupService } from './group.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { GroupService } from './group.service';
 
 @ApiTags('Groups')
 @Controller('groups')
@@ -32,5 +40,10 @@ export class GroupController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.groupService.remove(id);
+  }
+
+  @Get('user/:userId/group-processes')
+  getGroupProcessesByUser(@Param('userId') userId: string) {
+    return this.groupService.getGroupAndProcessesByUserId(userId);
   }
 }

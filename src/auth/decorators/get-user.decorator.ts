@@ -4,6 +4,7 @@ import { User as UserModel } from 'db/client';
 export interface AuthenticatedUser extends Omit<UserModel, 'password'> {
   id: string;
   roles: string[];
+  sub: string;
 }
 
 export const GetUser = createParamDecorator(

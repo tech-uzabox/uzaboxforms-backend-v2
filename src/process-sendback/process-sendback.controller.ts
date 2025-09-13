@@ -1,15 +1,17 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Patch, Param, UseGuards } from '@nestjs/common';
 import { ProcessSendbackService } from './process-sendback.service';
-import { SendbackDto } from './dto/sendback.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Process Sendback')
-@Controller('process-sendback')
+@Controller('pending-processes')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class ProcessSendbackController {
   constructor(private readonly processSendbackService: ProcessSendbackService) {}
 
-  @Post()
-  sendback(@Body() sendbackDto: SendbackDto) {
-    return this.processSendbackService.sendback(sendbackDto.applicantProcessId);
+  @Patch('sendback/:applicantProcessId')
+  async sendback(@Param('applicantProcessId') applicantProcessId: string) {
+    return this.processSendbackService.sendback(applicantProcessId);
   }
 }

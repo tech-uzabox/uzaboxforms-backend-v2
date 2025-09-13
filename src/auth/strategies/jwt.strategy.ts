@@ -1,10 +1,10 @@
-import { Request } from 'express';
-import { JwtPayload } from '../auth.service';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from 'src/db/prisma.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtPayload } from '../auth.service';
 import { AuthenticatedUser } from '../decorators/get-user.decorator';
 
 @Injectable()
@@ -40,6 +40,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     const { password, ...result } = user;
-    return { ...result, roles: user.roles.map((r) => r.role.name) };
+    return {
+      ...result,
+      roles: user.roles.map((r) => r.role.name),
+      sub: user.id,
+    };
   }
 }
