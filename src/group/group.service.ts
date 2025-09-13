@@ -63,4 +63,101 @@ export class GroupService {
     });
     return deletedGroup;
   }
+
+  async getGroupAndProcessesByUserId(userId: string): Promise<any[]> {
+    // Get enabled roles for the user
+    const userRoles = await this.prisma.userRole.findMany({
+      where: {
+        userId,
+        status: 'ENABLED',
+      },
+      select: { roleId: true },
+    });
+
+    if (!userRoles || userRoles.length === 0) {
+      throw new Error('No enabled roles found for the user');
+    }
+
+    const roleIds = userRoles.map(ur => ur.roleId);
+
+    // Get enabled group roles for those roles
+    const groupRoles = await this.prisma.groupRole.findMany({
+      where: {
+        roleId: { in: roleIds },
+        status: 'ENABLED',
+      },
+      select: { groupId: true },
+    });
+
+    if (!groupRoles || groupRoles.length === 0) {
+      throw new Error('No accessible groups found for the user roles');
+    }
+
+    const groupIds = groupRoles.map(gr => gr.groupId);
+
+    // Get enabled groups
+    const groups = await this.prisma.group.findMany({
+      where: {
+        id: { in: groupIds },
+        status: 'ENABLED',
+      },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+      },
+    });
+
+    if (!groups || groups.length === 0) {
+      throw new Error('No enabled groups found for the user roles');
+    }
+
+    // For each group, get processes and first form id
+    const groupsWithProcesses = await Promise.all(
+      groups.map(async (group) => {
+        const processes = await this.prisma.process.findMany({
+          where: {
+            groupId: group.id,
+            status: 'ENABLED',
+            archived: false,
+          },
+          select: {
+            id: true,
+            name: true,
+            status: true,
+          },
+        });
+
+        const processesWithFirstFormId = await Promise.all(
+          processes.map(async (process) => {
+            const firstForm = await this.prisma.processForm.findFirst({
+              where: { processId: process.id },
+              orderBy: { createdAt: 'asc' },
+              select: { formId: true },
+            });
+
+            const firstFormId = firstForm?.formId || null;
+
+            return {
+              id: process.id,
+              name: process.name,
+              status: process.status,
+              firstFormId,
+            };
+          }),
+        );
+
+        return {
+          group: {
+            id: group.id,
+            name: group.name,
+            status: group.status,
+          },
+          processes: processesWithFirstFormId,
+        };
+      }),
+    );
+
+    return groupsWithProcesses;
+  }
 }

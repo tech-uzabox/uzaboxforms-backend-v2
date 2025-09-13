@@ -5,28 +5,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-  PrismaClientRustPanicError,
-  PrismaClientInitializationError,
-  PrismaClientValidationError,
-  getPrismaClient,
-  sqltag,
-  empty,
-  join,
-  raw,
-  skip,
   Decimal,
-  Debug,
   objectEnumValues,
   makeStrictEnum,
-  Extensions,
-  warnOnce,
-  defineDmmfProperty,
   Public,
   getRuntime,
-  createParam,
-} = require('./runtime/wasm-compiler-edge.js')
+  skip
+} = require('./runtime/index-browser.js')
 
 
 const Prisma = {}
@@ -43,27 +28,71 @@ Prisma.prismaVersion = {
   engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
 }
 
-Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
-Prisma.PrismaClientUnknownRequestError = PrismaClientUnknownRequestError
-Prisma.PrismaClientRustPanicError = PrismaClientRustPanicError
-Prisma.PrismaClientInitializationError = PrismaClientInitializationError
-Prisma.PrismaClientValidationError = PrismaClientValidationError
+Prisma.PrismaClientKnownRequestError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientKnownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)};
+Prisma.PrismaClientUnknownRequestError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientUnknownRequestError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.PrismaClientRustPanicError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientRustPanicError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.PrismaClientInitializationError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientInitializationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.PrismaClientValidationError = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`PrismaClientValidationError is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
 Prisma.Decimal = Decimal
 
 /**
  * Re-export of sql-template-tag
  */
-Prisma.sql = sqltag
-Prisma.empty = empty
-Prisma.join = join
-Prisma.raw = raw
+Prisma.sql = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`sqltag is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.empty = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`empty is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.join = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`join is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.raw = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`raw is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
 Prisma.validator = Public.validator
 
 /**
 * Extensions
 */
-Prisma.getExtensionContext = Extensions.getExtensionContext
-Prisma.defineExtension = Extensions.defineExtension
+Prisma.getExtensionContext = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`Extensions.getExtensionContext is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
+Prisma.defineExtension = () => {
+  const runtimeName = getRuntime().prettyName;
+  throw new Error(`Extensions.defineExtension is unable to run in this browser environment, or has been bundled for the browser (running in ${runtimeName}).
+In case this error is unexpected for you, please report it in https://pris.ly/prisma-prisma-bug-report`,
+)}
 
 /**
  * Shorthand utilities for JSON filtering
@@ -80,11 +109,10 @@ Prisma.NullTypes = {
 
 
 
-
-
 /**
  * Enums
  */
+
 exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   ReadUncommitted: 'ReadUncommitted',
   ReadCommitted: 'ReadCommitted',
@@ -103,11 +131,6 @@ exports.Prisma.UserScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.RelationLoadStrategy = {
-  query: 'query',
-  join: 'join'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -200,10 +223,10 @@ exports.Prisma.FormScalarFieldEnum = {
 exports.Prisma.FormResponseScalarFieldEnum = {
   id: 'id',
   formId: 'formId',
-  processId: 'processId',
   applicantProcessId: 'applicantProcessId',
   responses: 'responses',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  processId: 'processId'
 };
 
 exports.Prisma.ProcessFormScalarFieldEnum = {
@@ -219,7 +242,9 @@ exports.Prisma.ProcessFormScalarFieldEnum = {
   notificationToId: 'notificationToId',
   notificationComment: 'notificationComment',
   notifyApplicant: 'notifyApplicant',
-  applicantNotificationContent: 'applicantNotificationContent'
+  applicantNotificationContent: 'applicantNotificationContent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ApplicantProcessScalarFieldEnum = {
@@ -333,164 +358,10 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  email: 'email',
-  password: 'password',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  photo: 'photo',
-  googleId: 'googleId'
-};
-
-exports.Prisma.RoleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description'
-};
-
-exports.Prisma.UserRoleOrderByRelevanceFieldEnum = {
-  userId: 'userId',
-  roleId: 'roleId'
-};
-
-exports.Prisma.FileOrderByRelevanceFieldEnum = {
-  id: 'id',
-  fileUrl: 'fileUrl',
-  thumbnailUrl: 'thumbnailUrl',
-  title: 'title',
-  userId: 'userId',
-  fileType: 'fileType'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  action: 'action',
-  resource: 'resource',
-  resourceId: 'resourceId',
-  status: 'status',
-  errorMessage: 'errorMessage'
-};
-
-exports.Prisma.GroupOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.GroupRoleOrderByRelevanceFieldEnum = {
-  groupId: 'groupId',
-  roleId: 'roleId'
-};
-
-exports.Prisma.ProcessOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  groupId: 'groupId',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.ProcessRoleOrderByRelevanceFieldEnum = {
-  processId: 'processId',
-  roleId: 'roleId'
-};
-
-exports.Prisma.FormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.FormResponseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  formId: 'formId',
-  processId: 'processId',
-  applicantProcessId: 'applicantProcessId'
-};
-
-exports.Prisma.ProcessFormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  processId: 'processId',
-  formId: 'formId',
-  nextStepRoles: 'nextStepRoles',
-  nextStaffId: 'nextStaffId',
-  notificationRoles: 'notificationRoles',
-  notificationToId: 'notificationToId',
-  notificationComment: 'notificationComment',
-  applicantNotificationContent: 'applicantNotificationContent'
-};
-
-exports.Prisma.ApplicantProcessOrderByRelevanceFieldEnum = {
-  id: 'id',
-  applicantId: 'applicantId',
-  processId: 'processId'
-};
-
-exports.Prisma.APCompletedFormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  applicantProcessId: 'applicantProcessId',
-  formId: 'formId',
-  reviewerId: 'reviewerId'
-};
-
-exports.Prisma.ProcessCommentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  applicantProcessId: 'applicantProcessId',
-  userId: 'userId',
-  comment: 'comment'
-};
-
-exports.Prisma.OrganizationUserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  superiorId: 'superiorId',
-  title: 'title'
-};
-
-exports.Prisma.DashboardOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  ownerId: 'ownerId',
-  allowedUsers: 'allowedUsers',
-  allowedRoles: 'allowedRoles'
-};
-
-exports.Prisma.WidgetOrderByRelevanceFieldEnum = {
-  id: 'id',
-  dashboardId: 'dashboardId',
-  title: 'title',
-  visualizationType: 'visualizationType'
-};
-
-exports.Prisma.QrCodeDocumentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  documentName: 'documentName',
-  fileName: 'fileName',
-  qrCodeId: 'qrCodeId',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.OtpOrderByRelevanceFieldEnum = {
-  id: 'id',
-  email: 'email',
-  otp: 'otp'
-};
-
-exports.Prisma.ManagementOrderByRelevanceFieldEnum = {
-  id: 'id',
-  fileName: 'fileName'
-};
-
-exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name'
 };
 exports.UserStatus = exports.$Enums.UserStatus = {
   ENABLED: 'ENABLED',
@@ -569,88 +440,34 @@ exports.Prisma.ModelName = {
   Management: 'Management',
   AddToDatabase: 'AddToDatabase'
 };
+
 /**
- * Create the Client
+ * This is a stub Prisma Client that will error at runtime if called.
  */
-const config = {
-  "generator": {
-    "name": "client",
-    "provider": {
-      "fromEnvVar": null,
-      "value": "prisma-client-js"
-    },
-    "output": {
-      "value": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server/src/generated/prisma",
-      "fromEnvVar": null
-    },
-    "config": {
-      "engineType": "client"
-    },
-    "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "darwin-arm64",
-        "native": true
-      }
-    ],
-    "previewFeatures": [
-      "driverAdapters",
-      "fullTextSearchPostgres",
-      "queryCompiler",
-      "relationJoins"
-    ],
-    "sourceFilePath": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server/prisma/schema.prisma",
-    "isCustomOutput": true
-  },
-  "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
-  },
-  "relativePath": "../../../prisma",
-  "clientVersion": "6.15.0",
-  "engineVersion": "85179d7826409ee107a6ba334b5e305ae3fba9fb",
-  "datasourceNames": [
-    "db"
-  ],
-  "activeProvider": "postgresql",
-  "postinstall": false,
-  "inlineDatasources": {
-    "db": {
-      "url": {
-        "fromEnvVar": "DATABASE_URL",
-        "value": null
-      }
-    }
-  },
-  "inlineSchema": "// schema.prisma\n\ngenerator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../src/generated/prisma\"\n  previewFeatures = [\"queryCompiler\", \"driverAdapters\", \"relationJoins\", \"fullTextSearchPostgres\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// --- Core Models -- -\n\nmodel User {\n  id        String     @id @default(uuid()) @db.Uuid\n  email     String     @unique @db.VarChar(255)\n  password  String     @db.VarChar(255)\n  firstName String?\n  lastName  String?\n  photo     String?\n  googleId  String?    @unique\n  status    UserStatus @default(ENABLED)\n  createdAt DateTime   @default(now())\n  updatedAt DateTime   @updatedAt\n\n  roles              UserRole[]\n  files              File[]\n  auditLogs          AuditLog[]\n  createdForms       Form[]             @relation(\"FormCreator\")\n  createdGroups      Group[]            @relation(\"GroupCreator\")\n  createdProcesses   Process[]          @relation(\"ProcessCreator\")\n  organization       OrganizationUser?\n  applicantProcesses ApplicantProcess[]\n\n  @@index([email])\n  @@map(\"users\")\n}\n\nenum UserStatus {\n  ENABLED\n  DISABLED\n  PENDING\n}\n\nmodel Role {\n  id          String     @id @default(uuid()) @db.Uuid\n  name        String     @unique\n  description String?\n  status      RoleStatus @default(ENABLED)\n  createdAt   DateTime   @default(now())\n  updatedAt   DateTime   @updatedAt\n\n  users     UserRole[]\n  groups    GroupRole[]\n  processes ProcessRole[]\n\n  @@map(\"roles\")\n}\n\nenum RoleStatus {\n  ENABLED\n  DISABLED\n}\n\nmodel UserRole {\n  userId String     @db.Uuid\n  roleId String     @db.Uuid\n  status RoleStatus @default(ENABLED)\n\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([userId, roleId])\n  @@map(\"user_roles\")\n}\n\nmodel File {\n  id           String   @id @default(uuid()) @db.Uuid\n  fileUrl      String   @db.VarChar(255)\n  thumbnailUrl String?\n  size         Int\n  isPrivate    Boolean  @default(false)\n  title        String   @db.VarChar(255)\n  userId       String   @db.Uuid\n  fileType     String   @db.VarChar(255)\n  createdAt    DateTime @default(now()) @db.Timestamp(0)\n  updatedAt    DateTime @updatedAt @db.Timestamp(0)\n\n  user User @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"files\")\n}\n\nmodel AuditLog {\n  id           String   @id @default(uuid()) @db.Uuid\n  timestamp    DateTime @default(now())\n  userId       String?  @db.Uuid\n  action       String\n  resource     String?\n  resourceId   String?\n  details      Json?\n  status       String\n  errorMessage String?\n\n  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)\n\n  @@index([userId, action, resource])\n  @@map(\"audit_logs\")\n}\n\n// --- Group & Process Models ---\n\nmodel Group {\n  id        String      @id @default(uuid()) @db.Uuid\n  name      String      @unique\n  status    GroupStatus @default(ENABLED)\n  creatorId String      @db.Uuid\n  createdAt DateTime    @default(now())\n  updatedAt DateTime    @updatedAt\n\n  creator   User        @relation(\"GroupCreator\", fields: [creatorId], references: [id])\n  roles     GroupRole[]\n  processes Process[]\n\n  @@map(\"groups\")\n}\n\nenum GroupStatus {\n  ENABLED\n  DISABLED\n}\n\nmodel GroupRole {\n  groupId String     @db.Uuid\n  roleId  String     @db.Uuid\n  status  RoleStatus @default(ENABLED)\n\n  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)\n  role  Role  @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([groupId, roleId])\n  @@map(\"group_roles\")\n}\n\nmodel Process {\n  id                        String        @id @default(uuid()) @db.Uuid\n  name                      String\n  type                      ProcessType   @default(PRIVATE)\n  groupId                   String        @db.Uuid\n  creatorId                 String        @db.Uuid\n  status                    ProcessStatus @default(ENABLED)\n  archived                  Boolean       @default(false)\n  staffViewForms            Boolean       @default(false)\n  applicantViewProcessLevel Boolean       @default(false)\n  createdAt                 DateTime      @default(now())\n  updatedAt                 DateTime      @updatedAt\n\n  group              Group              @relation(fields: [groupId], references: [id])\n  creator            User               @relation(\"ProcessCreator\", fields: [creatorId], references: [id])\n  roles              ProcessRole[]\n  forms              ProcessForm[]\n  applicantProcesses ApplicantProcess[]\n  formResponses      FormResponse[]\n\n  @@index([groupId])\n  @@index([creatorId])\n  @@map(\"processes\")\n}\n\nenum ProcessType {\n  PUBLIC\n  PRIVATE\n}\n\nenum ProcessStatus {\n  ENABLED\n  DISABLED\n}\n\nmodel ProcessRole {\n  processId String     @db.Uuid\n  roleId    String     @db.Uuid\n  status    RoleStatus @default(ENABLED)\n\n  process Process @relation(fields: [processId], references: [id], onDelete: Cascade)\n  role    Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([processId, roleId])\n  @@map(\"process_roles\")\n}\n\n// --- Form Models ---\n\nmodel Form {\n  id        String     @id @default(uuid()) @db.Uuid\n  name      String\n  type      FormType   @default(INTERNAL)\n  status    FormStatus @default(ENABLED)\n  archived  Boolean    @default(false)\n  creatorId String     @db.Uuid\n  createdAt DateTime   @default(now())\n  updatedAt DateTime   @updatedAt\n\n  creator      User           @relation(\"FormCreator\", fields: [creatorId], references: [id])\n  design       Json? // Storing complex, nested form design as JSON is appropriate here\n  responses    FormResponse[]\n  processForms ProcessForm[]\n\n  @@index([creatorId])\n  @@map(\"forms\")\n}\n\nenum FormType {\n  PUBLIC\n  INTERNAL\n}\n\nenum FormStatus {\n  ENABLED\n  DISABLED\n}\n\nmodel FormResponse {\n  id                 String   @id @default(uuid()) @db.Uuid\n  formId             String   @db.Uuid\n  processId          String   @db.Uuid\n  applicantProcessId String   @db.Uuid\n  responses          Json // Storing flexible response data as JSON is appropriate\n  createdAt          DateTime @default(now())\n\n  form             Form             @relation(fields: [formId], references: [id], onDelete: Cascade)\n  process          Process          @relation(fields: [processId], references: [id], onDelete: Cascade)\n  applicantProcess ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@unique([formId, applicantProcessId])\n  @@index([formId])\n  @@index([processId])\n  @@index([applicantProcessId])\n  @@map(\"form_responses\")\n}\n\n// --- Process Workflow Models ---\n\nmodel ProcessForm {\n  id        String @id @default(uuid()) @db.Uuid\n  processId String @db.Uuid\n  formId    String @db.Uuid\n  order     Int // To define the sequence of forms in a process\n\n  // Workflow Logic\n  nextStepType  NextStepType @default(NOT_APPLICABLE)\n  nextStepRoles String[] // Array of role IDs for DYNAMIC\n  nextStaffId   String?      @db.Uuid // User ID for STATIC\n\n  // Notification Logic\n  notificationType             NextStepType @default(NOT_APPLICABLE)\n  notificationRoles            String[] // Array of role IDs\n  notificationToId             String?      @db.Uuid // User ID\n  notificationComment          String?\n  notifyApplicant              Boolean      @default(false)\n  applicantNotificationContent String?\n\n  process Process @relation(fields: [processId], references: [id], onDelete: Cascade)\n  form    Form    @relation(fields: [formId], references: [id], onDelete: Cascade)\n\n  @@index([processId, formId])\n  @@map(\"process_forms\")\n}\n\nenum NextStepType {\n  STATIC\n  DYNAMIC\n  FOLLOW_ORGANIZATION_CHART\n  NOT_APPLICABLE\n}\n\nmodel ApplicantProcess {\n  id          String        @id @default(uuid()) @db.Uuid\n  applicantId String        @db.Uuid\n  processId   String        @db.Uuid\n  status      ProcessStatus @default(ENABLED)\n  createdAt   DateTime      @default(now())\n\n  applicant      User              @relation(fields: [applicantId], references: [id])\n  process        Process           @relation(fields: [processId], references: [id])\n  completedForms APCompletedForm[]\n  responses      FormResponse[]\n  comments       ProcessComment[]\n\n  @@index([applicantId])\n  @@index([processId])\n  @@map(\"applicant_processes\")\n}\n\nmodel APCompletedForm {\n  id                 String   @id @default(uuid()) @db.Uuid\n  applicantProcessId String   @db.Uuid\n  formId             String   @db.Uuid\n  reviewerId         String?  @db.Uuid // User who completed/reviewed this step\n  createdAt          DateTime @default(now())\n\n  applicantProcess ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@index([applicantProcessId])\n  @@map(\"ap_completed_forms\")\n}\n\nmodel ProcessComment {\n  id                 String   @id @default(uuid()) @db.Uuid\n  applicantProcessId String   @db.Uuid\n  userId             String   @db.Uuid\n  comment            String\n  createdAt          DateTime @default(now())\n\n  applicantProcess ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@index([applicantProcessId])\n  @@index([userId])\n  @@map(\"process_comments\")\n}\n\n// --- Organization, Dashboard, QR ---\n\nmodel OrganizationUser {\n  id         String  @id @default(uuid()) @db.Uuid\n  userId     String  @unique @db.Uuid\n  superiorId String? @db.Uuid\n\n  title String\n\n  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)\n  superior     OrganizationUser?  @relation(\"Hierarchy\", fields: [superiorId], references: [id], onDelete: SetNull)\n  subordinates OrganizationUser[] @relation(\"Hierarchy\")\n\n  @@map(\"organization_users\")\n}\n\nmodel Dashboard {\n  id           String   @id @default(uuid()) @db.Uuid\n  name         String\n  ownerId      String   @db.Uuid\n  allowedUsers String[] // Array of user IDs\n  allowedRoles String[] // Array of role IDs\n  layout       Json?\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n\n  widgets Widget[]\n\n  @@index([ownerId])\n  @@map(\"dashboards\")\n}\n\nmodel Widget {\n  id                String   @id @default(uuid()) @db.Uuid\n  dashboardId       String   @db.Uuid\n  title             String\n  visualizationType String\n  config            Json // Store all metric, groupBy, filter, etc. config here\n  order             Int\n  createdAt         DateTime @default(now())\n  updatedAt         DateTime @updatedAt\n\n  dashboard Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)\n\n  @@index([dashboardId])\n  @@map(\"widgets\")\n}\n\nmodel QrCodeDocument {\n  id           String   @id @default(uuid()) @db.Uuid\n  documentName String\n  fileName     String\n  qrCodeId     String   @unique\n  creatorId    String   @db.Uuid\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n\n  @@index([creatorId])\n  @@map(\"qr_code_documents\")\n}\n\nmodel Otp {\n  id        String   @id @default(uuid()) @db.Uuid\n  email     String\n  otp       String\n  expiresAt DateTime\n\n  @@index([email])\n  @@map(\"otps\")\n}\n\nmodel Management {\n  id         String         @id @default(uuid()) @db.Uuid\n  fileName   String\n  type       ManagementType\n  uploadedAt DateTime       @default(now())\n  updatedAt  DateTime       @updatedAt\n\n  @@map(\"management\")\n}\n\nenum ManagementType {\n  HEADER\n  FOOTER\n}\n\nmodel AddToDatabase {\n  id        String              @id @default(uuid()) @db.Uuid\n  name      String\n  status    AddToDatabaseStatus @default(ENABLED)\n  levels    Json // Store hierarchical levels as JSON\n  createdAt DateTime            @default(now())\n  updatedAt DateTime            @updatedAt\n\n  @@map(\"add_to_databases\")\n}\n\nenum AddToDatabaseStatus {\n  ENABLED\n  DISABLED\n}\n",
-  "inlineSchemaHash": "9b89f175ab3ae3f847376e84fc7b2f2e721138f8c16316042cdc6c4f4622f7a8",
-  "copyEngine": true
-}
-config.dirname = '/'
+class PrismaClient {
+  constructor() {
+    return new Proxy(this, {
+      get(target, prop) {
+        let message
+        const runtime = getRuntime()
+        if (runtime.isEdge) {
+          message = `PrismaClient is not configured to run in ${runtime.prettyName}. In order to run Prisma Client on edge runtime, either:
+- Use Prisma Accelerate: https://pris.ly/d/accelerate
+- Use Driver Adapters: https://pris.ly/d/driver-adapters
+`;
+        } else {
+          message = 'PrismaClient is unable to run in this browser environment, or has been bundled for the browser (running in `' + runtime.prettyName + '`).'
+        }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"photo\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"googleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"UserStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"roles\",\"kind\":\"object\",\"type\":\"UserRole\",\"relationName\":\"UserToUserRole\"},{\"name\":\"files\",\"kind\":\"object\",\"type\":\"File\",\"relationName\":\"FileToUser\"},{\"name\":\"auditLogs\",\"kind\":\"object\",\"type\":\"AuditLog\",\"relationName\":\"AuditLogToUser\"},{\"name\":\"createdForms\",\"kind\":\"object\",\"type\":\"Form\",\"relationName\":\"FormCreator\"},{\"name\":\"createdGroups\",\"kind\":\"object\",\"type\":\"Group\",\"relationName\":\"GroupCreator\"},{\"name\":\"createdProcesses\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ProcessCreator\"},{\"name\":\"organization\",\"kind\":\"object\",\"type\":\"OrganizationUser\",\"relationName\":\"OrganizationUserToUser\"},{\"name\":\"applicantProcesses\",\"kind\":\"object\",\"type\":\"ApplicantProcess\",\"relationName\":\"ApplicantProcessToUser\"}],\"dbName\":\"users\"},\"Role\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RoleStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"users\",\"kind\":\"object\",\"type\":\"UserRole\",\"relationName\":\"RoleToUserRole\"},{\"name\":\"groups\",\"kind\":\"object\",\"type\":\"GroupRole\",\"relationName\":\"GroupRoleToRole\"},{\"name\":\"processes\",\"kind\":\"object\",\"type\":\"ProcessRole\",\"relationName\":\"ProcessRoleToRole\"}],\"dbName\":\"roles\"},\"UserRole\":{\"fields\":[{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RoleStatus\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"UserToUserRole\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"RoleToUserRole\"}],\"dbName\":\"user_roles\"},\"File\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"thumbnailUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"size\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"isPrivate\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"FileToUser\"}],\"dbName\":\"files\"},\"AuditLog\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timestamp\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"action\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resource\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"resourceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"details\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"errorMessage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AuditLogToUser\"}],\"dbName\":\"audit_logs\"},\"Group\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"GroupStatus\"},{\"name\":\"creatorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"creator\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"GroupCreator\"},{\"name\":\"roles\",\"kind\":\"object\",\"type\":\"GroupRole\",\"relationName\":\"GroupToGroupRole\"},{\"name\":\"processes\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"GroupToProcess\"}],\"dbName\":\"groups\"},\"GroupRole\":{\"fields\":[{\"name\":\"groupId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RoleStatus\"},{\"name\":\"group\",\"kind\":\"object\",\"type\":\"Group\",\"relationName\":\"GroupToGroupRole\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"GroupRoleToRole\"}],\"dbName\":\"group_roles\"},\"Process\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ProcessType\"},{\"name\":\"groupId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creatorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ProcessStatus\"},{\"name\":\"archived\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"staffViewForms\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"applicantViewProcessLevel\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"group\",\"kind\":\"object\",\"type\":\"Group\",\"relationName\":\"GroupToProcess\"},{\"name\":\"creator\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ProcessCreator\"},{\"name\":\"roles\",\"kind\":\"object\",\"type\":\"ProcessRole\",\"relationName\":\"ProcessToProcessRole\"},{\"name\":\"forms\",\"kind\":\"object\",\"type\":\"ProcessForm\",\"relationName\":\"ProcessToProcessForm\"},{\"name\":\"applicantProcesses\",\"kind\":\"object\",\"type\":\"ApplicantProcess\",\"relationName\":\"ApplicantProcessToProcess\"},{\"name\":\"formResponses\",\"kind\":\"object\",\"type\":\"FormResponse\",\"relationName\":\"FormResponseToProcess\"}],\"dbName\":\"processes\"},\"ProcessRole\":{\"fields\":[{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"roleId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RoleStatus\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ProcessToProcessRole\"},{\"name\":\"role\",\"kind\":\"object\",\"type\":\"Role\",\"relationName\":\"ProcessRoleToRole\"}],\"dbName\":\"process_roles\"},\"Form\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"FormType\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"FormStatus\"},{\"name\":\"archived\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"creatorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"creator\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"FormCreator\"},{\"name\":\"design\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"responses\",\"kind\":\"object\",\"type\":\"FormResponse\",\"relationName\":\"FormToFormResponse\"},{\"name\":\"processForms\",\"kind\":\"object\",\"type\":\"ProcessForm\",\"relationName\":\"FormToProcessForm\"}],\"dbName\":\"forms\"},\"FormResponse\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"formId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"applicantProcessId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"responses\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"form\",\"kind\":\"object\",\"type\":\"Form\",\"relationName\":\"FormToFormResponse\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"FormResponseToProcess\"},{\"name\":\"applicantProcess\",\"kind\":\"object\",\"type\":\"ApplicantProcess\",\"relationName\":\"ApplicantProcessToFormResponse\"}],\"dbName\":\"form_responses\"},\"ProcessForm\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"formId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"nextStepType\",\"kind\":\"enum\",\"type\":\"NextStepType\"},{\"name\":\"nextStepRoles\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"nextStaffId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notificationType\",\"kind\":\"enum\",\"type\":\"NextStepType\"},{\"name\":\"notificationRoles\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notificationToId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notificationComment\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"notifyApplicant\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"applicantNotificationContent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ProcessToProcessForm\"},{\"name\":\"form\",\"kind\":\"object\",\"type\":\"Form\",\"relationName\":\"FormToProcessForm\"}],\"dbName\":\"process_forms\"},\"ApplicantProcess\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"applicantId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"processId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"ProcessStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"applicant\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"ApplicantProcessToUser\"},{\"name\":\"process\",\"kind\":\"object\",\"type\":\"Process\",\"relationName\":\"ApplicantProcessToProcess\"},{\"name\":\"completedForms\",\"kind\":\"object\",\"type\":\"APCompletedForm\",\"relationName\":\"APCompletedFormToApplicantProcess\"},{\"name\":\"responses\",\"kind\":\"object\",\"type\":\"FormResponse\",\"relationName\":\"ApplicantProcessToFormResponse\"},{\"name\":\"comments\",\"kind\":\"object\",\"type\":\"ProcessComment\",\"relationName\":\"ApplicantProcessToProcessComment\"}],\"dbName\":\"applicant_processes\"},\"APCompletedForm\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"applicantProcessId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"formId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"reviewerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"applicantProcess\",\"kind\":\"object\",\"type\":\"ApplicantProcess\",\"relationName\":\"APCompletedFormToApplicantProcess\"}],\"dbName\":\"ap_completed_forms\"},\"ProcessComment\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"applicantProcessId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"comment\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"applicantProcess\",\"kind\":\"object\",\"type\":\"ApplicantProcess\",\"relationName\":\"ApplicantProcessToProcessComment\"}],\"dbName\":\"process_comments\"},\"OrganizationUser\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"superiorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"OrganizationUserToUser\"},{\"name\":\"superior\",\"kind\":\"object\",\"type\":\"OrganizationUser\",\"relationName\":\"Hierarchy\"},{\"name\":\"subordinates\",\"kind\":\"object\",\"type\":\"OrganizationUser\",\"relationName\":\"Hierarchy\"}],\"dbName\":\"organization_users\"},\"Dashboard\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ownerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allowedUsers\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"allowedRoles\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"layout\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"widgets\",\"kind\":\"object\",\"type\":\"Widget\",\"relationName\":\"DashboardToWidget\"}],\"dbName\":\"dashboards\"},\"Widget\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"dashboardId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"visualizationType\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"config\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"dashboard\",\"kind\":\"object\",\"type\":\"Dashboard\",\"relationName\":\"DashboardToWidget\"}],\"dbName\":\"widgets\"},\"QrCodeDocument\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"documentName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"qrCodeId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"creatorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"qr_code_documents\"},\"Otp\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"otp\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"otps\"},\"Management\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"fileName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ManagementType\"},{\"name\":\"uploadedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"management\"},\"AddToDatabase\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"AddToDatabaseStatus\"},{\"name\":\"levels\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"add_to_databases\"}},\"enums\":{},\"types\":{}}")
-defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.engineWasm = undefined
-config.compilerWasm = {
-  getRuntime: async () => require('./query_compiler_bg.js'),
-  getQueryCompilerWasmModule: async () => {
-    const loader = (await import('#wasm-compiler-loader')).default
-    const compiler = (await loader).default
-    return compiler
+        message += `
+If this is unexpected, please open an issue: https://pris.ly/prisma-prisma-bug-report`
+
+        throw new Error(message)
+      }
+    })
   }
 }
 
-config.injectableEdgeEnv = () => ({
-  parsed: {
-    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
-  }
-})
-
-if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
-  Debug.enable(typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined)
-}
-
-const PrismaClient = getPrismaClient(config)
 exports.PrismaClient = PrismaClient
-Object.assign(exports, Prisma)
 
+Object.assign(exports, Prisma)

@@ -133,11 +133,6 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.RelationLoadStrategy = {
-  query: 'query',
-  join: 'join'
-};
-
 exports.Prisma.RoleScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -228,10 +223,10 @@ exports.Prisma.FormScalarFieldEnum = {
 exports.Prisma.FormResponseScalarFieldEnum = {
   id: 'id',
   formId: 'formId',
-  processId: 'processId',
   applicantProcessId: 'applicantProcessId',
   responses: 'responses',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  processId: 'processId'
 };
 
 exports.Prisma.ProcessFormScalarFieldEnum = {
@@ -247,7 +242,9 @@ exports.Prisma.ProcessFormScalarFieldEnum = {
   notificationToId: 'notificationToId',
   notificationComment: 'notificationComment',
   notifyApplicant: 'notifyApplicant',
-  applicantNotificationContent: 'applicantNotificationContent'
+  applicantNotificationContent: 'applicantNotificationContent',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ApplicantProcessScalarFieldEnum = {
@@ -361,164 +358,10 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
-exports.Prisma.UserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  email: 'email',
-  password: 'password',
-  firstName: 'firstName',
-  lastName: 'lastName',
-  photo: 'photo',
-  googleId: 'googleId'
-};
-
-exports.Prisma.RoleOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description'
-};
-
-exports.Prisma.UserRoleOrderByRelevanceFieldEnum = {
-  userId: 'userId',
-  roleId: 'roleId'
-};
-
-exports.Prisma.FileOrderByRelevanceFieldEnum = {
-  id: 'id',
-  fileUrl: 'fileUrl',
-  thumbnailUrl: 'thumbnailUrl',
-  title: 'title',
-  userId: 'userId',
-  fileType: 'fileType'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
-};
-
-exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  action: 'action',
-  resource: 'resource',
-  resourceId: 'resourceId',
-  status: 'status',
-  errorMessage: 'errorMessage'
-};
-
-exports.Prisma.GroupOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.GroupRoleOrderByRelevanceFieldEnum = {
-  groupId: 'groupId',
-  roleId: 'roleId'
-};
-
-exports.Prisma.ProcessOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  groupId: 'groupId',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.ProcessRoleOrderByRelevanceFieldEnum = {
-  processId: 'processId',
-  roleId: 'roleId'
-};
-
-exports.Prisma.FormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.FormResponseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  formId: 'formId',
-  processId: 'processId',
-  applicantProcessId: 'applicantProcessId'
-};
-
-exports.Prisma.ProcessFormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  processId: 'processId',
-  formId: 'formId',
-  nextStepRoles: 'nextStepRoles',
-  nextStaffId: 'nextStaffId',
-  notificationRoles: 'notificationRoles',
-  notificationToId: 'notificationToId',
-  notificationComment: 'notificationComment',
-  applicantNotificationContent: 'applicantNotificationContent'
-};
-
-exports.Prisma.ApplicantProcessOrderByRelevanceFieldEnum = {
-  id: 'id',
-  applicantId: 'applicantId',
-  processId: 'processId'
-};
-
-exports.Prisma.APCompletedFormOrderByRelevanceFieldEnum = {
-  id: 'id',
-  applicantProcessId: 'applicantProcessId',
-  formId: 'formId',
-  reviewerId: 'reviewerId'
-};
-
-exports.Prisma.ProcessCommentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  applicantProcessId: 'applicantProcessId',
-  userId: 'userId',
-  comment: 'comment'
-};
-
-exports.Prisma.OrganizationUserOrderByRelevanceFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  superiorId: 'superiorId',
-  title: 'title'
-};
-
-exports.Prisma.DashboardOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  ownerId: 'ownerId',
-  allowedUsers: 'allowedUsers',
-  allowedRoles: 'allowedRoles'
-};
-
-exports.Prisma.WidgetOrderByRelevanceFieldEnum = {
-  id: 'id',
-  dashboardId: 'dashboardId',
-  title: 'title',
-  visualizationType: 'visualizationType'
-};
-
-exports.Prisma.QrCodeDocumentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  documentName: 'documentName',
-  fileName: 'fileName',
-  qrCodeId: 'qrCodeId',
-  creatorId: 'creatorId'
-};
-
-exports.Prisma.OtpOrderByRelevanceFieldEnum = {
-  id: 'id',
-  email: 'email',
-  otp: 'otp'
-};
-
-exports.Prisma.ManagementOrderByRelevanceFieldEnum = {
-  id: 'id',
-  fileName: 'fileName'
-};
-
-exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name'
 };
 exports.UserStatus = exports.$Enums.UserStatus = {
   ENABLED: 'ENABLED',

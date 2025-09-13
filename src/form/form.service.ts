@@ -168,4 +168,86 @@ export class FormService {
       countryFields: item.countryFields,
     }));
   }
+
+  async getFormFields(formId: string) {
+    const form = await this.prisma.form.findUnique({ where: { id: formId } });
+    if (!form) {
+      throw new NotFoundException(`Form with ID ${formId} not found`);
+    }
+    const systemFields = [
+      { id: '$responseId$', label: 'Response ID', type: 'text' },
+      { id: '$submissionDate$', label: 'Submission Date', type: 'date' },
+    ];
+    let formFields: any[] = [];
+    if (form.design) {
+      const design = form.design as any;
+      if (Array.isArray(design.sections)) {
+        design.sections.forEach((section: any) => {
+          if (Array.isArray(section.questions)) {
+            section.questions.forEach((question: any) => {
+              const type = this.mapQuestionTypeToFieldType(question.type);
+              formFields.push({
+                id: question.id,
+                label: question.label || question.id,
+                type,
+                required: question.required || false,
+                options: question.options || [],
+              });
+            });
+          }
+        });
+      }
+    }
+    return {
+      formId,
+      fields: [...systemFields, ...formFields],
+      systemFields,
+      formFields,
+    };
+  }
+
+  async getMultipleFormFields(formIds: string[]) {
+    const result: any = {};
+    const allFields: any[] = [];
+    for (const id of formIds) {
+      const data = await this.getFormFields(id);
+      result[id] = data;
+      allFields.push(...data.fields);
+    }
+    const uniqueFields = Array.from(new Map(allFields.map(f => [f.id as string, f])).values());
+    const systemFields = result[Object.keys(result)[0]]?.systemFields || [];
+    const formFields = allFields.filter(f => !f.id.startsWith('$'));
+    return {
+      allFields: uniqueFields,
+      byForm: result,
+      systemFields,
+      formFields,
+    };
+  }
+
+  mapQuestionTypeToFieldType(questionType: string): string {
+    switch (questionType) {
+      case 'text':
+      case 'textarea':
+      case 'email':
+      case 'number':
+      case 'phoneNumber':
+      case 'url':
+        return 'text';
+      case 'select':
+      case 'dropdown':
+      case 'radio':
+        return 'select';
+      case 'checkbox':
+      case 'yesno':
+        return 'boolean';
+      case 'date':
+      case 'time':
+      case 'datetime':
+      case 'dateRange':
+        return 'date';
+      default:
+        return 'text';
+    }
+  }
 }
