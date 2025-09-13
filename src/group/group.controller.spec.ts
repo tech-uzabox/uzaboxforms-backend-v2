@@ -42,8 +42,18 @@ describe('GroupController', () => {
   });
 
   describe('create', () => {
-    it('should create a group', async () => {
+    it('should create a group without roles', async () => {
       const createGroupDto = { name: 'New Group', creatorId: 'user-id-1' };
+      expect(await controller.create(createGroupDto)).toEqual(mockGroup);
+      expect(mockGroupService.create).toHaveBeenCalledWith(createGroupDto);
+    });
+
+    it('should create a group with roles', async () => {
+      const createGroupDto = {
+        name: 'New Group',
+        creatorId: 'user-id-1',
+        roles: ['role-id-1', 'role-id-2'],
+      };
       expect(await controller.create(createGroupDto)).toEqual(mockGroup);
       expect(mockGroupService.create).toHaveBeenCalledWith(createGroupDto);
     });
@@ -66,6 +76,20 @@ describe('GroupController', () => {
   describe('update', () => {
     it('should update a group', async () => {
       const updateGroupDto = { name: 'Updated Group' };
+      expect(await controller.update(mockGroup.id, updateGroupDto)).toEqual(
+        mockGroup,
+      );
+      expect(mockGroupService.update).toHaveBeenCalledWith(
+        mockGroup.id,
+        updateGroupDto,
+      );
+    });
+
+    it('should update a group with roles', async () => {
+      const updateGroupDto = {
+        name: 'Updated Group',
+        roles: ['role-id-1', 'role-id-3'],
+      };
       expect(await controller.update(mockGroup.id, updateGroupDto)).toEqual(
         mockGroup,
       );
