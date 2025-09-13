@@ -84,11 +84,32 @@ export class ProcessService {
   }
 
   async findAll(): Promise<Process[]> {
-    return this.prisma.process.findMany();
+    return this.prisma.process.findMany({
+      include: {
+        group: true,
+        creator: true,
+        roles: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
   }
 
   async findOne(id: string): Promise<Process | null> {
-    return this.prisma.process.findUnique({ where: { id } });
+    return this.prisma.process.findUnique({
+      where: { id },
+      include: {
+        group: true,
+        creator: true,
+        roles: {
+          include: {
+            role: true,
+          },
+        },
+      },
+    });
   }
 
   async update(id: string, data: UpdateProcessDto): Promise<Process> {
