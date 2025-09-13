@@ -1,9 +1,9 @@
 import { APP_PIPE } from '@nestjs/core';
-import { Test, TestingModule } from '@nestjs/testing';
-import { Form, FormStatus, FormType } from 'db';
-import { ZodValidationPipe } from 'nestjs-zod';
-import { FormController } from './form.controller';
 import { FormService } from './form.service';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { Form, FormStatus, FormType } from 'db';
+import { FormController } from './form.controller';
+import { Test, TestingModule } from '@nestjs/testing';
 
 const mockForm: Form = {
   id: 'form-id-1',
@@ -47,7 +47,7 @@ describe('FormController', () => {
 
   describe('create', () => {
     it('should create a form', async () => {
-      const createFormDto = { name: 'New Form', creatorId: 'user-id-1' };
+      const createFormDto = { name: 'New Form', creatorId: 'user-id-1' , status: mockForm.status, type: mockForm.type};
       expect(await controller.create(createFormDto)).toEqual(mockForm);
       expect(mockFormService.create).toHaveBeenCalledWith(createFormDto);
     });
