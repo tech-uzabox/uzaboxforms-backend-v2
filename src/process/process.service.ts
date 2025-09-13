@@ -3,6 +3,7 @@ import { NextStepType, Prisma, Process } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateProcessDto } from './dto/create-process.dto';
+import { UpdateProcessDto } from './dto/update-process.dto';
 
 @Injectable()
 export class ProcessService {
@@ -90,7 +91,7 @@ export class ProcessService {
     return this.prisma.process.findUnique({ where: { id } });
   }
 
-  async update(id: string, data: Prisma.ProcessUpdateInput): Promise<Process> {
+  async update(id: string, data: UpdateProcessDto): Promise<Process> {
     const { roles, ...processData } = data as any;
 
     // Use transaction to handle role synchronization atomically

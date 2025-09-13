@@ -3,6 +3,7 @@ import { Group, Prisma } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -84,7 +85,7 @@ export class GroupService {
     });
   }
 
-  async update(id: string, data: Prisma.GroupUpdateInput): Promise<Group> {
+  async update(id: string, data: UpdateGroupDto): Promise<Group> {
     const { roles, ...groupData } = data as any;
 
     // Use transaction to handle role synchronization atomically
