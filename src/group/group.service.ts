@@ -18,6 +18,10 @@ export class GroupService {
         name,
         creator: { connect: { id: creatorId } },
       },
+      include: {
+        creator: true,
+        roles: true,
+      },
     });
     await this.auditLogService.log({
       action: 'GROUP_CREATED',
@@ -30,17 +34,32 @@ export class GroupService {
   }
 
   async findAll(): Promise<Group[]> {
-    return this.prisma.group.findMany();
+    return this.prisma.group.findMany({
+      include: {
+        creator: true,
+        roles: true,
+      },
+    });
   }
 
   async findOne(id: string): Promise<Group | null> {
-    return this.prisma.group.findUnique({ where: { id } });
+    return this.prisma.group.findUnique({
+      where: { id },
+      include: {
+        creator: true,
+        roles: true,
+      },
+    });
   }
 
   async update(id: string, data: Prisma.GroupUpdateInput): Promise<Group> {
     const updatedGroup = await this.prisma.group.update({
       where: { id },
       data,
+      include: {
+        creator: true,
+        roles: true,
+      },
     });
     await this.auditLogService.log({
       action: 'GROUP_UPDATED',
@@ -78,7 +97,7 @@ export class GroupService {
       throw new Error('No enabled roles found for the user');
     }
 
-    const roleIds = userRoles.map(ur => ur.roleId);
+    const roleIds = userRoles.map((ur) => ur.roleId);
 
     // Get enabled group roles for those roles
     const groupRoles = await this.prisma.groupRole.findMany({
@@ -93,7 +112,7 @@ export class GroupService {
       throw new Error('No accessible groups found for the user roles');
     }
 
-    const groupIds = groupRoles.map(gr => gr.groupId);
+    const groupIds = groupRoles.map((gr) => gr.groupId);
 
     // Get enabled groups
     const groups = await this.prisma.group.findMany({
@@ -105,6 +124,8 @@ export class GroupService {
         id: true,
         name: true,
         status: true,
+        creator: true,
+        roles: true,
       },
     });
 
@@ -152,6 +173,8 @@ export class GroupService {
             id: group.id,
             name: group.name,
             status: group.status,
+            creator: group.creator,
+            roles: group.roles,
           },
           processes: processesWithFirstFormId,
         };
