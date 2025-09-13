@@ -647,8 +647,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.15.0
-   * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+   * Prisma Client JS version: 6.16.1
+   * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
    */
   export type PrismaVersion = {
     client: string
@@ -2777,6 +2777,10 @@ export namespace Prisma {
       isolationLevel?: Prisma.TransactionIsolationLevel
     }
     /**
+     * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-planetscale`
+     */
+    adapter?: runtime.SqlDriverAdapterFactory | null
+    /**
      * Global configuration for omitting model fields by default.
      * 
      * @example
@@ -3576,7 +3580,7 @@ export namespace Prisma {
   type UserGetPayload<S extends boolean | null | undefined | UserDefaultArgs> = $Result.GetResult<Prisma.$UserPayload, S>
 
   type UserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<UserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: UserCountAggregateInputType | true
     }
 
@@ -4034,6 +4038,7 @@ export namespace Prisma {
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4056,6 +4061,7 @@ export namespace Prisma {
      * Filter, which User to fetch.
      */
     where: UserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4108,6 +4114,7 @@ export namespace Prisma {
      * Filter by unique combinations of Users.
      */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4160,6 +4167,7 @@ export namespace Prisma {
      * Filter by unique combinations of Users.
      */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4207,6 +4215,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4229,6 +4238,7 @@ export namespace Prisma {
      * The data needed to create a User.
      */
     data: XOR<UserCreateInput, UserUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4285,6 +4295,7 @@ export namespace Prisma {
      * Choose, which User to update.
      */
     where: UserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4359,6 +4370,7 @@ export namespace Prisma {
      * In case the User was found with the provided `where` argument, update it with this data.
      */
     update: XOR<UserUpdateInput, UserUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4381,6 +4393,7 @@ export namespace Prisma {
      * Filter which User to delete.
      */
     where: UserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -4839,7 +4852,7 @@ export namespace Prisma {
   type RoleGetPayload<S extends boolean | null | undefined | RoleDefaultArgs> = $Result.GetResult<Prisma.$RolePayload, S>
 
   type RoleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<RoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<RoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: RoleCountAggregateInputType | true
     }
 
@@ -5288,6 +5301,7 @@ export namespace Prisma {
      * Filter, which Role to fetch.
      */
     where: RoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5310,6 +5324,7 @@ export namespace Prisma {
      * Filter, which Role to fetch.
      */
     where: RoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5362,6 +5377,7 @@ export namespace Prisma {
      * Filter by unique combinations of Roles.
      */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5414,6 +5430,7 @@ export namespace Prisma {
      * Filter by unique combinations of Roles.
      */
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5461,6 +5478,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: RoleScalarFieldEnum | RoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5483,6 +5501,7 @@ export namespace Prisma {
      * The data needed to create a Role.
      */
     data: XOR<RoleCreateInput, RoleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5539,6 +5558,7 @@ export namespace Prisma {
      * Choose, which Role to update.
      */
     where: RoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5613,6 +5633,7 @@ export namespace Prisma {
      * In case the Role was found with the provided `where` argument, update it with this data.
      */
     update: XOR<RoleUpdateInput, RoleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5635,6 +5656,7 @@ export namespace Prisma {
      * Filter which Role to delete.
      */
     where: RoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -5947,7 +5969,7 @@ export namespace Prisma {
   type UserRoleGetPayload<S extends boolean | null | undefined | UserRoleDefaultArgs> = $Result.GetResult<Prisma.$UserRolePayload, S>
 
   type UserRoleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<UserRoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<UserRoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: UserRoleCountAggregateInputType | true
     }
 
@@ -6392,6 +6414,7 @@ export namespace Prisma {
      * Filter, which UserRole to fetch.
      */
     where: UserRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6414,6 +6437,7 @@ export namespace Prisma {
      * Filter, which UserRole to fetch.
      */
     where: UserRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6466,6 +6490,7 @@ export namespace Prisma {
      * Filter by unique combinations of UserRoles.
      */
     distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6518,6 +6543,7 @@ export namespace Prisma {
      * Filter by unique combinations of UserRoles.
      */
     distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6565,6 +6591,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6587,6 +6614,7 @@ export namespace Prisma {
      * The data needed to create a UserRole.
      */
     data: XOR<UserRoleCreateInput, UserRoleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6647,6 +6675,7 @@ export namespace Prisma {
      * Choose, which UserRole to update.
      */
     where: UserRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6725,6 +6754,7 @@ export namespace Prisma {
      * In case the UserRole was found with the provided `where` argument, update it with this data.
      */
     update: XOR<UserRoleUpdateInput, UserRoleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -6747,6 +6777,7 @@ export namespace Prisma {
      * Filter which UserRole to delete.
      */
     where: UserRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7098,7 +7129,7 @@ export namespace Prisma {
   type FileGetPayload<S extends boolean | null | undefined | FileDefaultArgs> = $Result.GetResult<Prisma.$FilePayload, S>
 
   type FileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<FileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: FileCountAggregateInputType | true
     }
 
@@ -7549,6 +7580,7 @@ export namespace Prisma {
      * Filter, which File to fetch.
      */
     where: FileWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7571,6 +7603,7 @@ export namespace Prisma {
      * Filter, which File to fetch.
      */
     where: FileWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7623,6 +7656,7 @@ export namespace Prisma {
      * Filter by unique combinations of Files.
      */
     distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7675,6 +7709,7 @@ export namespace Prisma {
      * Filter by unique combinations of Files.
      */
     distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7722,6 +7757,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: FileScalarFieldEnum | FileScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7744,6 +7780,7 @@ export namespace Prisma {
      * The data needed to create a File.
      */
     data: XOR<FileCreateInput, FileUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7804,6 +7841,7 @@ export namespace Prisma {
      * Choose, which File to update.
      */
     where: FileWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7882,6 +7920,7 @@ export namespace Prisma {
      * In case the File was found with the provided `where` argument, update it with this data.
      */
     update: XOR<FileUpdateInput, FileUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -7904,6 +7943,7 @@ export namespace Prisma {
      * Filter which File to delete.
      */
     where: FileWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8205,7 +8245,7 @@ export namespace Prisma {
   type AuditLogGetPayload<S extends boolean | null | undefined | AuditLogDefaultArgs> = $Result.GetResult<Prisma.$AuditLogPayload, S>
 
   type AuditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AuditLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<AuditLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: AuditLogCountAggregateInputType | true
     }
 
@@ -8655,6 +8695,7 @@ export namespace Prisma {
      * Filter, which AuditLog to fetch.
      */
     where: AuditLogWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8677,6 +8718,7 @@ export namespace Prisma {
      * Filter, which AuditLog to fetch.
      */
     where: AuditLogWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8729,6 +8771,7 @@ export namespace Prisma {
      * Filter by unique combinations of AuditLogs.
      */
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8781,6 +8824,7 @@ export namespace Prisma {
      * Filter by unique combinations of AuditLogs.
      */
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8828,6 +8872,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8850,6 +8895,7 @@ export namespace Prisma {
      * The data needed to create a AuditLog.
      */
     data: XOR<AuditLogCreateInput, AuditLogUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8910,6 +8956,7 @@ export namespace Prisma {
      * Choose, which AuditLog to update.
      */
     where: AuditLogWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -8988,6 +9035,7 @@ export namespace Prisma {
      * In case the AuditLog was found with the provided `where` argument, update it with this data.
      */
     update: XOR<AuditLogUpdateInput, AuditLogUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9010,6 +9058,7 @@ export namespace Prisma {
      * Filter which AuditLog to delete.
      */
     where: AuditLogWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9306,7 +9355,7 @@ export namespace Prisma {
   type GroupGetPayload<S extends boolean | null | undefined | GroupDefaultArgs> = $Result.GetResult<Prisma.$GroupPayload, S>
 
   type GroupCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<GroupFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: GroupCountAggregateInputType | true
     }
 
@@ -9755,6 +9804,7 @@ export namespace Prisma {
      * Filter, which Group to fetch.
      */
     where: GroupWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9777,6 +9827,7 @@ export namespace Prisma {
      * Filter, which Group to fetch.
      */
     where: GroupWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9829,6 +9880,7 @@ export namespace Prisma {
      * Filter by unique combinations of Groups.
      */
     distinct?: GroupScalarFieldEnum | GroupScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9881,6 +9933,7 @@ export namespace Prisma {
      * Filter by unique combinations of Groups.
      */
     distinct?: GroupScalarFieldEnum | GroupScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9928,6 +9981,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: GroupScalarFieldEnum | GroupScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -9950,6 +10004,7 @@ export namespace Prisma {
      * The data needed to create a Group.
      */
     data: XOR<GroupCreateInput, GroupUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10010,6 +10065,7 @@ export namespace Prisma {
      * Choose, which Group to update.
      */
     where: GroupWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10088,6 +10144,7 @@ export namespace Prisma {
      * In case the Group was found with the provided `where` argument, update it with this data.
      */
     update: XOR<GroupUpdateInput, GroupUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10110,6 +10167,7 @@ export namespace Prisma {
      * Filter which Group to delete.
      */
     where: GroupWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10398,7 +10456,7 @@ export namespace Prisma {
   type GroupRoleGetPayload<S extends boolean | null | undefined | GroupRoleDefaultArgs> = $Result.GetResult<Prisma.$GroupRolePayload, S>
 
   type GroupRoleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<GroupRoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<GroupRoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: GroupRoleCountAggregateInputType | true
     }
 
@@ -10843,6 +10901,7 @@ export namespace Prisma {
      * Filter, which GroupRole to fetch.
      */
     where: GroupRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10865,6 +10924,7 @@ export namespace Prisma {
      * Filter, which GroupRole to fetch.
      */
     where: GroupRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10917,6 +10977,7 @@ export namespace Prisma {
      * Filter by unique combinations of GroupRoles.
      */
     distinct?: GroupRoleScalarFieldEnum | GroupRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -10969,6 +11030,7 @@ export namespace Prisma {
      * Filter by unique combinations of GroupRoles.
      */
     distinct?: GroupRoleScalarFieldEnum | GroupRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11016,6 +11078,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: GroupRoleScalarFieldEnum | GroupRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11038,6 +11101,7 @@ export namespace Prisma {
      * The data needed to create a GroupRole.
      */
     data: XOR<GroupRoleCreateInput, GroupRoleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11098,6 +11162,7 @@ export namespace Prisma {
      * Choose, which GroupRole to update.
      */
     where: GroupRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11176,6 +11241,7 @@ export namespace Prisma {
      * In case the GroupRole was found with the provided `where` argument, update it with this data.
      */
     update: XOR<GroupRoleUpdateInput, GroupRoleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11198,6 +11264,7 @@ export namespace Prisma {
      * Filter which GroupRole to delete.
      */
     where: GroupRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -11548,7 +11615,7 @@ export namespace Prisma {
   type ProcessGetPayload<S extends boolean | null | undefined | ProcessDefaultArgs> = $Result.GetResult<Prisma.$ProcessPayload, S>
 
   type ProcessCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProcessFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ProcessFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ProcessCountAggregateInputType | true
     }
 
@@ -12005,6 +12072,7 @@ export namespace Prisma {
      * Filter, which Process to fetch.
      */
     where: ProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12027,6 +12095,7 @@ export namespace Prisma {
      * Filter, which Process to fetch.
      */
     where: ProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12079,6 +12148,7 @@ export namespace Prisma {
      * Filter by unique combinations of Processes.
      */
     distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12131,6 +12201,7 @@ export namespace Prisma {
      * Filter by unique combinations of Processes.
      */
     distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12178,6 +12249,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12200,6 +12272,7 @@ export namespace Prisma {
      * The data needed to create a Process.
      */
     data: XOR<ProcessCreateInput, ProcessUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12260,6 +12333,7 @@ export namespace Prisma {
      * Choose, which Process to update.
      */
     where: ProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12338,6 +12412,7 @@ export namespace Prisma {
      * In case the Process was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ProcessUpdateInput, ProcessUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12360,6 +12435,7 @@ export namespace Prisma {
      * Filter which Process to delete.
      */
     where: ProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -12696,7 +12772,7 @@ export namespace Prisma {
   type ProcessRoleGetPayload<S extends boolean | null | undefined | ProcessRoleDefaultArgs> = $Result.GetResult<Prisma.$ProcessRolePayload, S>
 
   type ProcessRoleCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProcessRoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ProcessRoleFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ProcessRoleCountAggregateInputType | true
     }
 
@@ -13141,6 +13217,7 @@ export namespace Prisma {
      * Filter, which ProcessRole to fetch.
      */
     where: ProcessRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13163,6 +13240,7 @@ export namespace Prisma {
      * Filter, which ProcessRole to fetch.
      */
     where: ProcessRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13215,6 +13293,7 @@ export namespace Prisma {
      * Filter by unique combinations of ProcessRoles.
      */
     distinct?: ProcessRoleScalarFieldEnum | ProcessRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13267,6 +13346,7 @@ export namespace Prisma {
      * Filter by unique combinations of ProcessRoles.
      */
     distinct?: ProcessRoleScalarFieldEnum | ProcessRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13314,6 +13394,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: ProcessRoleScalarFieldEnum | ProcessRoleScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13336,6 +13417,7 @@ export namespace Prisma {
      * The data needed to create a ProcessRole.
      */
     data: XOR<ProcessRoleCreateInput, ProcessRoleUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13396,6 +13478,7 @@ export namespace Prisma {
      * Choose, which ProcessRole to update.
      */
     where: ProcessRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13474,6 +13557,7 @@ export namespace Prisma {
      * In case the ProcessRole was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ProcessRoleUpdateInput, ProcessRoleUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13496,6 +13580,7 @@ export namespace Prisma {
      * Filter which ProcessRole to delete.
      */
     where: ProcessRoleWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -13805,7 +13890,7 @@ export namespace Prisma {
   type FormGetPayload<S extends boolean | null | undefined | FormDefaultArgs> = $Result.GetResult<Prisma.$FormPayload, S>
 
   type FormCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<FormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: FormCountAggregateInputType | true
     }
 
@@ -14257,6 +14342,7 @@ export namespace Prisma {
      * Filter, which Form to fetch.
      */
     where: FormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14279,6 +14365,7 @@ export namespace Prisma {
      * Filter, which Form to fetch.
      */
     where: FormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14331,6 +14418,7 @@ export namespace Prisma {
      * Filter by unique combinations of Forms.
      */
     distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14383,6 +14471,7 @@ export namespace Prisma {
      * Filter by unique combinations of Forms.
      */
     distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14430,6 +14519,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: FormScalarFieldEnum | FormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14452,6 +14542,7 @@ export namespace Prisma {
      * The data needed to create a Form.
      */
     data: XOR<FormCreateInput, FormUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14512,6 +14603,7 @@ export namespace Prisma {
      * Choose, which Form to update.
      */
     where: FormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14590,6 +14682,7 @@ export namespace Prisma {
      * In case the Form was found with the provided `where` argument, update it with this data.
      */
     update: XOR<FormUpdateInput, FormUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14612,6 +14705,7 @@ export namespace Prisma {
      * Filter which Form to delete.
      */
     where: FormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -14939,7 +15033,7 @@ export namespace Prisma {
   type FormResponseGetPayload<S extends boolean | null | undefined | FormResponseDefaultArgs> = $Result.GetResult<Prisma.$FormResponsePayload, S>
 
   type FormResponseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<FormResponseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<FormResponseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: FormResponseCountAggregateInputType | true
     }
 
@@ -15388,6 +15482,7 @@ export namespace Prisma {
      * Filter, which FormResponse to fetch.
      */
     where: FormResponseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15410,6 +15505,7 @@ export namespace Prisma {
      * Filter, which FormResponse to fetch.
      */
     where: FormResponseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15462,6 +15558,7 @@ export namespace Prisma {
      * Filter by unique combinations of FormResponses.
      */
     distinct?: FormResponseScalarFieldEnum | FormResponseScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15514,6 +15611,7 @@ export namespace Prisma {
      * Filter by unique combinations of FormResponses.
      */
     distinct?: FormResponseScalarFieldEnum | FormResponseScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15561,6 +15659,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: FormResponseScalarFieldEnum | FormResponseScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15583,6 +15682,7 @@ export namespace Prisma {
      * The data needed to create a FormResponse.
      */
     data: XOR<FormResponseCreateInput, FormResponseUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15643,6 +15743,7 @@ export namespace Prisma {
      * Choose, which FormResponse to update.
      */
     where: FormResponseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15721,6 +15822,7 @@ export namespace Prisma {
      * In case the FormResponse was found with the provided `where` argument, update it with this data.
      */
     update: XOR<FormResponseUpdateInput, FormResponseUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -15743,6 +15845,7 @@ export namespace Prisma {
      * Filter which FormResponse to delete.
      */
     where: FormResponseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16153,7 +16256,7 @@ export namespace Prisma {
   type ProcessFormGetPayload<S extends boolean | null | undefined | ProcessFormDefaultArgs> = $Result.GetResult<Prisma.$ProcessFormPayload, S>
 
   type ProcessFormCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProcessFormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ProcessFormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ProcessFormCountAggregateInputType | true
     }
 
@@ -16610,6 +16713,7 @@ export namespace Prisma {
      * Filter, which ProcessForm to fetch.
      */
     where: ProcessFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16632,6 +16736,7 @@ export namespace Prisma {
      * Filter, which ProcessForm to fetch.
      */
     where: ProcessFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16684,6 +16789,7 @@ export namespace Prisma {
      * Filter by unique combinations of ProcessForms.
      */
     distinct?: ProcessFormScalarFieldEnum | ProcessFormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16736,6 +16842,7 @@ export namespace Prisma {
      * Filter by unique combinations of ProcessForms.
      */
     distinct?: ProcessFormScalarFieldEnum | ProcessFormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16783,6 +16890,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: ProcessFormScalarFieldEnum | ProcessFormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16805,6 +16913,7 @@ export namespace Prisma {
      * The data needed to create a ProcessForm.
      */
     data: XOR<ProcessFormCreateInput, ProcessFormUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16865,6 +16974,7 @@ export namespace Prisma {
      * Choose, which ProcessForm to update.
      */
     where: ProcessFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16943,6 +17053,7 @@ export namespace Prisma {
      * In case the ProcessForm was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ProcessFormUpdateInput, ProcessFormUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -16965,6 +17076,7 @@ export namespace Prisma {
      * Filter which ProcessForm to delete.
      */
     where: ProcessFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17240,7 +17352,7 @@ export namespace Prisma {
   type ApplicantProcessGetPayload<S extends boolean | null | undefined | ApplicantProcessDefaultArgs> = $Result.GetResult<Prisma.$ApplicantProcessPayload, S>
 
   type ApplicantProcessCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ApplicantProcessFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ApplicantProcessFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ApplicantProcessCountAggregateInputType | true
     }
 
@@ -17690,6 +17802,7 @@ export namespace Prisma {
      * Filter, which ApplicantProcess to fetch.
      */
     where: ApplicantProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17712,6 +17825,7 @@ export namespace Prisma {
      * Filter, which ApplicantProcess to fetch.
      */
     where: ApplicantProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17764,6 +17878,7 @@ export namespace Prisma {
      * Filter by unique combinations of ApplicantProcesses.
      */
     distinct?: ApplicantProcessScalarFieldEnum | ApplicantProcessScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17816,6 +17931,7 @@ export namespace Prisma {
      * Filter by unique combinations of ApplicantProcesses.
      */
     distinct?: ApplicantProcessScalarFieldEnum | ApplicantProcessScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17863,6 +17979,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: ApplicantProcessScalarFieldEnum | ApplicantProcessScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17885,6 +18002,7 @@ export namespace Prisma {
      * The data needed to create a ApplicantProcess.
      */
     data: XOR<ApplicantProcessCreateInput, ApplicantProcessUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -17945,6 +18063,7 @@ export namespace Prisma {
      * Choose, which ApplicantProcess to update.
      */
     where: ApplicantProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18023,6 +18142,7 @@ export namespace Prisma {
      * In case the ApplicantProcess was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ApplicantProcessUpdateInput, ApplicantProcessUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18045,6 +18165,7 @@ export namespace Prisma {
      * Filter which ApplicantProcess to delete.
      */
     where: ApplicantProcessWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18374,7 +18495,7 @@ export namespace Prisma {
   type APCompletedFormGetPayload<S extends boolean | null | undefined | APCompletedFormDefaultArgs> = $Result.GetResult<Prisma.$APCompletedFormPayload, S>
 
   type APCompletedFormCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<APCompletedFormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<APCompletedFormFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: APCompletedFormCountAggregateInputType | true
     }
 
@@ -18820,6 +18941,7 @@ export namespace Prisma {
      * Filter, which APCompletedForm to fetch.
      */
     where: APCompletedFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18842,6 +18964,7 @@ export namespace Prisma {
      * Filter, which APCompletedForm to fetch.
      */
     where: APCompletedFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18894,6 +19017,7 @@ export namespace Prisma {
      * Filter by unique combinations of APCompletedForms.
      */
     distinct?: APCompletedFormScalarFieldEnum | APCompletedFormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18946,6 +19070,7 @@ export namespace Prisma {
      * Filter by unique combinations of APCompletedForms.
      */
     distinct?: APCompletedFormScalarFieldEnum | APCompletedFormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -18993,6 +19118,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: APCompletedFormScalarFieldEnum | APCompletedFormScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19015,6 +19141,7 @@ export namespace Prisma {
      * The data needed to create a APCompletedForm.
      */
     data: XOR<APCompletedFormCreateInput, APCompletedFormUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19075,6 +19202,7 @@ export namespace Prisma {
      * Choose, which APCompletedForm to update.
      */
     where: APCompletedFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19153,6 +19281,7 @@ export namespace Prisma {
      * In case the APCompletedForm was found with the provided `where` argument, update it with this data.
      */
     update: XOR<APCompletedFormUpdateInput, APCompletedFormUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19175,6 +19304,7 @@ export namespace Prisma {
      * Filter which APCompletedForm to delete.
      */
     where: APCompletedFormWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19432,7 +19562,7 @@ export namespace Prisma {
   type ProcessCommentGetPayload<S extends boolean | null | undefined | ProcessCommentDefaultArgs> = $Result.GetResult<Prisma.$ProcessCommentPayload, S>
 
   type ProcessCommentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ProcessCommentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ProcessCommentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ProcessCommentCountAggregateInputType | true
     }
 
@@ -19878,6 +20008,7 @@ export namespace Prisma {
      * Filter, which ProcessComment to fetch.
      */
     where: ProcessCommentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19900,6 +20031,7 @@ export namespace Prisma {
      * Filter, which ProcessComment to fetch.
      */
     where: ProcessCommentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -19952,6 +20084,7 @@ export namespace Prisma {
      * Filter by unique combinations of ProcessComments.
      */
     distinct?: ProcessCommentScalarFieldEnum | ProcessCommentScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20004,6 +20137,7 @@ export namespace Prisma {
      * Filter by unique combinations of ProcessComments.
      */
     distinct?: ProcessCommentScalarFieldEnum | ProcessCommentScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20051,6 +20185,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: ProcessCommentScalarFieldEnum | ProcessCommentScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20073,6 +20208,7 @@ export namespace Prisma {
      * The data needed to create a ProcessComment.
      */
     data: XOR<ProcessCommentCreateInput, ProcessCommentUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20133,6 +20269,7 @@ export namespace Prisma {
      * Choose, which ProcessComment to update.
      */
     where: ProcessCommentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20211,6 +20348,7 @@ export namespace Prisma {
      * In case the ProcessComment was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ProcessCommentUpdateInput, ProcessCommentUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20233,6 +20371,7 @@ export namespace Prisma {
      * Filter which ProcessComment to delete.
      */
     where: ProcessCommentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20490,7 +20629,7 @@ export namespace Prisma {
   type OrganizationUserGetPayload<S extends boolean | null | undefined | OrganizationUserDefaultArgs> = $Result.GetResult<Prisma.$OrganizationUserPayload, S>
 
   type OrganizationUserCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<OrganizationUserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<OrganizationUserFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: OrganizationUserCountAggregateInputType | true
     }
 
@@ -20937,6 +21076,7 @@ export namespace Prisma {
      * Filter, which OrganizationUser to fetch.
      */
     where: OrganizationUserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -20959,6 +21099,7 @@ export namespace Prisma {
      * Filter, which OrganizationUser to fetch.
      */
     where: OrganizationUserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21011,6 +21152,7 @@ export namespace Prisma {
      * Filter by unique combinations of OrganizationUsers.
      */
     distinct?: OrganizationUserScalarFieldEnum | OrganizationUserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21063,6 +21205,7 @@ export namespace Prisma {
      * Filter by unique combinations of OrganizationUsers.
      */
     distinct?: OrganizationUserScalarFieldEnum | OrganizationUserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21110,6 +21253,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: OrganizationUserScalarFieldEnum | OrganizationUserScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21132,6 +21276,7 @@ export namespace Prisma {
      * The data needed to create a OrganizationUser.
      */
     data: XOR<OrganizationUserCreateInput, OrganizationUserUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21192,6 +21337,7 @@ export namespace Prisma {
      * Choose, which OrganizationUser to update.
      */
     where: OrganizationUserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21270,6 +21416,7 @@ export namespace Prisma {
      * In case the OrganizationUser was found with the provided `where` argument, update it with this data.
      */
     update: XOR<OrganizationUserUpdateInput, OrganizationUserUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21292,6 +21439,7 @@ export namespace Prisma {
      * Filter which OrganizationUser to delete.
      */
     where: OrganizationUserWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -21612,7 +21760,7 @@ export namespace Prisma {
   type DashboardGetPayload<S extends boolean | null | undefined | DashboardDefaultArgs> = $Result.GetResult<Prisma.$DashboardPayload, S>
 
   type DashboardCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<DashboardFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<DashboardFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: DashboardCountAggregateInputType | true
     }
 
@@ -22061,6 +22209,7 @@ export namespace Prisma {
      * Filter, which Dashboard to fetch.
      */
     where: DashboardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22083,6 +22232,7 @@ export namespace Prisma {
      * Filter, which Dashboard to fetch.
      */
     where: DashboardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22135,6 +22285,7 @@ export namespace Prisma {
      * Filter by unique combinations of Dashboards.
      */
     distinct?: DashboardScalarFieldEnum | DashboardScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22187,6 +22338,7 @@ export namespace Prisma {
      * Filter by unique combinations of Dashboards.
      */
     distinct?: DashboardScalarFieldEnum | DashboardScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22234,6 +22386,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: DashboardScalarFieldEnum | DashboardScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22256,6 +22409,7 @@ export namespace Prisma {
      * The data needed to create a Dashboard.
      */
     data: XOR<DashboardCreateInput, DashboardUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22312,6 +22466,7 @@ export namespace Prisma {
      * Choose, which Dashboard to update.
      */
     where: DashboardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22386,6 +22541,7 @@ export namespace Prisma {
      * In case the Dashboard was found with the provided `where` argument, update it with this data.
      */
     update: XOR<DashboardUpdateInput, DashboardUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22408,6 +22564,7 @@ export namespace Prisma {
      * Filter which Dashboard to delete.
      */
     where: DashboardWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -22755,7 +22912,7 @@ export namespace Prisma {
   type WidgetGetPayload<S extends boolean | null | undefined | WidgetDefaultArgs> = $Result.GetResult<Prisma.$WidgetPayload, S>
 
   type WidgetCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<WidgetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<WidgetFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: WidgetCountAggregateInputType | true
     }
 
@@ -23204,6 +23361,7 @@ export namespace Prisma {
      * Filter, which Widget to fetch.
      */
     where: WidgetWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23226,6 +23384,7 @@ export namespace Prisma {
      * Filter, which Widget to fetch.
      */
     where: WidgetWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23278,6 +23437,7 @@ export namespace Prisma {
      * Filter by unique combinations of Widgets.
      */
     distinct?: WidgetScalarFieldEnum | WidgetScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23330,6 +23490,7 @@ export namespace Prisma {
      * Filter by unique combinations of Widgets.
      */
     distinct?: WidgetScalarFieldEnum | WidgetScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23377,6 +23538,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: WidgetScalarFieldEnum | WidgetScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23399,6 +23561,7 @@ export namespace Prisma {
      * The data needed to create a Widget.
      */
     data: XOR<WidgetCreateInput, WidgetUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23459,6 +23622,7 @@ export namespace Prisma {
      * Choose, which Widget to update.
      */
     where: WidgetWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23537,6 +23701,7 @@ export namespace Prisma {
      * In case the Widget was found with the provided `where` argument, update it with this data.
      */
     update: XOR<WidgetUpdateInput, WidgetUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23559,6 +23724,7 @@ export namespace Prisma {
      * Filter which Widget to delete.
      */
     where: WidgetWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -23826,7 +23992,7 @@ export namespace Prisma {
   type QrCodeDocumentGetPayload<S extends boolean | null | undefined | QrCodeDocumentDefaultArgs> = $Result.GetResult<Prisma.$QrCodeDocumentPayload, S>
 
   type QrCodeDocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<QrCodeDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<QrCodeDocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: QrCodeDocumentCountAggregateInputType | true
     }
 
@@ -24269,6 +24435,7 @@ export namespace Prisma {
      * Filter, which QrCodeDocument to fetch.
      */
     where: QrCodeDocumentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24287,6 +24454,7 @@ export namespace Prisma {
      * Filter, which QrCodeDocument to fetch.
      */
     where: QrCodeDocumentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24335,6 +24503,7 @@ export namespace Prisma {
      * Filter by unique combinations of QrCodeDocuments.
      */
     distinct?: QrCodeDocumentScalarFieldEnum | QrCodeDocumentScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24383,6 +24552,7 @@ export namespace Prisma {
      * Filter by unique combinations of QrCodeDocuments.
      */
     distinct?: QrCodeDocumentScalarFieldEnum | QrCodeDocumentScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24426,6 +24596,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: QrCodeDocumentScalarFieldEnum | QrCodeDocumentScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24444,6 +24615,7 @@ export namespace Prisma {
      * The data needed to create a QrCodeDocument.
      */
     data: XOR<QrCodeDocumentCreateInput, QrCodeDocumentUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24496,6 +24668,7 @@ export namespace Prisma {
      * Choose, which QrCodeDocument to update.
      */
     where: QrCodeDocumentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24566,6 +24739,7 @@ export namespace Prisma {
      * In case the QrCodeDocument was found with the provided `where` argument, update it with this data.
      */
     update: XOR<QrCodeDocumentUpdateInput, QrCodeDocumentUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24584,6 +24758,7 @@ export namespace Prisma {
      * Filter which QrCodeDocument to delete.
      */
     where: QrCodeDocumentWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -24811,7 +24986,7 @@ export namespace Prisma {
   type OtpGetPayload<S extends boolean | null | undefined | OtpDefaultArgs> = $Result.GetResult<Prisma.$OtpPayload, S>
 
   type OtpCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<OtpFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<OtpFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: OtpCountAggregateInputType | true
     }
 
@@ -25251,6 +25426,7 @@ export namespace Prisma {
      * Filter, which Otp to fetch.
      */
     where: OtpWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25269,6 +25445,7 @@ export namespace Prisma {
      * Filter, which Otp to fetch.
      */
     where: OtpWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25317,6 +25494,7 @@ export namespace Prisma {
      * Filter by unique combinations of Otps.
      */
     distinct?: OtpScalarFieldEnum | OtpScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25365,6 +25543,7 @@ export namespace Prisma {
      * Filter by unique combinations of Otps.
      */
     distinct?: OtpScalarFieldEnum | OtpScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25408,6 +25587,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: OtpScalarFieldEnum | OtpScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25426,6 +25606,7 @@ export namespace Prisma {
      * The data needed to create a Otp.
      */
     data: XOR<OtpCreateInput, OtpUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25478,6 +25659,7 @@ export namespace Prisma {
      * Choose, which Otp to update.
      */
     where: OtpWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25548,6 +25730,7 @@ export namespace Prisma {
      * In case the Otp was found with the provided `where` argument, update it with this data.
      */
     update: XOR<OtpUpdateInput, OtpUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25566,6 +25749,7 @@ export namespace Prisma {
      * Filter which Otp to delete.
      */
     where: OtpWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -25805,7 +25989,7 @@ export namespace Prisma {
   type ManagementGetPayload<S extends boolean | null | undefined | ManagementDefaultArgs> = $Result.GetResult<Prisma.$ManagementPayload, S>
 
   type ManagementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<ManagementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<ManagementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: ManagementCountAggregateInputType | true
     }
 
@@ -26246,6 +26430,7 @@ export namespace Prisma {
      * Filter, which Management to fetch.
      */
     where: ManagementWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26264,6 +26449,7 @@ export namespace Prisma {
      * Filter, which Management to fetch.
      */
     where: ManagementWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26312,6 +26498,7 @@ export namespace Prisma {
      * Filter by unique combinations of Managements.
      */
     distinct?: ManagementScalarFieldEnum | ManagementScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26360,6 +26547,7 @@ export namespace Prisma {
      * Filter by unique combinations of Managements.
      */
     distinct?: ManagementScalarFieldEnum | ManagementScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26403,6 +26591,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: ManagementScalarFieldEnum | ManagementScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26421,6 +26610,7 @@ export namespace Prisma {
      * The data needed to create a Management.
      */
     data: XOR<ManagementCreateInput, ManagementUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26473,6 +26663,7 @@ export namespace Prisma {
      * Choose, which Management to update.
      */
     where: ManagementWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26543,6 +26734,7 @@ export namespace Prisma {
      * In case the Management was found with the provided `where` argument, update it with this data.
      */
     update: XOR<ManagementUpdateInput, ManagementUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26561,6 +26753,7 @@ export namespace Prisma {
      * Filter which Management to delete.
      */
     where: ManagementWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -26808,7 +27001,7 @@ export namespace Prisma {
   type AddToDatabaseGetPayload<S extends boolean | null | undefined | AddToDatabaseDefaultArgs> = $Result.GetResult<Prisma.$AddToDatabasePayload, S>
 
   type AddToDatabaseCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<AddToDatabaseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+    Omit<AddToDatabaseFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
       select?: AddToDatabaseCountAggregateInputType | true
     }
 
@@ -27250,6 +27443,7 @@ export namespace Prisma {
      * Filter, which AddToDatabase to fetch.
      */
     where: AddToDatabaseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27268,6 +27462,7 @@ export namespace Prisma {
      * Filter, which AddToDatabase to fetch.
      */
     where: AddToDatabaseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27316,6 +27511,7 @@ export namespace Prisma {
      * Filter by unique combinations of AddToDatabases.
      */
     distinct?: AddToDatabaseScalarFieldEnum | AddToDatabaseScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27364,6 +27560,7 @@ export namespace Prisma {
      * Filter by unique combinations of AddToDatabases.
      */
     distinct?: AddToDatabaseScalarFieldEnum | AddToDatabaseScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27407,6 +27604,7 @@ export namespace Prisma {
      */
     skip?: number
     distinct?: AddToDatabaseScalarFieldEnum | AddToDatabaseScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27425,6 +27623,7 @@ export namespace Prisma {
      * The data needed to create a AddToDatabase.
      */
     data: XOR<AddToDatabaseCreateInput, AddToDatabaseUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27477,6 +27676,7 @@ export namespace Prisma {
      * Choose, which AddToDatabase to update.
      */
     where: AddToDatabaseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27547,6 +27747,7 @@ export namespace Prisma {
      * In case the AddToDatabase was found with the provided `where` argument, update it with this data.
      */
     update: XOR<AddToDatabaseUpdateInput, AddToDatabaseUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27565,6 +27766,7 @@ export namespace Prisma {
      * Filter which AddToDatabase to delete.
      */
     where: AddToDatabaseWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
   }
 
   /**
@@ -27624,6 +27826,14 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const RelationLoadStrategy: {
+    query: 'query',
+    join: 'join'
+  };
+
+  export type RelationLoadStrategy = (typeof RelationLoadStrategy)[keyof typeof RelationLoadStrategy]
 
 
   export const RoleScalarFieldEnum: {
@@ -27929,6 +28139,48 @@ export namespace Prisma {
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
+  export const UserOrderByRelevanceFieldEnum: {
+    id: 'id',
+    email: 'email',
+    password: 'password',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    photo: 'photo',
+    googleId: 'googleId'
+  };
+
+  export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+  export const RoleOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description'
+  };
+
+  export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
+
+
+  export const UserRoleOrderByRelevanceFieldEnum: {
+    userId: 'userId',
+    roleId: 'roleId'
+  };
+
+  export type UserRoleOrderByRelevanceFieldEnum = (typeof UserRoleOrderByRelevanceFieldEnum)[keyof typeof UserRoleOrderByRelevanceFieldEnum]
+
+
+  export const FileOrderByRelevanceFieldEnum: {
+    id: 'id',
+    fileUrl: 'fileUrl',
+    thumbnailUrl: 'thumbnailUrl',
+    title: 'title',
+    userId: 'userId',
+    fileType: 'fileType'
+  };
+
+  export type FileOrderByRelevanceFieldEnum = (typeof FileOrderByRelevanceFieldEnum)[keyof typeof FileOrderByRelevanceFieldEnum]
+
+
   export const JsonNullValueFilter: {
     DbNull: typeof DbNull,
     JsonNull: typeof JsonNull,
@@ -27936,6 +28188,184 @@ export namespace Prisma {
   };
 
   export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const AuditLogOrderByRelevanceFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    action: 'action',
+    resource: 'resource',
+    resourceId: 'resourceId',
+    status: 'status',
+    errorMessage: 'errorMessage'
+  };
+
+  export type AuditLogOrderByRelevanceFieldEnum = (typeof AuditLogOrderByRelevanceFieldEnum)[keyof typeof AuditLogOrderByRelevanceFieldEnum]
+
+
+  export const GroupOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    creatorId: 'creatorId'
+  };
+
+  export type GroupOrderByRelevanceFieldEnum = (typeof GroupOrderByRelevanceFieldEnum)[keyof typeof GroupOrderByRelevanceFieldEnum]
+
+
+  export const GroupRoleOrderByRelevanceFieldEnum: {
+    groupId: 'groupId',
+    roleId: 'roleId'
+  };
+
+  export type GroupRoleOrderByRelevanceFieldEnum = (typeof GroupRoleOrderByRelevanceFieldEnum)[keyof typeof GroupRoleOrderByRelevanceFieldEnum]
+
+
+  export const ProcessOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    groupId: 'groupId',
+    creatorId: 'creatorId'
+  };
+
+  export type ProcessOrderByRelevanceFieldEnum = (typeof ProcessOrderByRelevanceFieldEnum)[keyof typeof ProcessOrderByRelevanceFieldEnum]
+
+
+  export const ProcessRoleOrderByRelevanceFieldEnum: {
+    processId: 'processId',
+    roleId: 'roleId'
+  };
+
+  export type ProcessRoleOrderByRelevanceFieldEnum = (typeof ProcessRoleOrderByRelevanceFieldEnum)[keyof typeof ProcessRoleOrderByRelevanceFieldEnum]
+
+
+  export const FormOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    creatorId: 'creatorId'
+  };
+
+  export type FormOrderByRelevanceFieldEnum = (typeof FormOrderByRelevanceFieldEnum)[keyof typeof FormOrderByRelevanceFieldEnum]
+
+
+  export const FormResponseOrderByRelevanceFieldEnum: {
+    id: 'id',
+    formId: 'formId',
+    applicantProcessId: 'applicantProcessId',
+    processId: 'processId'
+  };
+
+  export type FormResponseOrderByRelevanceFieldEnum = (typeof FormResponseOrderByRelevanceFieldEnum)[keyof typeof FormResponseOrderByRelevanceFieldEnum]
+
+
+  export const ProcessFormOrderByRelevanceFieldEnum: {
+    id: 'id',
+    processId: 'processId',
+    formId: 'formId',
+    nextStepRoles: 'nextStepRoles',
+    nextStaffId: 'nextStaffId',
+    notificationRoles: 'notificationRoles',
+    notificationToId: 'notificationToId',
+    notificationComment: 'notificationComment',
+    applicantNotificationContent: 'applicantNotificationContent'
+  };
+
+  export type ProcessFormOrderByRelevanceFieldEnum = (typeof ProcessFormOrderByRelevanceFieldEnum)[keyof typeof ProcessFormOrderByRelevanceFieldEnum]
+
+
+  export const ApplicantProcessOrderByRelevanceFieldEnum: {
+    id: 'id',
+    applicantId: 'applicantId',
+    processId: 'processId'
+  };
+
+  export type ApplicantProcessOrderByRelevanceFieldEnum = (typeof ApplicantProcessOrderByRelevanceFieldEnum)[keyof typeof ApplicantProcessOrderByRelevanceFieldEnum]
+
+
+  export const APCompletedFormOrderByRelevanceFieldEnum: {
+    id: 'id',
+    applicantProcessId: 'applicantProcessId',
+    formId: 'formId',
+    reviewerId: 'reviewerId'
+  };
+
+  export type APCompletedFormOrderByRelevanceFieldEnum = (typeof APCompletedFormOrderByRelevanceFieldEnum)[keyof typeof APCompletedFormOrderByRelevanceFieldEnum]
+
+
+  export const ProcessCommentOrderByRelevanceFieldEnum: {
+    id: 'id',
+    applicantProcessId: 'applicantProcessId',
+    userId: 'userId',
+    comment: 'comment'
+  };
+
+  export type ProcessCommentOrderByRelevanceFieldEnum = (typeof ProcessCommentOrderByRelevanceFieldEnum)[keyof typeof ProcessCommentOrderByRelevanceFieldEnum]
+
+
+  export const OrganizationUserOrderByRelevanceFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    superiorId: 'superiorId',
+    title: 'title'
+  };
+
+  export type OrganizationUserOrderByRelevanceFieldEnum = (typeof OrganizationUserOrderByRelevanceFieldEnum)[keyof typeof OrganizationUserOrderByRelevanceFieldEnum]
+
+
+  export const DashboardOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name',
+    ownerId: 'ownerId',
+    allowedUsers: 'allowedUsers',
+    allowedRoles: 'allowedRoles'
+  };
+
+  export type DashboardOrderByRelevanceFieldEnum = (typeof DashboardOrderByRelevanceFieldEnum)[keyof typeof DashboardOrderByRelevanceFieldEnum]
+
+
+  export const WidgetOrderByRelevanceFieldEnum: {
+    id: 'id',
+    dashboardId: 'dashboardId',
+    title: 'title',
+    visualizationType: 'visualizationType'
+  };
+
+  export type WidgetOrderByRelevanceFieldEnum = (typeof WidgetOrderByRelevanceFieldEnum)[keyof typeof WidgetOrderByRelevanceFieldEnum]
+
+
+  export const QrCodeDocumentOrderByRelevanceFieldEnum: {
+    id: 'id',
+    documentName: 'documentName',
+    fileName: 'fileName',
+    qrCodeId: 'qrCodeId',
+    creatorId: 'creatorId'
+  };
+
+  export type QrCodeDocumentOrderByRelevanceFieldEnum = (typeof QrCodeDocumentOrderByRelevanceFieldEnum)[keyof typeof QrCodeDocumentOrderByRelevanceFieldEnum]
+
+
+  export const OtpOrderByRelevanceFieldEnum: {
+    id: 'id',
+    email: 'email',
+    otp: 'otp'
+  };
+
+  export type OtpOrderByRelevanceFieldEnum = (typeof OtpOrderByRelevanceFieldEnum)[keyof typeof OtpOrderByRelevanceFieldEnum]
+
+
+  export const ManagementOrderByRelevanceFieldEnum: {
+    id: 'id',
+    fileName: 'fileName'
+  };
+
+  export type ManagementOrderByRelevanceFieldEnum = (typeof ManagementOrderByRelevanceFieldEnum)[keyof typeof ManagementOrderByRelevanceFieldEnum]
+
+
+  export const AddToDatabaseOrderByRelevanceFieldEnum: {
+    id: 'id',
+    name: 'name'
+  };
+
+  export type AddToDatabaseOrderByRelevanceFieldEnum = (typeof AddToDatabaseOrderByRelevanceFieldEnum)[keyof typeof AddToDatabaseOrderByRelevanceFieldEnum]
 
 
   /**
@@ -28206,6 +28636,7 @@ export namespace Prisma {
     organization?: OrganizationUserOrderByWithRelationInput
     createdProcesses?: ProcessOrderByRelationAggregateInput
     roles?: UserRoleOrderByRelationAggregateInput
+    _relevance?: UserOrderByRelevanceInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -28289,6 +28720,7 @@ export namespace Prisma {
     groups?: GroupRoleOrderByRelationAggregateInput
     processes?: ProcessRoleOrderByRelationAggregateInput
     users?: UserRoleOrderByRelationAggregateInput
+    _relevance?: RoleOrderByRelevanceInput
   }
 
   export type RoleWhereUniqueInput = Prisma.AtLeast<{
@@ -28347,6 +28779,7 @@ export namespace Prisma {
     status?: SortOrder
     role?: RoleOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
+    _relevance?: UserRoleOrderByRelevanceInput
   }
 
   export type UserRoleWhereUniqueInput = Prisma.AtLeast<{
@@ -28408,6 +28841,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    _relevance?: FileOrderByRelevanceInput
   }
 
   export type FileWhereUniqueInput = Prisma.AtLeast<{
@@ -28488,6 +28922,7 @@ export namespace Prisma {
     status?: SortOrder
     errorMessage?: SortOrderInput | SortOrder
     user?: UserOrderByWithRelationInput
+    _relevance?: AuditLogOrderByRelevanceInput
   }
 
   export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
@@ -28561,6 +28996,7 @@ export namespace Prisma {
     roles?: GroupRoleOrderByRelationAggregateInput
     creator?: UserOrderByWithRelationInput
     processes?: ProcessOrderByRelationAggregateInput
+    _relevance?: GroupOrderByRelevanceInput
   }
 
   export type GroupWhereUniqueInput = Prisma.AtLeast<{
@@ -28619,6 +29055,7 @@ export namespace Prisma {
     status?: SortOrder
     group?: GroupOrderByWithRelationInput
     role?: RoleOrderByWithRelationInput
+    _relevance?: GroupRoleOrderByRelevanceInput
   }
 
   export type GroupRoleWhereUniqueInput = Prisma.AtLeast<{
@@ -28692,6 +29129,7 @@ export namespace Prisma {
     roles?: ProcessRoleOrderByRelationAggregateInput
     creator?: UserOrderByWithRelationInput
     group?: GroupOrderByWithRelationInput
+    _relevance?: ProcessOrderByRelevanceInput
   }
 
   export type ProcessWhereUniqueInput = Prisma.AtLeast<{
@@ -28768,6 +29206,7 @@ export namespace Prisma {
     status?: SortOrder
     process?: ProcessOrderByWithRelationInput
     role?: RoleOrderByWithRelationInput
+    _relevance?: ProcessRoleOrderByRelevanceInput
   }
 
   export type ProcessRoleWhereUniqueInput = Prisma.AtLeast<{
@@ -28831,6 +29270,7 @@ export namespace Prisma {
     responses?: FormResponseOrderByRelationAggregateInput
     creator?: UserOrderByWithRelationInput
     processForms?: ProcessFormOrderByRelationAggregateInput
+    _relevance?: FormOrderByRelevanceInput
   }
 
   export type FormWhereUniqueInput = Prisma.AtLeast<{
@@ -28906,6 +29346,7 @@ export namespace Prisma {
     applicantProcess?: ApplicantProcessOrderByWithRelationInput
     form?: FormOrderByWithRelationInput
     process?: ProcessOrderByWithRelationInput
+    _relevance?: FormResponseOrderByRelevanceInput
   }
 
   export type FormResponseWhereUniqueInput = Prisma.AtLeast<{
@@ -28989,6 +29430,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     form?: FormOrderByWithRelationInput
     process?: ProcessOrderByWithRelationInput
+    _relevance?: ProcessFormOrderByRelevanceInput
   }
 
   export type ProcessFormWhereUniqueInput = Prisma.AtLeast<{
@@ -29085,6 +29527,7 @@ export namespace Prisma {
     process?: ProcessOrderByWithRelationInput
     responses?: FormResponseOrderByRelationAggregateInput
     comments?: ProcessCommentOrderByRelationAggregateInput
+    _relevance?: ApplicantProcessOrderByRelevanceInput
   }
 
   export type ApplicantProcessWhereUniqueInput = Prisma.AtLeast<{
@@ -29144,6 +29587,7 @@ export namespace Prisma {
     reviewerId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     applicantProcess?: ApplicantProcessOrderByWithRelationInput
+    _relevance?: APCompletedFormOrderByRelevanceInput
   }
 
   export type APCompletedFormWhereUniqueInput = Prisma.AtLeast<{
@@ -29199,6 +29643,7 @@ export namespace Prisma {
     comment?: SortOrder
     createdAt?: SortOrder
     applicantProcess?: ApplicantProcessOrderByWithRelationInput
+    _relevance?: ProcessCommentOrderByRelevanceInput
   }
 
   export type ProcessCommentWhereUniqueInput = Prisma.AtLeast<{
@@ -29256,6 +29701,7 @@ export namespace Prisma {
     superior?: OrganizationUserOrderByWithRelationInput
     subordinates?: OrganizationUserOrderByRelationAggregateInput
     user?: UserOrderByWithRelationInput
+    _relevance?: OrganizationUserOrderByRelevanceInput
   }
 
   export type OrganizationUserWhereUniqueInput = Prisma.AtLeast<{
@@ -29316,6 +29762,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     widgets?: WidgetOrderByRelationAggregateInput
+    _relevance?: DashboardOrderByRelevanceInput
   }
 
   export type DashboardWhereUniqueInput = Prisma.AtLeast<{
@@ -29386,6 +29833,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     dashboard?: DashboardOrderByWithRelationInput
+    _relevance?: WidgetOrderByRelevanceInput
   }
 
   export type WidgetWhereUniqueInput = Prisma.AtLeast<{
@@ -29454,6 +29902,7 @@ export namespace Prisma {
     creatorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    _relevance?: QrCodeDocumentOrderByRelevanceInput
   }
 
   export type QrCodeDocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -29510,6 +29959,7 @@ export namespace Prisma {
     email?: SortOrder
     otp?: SortOrder
     expiresAt?: SortOrder
+    _relevance?: OtpOrderByRelevanceInput
   }
 
   export type OtpWhereUniqueInput = Prisma.AtLeast<{
@@ -29559,6 +30009,7 @@ export namespace Prisma {
     type?: SortOrder
     uploadedAt?: SortOrder
     updatedAt?: SortOrder
+    _relevance?: ManagementOrderByRelevanceInput
   }
 
   export type ManagementWhereUniqueInput = Prisma.AtLeast<{
@@ -29613,6 +30064,7 @@ export namespace Prisma {
     levels?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    _relevance?: AddToDatabaseOrderByRelevanceInput
   }
 
   export type AddToDatabaseWhereUniqueInput = Prisma.AtLeast<{
@@ -31229,6 +31681,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedUuidFilter<$PrismaModel> | string
   }
@@ -31244,6 +31697,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedStringFilter<$PrismaModel> | string
   }
@@ -31259,6 +31713,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
@@ -31361,6 +31816,12 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type UserOrderByRelevanceInput = {
+    fields: UserOrderByRelevanceFieldEnum | UserOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -31408,6 +31869,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
@@ -31426,6 +31888,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
@@ -31444,6 +31907,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
@@ -31502,6 +31966,12 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type RoleOrderByRelevanceInput = {
+    fields: RoleOrderByRelevanceFieldEnum | RoleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type RoleCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -31549,6 +32019,12 @@ export namespace Prisma {
     isNot?: UserWhereInput
   }
 
+  export type UserRoleOrderByRelevanceInput = {
+    fields: UserRoleOrderByRelevanceFieldEnum | UserRoleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type UserRoleUserIdRoleIdCompoundUniqueInput = {
     userId: string
     roleId: string
@@ -31586,6 +32062,12 @@ export namespace Prisma {
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type FileOrderByRelevanceInput = {
+    fields: FileOrderByRelevanceFieldEnum | FileOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type FileCountOrderByAggregateInput = {
@@ -31667,6 +32149,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
@@ -31697,6 +32180,12 @@ export namespace Prisma {
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
+  }
+
+  export type AuditLogOrderByRelevanceInput = {
+    fields: AuditLogOrderByRelevanceFieldEnum | AuditLogOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type AuditLogCountOrderByAggregateInput = {
@@ -31741,6 +32230,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     mode?: QueryMode
     not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
@@ -31779,6 +32269,12 @@ export namespace Prisma {
     in?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.GroupStatus[] | ListEnumGroupStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumGroupStatusFilter<$PrismaModel> | $Enums.GroupStatus
+  }
+
+  export type GroupOrderByRelevanceInput = {
+    fields: GroupOrderByRelevanceFieldEnum | GroupOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type GroupCountOrderByAggregateInput = {
@@ -31821,6 +32317,12 @@ export namespace Prisma {
   export type GroupScalarRelationFilter = {
     is?: GroupWhereInput
     isNot?: GroupWhereInput
+  }
+
+  export type GroupRoleOrderByRelevanceInput = {
+    fields: GroupRoleOrderByRelevanceFieldEnum | GroupRoleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type GroupRoleGroupIdRoleIdCompoundUniqueInput = {
@@ -31878,6 +32380,12 @@ export namespace Prisma {
 
   export type ProcessFormOrderByRelationAggregateInput = {
     _count?: SortOrder
+  }
+
+  export type ProcessOrderByRelevanceInput = {
+    fields: ProcessOrderByRelevanceFieldEnum | ProcessOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type ProcessCountOrderByAggregateInput = {
@@ -31947,6 +32455,12 @@ export namespace Prisma {
     isNot?: ProcessWhereInput
   }
 
+  export type ProcessRoleOrderByRelevanceInput = {
+    fields: ProcessRoleOrderByRelevanceFieldEnum | ProcessRoleOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type ProcessRoleProcessIdRoleIdCompoundUniqueInput = {
     processId: string
     roleId: string
@@ -31982,6 +32496,12 @@ export namespace Prisma {
     in?: $Enums.FormStatus[] | ListEnumFormStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.FormStatus[] | ListEnumFormStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumFormStatusFilter<$PrismaModel> | $Enums.FormStatus
+  }
+
+  export type FormOrderByRelevanceInput = {
+    fields: FormOrderByRelevanceFieldEnum | FormOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type FormCountOrderByAggregateInput = {
@@ -32071,6 +32591,12 @@ export namespace Prisma {
     isNot?: FormWhereInput
   }
 
+  export type FormResponseOrderByRelevanceInput = {
+    fields: FormResponseOrderByRelevanceFieldEnum | FormResponseOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type FormResponseFormIdApplicantProcessIdCompoundUniqueInput = {
     formId: string
     applicantProcessId: string
@@ -32140,6 +32666,12 @@ export namespace Prisma {
     hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
     hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
     isEmpty?: boolean
+  }
+
+  export type ProcessFormOrderByRelevanceInput = {
+    fields: ProcessFormOrderByRelevanceFieldEnum | ProcessFormOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type ProcessFormCountOrderByAggregateInput = {
@@ -32230,6 +32762,12 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ApplicantProcessOrderByRelevanceInput = {
+    fields: ApplicantProcessOrderByRelevanceFieldEnum | ApplicantProcessOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type ApplicantProcessCountOrderByAggregateInput = {
     id?: SortOrder
     applicantId?: SortOrder
@@ -32254,6 +32792,12 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type APCompletedFormOrderByRelevanceInput = {
+    fields: APCompletedFormOrderByRelevanceFieldEnum | APCompletedFormOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type APCompletedFormCountOrderByAggregateInput = {
     id?: SortOrder
     applicantProcessId?: SortOrder
@@ -32276,6 +32820,12 @@ export namespace Prisma {
     formId?: SortOrder
     reviewerId?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type ProcessCommentOrderByRelevanceInput = {
+    fields: ProcessCommentOrderByRelevanceFieldEnum | ProcessCommentOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type ProcessCommentCountOrderByAggregateInput = {
@@ -32312,6 +32862,12 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type OrganizationUserOrderByRelevanceInput = {
+    fields: OrganizationUserOrderByRelevanceFieldEnum | OrganizationUserOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type OrganizationUserCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
@@ -32341,6 +32897,12 @@ export namespace Prisma {
 
   export type WidgetOrderByRelationAggregateInput = {
     _count?: SortOrder
+  }
+
+  export type DashboardOrderByRelevanceInput = {
+    fields: DashboardOrderByRelevanceFieldEnum | DashboardOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type DashboardCountOrderByAggregateInput = {
@@ -32373,6 +32935,12 @@ export namespace Prisma {
   export type DashboardScalarRelationFilter = {
     is?: DashboardWhereInput
     isNot?: DashboardWhereInput
+  }
+
+  export type WidgetOrderByRelevanceInput = {
+    fields: WidgetOrderByRelevanceFieldEnum | WidgetOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type WidgetCountOrderByAggregateInput = {
@@ -32414,6 +32982,12 @@ export namespace Prisma {
     order?: SortOrder
   }
 
+  export type QrCodeDocumentOrderByRelevanceInput = {
+    fields: QrCodeDocumentOrderByRelevanceFieldEnum | QrCodeDocumentOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type QrCodeDocumentCountOrderByAggregateInput = {
     id?: SortOrder
     documentName?: SortOrder
@@ -32444,6 +33018,12 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type OtpOrderByRelevanceInput = {
+    fields: OtpOrderByRelevanceFieldEnum | OtpOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
   export type OtpCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -32470,6 +33050,12 @@ export namespace Prisma {
     in?: $Enums.ManagementType[] | ListEnumManagementTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.ManagementType[] | ListEnumManagementTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumManagementTypeFilter<$PrismaModel> | $Enums.ManagementType
+  }
+
+  export type ManagementOrderByRelevanceInput = {
+    fields: ManagementOrderByRelevanceFieldEnum | ManagementOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type ManagementCountOrderByAggregateInput = {
@@ -32511,6 +33097,12 @@ export namespace Prisma {
     in?: $Enums.AddToDatabaseStatus[] | ListEnumAddToDatabaseStatusFieldRefInput<$PrismaModel>
     notIn?: $Enums.AddToDatabaseStatus[] | ListEnumAddToDatabaseStatusFieldRefInput<$PrismaModel>
     not?: NestedEnumAddToDatabaseStatusFilter<$PrismaModel> | $Enums.AddToDatabaseStatus
+  }
+
+  export type AddToDatabaseOrderByRelevanceInput = {
+    fields: AddToDatabaseOrderByRelevanceFieldEnum | AddToDatabaseOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
   }
 
   export type AddToDatabaseCountOrderByAggregateInput = {
@@ -33994,6 +34586,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedUuidFilter<$PrismaModel> | string
   }
 
@@ -34008,6 +34601,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
@@ -34022,6 +34616,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
@@ -34051,6 +34646,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedUuidWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -34079,6 +34675,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringWithAggregatesFilter<$PrismaModel> | string
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
@@ -34096,6 +34693,7 @@ export namespace Prisma {
     contains?: string | StringFieldRefInput<$PrismaModel>
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
@@ -34202,6 +34800,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
@@ -34213,6 +34812,7 @@ export namespace Prisma {
     lte?: string | StringFieldRefInput<$PrismaModel>
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
     not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>

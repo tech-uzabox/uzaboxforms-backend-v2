@@ -35,12 +35,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.15.0
- * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+ * Prisma Client JS version: 6.16.1
+ * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
  */
 Prisma.prismaVersion = {
-  client: "6.15.0",
-  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
+  client: "6.16.1",
+  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -103,6 +103,11 @@ exports.Prisma.UserScalarFieldEnum = {
   status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RelationLoadStrategy = {
+  query: 'query',
+  join: 'join'
 };
 
 exports.Prisma.RoleScalarFieldEnum = {
@@ -330,10 +335,164 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  email: 'email',
+  password: 'password',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  photo: 'photo',
+  googleId: 'googleId'
+};
+
+exports.Prisma.RoleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description'
+};
+
+exports.Prisma.UserRoleOrderByRelevanceFieldEnum = {
+  userId: 'userId',
+  roleId: 'roleId'
+};
+
+exports.Prisma.FileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fileUrl: 'fileUrl',
+  thumbnailUrl: 'thumbnailUrl',
+  title: 'title',
+  userId: 'userId',
+  fileType: 'fileType'
+};
+
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.AuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  action: 'action',
+  resource: 'resource',
+  resourceId: 'resourceId',
+  status: 'status',
+  errorMessage: 'errorMessage'
+};
+
+exports.Prisma.GroupOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  creatorId: 'creatorId'
+};
+
+exports.Prisma.GroupRoleOrderByRelevanceFieldEnum = {
+  groupId: 'groupId',
+  roleId: 'roleId'
+};
+
+exports.Prisma.ProcessOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  groupId: 'groupId',
+  creatorId: 'creatorId'
+};
+
+exports.Prisma.ProcessRoleOrderByRelevanceFieldEnum = {
+  processId: 'processId',
+  roleId: 'roleId'
+};
+
+exports.Prisma.FormOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  creatorId: 'creatorId'
+};
+
+exports.Prisma.FormResponseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  formId: 'formId',
+  applicantProcessId: 'applicantProcessId',
+  processId: 'processId'
+};
+
+exports.Prisma.ProcessFormOrderByRelevanceFieldEnum = {
+  id: 'id',
+  processId: 'processId',
+  formId: 'formId',
+  nextStepRoles: 'nextStepRoles',
+  nextStaffId: 'nextStaffId',
+  notificationRoles: 'notificationRoles',
+  notificationToId: 'notificationToId',
+  notificationComment: 'notificationComment',
+  applicantNotificationContent: 'applicantNotificationContent'
+};
+
+exports.Prisma.ApplicantProcessOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicantId: 'applicantId',
+  processId: 'processId'
+};
+
+exports.Prisma.APCompletedFormOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicantProcessId: 'applicantProcessId',
+  formId: 'formId',
+  reviewerId: 'reviewerId'
+};
+
+exports.Prisma.ProcessCommentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  applicantProcessId: 'applicantProcessId',
+  userId: 'userId',
+  comment: 'comment'
+};
+
+exports.Prisma.OrganizationUserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  superiorId: 'superiorId',
+  title: 'title'
+};
+
+exports.Prisma.DashboardOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  ownerId: 'ownerId',
+  allowedUsers: 'allowedUsers',
+  allowedRoles: 'allowedRoles'
+};
+
+exports.Prisma.WidgetOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dashboardId: 'dashboardId',
+  title: 'title',
+  visualizationType: 'visualizationType'
+};
+
+exports.Prisma.QrCodeDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  documentName: 'documentName',
+  fileName: 'fileName',
+  qrCodeId: 'qrCodeId',
+  creatorId: 'creatorId'
+};
+
+exports.Prisma.OtpOrderByRelevanceFieldEnum = {
+  id: 'id',
+  email: 'email',
+  otp: 'otp'
+};
+
+exports.Prisma.ManagementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fileName: 'fileName'
+};
+
+exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name'
 };
 exports.UserStatus = exports.$Enums.UserStatus = {
   ENABLED: 'ENABLED',
@@ -436,7 +595,12 @@ const config = {
         "native": true
       }
     ],
-    "previewFeatures": [],
+    "previewFeatures": [
+      "driverAdapters",
+      "fullTextSearchPostgres",
+      "queryCompiler",
+      "relationJoins"
+    ],
     "sourceFilePath": "D:\\aurum\\work\\uzaform\\ref-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
@@ -445,12 +609,13 @@ const config = {
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
-  "clientVersion": "6.15.0",
-  "engineVersion": "85179d7826409ee107a6ba334b5e305ae3fba9fb",
+  "clientVersion": "6.16.1",
+  "engineVersion": "1c57fdcd7e44b29b9313256c76699e91c3ac3c43",
   "datasourceNames": [
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -459,8 +624,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                 String             @id @default(uuid()) @db.Uuid\n  email              String             @unique @db.VarChar(255)\n  password           String             @db.VarChar(255)\n  firstName          String?\n  lastName           String?\n  photo              String?\n  googleId           String?            @unique\n  status             UserStatus         @default(ENABLED)\n  createdAt          DateTime           @default(now())\n  updatedAt          DateTime           @updatedAt\n  applicantProcesses ApplicantProcess[]\n  auditLogs          AuditLog[]\n  files              File[]\n  createdForms       Form[]             @relation(\"FormCreator\")\n  createdGroups      Group[]            @relation(\"GroupCreator\")\n  organization       OrganizationUser?\n  createdProcesses   Process[]          @relation(\"ProcessCreator\")\n  roles              UserRole[]\n\n  @@index([email])\n  @@map(\"users\")\n}\n\nmodel Role {\n  id          String        @id @default(uuid()) @db.Uuid\n  name        String        @unique\n  description String?\n  status      RoleStatus    @default(ENABLED)\n  createdAt   DateTime      @default(now())\n  updatedAt   DateTime      @updatedAt\n  groups      GroupRole[]\n  processes   ProcessRole[]\n  users       UserRole[]\n\n  @@map(\"roles\")\n}\n\nmodel UserRole {\n  userId String     @db.Uuid\n  roleId String     @db.Uuid\n  status RoleStatus @default(ENABLED)\n  role   Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@id([userId, roleId])\n  @@map(\"user_roles\")\n}\n\nmodel File {\n  id           String   @id @default(uuid()) @db.Uuid\n  fileUrl      String   @db.VarChar(255)\n  thumbnailUrl String?\n  size         Int\n  isPrivate    Boolean  @default(false)\n  title        String   @db.VarChar(255)\n  userId       String   @db.Uuid\n  fileType     String   @db.VarChar(255)\n  createdAt    DateTime @default(now()) @db.Timestamp(0)\n  updatedAt    DateTime @updatedAt @db.Timestamp(0)\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"files\")\n}\n\nmodel AuditLog {\n  id           String   @id @default(uuid()) @db.Uuid\n  timestamp    DateTime @default(now())\n  userId       String?  @db.Uuid\n  action       String\n  resource     String?\n  resourceId   String?\n  details      Json?\n  status       String\n  errorMessage String?\n  user         User?    @relation(fields: [userId], references: [id])\n\n  @@index([userId, action, resource])\n  @@map(\"audit_logs\")\n}\n\nmodel Group {\n  id        String      @id @default(uuid()) @db.Uuid\n  name      String      @unique\n  status    GroupStatus @default(ENABLED)\n  creatorId String      @db.Uuid\n  createdAt DateTime    @default(now())\n  updatedAt DateTime    @updatedAt\n  roles     GroupRole[]\n  creator   User        @relation(\"GroupCreator\", fields: [creatorId], references: [id])\n  processes Process[]\n\n  @@map(\"groups\")\n}\n\nmodel GroupRole {\n  groupId String     @db.Uuid\n  roleId  String     @db.Uuid\n  status  RoleStatus @default(ENABLED)\n  group   Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)\n  role    Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([groupId, roleId])\n  @@map(\"group_roles\")\n}\n\nmodel Process {\n  id                        String             @id @default(uuid()) @db.Uuid\n  name                      String\n  type                      ProcessType        @default(PRIVATE)\n  groupId                   String             @db.Uuid\n  creatorId                 String             @db.Uuid\n  status                    ProcessStatus      @default(ENABLED)\n  archived                  Boolean            @default(false)\n  staffViewForms            Boolean            @default(false)\n  applicantViewProcessLevel Boolean            @default(false)\n  createdAt                 DateTime           @default(now())\n  updatedAt                 DateTime           @updatedAt\n  applicantProcesses        ApplicantProcess[]\n  formResponses             FormResponse[]\n  forms                     ProcessForm[]\n  roles                     ProcessRole[]\n  creator                   User               @relation(\"ProcessCreator\", fields: [creatorId], references: [id])\n  group                     Group              @relation(fields: [groupId], references: [id])\n\n  @@index([groupId])\n  @@index([creatorId])\n  @@map(\"processes\")\n}\n\nmodel ProcessRole {\n  processId String     @db.Uuid\n  roleId    String     @db.Uuid\n  status    RoleStatus @default(ENABLED)\n  process   Process    @relation(fields: [processId], references: [id], onDelete: Cascade)\n  role      Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([processId, roleId])\n  @@map(\"process_roles\")\n}\n\nmodel Form {\n  id           String         @id @default(uuid()) @db.Uuid\n  name         String\n  type         FormType       @default(INTERNAL)\n  status       FormStatus     @default(ENABLED)\n  archived     Boolean        @default(false)\n  creatorId    String         @db.Uuid\n  createdAt    DateTime       @default(now())\n  updatedAt    DateTime       @updatedAt\n  design       Json?\n  responses    FormResponse[]\n  creator      User           @relation(\"FormCreator\", fields: [creatorId], references: [id])\n  processForms ProcessForm[]\n\n  @@index([creatorId])\n  @@map(\"forms\")\n}\n\nmodel FormResponse {\n  id                 String           @id @default(uuid()) @db.Uuid\n  formId             String           @db.Uuid\n  applicantProcessId String           @db.Uuid\n  responses          Json\n  createdAt          DateTime         @default(now())\n  processId          String           @db.Uuid\n  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n  form               Form             @relation(fields: [formId], references: [id], onDelete: Cascade)\n  process            Process          @relation(fields: [processId], references: [id], onDelete: Cascade)\n\n  @@unique([formId, applicantProcessId])\n  @@index([formId])\n  @@index([processId])\n  @@index([applicantProcessId])\n  @@map(\"form_responses\")\n}\n\nmodel ProcessForm {\n  id                           String       @id @default(uuid()) @db.Uuid\n  processId                    String       @db.Uuid\n  formId                       String       @db.Uuid\n  order                        Int\n  nextStepType                 NextStepType @default(NOT_APPLICABLE)\n  nextStepRoles                String[]\n  nextStaffId                  String?      @db.Uuid\n  notificationType             NextStepType @default(NOT_APPLICABLE)\n  notificationRoles            String[]\n  notificationToId             String?      @db.Uuid\n  notificationComment          String?\n  notifyApplicant              Boolean      @default(false)\n  applicantNotificationContent String?\n  createdAt                    DateTime     @default(now())\n  updatedAt                    DateTime     @updatedAt\n  form                         Form         @relation(fields: [formId], references: [id], onDelete: Cascade)\n  process                      Process      @relation(fields: [processId], references: [id], onDelete: Cascade)\n\n  @@index([processId, formId])\n  @@map(\"process_forms\")\n}\n\nmodel ApplicantProcess {\n  id             String            @id @default(uuid()) @db.Uuid\n  applicantId    String            @db.Uuid\n  processId      String            @db.Uuid\n  status         ProcessStatus     @default(ENABLED)\n  createdAt      DateTime          @default(now())\n  completedForms APCompletedForm[]\n  applicant      User              @relation(fields: [applicantId], references: [id])\n  process        Process           @relation(fields: [processId], references: [id])\n  responses      FormResponse[]\n  comments       ProcessComment[]\n\n  @@index([applicantId])\n  @@index([processId])\n  @@map(\"applicant_processes\")\n}\n\nmodel APCompletedForm {\n  id                 String           @id @default(uuid()) @db.Uuid\n  applicantProcessId String           @db.Uuid\n  formId             String           @db.Uuid\n  reviewerId         String?          @db.Uuid\n  createdAt          DateTime         @default(now())\n  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@index([applicantProcessId])\n  @@map(\"ap_completed_forms\")\n}\n\nmodel ProcessComment {\n  id                 String           @id @default(uuid()) @db.Uuid\n  applicantProcessId String           @db.Uuid\n  userId             String           @db.Uuid\n  comment            String\n  createdAt          DateTime         @default(now())\n  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@index([applicantProcessId])\n  @@index([userId])\n  @@map(\"process_comments\")\n}\n\nmodel OrganizationUser {\n  id           String             @id @default(uuid()) @db.Uuid\n  userId       String             @unique @db.Uuid\n  superiorId   String?            @db.Uuid\n  title        String\n  superior     OrganizationUser?  @relation(\"Hierarchy\", fields: [superiorId], references: [id])\n  subordinates OrganizationUser[] @relation(\"Hierarchy\")\n  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@map(\"organization_users\")\n}\n\nmodel Dashboard {\n  id           String   @id @default(uuid()) @db.Uuid\n  name         String\n  ownerId      String   @db.Uuid\n  allowedUsers String[]\n  allowedRoles String[]\n  layout       Json?\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  widgets      Widget[]\n\n  @@index([ownerId])\n  @@map(\"dashboards\")\n}\n\nmodel Widget {\n  id                String    @id @default(uuid()) @db.Uuid\n  dashboardId       String    @db.Uuid\n  title             String\n  visualizationType String\n  config            Json\n  order             Int\n  createdAt         DateTime  @default(now())\n  updatedAt         DateTime  @updatedAt\n  dashboard         Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)\n\n  @@index([dashboardId])\n  @@map(\"widgets\")\n}\n\nmodel QrCodeDocument {\n  id           String   @id @default(uuid()) @db.Uuid\n  documentName String\n  fileName     String\n  qrCodeId     String   @unique\n  creatorId    String   @db.Uuid\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n\n  @@index([creatorId])\n  @@map(\"qr_code_documents\")\n}\n\nmodel Otp {\n  id        String   @id @default(uuid()) @db.Uuid\n  email     String\n  otp       String\n  expiresAt DateTime\n\n  @@index([email])\n  @@map(\"otps\")\n}\n\nmodel Management {\n  id         String         @id @default(uuid()) @db.Uuid\n  fileName   String\n  type       ManagementType\n  uploadedAt DateTime       @default(now())\n  updatedAt  DateTime       @updatedAt\n\n  @@map(\"management\")\n}\n\nmodel AddToDatabase {\n  id        String              @id @default(uuid()) @db.Uuid\n  name      String\n  status    AddToDatabaseStatus @default(ENABLED)\n  levels    Json\n  createdAt DateTime            @default(now())\n  updatedAt DateTime            @updatedAt\n\n  @@map(\"add_to_databases\")\n}\n\nenum UserStatus {\n  ENABLED\n  DISABLED\n  PENDING\n}\n\nenum RoleStatus {\n  ENABLED\n  DISABLED\n}\n\nenum GroupStatus {\n  ENABLED\n  DISABLED\n}\n\nenum ProcessType {\n  PUBLIC\n  PRIVATE\n}\n\nenum ProcessStatus {\n  ENABLED\n  DISABLED\n}\n\nenum FormType {\n  PUBLIC\n  INTERNAL\n}\n\nenum FormStatus {\n  ENABLED\n  DISABLED\n}\n\nenum NextStepType {\n  STATIC\n  DYNAMIC\n  FOLLOW_ORGANIZATION_CHART\n  NOT_APPLICABLE\n}\n\nenum ManagementType {\n  HEADER\n  FOOTER\n}\n\nenum AddToDatabaseStatus {\n  ENABLED\n  DISABLED\n}\n",
-  "inlineSchemaHash": "42f295f3c31278fbf736c7895918b28ea0b8743b170781720b47d6d5a06631d0",
+  "inlineSchema": "generator client {\n  provider        = \"prisma-client-js\"\n  output          = \"../src/generated/prisma\"\n  previewFeatures = [\"driverAdapters\", \"queryCompiler\", \"relationJoins\", \"fullTextSearchPostgres\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id                 String             @id @default(uuid()) @db.Uuid\n  email              String             @unique @db.VarChar(255)\n  password           String             @db.VarChar(255)\n  firstName          String?\n  lastName           String?\n  photo              String?\n  googleId           String?            @unique\n  status             UserStatus         @default(ENABLED)\n  createdAt          DateTime           @default(now())\n  updatedAt          DateTime           @updatedAt\n  applicantProcesses ApplicantProcess[]\n  auditLogs          AuditLog[]\n  files              File[]\n  createdForms       Form[]             @relation(\"FormCreator\")\n  createdGroups      Group[]            @relation(\"GroupCreator\")\n  organization       OrganizationUser?\n  createdProcesses   Process[]          @relation(\"ProcessCreator\")\n  roles              UserRole[]\n\n  @@index([email])\n  @@map(\"users\")\n}\n\nmodel Role {\n  id          String        @id @default(uuid()) @db.Uuid\n  name        String        @unique\n  description String?\n  status      RoleStatus    @default(ENABLED)\n  createdAt   DateTime      @default(now())\n  updatedAt   DateTime      @updatedAt\n  groups      GroupRole[]\n  processes   ProcessRole[]\n  users       UserRole[]\n\n  @@map(\"roles\")\n}\n\nmodel UserRole {\n  userId String     @db.Uuid\n  roleId String     @db.Uuid\n  status RoleStatus @default(ENABLED)\n  role   Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@id([userId, roleId])\n  @@map(\"user_roles\")\n}\n\nmodel File {\n  id           String   @id @default(uuid()) @db.Uuid\n  fileUrl      String   @db.VarChar(255)\n  thumbnailUrl String?\n  size         Int\n  isPrivate    Boolean  @default(false)\n  title        String   @db.VarChar(255)\n  userId       String   @db.Uuid\n  fileType     String   @db.VarChar(255)\n  createdAt    DateTime @default(now()) @db.Timestamp(0)\n  updatedAt    DateTime @updatedAt @db.Timestamp(0)\n  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@index([userId])\n  @@map(\"files\")\n}\n\nmodel AuditLog {\n  id           String   @id @default(uuid()) @db.Uuid\n  timestamp    DateTime @default(now())\n  userId       String?  @db.Uuid\n  action       String\n  resource     String?\n  resourceId   String?\n  details      Json?\n  status       String\n  errorMessage String?\n  user         User?    @relation(fields: [userId], references: [id])\n\n  @@index([userId, action, resource])\n  @@map(\"audit_logs\")\n}\n\nmodel Group {\n  id        String      @id @default(uuid()) @db.Uuid\n  name      String      @unique\n  status    GroupStatus @default(ENABLED)\n  creatorId String      @db.Uuid\n  createdAt DateTime    @default(now())\n  updatedAt DateTime    @updatedAt\n  roles     GroupRole[]\n  creator   User        @relation(\"GroupCreator\", fields: [creatorId], references: [id])\n  processes Process[]\n\n  @@map(\"groups\")\n}\n\nmodel GroupRole {\n  groupId String     @db.Uuid\n  roleId  String     @db.Uuid\n  status  RoleStatus @default(ENABLED)\n  group   Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)\n  role    Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([groupId, roleId])\n  @@map(\"group_roles\")\n}\n\nmodel Process {\n  id                        String             @id @default(uuid()) @db.Uuid\n  name                      String\n  type                      ProcessType        @default(PRIVATE)\n  groupId                   String             @db.Uuid\n  creatorId                 String             @db.Uuid\n  status                    ProcessStatus      @default(ENABLED)\n  archived                  Boolean            @default(false)\n  staffViewForms            Boolean            @default(false)\n  applicantViewProcessLevel Boolean            @default(false)\n  createdAt                 DateTime           @default(now())\n  updatedAt                 DateTime           @updatedAt\n  applicantProcesses        ApplicantProcess[]\n  formResponses             FormResponse[]\n  forms                     ProcessForm[]\n  roles                     ProcessRole[]\n  creator                   User               @relation(\"ProcessCreator\", fields: [creatorId], references: [id])\n  group                     Group              @relation(fields: [groupId], references: [id])\n\n  @@index([groupId])\n  @@index([creatorId])\n  @@map(\"processes\")\n}\n\nmodel ProcessRole {\n  processId String     @db.Uuid\n  roleId    String     @db.Uuid\n  status    RoleStatus @default(ENABLED)\n  process   Process    @relation(fields: [processId], references: [id], onDelete: Cascade)\n  role      Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)\n\n  @@id([processId, roleId])\n  @@map(\"process_roles\")\n}\n\nmodel Form {\n  id           String         @id @default(uuid()) @db.Uuid\n  name         String\n  type         FormType       @default(INTERNAL)\n  status       FormStatus     @default(ENABLED)\n  archived     Boolean        @default(false)\n  creatorId    String         @db.Uuid\n  createdAt    DateTime       @default(now())\n  updatedAt    DateTime       @updatedAt\n  design       Json?\n  responses    FormResponse[]\n  creator      User           @relation(\"FormCreator\", fields: [creatorId], references: [id])\n  processForms ProcessForm[]\n\n  @@index([creatorId])\n  @@map(\"forms\")\n}\n\nmodel FormResponse {\n  id                 String           @id @default(uuid()) @db.Uuid\n  formId             String           @db.Uuid\n  applicantProcessId String           @db.Uuid\n  responses          Json\n  createdAt          DateTime         @default(now())\n  processId          String           @db.Uuid\n  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n  form               Form             @relation(fields: [formId], references: [id], onDelete: Cascade)\n  process            Process          @relation(fields: [processId], references: [id], onDelete: Cascade)\n\n  @@unique([formId, applicantProcessId])\n  @@index([formId])\n  @@index([processId])\n  @@index([applicantProcessId])\n  @@map(\"form_responses\")\n}\n\nmodel ProcessForm {\n  id                           String       @id @default(uuid()) @db.Uuid\n  processId                    String       @db.Uuid\n  formId                       String       @db.Uuid\n  order                        Int\n  nextStepType                 NextStepType @default(NOT_APPLICABLE)\n  nextStepRoles                String[]\n  nextStaffId                  String?      @db.Uuid\n  notificationType             NextStepType @default(NOT_APPLICABLE)\n  notificationRoles            String[]\n  notificationToId             String?      @db.Uuid\n  notificationComment          String?\n  notifyApplicant              Boolean      @default(false)\n  applicantNotificationContent String?\n  createdAt                    DateTime     @default(now())\n  updatedAt                    DateTime     @updatedAt\n  form                         Form         @relation(fields: [formId], references: [id], onDelete: Cascade)\n  process                      Process      @relation(fields: [processId], references: [id], onDelete: Cascade)\n\n  @@index([processId, formId])\n  @@map(\"process_forms\")\n}\n\nmodel ApplicantProcess {\n  id             String            @id @default(uuid()) @db.Uuid\n  applicantId    String            @db.Uuid\n  processId      String            @db.Uuid\n  status         ProcessStatus     @default(ENABLED)\n  createdAt      DateTime          @default(now())\n  completedForms APCompletedForm[]\n  applicant      User              @relation(fields: [applicantId], references: [id])\n  process        Process           @relation(fields: [processId], references: [id])\n  responses      FormResponse[]\n  comments       ProcessComment[]\n\n  @@index([applicantId])\n  @@index([processId])\n  @@map(\"applicant_processes\")\n}\n\nmodel APCompletedForm {\n  id                 String           @id @default(uuid()) @db.Uuid\n  applicantProcessId String           @db.Uuid\n  formId             String           @db.Uuid\n  reviewerId         String?          @db.Uuid\n  createdAt          DateTime         @default(now())\n  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@index([applicantProcessId])\n  @@map(\"ap_completed_forms\")\n}\n\nmodel ProcessComment {\n  id                 String           @id @default(uuid()) @db.Uuid\n  applicantProcessId String           @db.Uuid\n  userId             String           @db.Uuid\n  comment            String\n  createdAt          DateTime         @default(now())\n  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)\n\n  @@index([applicantProcessId])\n  @@index([userId])\n  @@map(\"process_comments\")\n}\n\nmodel OrganizationUser {\n  id           String             @id @default(uuid()) @db.Uuid\n  userId       String             @unique @db.Uuid\n  superiorId   String?            @db.Uuid\n  title        String\n  superior     OrganizationUser?  @relation(\"Hierarchy\", fields: [superiorId], references: [id])\n  subordinates OrganizationUser[] @relation(\"Hierarchy\")\n  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@map(\"organization_users\")\n}\n\nmodel Dashboard {\n  id           String   @id @default(uuid()) @db.Uuid\n  name         String\n  ownerId      String   @db.Uuid\n  allowedUsers String[]\n  allowedRoles String[]\n  layout       Json?\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n  widgets      Widget[]\n\n  @@index([ownerId])\n  @@map(\"dashboards\")\n}\n\nmodel Widget {\n  id                String    @id @default(uuid()) @db.Uuid\n  dashboardId       String    @db.Uuid\n  title             String\n  visualizationType String\n  config            Json\n  order             Int\n  createdAt         DateTime  @default(now())\n  updatedAt         DateTime  @updatedAt\n  dashboard         Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)\n\n  @@index([dashboardId])\n  @@map(\"widgets\")\n}\n\nmodel QrCodeDocument {\n  id           String   @id @default(uuid()) @db.Uuid\n  documentName String\n  fileName     String\n  qrCodeId     String   @unique\n  creatorId    String   @db.Uuid\n  createdAt    DateTime @default(now())\n  updatedAt    DateTime @updatedAt\n\n  @@index([creatorId])\n  @@map(\"qr_code_documents\")\n}\n\nmodel Otp {\n  id        String   @id @default(uuid()) @db.Uuid\n  email     String\n  otp       String\n  expiresAt DateTime\n\n  @@index([email])\n  @@map(\"otps\")\n}\n\nmodel Management {\n  id         String         @id @default(uuid()) @db.Uuid\n  fileName   String\n  type       ManagementType\n  uploadedAt DateTime       @default(now())\n  updatedAt  DateTime       @updatedAt\n\n  @@map(\"management\")\n}\n\nmodel AddToDatabase {\n  id        String              @id @default(uuid()) @db.Uuid\n  name      String\n  status    AddToDatabaseStatus @default(ENABLED)\n  levels    Json\n  createdAt DateTime            @default(now())\n  updatedAt DateTime            @updatedAt\n\n  @@map(\"add_to_databases\")\n}\n\nenum UserStatus {\n  ENABLED\n  DISABLED\n  PENDING\n}\n\nenum RoleStatus {\n  ENABLED\n  DISABLED\n}\n\nenum GroupStatus {\n  ENABLED\n  DISABLED\n}\n\nenum ProcessType {\n  PUBLIC\n  PRIVATE\n}\n\nenum ProcessStatus {\n  ENABLED\n  DISABLED\n}\n\nenum FormType {\n  PUBLIC\n  INTERNAL\n}\n\nenum FormStatus {\n  ENABLED\n  DISABLED\n}\n\nenum NextStepType {\n  STATIC\n  DYNAMIC\n  FOLLOW_ORGANIZATION_CHART\n  NOT_APPLICABLE\n}\n\nenum ManagementType {\n  HEADER\n  FOOTER\n}\n\nenum AddToDatabaseStatus {\n  ENABLED\n  DISABLED\n}\n",
+  "inlineSchemaHash": "40cd05d6eea2d8c62344ae74701d1703ba493abf84be6d82863162c34a5e725c",
   "copyEngine": true
 }
 config.dirname = '/'
