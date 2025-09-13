@@ -20,21 +20,57 @@ export class UserService {
     return bcrypt.hash(password, saltRounds);
   }
 
-  async create(data: Prisma.UserCreateInput): Promise<User> {
+  async create(data: any): Promise<User> {
+    const { roles, ...userData } = data;
     const hashedPassword = await this.hashPassword(data.password);
+
+    // Validate roles exist if provided
+    if (roles && roles.length > 0) {
+      const existingRoles = await this.prisma.role.findMany({
+        where: { id: { in: roles } },
+        select: { id: true },
+      });
+      const existingRoleIds = existingRoles.map((r) => r.id);
+      const invalidRoleIds = roles.filter(
+        (id) => !existingRoleIds.includes(id),
+      );
+      if (invalidRoleIds.length > 0) {
+        throw new Error(
+          `Role(s) with ID(s) ${invalidRoleIds.join(', ')} not found`,
+        );
+      }
+    }
+
     const newUser = await this.prisma.user.create({
       data: {
-        ...data,
+        ...userData,
         password: hashedPassword,
+        roles:
+          roles && roles.length > 0
+            ? {
+                create: roles.map((roleId) => ({
+                  roleId,
+                  status: 'ENABLED',
+                })),
+              }
+            : undefined,
+      },
+      include: {
+        roles: {
+          include: {
+            role: true,
+          },
+        },
       },
     });
+
     await this.auditLogService.log({
       userId: newUser.id,
       action: 'USER_CREATED',
       resource: 'User',
       resourceId: newUser.id,
       status: 'SUCCESS',
-      details: { email: newUser.email },
+      details: { email: newUser.email, roles },
     });
     return newUser;
   }
@@ -51,19 +87,91 @@ export class UserService {
     return this.prisma.user.findFirst({ where: { email } });
   }
 
-  async update(id: string, data: Prisma.UserUpdateInput): Promise<User> {
+  async update(id: string, data: any): Promise<User> {
     const oldUser = await this.prisma.user.findUnique({ where: { id } });
     if (!oldUser) {
       throw new NotFoundException('User not found.');
     }
 
-    if (data.password && typeof data.password === 'string') {
-      data.password = await this.hashPassword(data.password);
-    }
-    const updatedUser = await this.prisma.user.update({
-      where: { id },
-      data,
+    const { roles, ...userData } = data;
+
+    // Use transaction to handle role synchronization atomically
+    const updatedUser = await this.prisma.$transaction(async (tx) => {
+      // If roles is provided, handle role synchronization
+      if (roles !== undefined) {
+        // Validate roles exist if provided
+        if (roles.length > 0) {
+          const existingRoles = await tx.role.findMany({
+            where: { id: { in: roles } },
+            select: { id: true },
+          });
+          const existingRoleIds = existingRoles.map((r) => r.id);
+          const invalidRoleIds = roles.filter(
+            (id) => !existingRoleIds.includes(id),
+          );
+          if (invalidRoleIds.length > 0) {
+            throw new Error(
+              `Role(s) with ID(s) ${invalidRoleIds.join(', ')} not found`,
+            );
+          }
+        }
+
+        // Get current user roles
+        const currentUserRoles = await tx.userRole.findMany({
+          where: { userId: id },
+          select: { roleId: true },
+        });
+        const currentRoleIds = currentUserRoles.map((ur) => ur.roleId);
+
+        // Determine roles to add and remove
+        const rolesToAdd = roles.filter(
+          (roleId) => !currentRoleIds.includes(roleId),
+        );
+        const rolesToRemove = currentRoleIds.filter(
+          (roleId) => !roles.includes(roleId),
+        );
+
+        // Delete removed user roles
+        if (rolesToRemove.length > 0) {
+          await tx.userRole.deleteMany({
+            where: {
+              userId: id,
+              roleId: { in: rolesToRemove },
+            },
+          });
+        }
+
+        // Create new user roles
+        if (rolesToAdd.length > 0) {
+          await tx.userRole.createMany({
+            data: rolesToAdd.map((roleId) => ({
+              userId: id,
+              roleId,
+              status: 'ENABLED',
+            })),
+          });
+        }
+      }
+
+      // Handle password hashing if provided
+      if (userData.password && typeof userData.password === 'string') {
+        userData.password = await this.hashPassword(userData.password);
+      }
+
+      // Update the user itself
+      return tx.user.update({
+        where: { id },
+        data: userData,
+        include: {
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
     });
+
     await this.auditLogService.log({
       userId: updatedUser.id,
       action: 'USER_UPDATED',

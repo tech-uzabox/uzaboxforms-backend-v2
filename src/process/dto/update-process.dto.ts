@@ -10,6 +10,7 @@ const UpdateProcessSchema = z.object({
   archived: z.boolean().optional(),
   staffViewForms: z.boolean().optional(),
   applicantViewProcessLevel: z.boolean().optional(),
+  roles: z.array(z.string().uuid()).optional(),
 });
 
 export class UpdateProcessDto extends createZodDto(UpdateProcessSchema) {}

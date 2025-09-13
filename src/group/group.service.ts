@@ -3,6 +3,7 @@ import { Group, Prisma } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDto } from './dto/update-group.dto';
 
 @Injectable()
 export class GroupService {
@@ -12,23 +13,55 @@ export class GroupService {
   ) {}
 
   async create(data: CreateGroupDto): Promise<Group> {
-    const { name, creatorId } = data;
+    const { name, creatorId, roles } = data;
+
+    // Validate roles exist if provided
+    if (roles && roles.length > 0) {
+      const existingRoles = await this.prisma.role.findMany({
+        where: { id: { in: roles } },
+        select: { id: true },
+      });
+      const existingRoleIds = existingRoles.map((r) => r.id);
+      const invalidRoleIds = roles.filter(
+        (id) => !existingRoleIds.includes(id),
+      );
+      if (invalidRoleIds.length > 0) {
+        throw new Error(
+          `Role(s) with ID(s) ${invalidRoleIds.join(', ')} not found`,
+        );
+      }
+    }
+
     const newGroup = await this.prisma.group.create({
       data: {
         name,
         creator: { connect: { id: creatorId } },
+        roles:
+          roles && roles.length > 0
+            ? {
+                create: roles.map((roleId) => ({
+                  roleId,
+                  status: 'ENABLED',
+                })),
+              }
+            : undefined,
       },
       include: {
         creator: true,
-        roles: true,
+        roles: {
+          include: {
+            role: true,
+          },
+        },
       },
     });
+
     await this.auditLogService.log({
       action: 'GROUP_CREATED',
       resource: 'Group',
       resourceId: newGroup.id,
       status: 'SUCCESS',
-      details: { name: newGroup.name, creatorId: newGroup.creatorId },
+      details: { name: newGroup.name, creatorId: newGroup.creatorId, roles },
     });
     return newGroup;
   }
@@ -52,15 +85,82 @@ export class GroupService {
     });
   }
 
-  async update(id: string, data: Prisma.GroupUpdateInput): Promise<Group> {
-    const updatedGroup = await this.prisma.group.update({
-      where: { id },
-      data,
-      include: {
-        creator: true,
-        roles: true,
-      },
+  async update(id: string, data: UpdateGroupDto): Promise<Group> {
+    const { roles, ...groupData } = data as any;
+
+    // Use transaction to handle role synchronization atomically
+    const updatedGroup = await this.prisma.$transaction(async (tx) => {
+      // If roles is provided, handle role synchronization
+      if (roles !== undefined) {
+        // Validate roles exist if provided
+        if (roles.length > 0) {
+          const existingRoles = await tx.role.findMany({
+            where: { id: { in: roles } },
+            select: { id: true },
+          });
+          const existingRoleIds = existingRoles.map((r) => r.id);
+          const invalidRoleIds = roles.filter(
+            (id) => !existingRoleIds.includes(id),
+          );
+          if (invalidRoleIds.length > 0) {
+            throw new Error(
+              `Role(s) with ID(s) ${invalidRoleIds.join(', ')} not found`,
+            );
+          }
+        }
+
+        // Get current group roles
+        const currentGroupRoles = await tx.groupRole.findMany({
+          where: { groupId: id },
+          select: { roleId: true },
+        });
+        const currentRoleIds = currentGroupRoles.map((gr) => gr.roleId);
+
+        // Determine roles to add and remove
+        const rolesToAdd = roles.filter(
+          (roleId) => !currentRoleIds.includes(roleId),
+        );
+        const rolesToRemove = currentRoleIds.filter(
+          (roleId) => !roles.includes(roleId),
+        );
+
+        // Delete removed group roles
+        if (rolesToRemove.length > 0) {
+          await tx.groupRole.deleteMany({
+            where: {
+              groupId: id,
+              roleId: { in: rolesToRemove },
+            },
+          });
+        }
+
+        // Create new group roles
+        if (rolesToAdd.length > 0) {
+          await tx.groupRole.createMany({
+            data: rolesToAdd.map((roleId) => ({
+              groupId: id,
+              roleId,
+              status: 'ENABLED',
+            })),
+          });
+        }
+      }
+
+      // Update the group itself
+      return tx.group.update({
+        where: { id },
+        data: groupData,
+        include: {
+          creator: true,
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
     });
+
     await this.auditLogService.log({
       action: 'GROUP_UPDATED',
       resource: 'Group',

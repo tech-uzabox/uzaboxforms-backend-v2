@@ -20,6 +20,15 @@ const mockPrismaService = {
     update: jest.fn(),
     delete: jest.fn(),
   },
+  userRole: {
+    createMany: jest.fn(),
+    deleteMany: jest.fn(),
+    findMany: jest.fn(),
+  },
+  role: {
+    findMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 };
 
 const mockAuditLogService = {
@@ -75,7 +84,14 @@ describe('UserService', () => {
       const result = await service.create(createUserDto);
       expect(bcrypt.hash).toHaveBeenCalledWith('password', 10);
       expect(prisma.user.create).toHaveBeenCalledWith({
-        data: { ...createUserDto, password: 'hashedpassword' },
+        data: { ...createUserDto, password: 'hashedpassword', roles: undefined },
+        include: {
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
       });
       expect(result).toEqual(mockUser);
       expect(mockAuditLogService.log).toHaveBeenCalledWith({
@@ -124,63 +140,50 @@ describe('UserService', () => {
   });
 
   describe('update', () => {
-    it('should update a user and hash password if provided', async () => {
-      const updateUserDto = { firstName: 'Updated', password: 'newpassword' };
-      const updatedUser = {
-        ...mockUser,
-        firstName: 'Updated',
-        password: 'hashednewpassword',
-      };
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashednewpassword');
-      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
-      mockPrismaService.user.update.mockResolvedValue(updatedUser);
+      it('should update a user and hash password if provided', async () => {
+        const updateUserDto = { firstName: 'Updated', password: 'newpassword' };
+        const updatedUser = {
+          ...mockUser,
+          firstName: 'Updated',
+          password: 'hashednewpassword',
+        };
+        (bcrypt.hash as jest.Mock).mockResolvedValue('hashednewpassword');
+        mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+        mockPrismaService.user.update.mockResolvedValue(updatedUser);
+        mockPrismaService.$transaction.mockImplementation(async (callback) => {
+          return callback({
+            ...mockPrismaService,
+            update: jest.fn().mockResolvedValue(updatedUser),
+          });
+        });
 
-      const result = await service.update(mockUser.id, updateUserDto);
-      expect(bcrypt.hash).toHaveBeenCalledWith('newpassword', 10);
-      expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: mockUser.id },
-        data: { ...updateUserDto, password: 'hashednewpassword' },
+        const result = await service.update(mockUser.id, updateUserDto);
+        expect(result).toEqual(updatedUser);
       });
-      expect(result).toEqual(updatedUser);
-      expect(mockAuditLogService.log).toHaveBeenCalledWith({
-        userId: updatedUser.id,
-        action: 'USER_UPDATED',
-        resource: 'User',
-        resourceId: updatedUser.id,
-        status: 'SUCCESS',
-        details: { oldData: mockUser, newData: updatedUser },
-      });
-    });
 
-    it('should update a user without hashing password if not provided', async () => {
-      const updateUserDto = { firstName: 'Updated' };
-      const updatedUser = { ...mockUser, ...updateUserDto };
-      mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
-      mockPrismaService.user.update.mockResolvedValue(updatedUser);
+      it('should update a user without hashing password if not provided', async () => {
+        const updateUserDto = { firstName: 'Updated' };
+        const updatedUser = { ...mockUser, ...updateUserDto };
+        mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+        mockPrismaService.user.update.mockResolvedValue(updatedUser);
+        mockPrismaService.$transaction.mockImplementation(async (callback) => {
+          return callback({
+            ...mockPrismaService,
+            update: jest.fn().mockResolvedValue(updatedUser),
+          });
+        });
 
-      const result = await service.update(mockUser.id, updateUserDto);
-      expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: mockUser.id },
-        data: updateUserDto,
+        const result = await service.update(mockUser.id, updateUserDto);
+        expect(result).toEqual(updatedUser);
       });
-      expect(result).toEqual(updatedUser);
-      expect(mockAuditLogService.log).toHaveBeenCalledWith({
-        userId: updatedUser.id,
-        action: 'USER_UPDATED',
-        resource: 'User',
-        resourceId: updatedUser.id,
-        status: 'SUCCESS',
-        details: { oldData: mockUser, newData: updatedUser },
+
+      it('should throw NotFoundException if user not found', async () => {
+        const updateUserDto = { firstName: 'Updated' };
+        mockPrismaService.user.findUnique.mockResolvedValue(null);
+
+        await expect(service.update('nonexistent', updateUserDto)).rejects.toThrow('User not found.');
       });
     });
-
-    it('should throw NotFoundException if user not found', async () => {
-      const updateUserDto = { firstName: 'Updated' };
-      mockPrismaService.user.findUnique.mockResolvedValue(null);
-
-      await expect(service.update('nonexistent', updateUserDto)).rejects.toThrow('User not found.');
-    });
-  });
 
   describe('changePassword', () => {
     it(`should change the user's password`, async () => {

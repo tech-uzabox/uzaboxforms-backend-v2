@@ -12,6 +12,15 @@ const mockPrismaService = {
     update: jest.fn(),
     delete: jest.fn(),
   },
+  role: {
+    findMany: jest.fn(),
+  },
+  groupRole: {
+    createMany: jest.fn(),
+    deleteMany: jest.fn(),
+    findMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 };
 
 const mockAuditLogService = {
@@ -49,7 +58,7 @@ describe('GroupService', () => {
   });
 
   describe('create', () => {
-    it('should create a new group', async () => {
+    it('should create a new group without roles', async () => {
       const createGroupDto = { name: 'New Group', creatorId: 'user-id-1' };
       mockPrismaService.group.create.mockResolvedValue(mockGroup);
 
@@ -59,8 +68,66 @@ describe('GroupService', () => {
         data: {
           name: createGroupDto.name,
           creator: { connect: { id: createGroupDto.creatorId } },
+          roles: undefined,
+        },
+        include: {
+          creator: true,
+          roles: {
+            include: {
+              role: true,
+            },
+          },
         },
       });
+    });
+
+    it('should create a new group with roles', async () => {
+      const createGroupDto = {
+        name: 'New Group',
+        creatorId: 'user-id-1',
+        roles: ['role-id-1', 'role-id-2'],
+      };
+      mockPrismaService.role.findMany.mockResolvedValue([
+        { id: 'role-id-1' },
+        { id: 'role-id-2' },
+      ]);
+      mockPrismaService.group.create.mockResolvedValue(mockGroup);
+
+      const result = await service.create(createGroupDto);
+      expect(result).toEqual(mockGroup);
+      expect(prisma.group.create).toHaveBeenCalledWith({
+        data: {
+          name: createGroupDto.name,
+          creator: { connect: { id: createGroupDto.creatorId } },
+          roles: {
+            create: [
+              { roleId: 'role-id-1', status: 'ENABLED' },
+              { roleId: 'role-id-2', status: 'ENABLED' },
+            ],
+          },
+        },
+        include: {
+          creator: true,
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
+    });
+
+    it('should throw error for non-existent role IDs', async () => {
+      const createGroupDto = {
+        name: 'New Group',
+        creatorId: 'user-id-1',
+        roles: ['role-id-1', 'invalid-role-id'],
+      };
+      mockPrismaService.role.findMany.mockResolvedValue([{ id: 'role-id-1' }]);
+
+      await expect(service.create(createGroupDto)).rejects.toThrow(
+        'Role(s) with ID(s) invalid-role-id not found',
+      );
     });
   });
 

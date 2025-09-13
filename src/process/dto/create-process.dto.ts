@@ -11,6 +11,7 @@ const CreateProcessSchema = z.object({
   archived: z.boolean().default(false),
   staffViewForms: z.boolean().default(false),
   applicantViewProcessLevel: z.boolean().default(false),
+  roles: z.array(z.string().uuid()).optional(),
 });
 
 export class CreateProcessDto extends createZodDto(CreateProcessSchema) {}

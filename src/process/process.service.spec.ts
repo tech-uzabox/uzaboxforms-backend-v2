@@ -15,11 +15,17 @@ const mockPrismaService = {
   },
   processRole: {
     createMany: jest.fn(),
+    deleteMany: jest.fn(),
+    findMany: jest.fn(),
   },
   processForm: {
     deleteMany: jest.fn(),
     createMany: jest.fn(),
   },
+  role: {
+    findMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 };
 
 const mockAuditLogService = {
@@ -62,7 +68,7 @@ describe('ProcessService', () => {
   });
 
   describe('create', () => {
-    it('should create a new process', async () => {
+    it('should create a new process without roles', async () => {
       const createProcessDto = {
         name: 'New Process',
         groupId: 'group-id-1',
@@ -87,8 +93,88 @@ describe('ProcessService', () => {
           applicantViewProcessLevel: createProcessDto.applicantViewProcessLevel,
           group: { connect: { id: createProcessDto.groupId } },
           creator: { connect: { id: createProcessDto.creatorId } },
+          roles: undefined,
+        },
+        include: {
+          creator: true,
+          roles: {
+            include: {
+              role: true,
+            },
+          },
         },
       });
+    });
+
+    it('should create a new process with roles', async () => {
+      const createProcessDto = {
+        name: 'New Process',
+        groupId: 'group-id-1',
+        creatorId: 'user-id-1',
+        type: mockProcess.type,
+        status: mockProcess.status,
+        archived: mockProcess.archived,
+        staffViewForms: mockProcess.staffViewForms,
+        applicantViewProcessLevel: mockProcess.applicantViewProcessLevel,
+        roles: ['role-id-1', 'role-id-2'],
+      };
+      mockPrismaService.role.findMany.mockResolvedValue([
+        { id: 'role-id-1' },
+        { id: 'role-id-2' },
+      ]);
+      mockPrismaService.process.create.mockResolvedValue(mockProcess);
+
+      const result = await service.create(createProcessDto);
+      expect(result).toEqual(mockProcess);
+      expect(prisma.role.findMany).toHaveBeenCalledWith({
+        where: { id: { in: ['role-id-1', 'role-id-2'] } },
+        select: { id: true },
+      });
+      expect(prisma.process.create).toHaveBeenCalledWith({
+        data: {
+          name: createProcessDto.name,
+          type: createProcessDto.type,
+          status: createProcessDto.status,
+          archived: createProcessDto.archived,
+          staffViewForms: createProcessDto.staffViewForms,
+          applicantViewProcessLevel: createProcessDto.applicantViewProcessLevel,
+          group: { connect: { id: createProcessDto.groupId } },
+          creator: { connect: { id: createProcessDto.creatorId } },
+          roles: {
+            create: [
+              { roleId: 'role-id-1', status: 'ENABLED' },
+              { roleId: 'role-id-2', status: 'ENABLED' },
+            ],
+          },
+        },
+        include: {
+          creator: true,
+          roles: {
+            include: {
+              role: true,
+            },
+          },
+        },
+      });
+    });
+
+    it('should throw error for non-existent role IDs', async () => {
+      const createProcessDto = {
+        name: 'New Process',
+        groupId: 'group-id-1',
+        creatorId: 'user-id-1',
+        type: mockProcess.type,
+        status: mockProcess.status,
+        archived: mockProcess.archived,
+        staffViewForms: mockProcess.staffViewForms,
+        applicantViewProcessLevel: mockProcess.applicantViewProcessLevel,
+        roles: ['role-id-1', 'invalid-role-id'],
+      };
+      mockPrismaService.role.findMany.mockResolvedValue([{ id: 'role-id-1' }]);
+
+      await expect(service.create(createProcessDto)).rejects.toThrow(
+        'Role(s) with ID(s) invalid-role-id not found',
+      );
     });
   });
 

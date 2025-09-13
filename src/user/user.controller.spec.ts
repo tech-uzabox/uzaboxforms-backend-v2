@@ -58,12 +58,24 @@ describe('UserController', () => {
   });
 
   describe('create', () => {
-    it('should create a user', async () => {
+    it('should create a user without roles', async () => {
       const createUserDto = {
         email: 'test@example.com',
         password: 'password',
         firstName: 'Test',
         lastName: 'User',
+      };
+      expect(await controller.create(createUserDto)).toEqual(mockUser);
+      expect(mockUserService.create).toHaveBeenCalledWith(createUserDto);
+    });
+
+    it('should create a user with roles', async () => {
+      const createUserDto = {
+        email: 'test@example.com',
+        password: 'password',
+        firstName: 'Test',
+        lastName: 'User',
+        roles: ['role-id-1', 'role-id-2'],
       };
       expect(await controller.create(createUserDto)).toEqual(mockUser);
       expect(mockUserService.create).toHaveBeenCalledWith(createUserDto);

@@ -8,6 +8,7 @@ const UpdateUserSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   status: z.enum(['ENABLED', 'DISABLED', 'PENDING']).optional(),
+  roles: z.array(z.string().uuid()).optional(),
 });
 
 export class UpdateUserDto extends createZodDto(UpdateUserSchema) {}
