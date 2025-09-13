@@ -49,11 +49,32 @@ describe('ProcessController', () => {
   });
 
   describe('create', () => {
-    it('should create a process', async () => {
+    it('should create a process without roles', async () => {
       const createProcessDto = {
         name: 'New Process',
         groupId: 'group-id-1',
         creatorId: 'user-id-1',
+        type: ProcessType.PRIVATE,
+        status: ProcessStatus.ENABLED,
+        archived: false,
+        staffViewForms: false,
+        applicantViewProcessLevel: false,
+      };
+      expect(await controller.create(createProcessDto)).toEqual(mockProcess);
+      expect(mockProcessService.create).toHaveBeenCalledWith(createProcessDto);
+    });
+
+    it('should create a process with roles', async () => {
+      const createProcessDto = {
+        name: 'New Process',
+        groupId: 'group-id-1',
+        creatorId: 'user-id-1',
+        type: ProcessType.PRIVATE,
+        status: ProcessStatus.ENABLED,
+        archived: false,
+        staffViewForms: false,
+        applicantViewProcessLevel: false,
+        roles: ['role-id-1', 'role-id-2'],
       };
       expect(await controller.create(createProcessDto)).toEqual(mockProcess);
       expect(mockProcessService.create).toHaveBeenCalledWith(createProcessDto);

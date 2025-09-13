@@ -15,6 +15,12 @@ const mockPrismaService = {
   role: {
     findMany: jest.fn(),
   },
+  groupRole: {
+    createMany: jest.fn(),
+    deleteMany: jest.fn(),
+    findMany: jest.fn(),
+  },
+  $transaction: jest.fn(),
 };
 
 const mockAuditLogService = {
