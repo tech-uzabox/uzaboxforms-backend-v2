@@ -17,20 +17,19 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from 'db/client';
-import type { Request, Response } from 'express';
-import { ZodValidationPipe } from 'nestjs-zod';
-import { AuthService } from './auth.service';
-import type { AuthenticatedUser } from './decorators/get-user.decorator';
-import { GetUser } from './decorators/get-user.decorator';
-
 import { LoginDto } from './dto/login.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
-import { ResetPasswordDto } from './dto/reset-password.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { ZodValidationPipe } from 'nestjs-zod';
+import type { Request, Response } from 'express';
+
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { GetUser } from './decorators/get-user.decorator';
+import { RegisterUserDto } from './dto/register-user.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import type { AuthenticatedUser } from './decorators/get-user.decorator';
+import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -65,22 +64,63 @@ export class AuthController {
     status: 401,
     description: 'Invalid credentials or email not verified.',
   })
-  async login(@Req() req: Request & { user: User }) {
-    return this.authService.login(req.user, req);
+  async login(@Req() req: Request & { user: User }, @Res() res: Response) {
+    const tokens = await this.authService.login(req.user, req);
+    
+    // Set JWT tokens in cookies (httpOnly: true for security)
+    res.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+      sameSite: 'lax',
+    });
+
+    res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: 'lax',
+    });
+
+    return res.json(tokens);
   }
 
   @Post('refresh-token')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Refresh access token using a refresh token' })
+  @ApiOperation({ summary: 'Refresh access token using a refresh token from cookies' })
   @ApiResponse({ status: 200, description: 'Tokens refreshed successfully.' })
   @ApiResponse({
     status: 401,
     description: 'Invalid or expired refresh token.',
   })
   async refreshToken(
-    @Body(new ZodValidationPipe(RefreshTokenDto)) dto: RefreshTokenDto,
+    @Req() req: Request,
+    @Res() res: Response,
   ) {
-    return this.authService.refreshTokens(dto.refreshToken);
+    const refreshToken = req.cookies?.refreshToken;
+    
+    if (!refreshToken) {
+      return res.status(401).json({ message: 'No refresh token provided' });
+    }
+
+    const tokens = await this.authService.refreshTokens(refreshToken);
+    
+    // Set new JWT tokens in cookies
+    res.cookie('accessToken', tokens.accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 15 * 60 * 1000, // 15 minutes
+      sameSite: 'lax',
+    });
+
+    res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: 'lax',
+    });
+
+    return res.json(tokens);
   }
 
   @UseGuards(JwtAuthGuard)
