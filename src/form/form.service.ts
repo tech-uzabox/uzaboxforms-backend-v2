@@ -42,7 +42,7 @@ export class FormService {
       const formDesign = form.design ? true : false;
       return {
         _id: form.id,
-        formName: form.name,
+        name: form.name,
         status: form.status,
         createdBy: form.creator ? {
           firstName: form.creator.firstName,
@@ -135,7 +135,7 @@ export class FormService {
       const formDesign = form.design ? true : false;
       return {
         _id: form.id,
-        formName: form.name,
+        name: form.name,
         status: form.status,
         createdBy: form.creator ? {
           firstName: form.creator.firstName,
@@ -205,7 +205,7 @@ export class FormService {
 
     return Array.from(resultMap.values()).map(item => ({
       _id: item.formId,
-      formName: nameMap.get(item.formId) || "",
+      name: nameMap.get(item.formId) || "",
       countryFields: item.countryFields,
     }));
   }
