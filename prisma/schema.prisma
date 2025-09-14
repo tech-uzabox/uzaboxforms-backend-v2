@@ -188,23 +188,25 @@ model FormResponse {
 }
 
 model ProcessForm {
-  id                           String       @id @default(uuid()) @db.Uuid
-  processId                    String       @db.Uuid
-  formId                       String       @db.Uuid
-  order                        Int
-  nextStepType                 NextStepType @default(NOT_APPLICABLE)
-  nextStepRoles                String[]
-  nextStaffId                  String?      @db.Uuid
-  notificationType             NextStepType @default(NOT_APPLICABLE)
-  notificationRoles            String[]
-  notificationToId             String?      @db.Uuid
-  notificationComment          String?
-  notifyApplicant              Boolean      @default(false)
-  applicantNotificationContent String?
-  createdAt                    DateTime     @default(now())
-  updatedAt                    DateTime     @updatedAt
-  form                         Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
-  process                      Process      @relation(fields: [processId], references: [id], onDelete: Cascade)
+  id                               String       @id @default(uuid()) @db.Uuid
+  processId                        String       @db.Uuid
+  formId                           String       @db.Uuid
+  order                            Int
+  nextStepType                     NextStepType @default(NOT_APPLICABLE)
+  nextStepRoles                    String[]
+  nextStaffId                      String?      @db.Uuid
+  notificationType                 NextStepType @default(NOT_APPLICABLE)
+  notificationRoles                String[]
+  notificationToId                 String?      @db.Uuid
+  notificationComment              String?
+  notifyApplicant                  Boolean      @default(false)
+  applicantNotificationContent     String?
+  editApplicationStatus            Boolean      @default(false)
+  applicantViewFormAfterCompletion Boolean      @default(false)
+  createdAt                        DateTime     @default(now())
+  updatedAt                        DateTime     @updatedAt
+  form                             Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
+  process                          Process      @relation(fields: [processId], references: [id], onDelete: Cascade)
 
   @@index([processId, formId])
   @@map("process_forms")

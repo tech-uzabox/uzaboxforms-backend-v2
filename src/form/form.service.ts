@@ -33,8 +33,26 @@ export class FormService {
     return newForm;
   }
 
-  async findAll(): Promise<Form[]> {
-    return this.prisma.form.findMany();
+  async findAll(): Promise<any[]> {
+    const forms = await this.prisma.form.findMany({
+      include: { creator: true },
+    });
+
+    return forms.map(form => {
+      const formDesign = form.design ? true : false;
+      return {
+        _id: form.id,
+        formName: form.name,
+        status: form.status,
+        createdBy: form.creator ? {
+          firstName: form.creator.firstName,
+          lastName: form.creator.lastName,
+        } : null,
+        formCreated: formDesign,
+        createdAt: form.createdAt,
+        updatedAt: form.updatedAt,
+      };
+    });
   }
 
   async findOne(id: string): Promise<Form | null> {
@@ -105,6 +123,29 @@ export class FormService {
       details: { originalFormId: formId, newFormName: duplicatedForm.name },
     });
     return duplicatedForm;
+  }
+
+  async getPublicForms(): Promise<any[]> {
+    const publicForms = await this.prisma.form.findMany({
+      where: { type: 'PUBLIC' },
+      include: { creator: true },
+    });
+
+    return publicForms.map(form => {
+      const formDesign = form.design ? true : false;
+      return {
+        _id: form.id,
+        formName: form.name,
+        status: form.status,
+        createdBy: form.creator ? {
+          firstName: form.creator.firstName,
+          lastName: form.creator.lastName,
+        } : null,
+        formCreated: formDesign,
+        createdAt: form.createdAt,
+        updatedAt: form.updatedAt,
+      };
+    });
   }
 
   async getFormsWithCountries(): Promise<any[]> {

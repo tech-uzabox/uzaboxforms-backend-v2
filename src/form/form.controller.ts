@@ -45,6 +45,11 @@ export class FormController {
     return this.formService.getFormsWithCountries();
   }
 
+  @Get('public')
+  getPublicForms() {
+    return this.formService.getPublicForms();
+  }
+
   @Get(':id/fields')
   getFormFields(@Param('id') id: string) {
     return this.formService.getFormFields(id);
