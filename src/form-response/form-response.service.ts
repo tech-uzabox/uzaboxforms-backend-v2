@@ -115,12 +115,101 @@ export class FormResponseService {
   async findByUserIdAndFormId(
     userId: string,
     formId: string,
-  ): Promise<FormResponse | null> {
-    return this.prisma.formResponse.findFirst({
+    applicantProcessId?: string,
+  ): Promise<any> {
+    // Step 1: Main user response
+    const userResponse = await this.prisma.formResponse.findFirst({
       where: {
         formId,
-        applicantProcess: { applicantId: userId },
+        applicantProcessId,
       },
     });
+
+    if (!userResponse) {
+      throw new Error('Response not found');
+    }
+
+    // Step 2: Get form name
+    const form = await this.prisma.form.findUnique({
+      where: { id: userResponse.formId },
+      select: { name: true },
+    });
+    const responseByUser = {
+      formName: form?.name || 'Untitled Form',
+      ...userResponse,
+    };
+
+    // Step 3: Get process details
+    const process = await this.prisma.process.findUnique({
+      where: { id: userResponse.processId },
+    });
+    if (!process) {
+      throw new Error('Process not found');
+    }
+
+    // Step 4: Fetch all forms under this process
+    const allProcessForms = await this.prisma.processForm.findMany({
+      where: { processId: userResponse.processId },
+    });
+
+    const relatedProcessForms = allProcessForms.filter(
+      pf => pf.processId === userResponse.processId,
+    );
+
+    // Step 5: Fetch completed forms by this applicant process
+    const relatedCompletedForms = await this.prisma.aPCompletedForm.findMany({
+      where: { applicantProcessId },
+    });
+
+    const totalForms = relatedProcessForms.length;
+    const completedFormsCount = relatedCompletedForms.length;
+
+    let responses = [responseByUser];
+
+    const applicantProcess = await this.prisma.applicantProcess.findFirst({
+      where: {
+        processId: process.id,
+        applicantId: userId,
+      },
+    });
+
+    // Step 6: Include forms where applicantViewFormAfterCompletion is true
+    if (applicantProcess) {
+      const viewableForms = relatedProcessForms.filter(pf => pf.applicantViewFormAfterCompletion);
+
+      for (const viewableForm of viewableForms) {
+        const formResponse = await this.prisma.formResponse.findFirst({
+          where: {
+            formId: viewableForm.formId,
+            applicantProcessId,
+          },
+        });
+
+        if (formResponse) {
+          const formData = await this.prisma.form.findUnique({
+            where: { id: formResponse.formId },
+            select: { name: true },
+          });
+          const formResult = {
+            formName: formData?.name || 'Untitled Form',
+            ...formResponse,
+          };
+          // Avoid duplicating the main response
+          if (formResponse.formId !== formId) {
+            responses.push(formResult);
+          }
+        }
+      }
+    }
+
+    return {
+      success: true,
+      responses,
+      process: {
+        name: process.name,
+        totalForms,
+        completedFormsCount,
+      },
+    };
   }
 }

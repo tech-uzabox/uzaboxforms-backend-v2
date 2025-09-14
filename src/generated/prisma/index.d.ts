@@ -15913,6 +15913,8 @@ export namespace Prisma {
     notificationComment: string | null
     notifyApplicant: boolean | null
     applicantNotificationContent: string | null
+    editApplicationStatus: boolean | null
+    applicantViewFormAfterCompletion: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15929,6 +15931,8 @@ export namespace Prisma {
     notificationComment: string | null
     notifyApplicant: boolean | null
     applicantNotificationContent: string | null
+    editApplicationStatus: boolean | null
+    applicantViewFormAfterCompletion: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15947,6 +15951,8 @@ export namespace Prisma {
     notificationComment: number
     notifyApplicant: number
     applicantNotificationContent: number
+    editApplicationStatus: number
+    applicantViewFormAfterCompletion: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -15973,6 +15979,8 @@ export namespace Prisma {
     notificationComment?: true
     notifyApplicant?: true
     applicantNotificationContent?: true
+    editApplicationStatus?: true
+    applicantViewFormAfterCompletion?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15989,6 +15997,8 @@ export namespace Prisma {
     notificationComment?: true
     notifyApplicant?: true
     applicantNotificationContent?: true
+    editApplicationStatus?: true
+    applicantViewFormAfterCompletion?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -16007,6 +16017,8 @@ export namespace Prisma {
     notificationComment?: true
     notifyApplicant?: true
     applicantNotificationContent?: true
+    editApplicationStatus?: true
+    applicantViewFormAfterCompletion?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -16112,6 +16124,8 @@ export namespace Prisma {
     notificationComment: string | null
     notifyApplicant: boolean
     applicantNotificationContent: string | null
+    editApplicationStatus: boolean
+    applicantViewFormAfterCompletion: boolean
     createdAt: Date
     updatedAt: Date
     _count: ProcessFormCountAggregateOutputType | null
@@ -16149,6 +16163,8 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     form?: boolean | FormDefaultArgs<ExtArgs>
@@ -16169,6 +16185,8 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     form?: boolean | FormDefaultArgs<ExtArgs>
@@ -16189,6 +16207,8 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     form?: boolean | FormDefaultArgs<ExtArgs>
@@ -16209,11 +16229,13 @@ export namespace Prisma {
     notificationComment?: boolean
     notifyApplicant?: boolean
     applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ProcessFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "formId" | "order" | "nextStepType" | "nextStepRoles" | "nextStaffId" | "notificationType" | "notificationRoles" | "notificationToId" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent" | "createdAt" | "updatedAt", ExtArgs["result"]["processForm"]>
+  export type ProcessFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "formId" | "order" | "nextStepType" | "nextStepRoles" | "nextStaffId" | "notificationType" | "notificationRoles" | "notificationToId" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent" | "editApplicationStatus" | "applicantViewFormAfterCompletion" | "createdAt" | "updatedAt", ExtArgs["result"]["processForm"]>
   export type ProcessFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
@@ -16247,6 +16269,8 @@ export namespace Prisma {
       notificationComment: string | null
       notifyApplicant: boolean
       applicantNotificationContent: string | null
+      editApplicationStatus: boolean
+      applicantViewFormAfterCompletion: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["processForm"]>
@@ -16687,6 +16711,8 @@ export namespace Prisma {
     readonly notificationComment: FieldRef<"ProcessForm", 'String'>
     readonly notifyApplicant: FieldRef<"ProcessForm", 'Boolean'>
     readonly applicantNotificationContent: FieldRef<"ProcessForm", 'String'>
+    readonly editApplicationStatus: FieldRef<"ProcessForm", 'Boolean'>
+    readonly applicantViewFormAfterCompletion: FieldRef<"ProcessForm", 'Boolean'>
     readonly createdAt: FieldRef<"ProcessForm", 'DateTime'>
     readonly updatedAt: FieldRef<"ProcessForm", 'DateTime'>
   }
@@ -27976,6 +28002,8 @@ export namespace Prisma {
     notificationComment: 'notificationComment',
     notifyApplicant: 'notifyApplicant',
     applicantNotificationContent: 'applicantNotificationContent',
+    editApplicationStatus: 'editApplicationStatus',
+    applicantViewFormAfterCompletion: 'applicantViewFormAfterCompletion',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -29406,6 +29434,8 @@ export namespace Prisma {
     notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
+    editApplicationStatus?: BoolFilter<"ProcessForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolFilter<"ProcessForm"> | boolean
     createdAt?: DateTimeFilter<"ProcessForm"> | Date | string
     updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
     form?: XOR<FormScalarRelationFilter, FormWhereInput>
@@ -29426,6 +29456,8 @@ export namespace Prisma {
     notificationComment?: SortOrderInput | SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrderInput | SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     form?: FormOrderByWithRelationInput
@@ -29450,6 +29482,8 @@ export namespace Prisma {
     notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
+    editApplicationStatus?: BoolFilter<"ProcessForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolFilter<"ProcessForm"> | boolean
     createdAt?: DateTimeFilter<"ProcessForm"> | Date | string
     updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
     form?: XOR<FormScalarRelationFilter, FormWhereInput>
@@ -29470,6 +29504,8 @@ export namespace Prisma {
     notificationComment?: SortOrderInput | SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrderInput | SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ProcessFormCountOrderByAggregateInput
@@ -29496,6 +29532,8 @@ export namespace Prisma {
     notificationComment?: StringNullableWithAggregatesFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolWithAggregatesFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableWithAggregatesFilter<"ProcessForm"> | string | null
+    editApplicationStatus?: BoolWithAggregatesFilter<"ProcessForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolWithAggregatesFilter<"ProcessForm"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ProcessForm"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProcessForm"> | Date | string
   }
@@ -30939,6 +30977,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     form: FormCreateNestedOneWithoutProcessFormsInput
@@ -30959,6 +30999,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30975,6 +31017,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     form?: FormUpdateOneRequiredWithoutProcessFormsNestedInput
@@ -30995,6 +31039,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31013,6 +31059,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31029,6 +31077,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31047,6 +31097,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32688,6 +32740,8 @@ export namespace Prisma {
     notificationComment?: SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32708,6 +32762,8 @@ export namespace Prisma {
     notificationComment?: SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32724,6 +32780,8 @@ export namespace Prisma {
     notificationComment?: SortOrder
     notifyApplicant?: SortOrder
     applicantNotificationContent?: SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36328,6 +36386,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     form: FormCreateNestedOneWithoutProcessFormsInput
@@ -36346,6 +36406,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -36527,6 +36589,8 @@ export namespace Prisma {
     notificationComment?: StringNullableFilter<"ProcessForm"> | string | null
     notifyApplicant?: BoolFilter<"ProcessForm"> | boolean
     applicantNotificationContent?: StringNullableFilter<"ProcessForm"> | string | null
+    editApplicationStatus?: BoolFilter<"ProcessForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolFilter<"ProcessForm"> | boolean
     createdAt?: DateTimeFilter<"ProcessForm"> | Date | string
     updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
   }
@@ -36856,6 +36920,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     process: ProcessCreateNestedOneWithoutFormsInput
@@ -36874,6 +36940,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38535,6 +38603,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38607,6 +38677,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     form?: FormUpdateOneRequiredWithoutProcessFormsNestedInput
@@ -38625,6 +38697,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38642,6 +38716,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38682,6 +38758,8 @@ export namespace Prisma {
     notificationComment?: string | null
     notifyApplicant?: boolean
     applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38722,6 +38800,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     process?: ProcessUpdateOneRequiredWithoutFormsNestedInput
@@ -38740,6 +38820,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38757,6 +38839,8 @@ export namespace Prisma {
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

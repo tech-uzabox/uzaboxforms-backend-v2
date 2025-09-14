@@ -248,6 +248,8 @@ exports.Prisma.ProcessFormScalarFieldEnum = {
   notificationComment: 'notificationComment',
   notifyApplicant: 'notifyApplicant',
   applicantNotificationContent: 'applicantNotificationContent',
+  editApplicationStatus: 'editApplicationStatus',
+  applicantViewFormAfterCompletion: 'applicantViewFormAfterCompletion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

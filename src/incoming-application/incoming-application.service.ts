@@ -17,23 +17,57 @@ export class IncomingApplicationService {
 
   private async userHasAccess(
     user: AuthenticatedUser,
-    lastCompletedForm: { reviewerId: string; nextStepType: NextStepType; nextStaffId: string; nextStepRoles: string[] },
+    lastCompletedForm: {
+      reviewerId: string;
+      nextStepType: NextStepType;
+      nextStaffId: string;
+      nextStepRoles: string[];
+      nextStepSpecifiedTo?: string;
+    },
   ): Promise<boolean> {
     if (!lastCompletedForm) return false;
 
     switch (lastCompletedForm.nextStepType) {
       case NextStepType.STATIC:
         return lastCompletedForm.nextStaffId === user.id;
+
       case NextStepType.DYNAMIC:
+        if (lastCompletedForm.nextStepSpecifiedTo === 'SINGLE_STAFF') {
+          return lastCompletedForm.nextStaffId === user.id;
+        } else if (lastCompletedForm.nextStepSpecifiedTo === 'ALL_STAFF') {
+          return user.roles.some(role => lastCompletedForm.nextStepRoles.includes(role));
+        }
+        // Default to role-based access
         return user.roles.some(role => lastCompletedForm.nextStepRoles.includes(role));
+
       case NextStepType.FOLLOW_ORGANIZATION_CHART:
         if (!lastCompletedForm.reviewerId) return false;
+
+        // Get the reviewer's organization info
         const reviewerOrgUser = await this.prisma.organizationUser.findFirst({
           where: { userId: lastCompletedForm.reviewerId },
         });
-        return reviewerOrgUser?.superiorId === user.id;
+
+        if (!reviewerOrgUser) return false;
+
+        // Check if current user is the direct supervisor
+        if (reviewerOrgUser.superiorId === user.id) {
+          return true;
+        }
+
+        // Check if current user is in the same organization hierarchy
+        const currentUserOrg = await this.prisma.organizationUser.findFirst({
+          where: { userId: user.id },
+        });
+
+        if (!currentUserOrg) return false;
+
+        // Check if they share the same superior (same level in hierarchy)
+        return reviewerOrgUser.superiorId === currentUserOrg.superiorId;
+
       case NextStepType.NOT_APPLICABLE:
-        return true; // Or based on some other role/permission
+        return true; // Allow access for completed processes
+
       default:
         return false;
     }
@@ -387,9 +421,9 @@ export class IncomingApplicationService {
     // Simplified implementation, but more direct query
     const disabledProcesses = await this.prisma.applicantProcess.findMany({
       where: { status: ProcessStatus.DISABLED },
-      include: { 
-          process: { include: { group: true } }, 
-          applicant: true 
+      include: {
+          process: { include: { group: true } },
+          applicant: true
         },
     });
 

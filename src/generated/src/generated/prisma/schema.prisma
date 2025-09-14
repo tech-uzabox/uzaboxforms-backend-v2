@@ -1,0 +1,433 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters", "queryCompiler", "relationJoins", "fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String             @id @default(uuid()) @db.Uuid
+  email              String             @unique @db.VarChar(255)
+  password           String             @db.VarChar(255)
+  firstName          String?
+  lastName           String?
+  photo              String?
+  googleId           String?            @unique
+  status             UserStatus         @default(ENABLED)
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  applicantProcesses ApplicantProcess[]
+  auditLogs          AuditLog[]
+  files              File[]
+  createdForms       Form[]             @relation("FormCreator")
+  createdGroups      Group[]            @relation("GroupCreator")
+  organization       OrganizationUser?
+  createdProcesses   Process[]          @relation("ProcessCreator")
+  roles              UserRole[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model Role {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        String        @unique
+  description String?
+  status      RoleStatus    @default(ENABLED)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  groups      GroupRole[]
+  processes   ProcessRole[]
+  users       UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId String     @db.Uuid
+  roleId String     @db.Uuid
+  status RoleStatus @default(ENABLED)
+  role   Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model File {
+  id           String   @id @default(uuid()) @db.Uuid
+  fileUrl      String   @db.VarChar(255)
+  thumbnailUrl String?
+  size         Int
+  isPrivate    Boolean  @default(false)
+  title        String   @db.VarChar(255)
+  userId       String   @db.Uuid
+  fileType     String   @db.VarChar(255)
+  createdAt    DateTime @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime @updatedAt @db.Timestamp(0)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("files")
+}
+
+model AuditLog {
+  id           String   @id @default(uuid()) @db.Uuid
+  timestamp    DateTime @default(now())
+  userId       String?  @db.Uuid
+  action       String
+  resource     String?
+  resourceId   String?
+  details      Json?
+  status       String
+  errorMessage String?
+  user         User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId, action, resource])
+  @@map("audit_logs")
+}
+
+model Group {
+  id        String      @id @default(uuid()) @db.Uuid
+  name      String      @unique
+  status    GroupStatus @default(ENABLED)
+  creatorId String      @db.Uuid
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  roles     GroupRole[]
+  creator   User        @relation("GroupCreator", fields: [creatorId], references: [id])
+  processes Process[]
+
+  @@map("groups")
+}
+
+model GroupRole {
+  groupId String     @db.Uuid
+  roleId  String     @db.Uuid
+  status  RoleStatus @default(ENABLED)
+  group   Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  role    Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, roleId])
+  @@map("group_roles")
+}
+
+model Process {
+  id                        String             @id @default(uuid()) @db.Uuid
+  name                      String
+  type                      ProcessType        @default(PRIVATE)
+  groupId                   String             @db.Uuid
+  creatorId                 String             @db.Uuid
+  status                    ProcessStatus      @default(ENABLED)
+  archived                  Boolean            @default(false)
+  staffViewForms            Boolean            @default(false)
+  applicantViewProcessLevel Boolean            @default(false)
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+  applicantProcesses        ApplicantProcess[]
+  formResponses             FormResponse[]
+  forms                     ProcessForm[]
+  roles                     ProcessRole[]
+  creator                   User               @relation("ProcessCreator", fields: [creatorId], references: [id])
+  group                     Group              @relation(fields: [groupId], references: [id])
+
+  @@index([groupId])
+  @@index([creatorId])
+  @@map("processes")
+}
+
+model ProcessRole {
+  processId String     @db.Uuid
+  roleId    String     @db.Uuid
+  status    RoleStatus @default(ENABLED)
+  process   Process    @relation(fields: [processId], references: [id], onDelete: Cascade)
+  role      Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([processId, roleId])
+  @@map("process_roles")
+}
+
+model Form {
+  id           String         @id @default(uuid()) @db.Uuid
+  name         String
+  type         FormType       @default(INTERNAL)
+  status       FormStatus     @default(ENABLED)
+  archived     Boolean        @default(false)
+  creatorId    String         @db.Uuid
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  design       Json?
+  responses    FormResponse[]
+  creator      User           @relation("FormCreator", fields: [creatorId], references: [id])
+  processForms ProcessForm[]
+
+  @@index([creatorId])
+  @@map("forms")
+}
+
+model FormResponse {
+  id                 String           @id @default(uuid()) @db.Uuid
+  formId             String           @db.Uuid
+  applicantProcessId String           @db.Uuid
+  responses          Json
+  createdAt          DateTime         @default(now())
+  processId          String           @db.Uuid
+  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
+  form               Form             @relation(fields: [formId], references: [id], onDelete: Cascade)
+  process            Process          @relation(fields: [processId], references: [id], onDelete: Cascade)
+
+  @@unique([formId, applicantProcessId])
+  @@index([formId])
+  @@index([processId])
+  @@index([applicantProcessId])
+  @@map("form_responses")
+}
+
+model ProcessForm {
+  id                               String       @id @default(uuid()) @db.Uuid
+  processId                        String       @db.Uuid
+  formId                           String       @db.Uuid
+  order                            Int
+  nextStepType                     NextStepType @default(NOT_APPLICABLE)
+  nextStepRoles                    String[]
+  nextStepSpecifiedTo              String?
+  nextStaffId                      String?      @db.Uuid
+  notificationType                 NextStepType @default(NOT_APPLICABLE)
+  notificationRoles                String[]
+  notificationToId                 String?      @db.Uuid
+  notificationComment              String?
+  notifyApplicant                  Boolean      @default(false)
+  applicantNotificationContent     String?
+  editApplicationStatus            Boolean      @default(false)
+  applicantViewFormAfterCompletion Boolean      @default(false)
+  createdAt                        DateTime     @default(now())
+  updatedAt                        DateTime     @updatedAt
+  form                             Form         @relation(fields: [formId], references: [id], onDelete: Cascade)
+  process                          Process      @relation(fields: [processId], references: [id], onDelete: Cascade)
+
+  @@index([processId, formId])
+  @@map("process_forms")
+}
+
+model ApplicantProcess {
+  id             String            @id @default(uuid()) @db.Uuid
+  applicantId    String            @db.Uuid
+  processId      String            @db.Uuid
+  status         ProcessStatus     @default(ENABLED)
+  createdAt      DateTime          @default(now())
+  completedForms APCompletedForm[]
+  applicant      User              @relation(fields: [applicantId], references: [id])
+  process        Process           @relation(fields: [processId], references: [id])
+  responses      FormResponse[]
+  comments       ProcessComment[]
+
+  @@index([applicantId])
+  @@index([processId])
+  @@map("applicant_processes")
+}
+
+model APCompletedForm {
+  id                  String           @id @default(uuid()) @db.Uuid
+  applicantProcessId  String           @db.Uuid
+  formId              String           @db.Uuid
+  reviewerId          String?          @db.Uuid
+  nextStepType        NextStepType     @default(NOT_APPLICABLE)
+  nextStaffId         String?          @db.Uuid
+  nextStepRoles       String[]
+  nextStepSpecifiedTo String?
+  notificationType    NextStepType     @default(NOT_APPLICABLE)
+  notificationToId    String?          @db.Uuid
+  notificationToRoles String[]
+  notificationComment String?
+  createdAt           DateTime         @default(now())
+  applicantProcess    ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
+
+  @@index([applicantProcessId])
+  @@map("ap_completed_forms")
+}
+
+model ProcessComment {
+  id                 String               @id @default(uuid()) @db.Uuid
+  processId          String               @db.Uuid
+  applicantProcessId String               @db.Uuid
+  formId             String               @db.Uuid
+  comments           ProcessCommentItem[]
+  applicantProcess   ApplicantProcess     @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
+
+  @@index([applicantProcessId])
+  @@index([processId])
+  @@index([formId])
+  @@map("process_comments")
+}
+
+model ProcessCommentItem {
+  id               String         @id @default(uuid()) @db.Uuid
+  processCommentId String         @db.Uuid
+  userId           String         @db.Uuid
+  comment          String
+  createdAt        DateTime       @default(now())
+  processComment   ProcessComment @relation(fields: [processCommentId], references: [id], onDelete: Cascade)
+
+  @@index([processCommentId])
+  @@index([userId])
+  @@map("process_comment_items")
+}
+
+model ProcessedApplication {
+  id                 String   @id @default(uuid()) @db.Uuid
+  userId             String   @db.Uuid
+  processId          String   @db.Uuid
+  applicantProcessId String   @db.Uuid
+  formId             String   @db.Uuid
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+  @@index([processId])
+  @@index([applicantProcessId])
+  @@index([formId])
+  @@map("processed_applications")
+}
+
+model OrganizationUser {
+  id           String             @id @default(uuid()) @db.Uuid
+  userId       String             @unique @db.Uuid
+  superiorId   String?            @db.Uuid
+  title        String
+  superior     OrganizationUser?  @relation("Hierarchy", fields: [superiorId], references: [id])
+  subordinates OrganizationUser[] @relation("Hierarchy")
+  user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("organization_users")
+}
+
+model Dashboard {
+  id           String   @id @default(uuid()) @db.Uuid
+  name         String
+  ownerId      String   @db.Uuid
+  allowedUsers String[]
+  allowedRoles String[]
+  layout       Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  widgets      Widget[]
+
+  @@index([ownerId])
+  @@map("dashboards")
+}
+
+model Widget {
+  id                String    @id @default(uuid()) @db.Uuid
+  dashboardId       String    @db.Uuid
+  title             String
+  visualizationType String
+  config            Json
+  order             Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  dashboard         Dashboard @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+
+  @@index([dashboardId])
+  @@map("widgets")
+}
+
+model QrCodeDocument {
+  id           String   @id @default(uuid()) @db.Uuid
+  documentName String
+  fileName     String
+  qrCodeId     String   @unique
+  creatorId    String   @db.Uuid
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([creatorId])
+  @@map("qr_code_documents")
+}
+
+model Otp {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String
+  otp       String
+  expiresAt DateTime
+
+  @@index([email])
+  @@map("otps")
+}
+
+model Management {
+  id         String         @id @default(uuid()) @db.Uuid
+  fileName   String
+  type       ManagementType
+  uploadedAt DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@map("management")
+}
+
+model AddToDatabase {
+  id        String              @id @default(uuid()) @db.Uuid
+  name      String
+  status    AddToDatabaseStatus @default(ENABLED)
+  levels    Json
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@map("add_to_databases")
+}
+
+enum UserStatus {
+  ENABLED
+  DISABLED
+  PENDING
+}
+
+enum RoleStatus {
+  ENABLED
+  DISABLED
+}
+
+enum GroupStatus {
+  ENABLED
+  DISABLED
+}
+
+enum ProcessType {
+  PUBLIC
+  PRIVATE
+}
+
+enum ProcessStatus {
+  ENABLED
+  DISABLED
+}
+
+enum FormType {
+  PUBLIC
+  INTERNAL
+}
+
+enum FormStatus {
+  ENABLED
+  DISABLED
+}
+
+enum NextStepType {
+  STATIC
+  DYNAMIC
+  FOLLOW_ORGANIZATION_CHART
+  NOT_APPLICABLE
+}
+
+enum ManagementType {
+  HEADER
+  FOOTER
+}
+
+enum AddToDatabaseStatus {
+  ENABLED
+  DISABLED
+}

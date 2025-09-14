@@ -13,22 +13,24 @@ export class ProcessCommentService {
 
   async create(data: CreateProcessCommentDto): Promise<ProcessComment> {
     const { applicantProcessId, userId, comment } = data;
+
     const newComment = await this.prisma.processComment.create({
       data: {
-        applicantProcess: { connect: { id: applicantProcessId } },
+        applicantProcessId,
         userId,
         comment,
       },
     });
+
     await this.auditLogService.log({
-      userId: newComment.userId,
+      userId,
       action: 'PROCESS_COMMENT_CREATED',
       resource: 'ProcessComment',
       resourceId: newComment.id,
       status: 'SUCCESS',
       details: {
-        applicantProcessId: newComment.applicantProcessId,
-        comment: newComment.comment,
+        applicantProcessId,
+        comment,
       },
     });
     return newComment;
@@ -108,15 +110,37 @@ export class ProcessCommentService {
   async findByApplicantProcessIdAndFormId(
     applicantProcessId: string,
     formId: string,
-  ): Promise<ProcessComment[]> {
-    // Assuming comments are linked to forms via applicantProcessId and formId indirectly
-    // This might need adjustment based on actual schema/logic if comments are directly linked to forms
-    return this.prisma.processComment.findMany({
+  ): Promise<any[]> {
+    const comments = await this.prisma.processComment.findMany({
       where: {
         applicantProcessId,
-        // Add formId filtering if comments are directly linked to forms
-        // For now, assuming comments are per applicantProcess and not per form within it
       },
+      orderBy: { createdAt: 'asc' },
     });
+
+    // Fetch user details for each comment
+    const commentsWithUsers = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await this.prisma.user.findUnique({
+          where: { id: comment.userId },
+          select: { firstName: true, lastName: true },
+        });
+
+        return {
+          userId: comment.userId,
+          comment: comment.comment,
+          createdAt: comment.createdAt,
+          user: user ? {
+            firstName: user.firstName,
+            lastName: user.lastName,
+          } : {
+            firstName: 'Unknown',
+            lastName: 'User',
+          },
+        };
+      })
+    );
+
+    return commentsWithUsers;
   }
 }

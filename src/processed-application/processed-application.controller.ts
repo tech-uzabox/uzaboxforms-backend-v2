@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser, type AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -16,5 +16,29 @@ export class ProcessedApplicationController {
     create(@Body() createProcessedApplicationDto: CreateProcessedApplicationDto, @GetUser() user: AuthenticatedUser) {
         // We can add authorization here to make sure the user is the reviewer
         return this.processedApplicationService.create({ ...createProcessedApplicationDto, reviewerId: user.id });
+    }
+
+    @Get(':userId')
+    getProcessedApplicationsByUser(@Param('userId') userId: string, @GetUser() user: AuthenticatedUser) {
+        return this.processedApplicationService.getProcessedApplicationsByUser(userId);
+    }
+
+    @Get(':userId/:processId')
+    getProcessedApplicationsByUserAndProcess(
+        @Param('userId') userId: string,
+        @Param('processId') processId: string,
+        @GetUser() user: AuthenticatedUser,
+    ) {
+        return this.processedApplicationService.getProcessedApplicationsByUserAndProcess(userId, processId);
+    }
+
+    @Get(':userId/:processId/:applicantProcessId')
+    getSingleProcessedApplication(
+        @Param('userId') userId: string,
+        @Param('processId') processId: string,
+        @Param('applicantProcessId') applicantProcessId: string,
+        @GetUser() user: AuthenticatedUser,
+    ) {
+        return this.processedApplicationService.getSingleProcessedApplication(userId, processId, applicantProcessId);
     }
 }

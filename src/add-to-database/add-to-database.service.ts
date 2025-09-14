@@ -1,52 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AddToDatabase, Prisma } from 'db';
-import { AuditLogService } from '../audit-log/audit-log.service';
+import { AddToDatabase } from 'db';
 import { PrismaService } from '../db/prisma.service';
+import { CreateAddToDatabaseDto } from './dto/create-add-to-database.dto';
+import { UpdateAddToDatabaseDto } from './dto/update-add-to-database.dto';
 
 @Injectable()
 export class AddToDatabaseService {
-  constructor(
-    private prisma: PrismaService,
-    private auditLogService: AuditLogService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
-  async create(data: { name: string; status: 'ENABLED' | 'DISABLED'; levels?: any[] }): Promise<AddToDatabase> {
-    const { name, status, levels = [] } = data;
-
-    const newAddToDatabase = await this.prisma.addToDatabase.create({
+  async create(data: CreateAddToDatabaseDto): Promise<AddToDatabase> {
+    const { name, status, levels } = data;
+    return this.prisma.addToDatabase.create({
       data: {
         name,
         status,
-        levels: levels as Prisma.JsonArray,
+        levels: levels || [],
       },
     });
-
-    await this.auditLogService.log({
-      action: 'ADD_TO_DATABASE_CREATED',
-      resource: 'AddToDatabase',
-      resourceId: newAddToDatabase.id,
-      status: 'SUCCESS',
-      details: { name: newAddToDatabase.name, status: newAddToDatabase.status },
-    });
-
-    return newAddToDatabase;
-  }
-
-  async update(id: string, data: Prisma.AddToDatabaseUpdateInput): Promise<AddToDatabase> {
-    const updatedAddToDatabase = await this.prisma.addToDatabase.update({
-      where: { id },
-      data,
-    });
-
-    await this.auditLogService.log({
-      action: 'ADD_TO_DATABASE_UPDATED',
-      resource: 'AddToDatabase',
-      resourceId: updatedAddToDatabase.id,
-      status: 'SUCCESS',
-      details: { name: updatedAddToDatabase.name, changes: data },
-    });
-
-    return updatedAddToDatabase;
   }
 
   async findAll(): Promise<AddToDatabase[]> {
@@ -54,26 +24,27 @@ export class AddToDatabaseService {
   }
 
   async findOne(id: string): Promise<AddToDatabase | null> {
-    const addToDatabase = await this.prisma.addToDatabase.findUnique({ where: { id } });
+    return this.prisma.addToDatabase.findUnique({ where: { id } });
+  }
 
-    if (!addToDatabase) {
+  async update(id: string, data: UpdateAddToDatabaseDto): Promise<AddToDatabase> {
+    const existing = await this.findOne(id);
+    if (!existing) {
       throw new NotFoundException(`AddToDatabase with ID ${id} not found`);
     }
 
-    return addToDatabase;
+    return this.prisma.addToDatabase.update({
+      where: { id },
+      data,
+    });
   }
 
   async remove(id: string): Promise<AddToDatabase> {
-    const deletedAddToDatabase = await this.prisma.addToDatabase.delete({ where: { id } });
+    const existing = await this.findOne(id);
+    if (!existing) {
+      throw new NotFoundException(`AddToDatabase with ID ${id} not found`);
+    }
 
-    await this.auditLogService.log({
-      action: 'ADD_TO_DATABASE_DELETED',
-      resource: 'AddToDatabase',
-      resourceId: deletedAddToDatabase.id,
-      status: 'SUCCESS',
-      details: { name: deletedAddToDatabase.name },
-    });
-
-    return deletedAddToDatabase;
+    return this.prisma.addToDatabase.delete({ where: { id } });
   }
 }

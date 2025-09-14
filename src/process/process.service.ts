@@ -1,9 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NextStepType, Prisma, Process } from 'db';
+import { NextStepType, Process, Role } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateProcessDto } from './dto/create-process.dto';
 import { UpdateProcessDto } from './dto/update-process.dto';
+
+// Extended Process type that includes roles
+export interface ProcessWithRoles extends Omit<Process, 'roles'> {
+  roles: Role[];
+}
 
 @Injectable()
 export class ProcessService {
@@ -83,7 +88,7 @@ export class ProcessService {
     return newProcess;
   }
 
-  async findAll(): Promise<Process[]> {
+  async findAll(): Promise<ProcessWithRoles[]> {
     const processes = await this.prisma.process.findMany({
       include: {
         group: true,
@@ -93,14 +98,22 @@ export class ProcessService {
             role: true,
           },
         },
+        forms: {
+          include: {
+            form: true,
+          },
+        },
       },
     });
 
     // Hoist roles to return just Role[] instead of {role: Role}[]
-    return processes.map(process => ({
+    return processes.map((process) => ({
       ...process,
-      roles: process.roles.map(roleRelation => roleRelation.role),
-    })) as any;
+      roles:
+        (process as unknown as { roles: { role: Role }[] }).roles?.map(
+          (roleRelation) => roleRelation.role,
+        ) || [],
+    })) as unknown as ProcessWithRoles[];
   }
 
   async findOne(id: string): Promise<Process | null> {
@@ -114,18 +127,28 @@ export class ProcessService {
             role: true,
           },
         },
+        forms: {
+          include: {
+            form: true,
+          },
+        },
       },
     });
 
     // Hoist roles to return just Role[] instead of {role: Role}[]
-    return process ? ({
-      ...process,
-      roles: process.roles.map(roleRelation => roleRelation.role),
-    } as any) : null;
+    return process
+      ? ({
+          ...process,
+          roles:
+            (process as unknown as { roles: { role: Role }[] }).roles?.map(
+              (roleRelation) => roleRelation.role,
+            ) || [],
+        } as ProcessWithRoles)
+      : null;
   }
 
   async update(id: string, data: UpdateProcessDto): Promise<Process> {
-    const { roles, ...processData } = data as any;
+    const { roles, ...processData } = data;
 
     // Use transaction to handle role synchronization atomically
     const updatedProcess = await this.prisma.$transaction(async (tx) => {
@@ -233,8 +256,17 @@ export class ProcessService {
         formId: string;
         order: number;
         nextStepType: string;
+        nextStepSpecifiedTo?: string;
         nextStaffId?: string;
         nextStepRoles?: string[];
+        notificationType?: string;
+        notificationRoles?: string[];
+        notificationToId?: string;
+        notificationComment?: string;
+        notifyApplicant?: boolean;
+        applicantNotificationContent?: string;
+        editApplicationStatus?: boolean;
+        applicantViewFormAfterCompletion?: boolean;
       }[];
     },
   ): Promise<Process> {
@@ -253,6 +285,7 @@ export class ProcessService {
         ...pf,
         processId,
         nextStepType: pf.nextStepType as NextStepType,
+        notificationType: pf.notificationType as NextStepType,
       })),
     });
     await this.auditLogService.log({
@@ -330,5 +363,85 @@ export class ProcessService {
       },
     });
     return duplicatedProcess;
+  }
+
+  async getProcessFormsByProcessIdAndUserId(
+    processId: string,
+    userId: string,
+    currentUser: { id: string; roles: string[] },
+  ): Promise<{ success: boolean; message?: string; data?: any[] }> {
+    // Get user's enabled roles
+    const userRoles = await this.prisma.userRole.findMany({
+      where: {
+        userId,
+        status: 'ENABLED',
+      },
+      select: { roleId: true },
+    });
+
+    if (!userRoles.length) {
+      return { success: false, message: 'User has no enabled roles' };
+    }
+
+    const roleIds = userRoles.map((role) => role.roleId);
+
+    // Get process forms with form details
+    const processForms = await this.prisma.processForm.findMany({
+      where: { processId },
+      include: {
+        form: true,
+      },
+    });
+
+    // Filter accessible forms based on roles
+    const accessibleForms: any[] = [];
+    for (const processForm of processForms) {
+      if (!processForm.form || processForm.form.status !== 'ENABLED') {
+        continue;
+      }
+
+      // Check if user has access to this form via roles
+      const formRoles = await this.prisma.role.findMany({
+        where: {
+          id: { in: roleIds },
+          status: 'ENABLED',
+        },
+      });
+
+      if (formRoles.length > 0) {
+        accessibleForms.push(processForm);
+      }
+    }
+
+    if (!accessibleForms.length) {
+      return { success: false, message: 'No accessible forms found' };
+    }
+
+    return {
+      success: true,
+      data: accessibleForms.map((form) => ({
+        _id: form.id,
+        formId: form.form,
+        nextStepType: form.nextStepType,
+        formName: form.form?.name,
+      })),
+    };
+  }
+
+  async getProcessForm(
+    processId: string,
+    formId: string,
+    currentUser: any,
+  ): Promise<any> {
+    const processForm = await this.prisma.processForm.findFirst({
+      where: { processId, formId },
+      include: { form: true },
+    });
+
+    if (!processForm) {
+      return { success: false, message: 'Process form not found' };
+    }
+
+    return { success: true, processForm };
   }
 }
