@@ -1,5 +1,5 @@
 export interface ProcessedResponse {
-  _id: string;
+  id: string;
   formId: string;
   responses: any;
   createdAt: Date;
@@ -26,7 +26,15 @@ export interface SeriesData {
 }
 
 export interface WidgetDataPayload {
-  type: 'card' | 'bar' | 'line' | 'pie' | 'histogram' | 'scatter' | 'calendar-heatmap' | 'map';
+  type:
+    | 'card'
+    | 'bar'
+    | 'line'
+    | 'pie'
+    | 'histogram'
+    | 'scatter'
+    | 'calendar-heatmap'
+    | 'map';
   title: string;
   value?: number;
   statLabel?: string;
@@ -39,7 +47,10 @@ export interface WidgetDataPayload {
   values?: { date: string; value: number }[];
   startDate?: string;
   endDate?: string;
-  countries?: Record<string, { values: Record<string, unknown>; colorValue?: string }>;
+  countries?: Record<
+    string,
+    { values: Record<string, unknown>; colorValue?: string }
+  >;
   meta: any;
   empty: boolean;
   errors?: string[];
@@ -58,7 +69,15 @@ export interface IWidgetGroupBy {
   kind: 'none' | 'categorical' | 'time';
   fieldId?: string;
   systemField?: 'responseId' | 'submissionDate';
-  timeBucket?: 'year' | 'quarter' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'whole';
+  timeBucket?:
+    | 'year'
+    | 'quarter'
+    | 'month'
+    | 'week'
+    | 'day'
+    | 'hour'
+    | 'minute'
+    | 'whole';
   includeMissing?: boolean;
 }
 
@@ -68,7 +87,21 @@ export interface IWidgetMetric {
   formId: string;
   fieldId?: string;
   systemField?: 'responseId' | 'submissionDate';
-  aggregation?: 'count' | 'sum' | 'mean' | 'median' | 'mode' | 'min' | 'max' | 'std' | 'variance' | 'p10' | 'p25' | 'p50' | 'p75' | 'p90';
+  aggregation?:
+    | 'count'
+    | 'sum'
+    | 'mean'
+    | 'median'
+    | 'mode'
+    | 'min'
+    | 'max'
+    | 'std'
+    | 'variance'
+    | 'p10'
+    | 'p25'
+    | 'p50'
+    | 'p75'
+    | 'p90';
 }
 
 export interface IWidgetSource {
@@ -78,7 +111,14 @@ export interface IWidgetSource {
 }
 
 export interface IWidgetDateRange {
-  preset?: 'custom' | 'last-7-days' | 'last-30-days' | 'last-3-months' | 'last-6-months' | 'last-12-months' | 'all';
+  preset?:
+    | 'custom'
+    | 'last-7-days'
+    | 'last-30-days'
+    | 'last-3-months'
+    | 'last-6-months'
+    | 'last-12-months'
+    | 'all';
   from?: string;
   to?: string;
 }

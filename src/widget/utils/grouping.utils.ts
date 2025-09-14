@@ -1,28 +1,39 @@
-import { ProcessedResponse, GroupedData, IWidgetGroupBy } from '../types/widget.types';
+import {
+  GroupedData,
+  IWidgetGroupBy,
+  ProcessedResponse,
+} from '../types/widget.types';
 
-export async function groupResponses(responses: ProcessedResponse[], groupBy: IWidgetGroupBy): Promise<GroupedData> {
+export async function groupResponses(
+  responses: ProcessedResponse[],
+  groupBy: IWidgetGroupBy,
+): Promise<GroupedData> {
   const groupedData: GroupedData = {};
 
   for (const response of responses) {
     let groupKey: string;
 
-    if (!groupBy || groupBy.kind === "none") {
-      groupKey = "all";
+    if (!groupBy || groupBy.kind === 'none') {
+      groupKey = 'all';
     } else {
-      const groupValue = getFieldValue(response, groupBy.fieldId, groupBy.systemField);
+      const groupValue = getFieldValue(
+        response,
+        groupBy.fieldId,
+        groupBy.systemField,
+      );
 
       if (groupValue === null || groupValue === undefined) {
         if (groupBy.includeMissing) {
-          groupKey = "missing";
+          groupKey = 'missing';
         } else {
           continue;
         }
       } else {
-        if (groupBy.kind === "time" && groupBy.timeBucket) {
+        if (groupBy.kind === 'time' && groupBy.timeBucket) {
           const dt = toDate(groupValue);
           if (!dt) {
             if (groupBy.includeMissing) {
-              groupKey = "missing";
+              groupKey = 'missing';
             } else {
               continue;
             }
@@ -62,25 +73,25 @@ export function computeSortedGroupKeys(
   sort: any,
   groupBy: IWidgetGroupBy,
   aggMatrix: Record<string, Record<string, number>>,
-  primaryMetricId?: string
+  primaryMetricId?: string,
 ): string[] {
-  if (!sort || sort.by === "none") {
+  if (!sort || sort.by === 'none') {
     return groupKeys;
   }
 
   const sortBy = sort.by;
-  const sortOrder = sort.order || "asc";
+  const sortOrder = sort.order || 'asc';
 
   return groupKeys.sort((a, b) => {
     let aValue: any, bValue: any;
 
     switch (sortBy) {
-      case "alpha":
+      case 'alpha':
         aValue = a;
         bValue = b;
         break;
-      case "time":
-        if (groupBy.kind === "time") {
+      case 'time':
+        if (groupBy.kind === 'time') {
           aValue = groupedData[a]?.sortValue || 0;
           bValue = groupedData[b]?.sortValue || 0;
         } else {
@@ -88,7 +99,7 @@ export function computeSortedGroupKeys(
           bValue = b;
         }
         break;
-      case "value":
+      case 'value':
         if (primaryMetricId && aggMatrix[a] && aggMatrix[b]) {
           aValue = aggMatrix[a][primaryMetricId] || 0;
           bValue = aggMatrix[b][primaryMetricId] || 0;
@@ -102,33 +113,33 @@ export function computeSortedGroupKeys(
         bValue = b;
     }
 
-    if (typeof aValue === "string" && typeof bValue === "string") {
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
       const comparison = aValue.localeCompare(bValue);
-      return sortOrder === "desc" ? -comparison : comparison;
+      return sortOrder === 'desc' ? -comparison : comparison;
     }
 
-    if (typeof aValue === "number" && typeof bValue === "number") {
-      return sortOrder === "desc" ? bValue - aValue : aValue - bValue;
+    if (typeof aValue === 'number' && typeof bValue === 'number') {
+      return sortOrder === 'desc' ? bValue - aValue : aValue - bValue;
     }
 
     // Fallback to string comparison
     const aStr = String(aValue);
     const bStr = String(bValue);
     const comparison = aStr.localeCompare(bStr);
-    return sortOrder === "desc" ? -comparison : comparison;
+    return sortOrder === 'desc' ? -comparison : comparison;
   });
 }
 
 function getFieldValue(
   response: ProcessedResponse,
   fieldId?: string,
-  systemField?: string
+  systemField?: string,
 ): any {
   if (systemField) {
     switch (systemField) {
-      case "responseId":
-        return response._id;
-      case "submissionDate":
+      case 'responseId':
+        return response.id;
+      case 'submissionDate':
         return response.createdAt;
       default:
         return null;
@@ -163,7 +174,10 @@ function toDate(x: any): Date | null {
   return isNaN(d.getTime()) ? null : d;
 }
 
-function formatTimeValue(date: Date, timeBucket: string): { key: string; sortValue: number } {
+function formatTimeValue(
+  date: Date,
+  timeBucket: string,
+): { key: string; sortValue: number } {
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
@@ -171,31 +185,49 @@ function formatTimeValue(date: Date, timeBucket: string): { key: string; sortVal
   const minute = date.getMinutes();
 
   switch (timeBucket) {
-    case "year":
+    case 'year':
       return { key: year.toString(), sortValue: year };
-    case "quarter":
+    case 'quarter':
       const quarter = Math.floor(month / 3) + 1;
       return { key: `${year}-Q${quarter}`, sortValue: year * 4 + quarter };
-    case "month":
-      return { key: `${year}-${pad2(month + 1)}`, sortValue: year * 12 + month };
-    case "week":
+    case 'month':
+      return {
+        key: `${year}-${pad2(month + 1)}`,
+        sortValue: year * 12 + month,
+      };
+    case 'week':
       const weekInfo = getISOWeekInfo(date);
-      return { key: `${year}-W${pad2(weekInfo.week)}`, sortValue: year * 53 + weekInfo.week };
-    case "day":
-      return { key: `${year}-${pad2(month + 1)}-${pad2(day)}`, sortValue: date.getTime() };
-    case "hour":
-      return { key: `${year}-${pad2(month + 1)}-${pad2(day)} ${pad2(hour)}:00`, sortValue: date.getTime() };
-    case "minute":
-      return { key: `${year}-${pad2(month + 1)}-${pad2(day)} ${pad2(hour)}:${pad2(minute)}`, sortValue: date.getTime() };
-    case "whole":
+      return {
+        key: `${year}-W${pad2(weekInfo.week)}`,
+        sortValue: year * 53 + weekInfo.week,
+      };
+    case 'day':
+      return {
+        key: `${year}-${pad2(month + 1)}-${pad2(day)}`,
+        sortValue: date.getTime(),
+      };
+    case 'hour':
+      return {
+        key: `${year}-${pad2(month + 1)}-${pad2(day)} ${pad2(hour)}:00`,
+        sortValue: date.getTime(),
+      };
+    case 'minute':
+      return {
+        key: `${year}-${pad2(month + 1)}-${pad2(day)} ${pad2(hour)}:${pad2(minute)}`,
+        sortValue: date.getTime(),
+      };
+    case 'whole':
       return { key: date.toISOString(), sortValue: date.getTime() };
     default:
-      return { key: date.toISOString().slice(0, 10), sortValue: date.getTime() };
+      return {
+        key: date.toISOString().slice(0, 10),
+        sortValue: date.getTime(),
+      };
   }
 }
 
 function pad2(n: number): string {
-  return n.toString().padStart(2, "0");
+  return n.toString().padStart(2, '0');
 }
 
 function getISOWeekInfo(date: Date): { week: number; year: number } {
@@ -203,6 +235,8 @@ function getISOWeekInfo(date: Date): { week: number; year: number } {
   d.setHours(0, 0, 0, 0);
   d.setDate(d.getDate() + 4 - (d.getDay() || 7));
   const yearStart = new Date(d.getFullYear(), 0, 1);
-  const weekNo = Math.ceil((((d.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
+  const weekNo = Math.ceil(
+    ((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7,
+  );
   return { week: weekNo, year: d.getFullYear() };
 }

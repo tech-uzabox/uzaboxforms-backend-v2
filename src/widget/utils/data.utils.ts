@@ -1,14 +1,14 @@
 import { ProcessedResponse } from '../types/widget.types';
 
 export function normalizeResponses(responses: any[]): ProcessedResponse[] {
-  return responses.map(r => ({
-    _id: r.id,
+  return responses.map((r) => ({
+    id: r.id,
     formId: r.formId,
     responses: r.responses,
     createdAt: r.createdAt,
     userId: r.applicantProcess?.applicantId,
     processId: r.applicantProcess?.processId,
-    applicantProcessId: r.applicantProcessId
+    applicantProcessId: r.applicantProcessId,
   }));
 }
 
@@ -27,7 +27,10 @@ export function getUniqueFormIds(config: any): string[] {
   return Array.from(formIds);
 }
 
-export function resolveDateRange(dateRange: any): { startDate: Date; endDate: Date } {
+export function resolveDateRange(dateRange: any): {
+  startDate: Date;
+  endDate: Date;
+} {
   const now = new Date();
   let startDate: Date, endDate: Date;
   if (!dateRange || !dateRange.preset) {
@@ -35,7 +38,7 @@ export function resolveDateRange(dateRange: any): { startDate: Date; endDate: Da
     startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
     return { startDate, endDate };
   }
-  if (dateRange.preset === "custom") {
+  if (dateRange.preset === 'custom') {
     const from = new Date(dateRange.from);
     const to = new Date(dateRange.to);
     to.setHours(23, 59, 59, 999);
@@ -43,19 +46,19 @@ export function resolveDateRange(dateRange: any): { startDate: Date; endDate: Da
   }
   endDate = now;
   switch (dateRange.preset) {
-    case "last-7-days":
+    case 'last-7-days':
       startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       break;
-    case "last-30-days":
+    case 'last-30-days':
       startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
       break;
-    case "last-3-months":
+    case 'last-3-months':
       startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
       break;
-    case "last-6-months":
+    case 'last-6-months':
       startDate = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
       break;
-    case "last-12-months":
+    case 'last-12-months':
       startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
       break;
     default:

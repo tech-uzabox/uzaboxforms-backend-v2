@@ -1,16 +1,16 @@
-import { ProcessedResponse, IWidgetFilter } from '../types/widget.types';
+import { IWidgetFilter, ProcessedResponse } from '../types/widget.types';
 
 export function getFieldValue(
   response: ProcessedResponse,
   fieldId?: string,
   systemField?: string,
-  formDesign?: any
+  formDesign?: any,
 ): any {
   if (systemField) {
     switch (systemField) {
-      case "responseId":
-        return response._id;
-      case "submissionDate":
+      case 'responseId':
+        return response.id;
+      case 'submissionDate':
         return response.createdAt;
       default:
         return null;
@@ -40,41 +40,54 @@ export function getFieldValue(
     if (!questionType) return rawValue;
 
     switch (questionType) {
-      case "Paragraph":
+      case 'Paragraph':
         try {
-          const parsed = typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
+          const parsed =
+            typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
           if (parsed && Array.isArray(parsed.blocks)) {
-            return parsed.blocks.map((block: any) => block.text).join("\n");
+            return parsed.blocks.map((block: any) => block.text).join('\n');
           }
         } catch (e) {
           /* fallthrough */
         }
         return rawValue;
-      case "Phone Number":
-        if (typeof rawValue === "string" && rawValue.length > 0 && !rawValue.startsWith("+")) {
+      case 'Phone Number':
+        if (
+          typeof rawValue === 'string' &&
+          rawValue.length > 0 &&
+          !rawValue.startsWith('+')
+        ) {
           return `+${rawValue}`;
         }
         return rawValue;
-      case "Checkbox":
+      case 'Checkbox':
         if (Array.isArray(rawValue)) {
           return rawValue.filter((opt) => opt.checked).map((opt) => opt.option);
         }
         return rawValue;
-      case "Date":
+      case 'Date':
         return rawValue?.date;
-      case "DateTime":
-        return rawValue?.date && rawValue?.time ? `${rawValue.date}T${rawValue.time}:00` : rawValue;
-      case "DateRange":
+      case 'DateTime':
+        return rawValue?.date && rawValue?.time
+          ? `${rawValue.date}T${rawValue.time}:00`
+          : rawValue;
+      case 'DateRange':
         if (rawValue?.start && rawValue?.end) {
           try {
-            const diff = Math.ceil(Math.abs(new Date(rawValue.end).getTime() - new Date(rawValue.start).getTime()) / (1000 * 60 * 60 * 24));
+            const diff = Math.ceil(
+              Math.abs(
+                new Date(rawValue.end).getTime() -
+                  new Date(rawValue.start).getTime(),
+              ) /
+                (1000 * 60 * 60 * 24),
+            );
             return diff;
           } catch (e) {
             return 0;
           }
         }
         return rawValue;
-      case "From Database":
+      case 'From Database':
         if (Array.isArray(rawValue)) {
           return rawValue.map((item) => item.response);
         }
@@ -87,7 +100,12 @@ export function getFieldValue(
 }
 
 export function getQuestion(formDesign: any, fieldId: string): any | null {
-  if (!formDesign || !formDesign.sections || !Array.isArray(formDesign.sections)) return null;
+  if (
+    !formDesign ||
+    !formDesign.sections ||
+    !Array.isArray(formDesign.sections)
+  )
+    return null;
   for (const section of formDesign.sections) {
     if (section.questions && Array.isArray(section.questions)) {
       const question = section.questions.find((q: any) => q.id === fieldId);
@@ -100,13 +118,18 @@ export function getQuestion(formDesign: any, fieldId: string): any | null {
 export async function applyFilters(
   responses: ProcessedResponse[],
   filters: IWidgetFilter[],
-  formDesignsMap: Map<string, any>
+  formDesignsMap: Map<string, any>,
 ): Promise<ProcessedResponse[]> {
   if (!filters || filters.length === 0) return responses;
   return responses.filter((response) => {
     for (const filter of filters) {
       const formDesign = formDesignsMap.get(response.formId);
-      const value = getFieldValue(response, filter.fieldId, filter.systemField, formDesign);
+      const value = getFieldValue(
+        response,
+        filter.fieldId,
+        filter.systemField,
+        formDesign,
+      );
       if (!applyFilterCondition(value, filter)) return false;
     }
     return true;
@@ -117,13 +140,13 @@ function applyFilterCondition(value: any, filter: IWidgetFilter): boolean {
   const operator = filter.operator;
   const filterValue = filter.value;
 
-  if (operator === "is_null" || operator === "is_empty") {
+  if (operator === 'is_null' || operator === 'is_empty') {
     if (Array.isArray(value)) return value.length === 0;
-    return value === null || value === undefined || value === "";
+    return value === null || value === undefined || value === '';
   }
-  if (operator === "is_not_null" || operator === "is_not_empty") {
+  if (operator === 'is_not_null' || operator === 'is_not_empty') {
     if (Array.isArray(value)) return value.length > 0;
-    return value !== null && value !== undefined && value !== "";
+    return value !== null && value !== undefined && value !== '';
   }
 
   if (value === null || value === undefined) {
@@ -134,118 +157,159 @@ function applyFilterCondition(value: any, filter: IWidgetFilter): boolean {
   const fvIsArray = Array.isArray(filterValue);
 
   switch (operator) {
-    case "eq":
-    case "equals": {
+    case 'eq':
+    case 'equals': {
       if (valueIsArray) {
         if (fvIsArray) {
-          const set = new Set((value as any[]).map((v) => normalizeScalarForCompare(v)));
-          return (filterValue as any[]).some((f: any) => set.has(normalizeScalarForCompare(f)));
+          const set = new Set(
+            (value as any[]).map((v) => normalizeScalarForCompare(v)),
+          );
+          return (filterValue as any[]).some((f: any) =>
+            set.has(normalizeScalarForCompare(f)),
+          );
         } else {
-          return (value as any[]).some((v) => normalizeScalarForCompare(v) === normalizeScalarForCompare(filterValue));
+          return (value as any[]).some(
+            (v) =>
+              normalizeScalarForCompare(v) ===
+              normalizeScalarForCompare(filterValue),
+          );
         }
       } else {
         const numVal = toNumber(value);
         const numF = toNumber(filterValue);
         if (numVal !== null && numF !== null) return numVal === numF;
-        return normalizeScalarForCompare(value) === normalizeScalarForCompare(filterValue);
+        return (
+          normalizeScalarForCompare(value) ===
+          normalizeScalarForCompare(filterValue)
+        );
       }
     }
-    case "neq":
-    case "not_equals": {
+    case 'neq':
+    case 'not_equals': {
       if (valueIsArray) {
         if (fvIsArray) {
-          const set = new Set((value as any[]).map((v) => normalizeScalarForCompare(v)));
-          return !(filterValue as any[]).some((f: any) => set.has(normalizeScalarForCompare(f)));
+          const set = new Set(
+            (value as any[]).map((v) => normalizeScalarForCompare(v)),
+          );
+          return !(filterValue as any[]).some((f: any) =>
+            set.has(normalizeScalarForCompare(f)),
+          );
         } else {
-          return !(value as any[]).some((v) => normalizeScalarForCompare(v) === normalizeScalarForCompare(filterValue));
+          return !(value as any[]).some(
+            (v) =>
+              normalizeScalarForCompare(v) ===
+              normalizeScalarForCompare(filterValue),
+          );
         }
       } else {
         const numVal = toNumber(value);
         const numF = toNumber(filterValue);
         if (numVal !== null && numF !== null) return numVal !== numF;
-        return normalizeScalarForCompare(value) !== normalizeScalarForCompare(filterValue);
+        return (
+          normalizeScalarForCompare(value) !==
+          normalizeScalarForCompare(filterValue)
+        );
       }
     }
-    case "gt":
-    case "greater_than": {
+    case 'gt':
+    case 'greater_than': {
       const v = toNumber(value);
       const f = toNumber(filterValue);
       return v !== null && f !== null && v > f;
     }
-    case "gte":
-    case "greater_than_equal": {
+    case 'gte':
+    case 'greater_than_equal': {
       const v = toNumber(value);
       const f = toNumber(filterValue);
       return v !== null && f !== null && v >= f;
     }
-    case "lt":
-    case "less_than": {
+    case 'lt':
+    case 'less_than': {
       const v = toNumber(value);
       const f = toNumber(filterValue);
       return v !== null && f !== null && v < f;
     }
-    case "lte":
-    case "less_than_equal": {
+    case 'lte':
+    case 'less_than_equal': {
       const v = toNumber(value);
       const f = toNumber(filterValue);
       return v !== null && f !== null && v <= f;
     }
-    case "contains": {
+    case 'contains': {
       const needle = String(filterValue).toLowerCase();
       if (valueIsArray) {
-        return (value as any[]).some((v) => String(v).toLowerCase().includes(needle));
+        return (value as any[]).some((v) =>
+          String(v).toLowerCase().includes(needle),
+        );
       }
       return String(value).toLowerCase().includes(needle);
     }
-    case "starts_with": {
+    case 'starts_with': {
       const needle = String(filterValue).toLowerCase();
       if (valueIsArray) {
-        return (value as any[]).some((v) => String(v).toLowerCase().startsWith(needle));
+        return (value as any[]).some((v) =>
+          String(v).toLowerCase().startsWith(needle),
+        );
       }
       return String(value).toLowerCase().startsWith(needle);
     }
-    case "ends_with": {
+    case 'ends_with': {
       const needle = String(filterValue).toLowerCase();
       if (valueIsArray) {
-        return (value as any[]).some((v) => String(v).toLowerCase().endsWith(needle));
+        return (value as any[]).some((v) =>
+          String(v).toLowerCase().endsWith(needle),
+        );
       }
       return String(value).toLowerCase().endsWith(needle);
     }
-    case "in": {
+    case 'in': {
       if (!Array.isArray(filterValue)) return false;
-      const set = new Set((filterValue as any[]).map((f) => normalizeScalarForCompare(f)));
+      const set = new Set(
+        (filterValue as any[]).map((f) => normalizeScalarForCompare(f)),
+      );
       if (valueIsArray) {
-        return (value as any[]).some((v) => set.has(normalizeScalarForCompare(v)));
+        return (value as any[]).some((v) =>
+          set.has(normalizeScalarForCompare(v)),
+        );
       } else {
         return set.has(normalizeScalarForCompare(value));
       }
     }
-    case "not_in": {
+    case 'not_in': {
       if (!Array.isArray(filterValue)) return true;
-      const set = new Set((filterValue as any[]).map((f) => normalizeScalarForCompare(f)));
+      const set = new Set(
+        (filterValue as any[]).map((f) => normalizeScalarForCompare(f)),
+      );
       if (valueIsArray) {
-        return !(value as any[]).some((v) => set.has(normalizeScalarForCompare(v)));
+        return !(value as any[]).some((v) =>
+          set.has(normalizeScalarForCompare(v)),
+        );
       } else {
         return !set.has(normalizeScalarForCompare(value));
       }
     }
-    case "date_eq": {
+    case 'date_eq': {
       const dv = toDate(value);
       const df = toDate(filterValue);
       return dv !== null && df !== null && isSameDay(dv, df);
     }
-    case "date_before": {
+    case 'date_before': {
       const dv = toDate(value);
       const df = toDate(filterValue);
       return dv !== null && df !== null && dv < df;
     }
-    case "date_after": {
+    case 'date_after': {
       const dv = toDate(value);
       const df = toDate(filterValue);
       return dv !== null && df !== null && dv > df;
     }
-    case "date_range": {
-      if (filterValue && typeof filterValue === "object" && filterValue.from && filterValue.to) {
+    case 'date_range': {
+      if (
+        filterValue &&
+        typeof filterValue === 'object' &&
+        filterValue.from &&
+        filterValue.to
+      ) {
         const dv = toDate(value);
         const fromDate = toDate(filterValue.from);
         const toDateVal = toDate(filterValue.to);
@@ -254,10 +318,10 @@ function applyFilterCondition(value: any, filter: IWidgetFilter): boolean {
       }
       return false;
     }
-    case "is_true":
-      return String(value).toLowerCase() === "true" || value === true;
-    case "is_false":
-      return String(value).toLowerCase() === "false" || value === false;
+    case 'is_true':
+      return String(value).toLowerCase() === 'true' || value === true;
+    case 'is_false':
+      return String(value).toLowerCase() === 'false' || value === false;
     default:
       console.warn(`Unknown filter operator: ${operator}`);
       return true;
@@ -273,17 +337,17 @@ function isSameDay(date1: Date, date2: Date): boolean {
 }
 
 function normalizeScalarForCompare(x: any): string {
-  if (x === null || x === undefined) return "";
+  if (x === null || x === undefined) return '';
   if (x instanceof Date) return x.toISOString();
-  if (typeof x === "boolean") return x ? "true" : "false";
-  if (typeof x === "number") return x.toString();
+  if (typeof x === 'boolean') return x ? 'true' : 'false';
+  if (typeof x === 'number') return x.toString();
   return String(x).trim().toLowerCase();
 }
 
 function toNumber(x: any): number | null {
   if (x === null || x === undefined) return null;
   if (x instanceof Date) return x.getTime();
-  const n = typeof x === "number" ? x : parseFloat(String(x));
+  const n = typeof x === 'number' ? x : parseFloat(String(x));
   return Number.isFinite(n) ? n : null;
 }
 

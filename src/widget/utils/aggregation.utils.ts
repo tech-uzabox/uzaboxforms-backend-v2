@@ -5,13 +5,13 @@ export function calculateAggregation(
   aggregationType: string,
   fieldId: string | undefined,
   systemField: string | undefined,
-  formDesign: any
+  formDesign: any,
 ): number {
   if (responses.length === 0) {
     return 0;
   }
 
-  if (aggregationType === "count") {
+  if (aggregationType === 'count') {
     return responses.length;
   }
 
@@ -38,20 +38,20 @@ export function calculateAggregation(
   }
 
   switch (aggregationType) {
-    case "sum":
+    case 'sum':
       return values.reduce((a, b) => a + b, 0);
-    case "mean":
+    case 'mean':
       return values.reduce((a, b) => a + b, 0) / values.length;
-    case "median": {
+    case 'median': {
       const sorted = [...values].sort((a, b) => a - b);
       const mid = Math.floor(sorted.length / 2);
       return sorted.length % 2 === 0
         ? (sorted[mid - 1] + sorted[mid]) / 2
         : sorted[mid];
     }
-    case "mode": {
+    case 'mode': {
       const frequency: { [key: number]: number } = {};
-      values.forEach(val => {
+      values.forEach((val) => {
         frequency[val] = (frequency[val] || 0) + 1;
       });
       let maxFreq = 0;
@@ -64,44 +64,44 @@ export function calculateAggregation(
       }
       return mode;
     }
-    case "min":
+    case 'min':
       return Math.min(...values);
-    case "max":
+    case 'max':
       return Math.max(...values);
-    case "std": {
+    case 'std': {
       const mean = values.reduce((a, b) => a + b, 0) / values.length;
-      const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
+      const squaredDiffs = values.map((val) => Math.pow(val - mean, 2));
       const variance = squaredDiffs.reduce((a, b) => a + b, 0) / values.length;
       return Math.sqrt(variance);
     }
-    case "variance": {
+    case 'variance': {
       const mean = values.reduce((a, b) => a + b, 0) / values.length;
-      const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
+      const squaredDiffs = values.map((val) => Math.pow(val - mean, 2));
       return squaredDiffs.reduce((a, b) => a + b, 0) / values.length;
     }
-    case "p10": {
+    case 'p10': {
       const sorted = [...values].sort((a, b) => a - b);
       const index = Math.floor(sorted.length * 0.1);
       return sorted[Math.max(0, Math.min(index, sorted.length - 1))];
     }
-    case "p25": {
+    case 'p25': {
       const sorted = [...values].sort((a, b) => a - b);
       const index = Math.floor(sorted.length * 0.25);
       return sorted[Math.max(0, Math.min(index, sorted.length - 1))];
     }
-    case "p50": {
+    case 'p50': {
       const sorted = [...values].sort((a, b) => a - b);
       const mid = Math.floor(sorted.length / 2);
       return sorted.length % 2 === 0
         ? (sorted[mid - 1] + sorted[mid]) / 2
         : sorted[mid];
     }
-    case "p75": {
+    case 'p75': {
       const sorted = [...values].sort((a, b) => a - b);
       const index = Math.floor(sorted.length * 0.75);
       return sorted[Math.max(0, Math.min(index, sorted.length - 1))];
     }
-    case "p90": {
+    case 'p90': {
       const sorted = [...values].sort((a, b) => a - b);
       const index = Math.floor(sorted.length * 0.9);
       return sorted[Math.max(0, Math.min(index, sorted.length - 1))];
@@ -116,13 +116,13 @@ function getFieldValue(
   response: ProcessedResponse,
   fieldId?: string,
   systemField?: string,
-  formDesign?: any
+  formDesign?: any,
 ): any {
   if (systemField) {
     switch (systemField) {
-      case "responseId":
-        return response._id;
-      case "submissionDate":
+      case 'responseId':
+        return response.id;
+      case 'submissionDate':
         return response.createdAt;
       default:
         return null;
@@ -152,41 +152,54 @@ function getFieldValue(
     if (!questionType) return rawValue;
 
     switch (questionType) {
-      case "Paragraph":
+      case 'Paragraph':
         try {
-          const parsed = typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;
+          const parsed =
+            typeof rawValue === 'string' ? JSON.parse(rawValue) : rawValue;
           if (parsed && Array.isArray(parsed.blocks)) {
-            return parsed.blocks.map((block: any) => block.text).join("\n");
+            return parsed.blocks.map((block: any) => block.text).join('\n');
           }
         } catch (e) {
           /* fallthrough */
         }
         return rawValue;
-      case "Phone Number":
-        if (typeof rawValue === "string" && rawValue.length > 0 && !rawValue.startsWith("+")) {
+      case 'Phone Number':
+        if (
+          typeof rawValue === 'string' &&
+          rawValue.length > 0 &&
+          !rawValue.startsWith('+')
+        ) {
           return `+${rawValue}`;
         }
         return rawValue;
-      case "Checkbox":
+      case 'Checkbox':
         if (Array.isArray(rawValue)) {
           return rawValue.filter((opt) => opt.checked).map((opt) => opt.option);
         }
         return rawValue;
-      case "Date":
+      case 'Date':
         return rawValue?.date;
-      case "DateTime":
-        return rawValue?.date && rawValue?.time ? `${rawValue.date}T${rawValue.time}:00` : rawValue;
-      case "DateRange":
+      case 'DateTime':
+        return rawValue?.date && rawValue?.time
+          ? `${rawValue.date}T${rawValue.time}:00`
+          : rawValue;
+      case 'DateRange':
         if (rawValue?.start && rawValue?.end) {
           try {
-            const diff = Math.ceil(Math.abs(new Date(rawValue.end).getTime() - new Date(rawValue.start).getTime()) / (1000 * 60 * 60 * 24));
+            const diff = Math.ceil(
+              Math.abs(
+                new Date(rawValue.end).getTime() -
+                  new Date(rawValue.start).getTime(),
+              ) /
+                (1000 * 60 * 60 * 24),
+            );
             return diff;
           } catch (e) {
             return 0;
           }
         }
         return rawValue;
-      case "From Database":
+      case 'From Database':
         if (Array.isArray(rawValue)) {
           return rawValue.map((item) => item.response);
         }
@@ -199,7 +212,12 @@ function getFieldValue(
 }
 
 function getQuestion(formDesign: any, fieldId: string): any | null {
-  if (!formDesign || !formDesign.sections || !Array.isArray(formDesign.sections)) return null;
+  if (
+    !formDesign ||
+    !formDesign.sections ||
+    !Array.isArray(formDesign.sections)
+  )
+    return null;
   for (const section of formDesign.sections) {
     if (section.questions && Array.isArray(section.questions)) {
       const question = section.questions.find((q: any) => q.id === fieldId);
@@ -212,6 +230,6 @@ function getQuestion(formDesign: any, fieldId: string): any | null {
 function toNumber(x: any): number | null {
   if (x === null || x === undefined) return null;
   if (x instanceof Date) return x.getTime();
-  const n = typeof x === "number" ? x : parseFloat(String(x));
+  const n = typeof x === 'number' ? x : parseFloat(String(x));
   return Number.isFinite(n) ? n : null;
 }
