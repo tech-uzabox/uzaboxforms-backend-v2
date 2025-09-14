@@ -3,7 +3,6 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 const SubmitProcessFormSchema = z.object({
-  processId: z.string().uuid(),
   staffViewForms: z.boolean(),
   applicantViewProcessLevel: z.boolean(),
   processForms: z.array(z.object({

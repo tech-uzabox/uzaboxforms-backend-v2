@@ -118,7 +118,6 @@ describe('ProcessController', () => {
   describe('submitProcessForm', () => {
     it('should configure forms within a process', async () => {
       const submitProcessFormDto = {
-        processId: mockProcess.id,
         staffViewForms: true,
         applicantViewProcessLevel: true,
         processForms: [
@@ -130,12 +129,11 @@ describe('ProcessController', () => {
           },
         ],
       };
-      const { processId, ...configData } = submitProcessFormDto; // Extract processId
       expect(
-        await controller.submitProcessForm(processId, submitProcessFormDto),
+        await controller.submitProcessForm(mockProcess.id, submitProcessFormDto),
       ).toEqual(mockProcess);
       expect(mockProcessService.submitProcessForm).toHaveBeenCalledWith(
-        processId,
+        mockProcess.id,
         submitProcessFormDto,
       );
     });
