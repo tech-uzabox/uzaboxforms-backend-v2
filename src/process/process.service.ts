@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NextStepType, Prisma, Process, Role } from 'db';
+import { NextStepType, Process, Role } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateProcessDto } from './dto/create-process.dto';
@@ -98,14 +98,22 @@ export class ProcessService {
             role: true,
           },
         },
+        forms: {
+          include: {
+            form: true,
+          },
+        },
       },
     });
 
     // Hoist roles to return just Role[] instead of {role: Role}[]
-    return (processes.map(process => ({
+    return processes.map((process) => ({
       ...process,
-      roles: (process as unknown as { roles: { role: Role }[] }).roles?.map(roleRelation => roleRelation.role) || [],
-    })) as unknown) as ProcessWithRoles[];
+      roles:
+        (process as unknown as { roles: { role: Role }[] }).roles?.map(
+          (roleRelation) => roleRelation.role,
+        ) || [],
+    })) as unknown as ProcessWithRoles[];
   }
 
   async findOne(id: string): Promise<Process | null> {
@@ -119,14 +127,24 @@ export class ProcessService {
             role: true,
           },
         },
+        forms: {
+          include: {
+            form: true,
+          },
+        },
       },
     });
 
     // Hoist roles to return just Role[] instead of {role: Role}[]
-    return process ? ({
-      ...process,
-      roles: (process as unknown as { roles: { role: Role }[] }).roles?.map(roleRelation => roleRelation.role) || [],
-    } as ProcessWithRoles) : null;
+    return process
+      ? ({
+          ...process,
+          roles:
+            (process as unknown as { roles: { role: Role }[] }).roles?.map(
+              (roleRelation) => roleRelation.role,
+            ) || [],
+        } as ProcessWithRoles)
+      : null;
   }
 
   async update(id: string, data: UpdateProcessDto): Promise<Process> {
@@ -311,7 +329,7 @@ export class ProcessService {
         staffViewForms: originalProcess.staffViewForms,
         applicantViewProcessLevel: originalProcess.applicantViewProcessLevel,
         forms: {
-          create: (originalProcess.forms).map((form) => ({
+          create: originalProcess.forms.map((form) => ({
             formId: form.formId,
             order: form.order,
             nextStepType: form.nextStepType,
@@ -365,7 +383,7 @@ export class ProcessService {
       return { success: false, message: 'User has no enabled roles' };
     }
 
-    const roleIds = userRoles.map(role => role.roleId);
+    const roleIds = userRoles.map((role) => role.roleId);
 
     // Get process forms with form details
     const processForms = await this.prisma.processForm.findMany({
