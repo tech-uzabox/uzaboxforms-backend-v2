@@ -35,12 +35,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 6.16.1
- * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
+ * Prisma Client JS version: 6.15.0
+ * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
  */
 Prisma.prismaVersion = {
-  client: "6.16.1",
-  engine: "1c57fdcd7e44b29b9313256c76699e91c3ac3c43"
+  client: "6.15.0",
+  engine: "85179d7826409ee107a6ba334b5e305ae3fba9fb"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -584,16 +584,16 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\aurum\\work\\uzaform\\ref-backend\\src\\generated\\prisma",
+      "value": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
-      "engineType": "library"
+      "engineType": "client"
     },
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "windows",
+        "value": "darwin-arm64",
         "native": true
       }
     ],
@@ -603,7 +603,7 @@ const config = {
       "queryCompiler",
       "relationJoins"
     ],
-    "sourceFilePath": "D:\\aurum\\work\\uzaform\\ref-backend\\prisma\\schema.prisma",
+    "sourceFilePath": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -611,8 +611,8 @@ const config = {
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
-  "clientVersion": "6.16.1",
-  "engineVersion": "1c57fdcd7e44b29b9313256c76699e91c3ac3c43",
+  "clientVersion": "6.15.0",
+  "engineVersion": "85179d7826409ee107a6ba334b5e305ae3fba9fb",
   "datasourceNames": [
     "db"
   ],
