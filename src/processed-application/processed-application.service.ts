@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { NextStepType, UserStatus } from 'db';
 import { PrismaService } from '../db/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { EmailService } from '../email/email.service';
@@ -43,7 +44,15 @@ export class ProcessedApplicationService {
         }
     });
 
-    // 2. Mark the form as completed
+    // 2. Mark the form as completed with workflow information
+    const processForm = await this.prisma.processForm.findFirst({
+        where: { processId: applicantProcess.processId, formId }
+    });
+
+    if (!processForm) {
+        throw new NotFoundException('Process form not found');
+    }
+
     await this.prisma.aPCompletedForm.create({
         data: {
             applicantProcessId,
@@ -52,13 +61,11 @@ export class ProcessedApplicationService {
         }
     });
 
-    const processForm = await this.prisma.processForm.findFirst({
-        where: { processId: applicantProcess.processId, formId }
-    });
+    // 3. Send notifications based on process form configuration
+    await this.sendNotifications(processForm, applicantProcess, reviewer);
 
-    if (processForm) {
-        await this.notificationService.sendNotification(processForm, applicantProcess.applicant, reviewer);
-    }
+    // 4. Send email notifications
+    await this.sendEmailNotifications(processForm, applicantProcess, reviewer);
 
     await this.auditLogService.log({
         userId: reviewerId,
@@ -70,5 +77,353 @@ export class ProcessedApplicationService {
       });
 
     return { message: 'Application step processed successfully.' };
+  }
+
+  async getProcessedApplicationsByUser(userId: string) {
+    // Get user's roles for access control
+    const userRoles = await this.prisma.userRole.findMany({
+      where: { userId, status: 'ENABLED' },
+      select: { roleId: true },
+    });
+    const roleIds = userRoles.map(role => role.roleId);
+
+    // Get enabled processes
+    const processes = await this.prisma.process.findMany({
+      where: { status: 'ENABLED' },
+    });
+
+    const groupedApplications: any[] = [];
+
+    for (const process of processes) {
+      const processForms = await this.prisma.processForm.findMany({
+        where: { processId: process.id },
+        orderBy: { order: 'asc' },
+      });
+
+      if (processForms.length === 0) continue;
+
+      const applicantProcesses = await this.prisma.applicantProcess.findMany({
+        where: { processId: process.id },
+      });
+
+      const applicationsForProcess: any[] = [];
+
+      for (const applicantProcess of applicantProcesses) {
+        const completedForms = await this.prisma.aPCompletedForm.findMany({
+          where: { applicantProcessId: applicantProcess.id },
+          orderBy: { createdAt: 'asc' },
+        });
+
+        if (completedForms.length >= processForms.length) continue;
+
+        const nextForm = processForms[completedForms.length];
+        if (!nextForm) continue;
+
+        // Check access control - get workflow info from ProcessForm for the last completed form
+        let hasAccess = false;
+        if (completedForms.length === 0) {
+          // First form - everyone can access
+          hasAccess = true;
+        } else {
+          const lastCompletedForm = completedForms[completedForms.length - 1];
+          const lastProcessForm = await this.prisma.processForm.findFirst({
+            where: { processId: process.id, formId: lastCompletedForm.formId }
+          });
+
+          if (lastProcessForm) {
+            hasAccess = await this.checkUserAccessToForm(
+              userId,
+              roleIds,
+              {
+                nextStepType: lastProcessForm.nextStepType,
+                nextStaffId: lastProcessForm.nextStaffId,
+                nextStepRoles: lastProcessForm.nextStepRoles,
+                reviewerId: lastCompletedForm.reviewerId || '',
+              },
+              applicantProcess.applicantId,
+            );
+          }
+        }
+
+        if (hasAccess) {
+          applicationsForProcess.push({
+            applicantProcessId: applicantProcess.id,
+            applicantId: applicantProcess.applicantId,
+            status: applicantProcess.status,
+            completedForms: completedForms.map(cf => cf.formId),
+            pendingForm: {
+              formId: nextForm.formId,
+              nextStepType: nextForm.nextStepType,
+              nextStepRoles: nextForm.nextStepRoles,
+            },
+            processLevel: `${completedForms.length}/${processForms.length}`,
+          });
+        }
+      }
+
+      if (applicationsForProcess.length > 0) {
+        groupedApplications.push({
+          processId: process.id,
+          name: process.name,
+          applications: applicationsForProcess,
+        });
+      }
+    }
+
+    return groupedApplications;
+  }
+
+  async getProcessedApplicationsByUserAndProcess(userId: string, processId: string) {
+    const userRoles = await this.prisma.userRole.findMany({
+      where: { userId, status: 'ENABLED' },
+      select: { roleId: true },
+    });
+    const roleIds = userRoles.map(role => role.roleId);
+
+    const process = await this.prisma.process.findUnique({
+      where: { id: processId, status: 'ENABLED' },
+    });
+
+    if (!process) {
+      throw new NotFoundException('Process not found');
+    }
+
+    const processForms = await this.prisma.processForm.findMany({
+      where: { processId },
+      orderBy: { order: 'asc' },
+    });
+
+    const applicantProcesses = await this.prisma.applicantProcess.findMany({
+      where: { processId },
+    });
+
+    const applicationsForProcess: any[] = [];
+
+    for (const applicantProcess of applicantProcesses) {
+      const completedForms = await this.prisma.aPCompletedForm.findMany({
+        where: { applicantProcessId: applicantProcess.id },
+        orderBy: { createdAt: 'asc' },
+      });
+
+      if (completedForms.length >= processForms.length) continue;
+
+      const nextForm = processForms[completedForms.length];
+      if (!nextForm) continue;
+
+      const hasAccess = await this.checkUserAccessToForm(
+        userId,
+        roleIds,
+        {
+          nextStepType: nextForm.nextStepType,
+          nextStaffId: nextForm.nextStaffId,
+          nextStepRoles: nextForm.nextStepRoles,
+          reviewerId: completedForms.length > 0 ? completedForms[completedForms.length - 1].reviewerId || '' : '',
+        },
+        applicantProcess.applicantId,
+      );
+
+      if (hasAccess) {
+        applicationsForProcess.push({
+          applicantProcessId: applicantProcess.id,
+          applicantId: applicantProcess.applicantId,
+          status: applicantProcess.status,
+          completedForms: completedForms.map(cf => cf.formId),
+          pendingForm: {
+            formId: nextForm.formId,
+            nextStepType: nextForm.nextStepType,
+            nextStepRoles: nextForm.nextStepRoles,
+          },
+          processLevel: `${completedForms.length}/${processForms.length}`,
+        });
+      }
+    }
+
+    return {
+      process: {
+        processId: process.id,
+        name: process.name,
+        groupId: process.groupId,
+        status: process.status,
+      },
+      applicantProcesses: applicationsForProcess,
+    };
+  }
+
+  async getSingleProcessedApplication(userId: string, processId: string, applicantProcessId: string) {
+    const userRoles = await this.prisma.userRole.findMany({
+      where: { userId, status: 'ENABLED' },
+      select: { roleId: true },
+    });
+    const roleIds = userRoles.map(role => role.roleId);
+
+    const applicantProcess = await this.prisma.applicantProcess.findUnique({
+      where: { id: applicantProcessId, processId },
+    });
+
+    if (!applicantProcess) {
+      throw new NotFoundException('Applicant process not found');
+    }
+
+    const processForms = await this.prisma.processForm.findMany({
+      where: { processId },
+      orderBy: { order: 'asc' },
+    });
+
+    const completedForms = await this.prisma.aPCompletedForm.findMany({
+      where: { applicantProcessId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const currentLevel = completedForms.length;
+    const nextForm = processForms[currentLevel];
+
+    // Check access
+    if (currentLevel > 0) {
+      const lastCompletedForm = completedForms[currentLevel - 1];
+      const hasAccess = await this.checkUserAccessToForm(
+        userId,
+        roleIds,
+        {
+          nextStepType: nextForm.nextStepType,
+          nextStaffId: nextForm.nextStaffId,
+          nextStepRoles: nextForm.nextStepRoles,
+          reviewerId: lastCompletedForm.reviewerId || '',
+        },
+        applicantProcess.applicantId,
+      );
+
+      if (!hasAccess) {
+        throw new NotFoundException('Access denied');
+      }
+    }
+
+    return {
+      applicantProcess: {
+        applicantProcessId: applicantProcess.id,
+        applicantId: applicantProcess.applicantId,
+        status: applicantProcess.status,
+        completedForms: completedForms.map(cf => cf.formId),
+        processLevel: `${currentLevel}/${processForms.length}`,
+        lastCompletedForm: completedForms[completedForms.length - 1],
+        nextPendingForm: nextForm ? { formId: nextForm.formId } : null,
+      },
+    };
+  }
+
+  private async checkUserAccessToForm(
+    userId: string,
+    roleIds: string[],
+    lastCompletedFormInfo: { nextStepType: NextStepType; nextStaffId: string | null; nextStepRoles: string[]; reviewerId: string },
+    applicantId: string,
+  ): Promise<boolean> {
+    switch (lastCompletedFormInfo.nextStepType) {
+      case 'STATIC':
+        return lastCompletedFormInfo.nextStaffId === userId;
+
+      case 'DYNAMIC':
+        // Check if user has any of the required roles
+        return lastCompletedFormInfo.nextStepRoles?.some((roleId: string) =>
+          roleIds.includes(roleId)
+        ) ?? false;
+
+      case 'FOLLOW_ORGANIZATION_CHART':
+        const applicantOrg = await this.prisma.organizationUser.findUnique({
+          where: { userId: applicantId },
+        });
+        const supervisorOrg = await this.prisma.organizationUser.findUnique({
+          where: { userId },
+        });
+        return applicantOrg?.superiorId === supervisorOrg?.id;
+
+      case 'NOT_APPLICABLE':
+      default:
+        return true;
+    }
+  }
+
+  private async sendNotifications(
+    processForm: { id: string; processId: string; formId: string; order: number; nextStepType: NextStepType; nextStepRoles: string[]; nextStaffId: string | null; notificationType: NextStepType; notificationRoles: string[]; notificationToId: string | null; notificationComment: string | null; notifyApplicant: boolean; applicantNotificationContent: string | null; createdAt: Date; updatedAt: Date },
+    applicantProcess: { id: string; applicantId: string; processId: string; status: string; createdAt: Date; applicant: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date } },
+    reviewer: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date },
+  ): Promise<void> {
+    // Send notifications using the notification service
+    if (this.notificationService) {
+      await this.notificationService.sendNotification(processForm, applicantProcess.applicant, reviewer);
+    }
+  }
+
+  private async sendEmailNotifications(
+    processForm: { id: string; processId: string; formId: string; order: number; nextStepType: NextStepType; nextStepRoles: string[]; nextStaffId: string | null; notificationType: NextStepType; notificationRoles: string[]; notificationToId: string | null; notificationComment: string | null; notifyApplicant: boolean; applicantNotificationContent: string | null; createdAt: Date; updatedAt: Date },
+    applicantProcess: { id: string; applicantId: string; processId: string; status: string; createdAt: Date; applicant: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date } },
+    reviewer: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date },
+  ): Promise<void> {
+    const notificationType = processForm.notificationType;
+    const notificationComment = processForm.notificationComment || 'You have a new application to review.';
+
+    try {
+      switch (notificationType) {
+        case NextStepType.STATIC:
+          if (processForm.notificationToId) {
+            const notificationUser = await this.prisma.user.findUnique({
+              where: { id: processForm.notificationToId },
+            });
+            if (notificationUser) {
+              await this.emailService.sendEmail(
+                notificationUser.email,
+                `Application Notification: ${notificationComment}`,
+              );
+            }
+          }
+          break;
+
+        case NextStepType.DYNAMIC:
+          if (processForm.notificationRoles?.length) {
+            const userRoles = await this.prisma.userRole.findMany({
+              where: {
+                roleId: { in: processForm.notificationRoles },
+                status: 'ENABLED',
+              },
+              include: { user: true },
+            });
+
+            for (const userRole of userRoles) {
+              if (userRole.user) {
+                await this.emailService.sendEmail(
+                  userRole.user.email,
+                  `Application Notification: ${notificationComment}`,
+                );
+              }
+            }
+          }
+          break;
+
+        case NextStepType.FOLLOW_ORGANIZATION_CHART:
+          const reviewerOrg = await this.prisma.organizationUser.findFirst({
+            where: { userId: reviewer.id },
+          });
+
+          if (reviewerOrg?.superiorId) {
+            const superior = await this.prisma.user.findUnique({
+              where: { id: reviewerOrg.superiorId },
+            });
+
+            if (superior) {
+              await this.emailService.sendEmail(
+                superior.email,
+                `Application Notification: ${notificationComment}`,
+              );
+            }
+          }
+          break;
+
+        case NextStepType.NOT_APPLICABLE:
+        default:
+          // No notification needed
+          break;
+      }
+    } catch (error) {
+      // Log error but don't fail the process
+      console.error('Error sending email notifications:', error);
+    }
   }
 }
