@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NextStepType, UserStatus } from 'db';
+import { NextStepType, UserStatus, ProcessForm } from 'db';
 import { PrismaService } from '../db/prisma.service';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { EmailService } from '../email/email.service';
@@ -342,7 +342,7 @@ export class ProcessedApplicationService {
   }
 
   private async sendNotifications(
-    processForm: { id: string; processId: string; formId: string; order: number; nextStepType: NextStepType; nextStepRoles: string[]; nextStaffId: string | null; notificationType: NextStepType; notificationRoles: string[]; notificationToId: string | null; notificationComment: string | null; notifyApplicant: boolean; applicantNotificationContent: string | null; createdAt: Date; updatedAt: Date },
+    processForm: ProcessForm,
     applicantProcess: { id: string; applicantId: string; processId: string; status: string; createdAt: Date; applicant: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date } },
     reviewer: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date },
   ): Promise<void> {
@@ -353,7 +353,7 @@ export class ProcessedApplicationService {
   }
 
   private async sendEmailNotifications(
-    processForm: { id: string; processId: string; formId: string; order: number; nextStepType: NextStepType; nextStepRoles: string[]; nextStaffId: string | null; notificationType: NextStepType; notificationRoles: string[]; notificationToId: string | null; notificationComment: string | null; notifyApplicant: boolean; applicantNotificationContent: string | null; createdAt: Date; updatedAt: Date },
+    processForm: ProcessForm,
     applicantProcess: { id: string; applicantId: string; processId: string; status: string; createdAt: Date; applicant: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date } },
     reviewer: { id: string; email: string; firstName: string | null; lastName: string | null; password: string; photo: string | null; googleId: string | null; status: UserStatus; createdAt: Date; updatedAt: Date },
   ): Promise<void> {
