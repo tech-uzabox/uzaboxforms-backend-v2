@@ -27,6 +27,7 @@ model User {
   createdGroups      Group[]            @relation("GroupCreator")
   organization       OrganizationUser?
   createdProcesses   Process[]          @relation("ProcessCreator")
+  qrCodeDocuments    QrCodeDocument[]
   roles              UserRole[]
 
   @@index([email])
@@ -304,6 +305,7 @@ model QrCodeDocument {
   creatorId    String   @db.Uuid
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  creator      User     @relation(fields: [creatorId], references: [id])
 
   @@index([creatorId])
   @@map("qr_code_documents")

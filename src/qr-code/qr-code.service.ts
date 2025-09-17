@@ -11,9 +11,25 @@ export class QrCodeService {
   ) {}
 
   async create(
-    data: Prisma.QrCodeDocumentCreateInput,
+    data: Omit<Prisma.QrCodeDocumentCreateInput, 'creator'> & { creatorId: string },
   ): Promise<QrCodeDocument> {
-    const newQrCodeDocument = await this.prisma.qrCodeDocument.create({ data });
+    // Check if qrCodeId already exists
+    const existingDocument = await this.prisma.qrCodeDocument.findFirst({
+      where: { qrCodeId: data.qrCodeId },
+    });
+    if (existingDocument) {
+      throw new Error('QR Code ID already exists');
+    }
+
+    const { creatorId, ...rest } = data;
+    const newQrCodeDocument = await this.prisma.qrCodeDocument.create({
+      data: {
+        ...rest,
+        creator: {
+          connect: { id: creatorId },
+        },
+      },
+    });
     await this.auditLogService.log({
       userId: newQrCodeDocument.creatorId,
       action: 'QR_CODE_DOCUMENT_CREATED',
@@ -29,7 +45,19 @@ export class QrCodeService {
   }
 
   async findAll(): Promise<QrCodeDocument[]> {
-    return this.prisma.qrCodeDocument.findMany();
+    return this.prisma.qrCodeDocument.findMany({
+      include: {
+        creator: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 
   async findOne(id: string): Promise<QrCodeDocument | null> {
@@ -39,6 +67,14 @@ export class QrCodeService {
   async findByQrCodeId(qrCodeId: string): Promise<QrCodeDocument | null> {
     const doc = await this.prisma.qrCodeDocument.findFirst({
       where: { qrCodeId },
+      include: {
+        creator: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
     });
     if (!doc) {
       await this.auditLogService.log({
@@ -95,6 +131,19 @@ export class QrCodeService {
   }
 
   async findByCreatorId(creatorId: string): Promise<QrCodeDocument[]> {
-    return this.prisma.qrCodeDocument.findMany({ where: { creatorId } });
+    return this.prisma.qrCodeDocument.findMany({
+      where: { creatorId },
+      include: {
+        creator: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
   }
 }

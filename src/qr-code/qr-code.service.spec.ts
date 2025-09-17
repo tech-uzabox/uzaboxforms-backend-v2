@@ -20,7 +20,7 @@ const mockAuditLogService = {
   log: jest.fn(),
 };
 
-const mockQrCodeDocument: QrCodeDocument = {
+const mockQrCodeDocument: any = {
   id: 'qr-doc-id-1',
   documentName: 'Test Document',
   fileName: 'test.pdf',
@@ -28,6 +28,10 @@ const mockQrCodeDocument: QrCodeDocument = {
   creatorId: 'user-id-1',
   createdAt: new Date(),
   updatedAt: new Date(),
+  creator: {
+    firstName: 'John',
+    lastName: 'Doe',
+  },
 };
 
 describe('QrCodeService', () => {
@@ -53,14 +57,27 @@ describe('QrCodeService', () => {
 
   describe('create', () => {
     it('should create a new QR code document', async () => {
+      const createData = {
+        documentName: 'Test Document',
+        fileName: 'test.pdf',
+        qrCodeId: 'qr-code-123',
+        creatorId: 'user-id-1',
+      };
       mockPrismaService.qrCodeDocument.create.mockResolvedValue(
         mockQrCodeDocument,
       );
 
-      const result = await service.create(mockQrCodeDocument);
+      const result = await service.create(createData);
       expect(result).toEqual(mockQrCodeDocument);
       expect(prisma.qrCodeDocument.create).toHaveBeenCalledWith({
-        data: mockQrCodeDocument,
+        data: {
+          documentName: 'Test Document',
+          fileName: 'test.pdf',
+          qrCodeId: 'qr-code-123',
+          creator: {
+            connect: { id: 'user-id-1' },
+          },
+        },
       });
     });
   });
@@ -73,7 +90,19 @@ describe('QrCodeService', () => {
 
       const result = await service.findAll();
       expect(result).toEqual([mockQrCodeDocument]);
-      expect(prisma.qrCodeDocument.findMany).toHaveBeenCalled();
+      expect(prisma.qrCodeDocument.findMany).toHaveBeenCalledWith({
+        include: {
+          creator: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
     });
   });
 
@@ -101,6 +130,14 @@ describe('QrCodeService', () => {
       expect(result).toEqual(mockQrCodeDocument);
       expect(prisma.qrCodeDocument.findFirst).toHaveBeenCalledWith({
         where: { qrCodeId: mockQrCodeDocument.qrCodeId },
+        include: {
+          creator: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       });
     });
 
@@ -151,6 +188,17 @@ describe('QrCodeService', () => {
       expect(result).toEqual([mockQrCodeDocument]);
       expect(prisma.qrCodeDocument.findMany).toHaveBeenCalledWith({
         where: { creatorId: 'user-id-1' },
+        include: {
+          creator: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
     });
   });

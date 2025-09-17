@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime/client.js';
+import * as runtime from './runtime/library.js';
 import $Types = runtime.Types // general types
 import $Public = runtime.Types.Public
 import $Utils = runtime.Types.Utils
@@ -647,8 +647,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.15.0
-   * Query Engine version: 85179d7826409ee107a6ba334b5e305ae3fba9fb
+   * Prisma Client JS version: 6.16.1
+   * Query Engine version: 1c57fdcd7e44b29b9313256c76699e91c3ac3c43
    */
   export type PrismaVersion = {
     client: string
@@ -2905,6 +2905,7 @@ export namespace Prisma {
     createdForms: number
     createdGroups: number
     createdProcesses: number
+    qrCodeDocuments: number
     roles: number
   }
 
@@ -2915,6 +2916,7 @@ export namespace Prisma {
     createdForms?: boolean | UserCountOutputTypeCountCreatedFormsArgs
     createdGroups?: boolean | UserCountOutputTypeCountCreatedGroupsArgs
     createdProcesses?: boolean | UserCountOutputTypeCountCreatedProcessesArgs
+    qrCodeDocuments?: boolean | UserCountOutputTypeCountQrCodeDocumentsArgs
     roles?: boolean | UserCountOutputTypeCountRolesArgs
   }
 
@@ -2969,6 +2971,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCreatedProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProcessWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountQrCodeDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: QrCodeDocumentWhereInput
   }
 
   /**
@@ -3492,6 +3501,7 @@ export namespace Prisma {
     createdGroups?: boolean | User$createdGroupsArgs<ExtArgs>
     organization?: boolean | User$organizationArgs<ExtArgs>
     createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
+    qrCodeDocuments?: boolean | User$qrCodeDocumentsArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -3544,6 +3554,7 @@ export namespace Prisma {
     createdGroups?: boolean | User$createdGroupsArgs<ExtArgs>
     organization?: boolean | User$organizationArgs<ExtArgs>
     createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
+    qrCodeDocuments?: boolean | User$qrCodeDocumentsArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3560,6 +3571,7 @@ export namespace Prisma {
       createdGroups: Prisma.$GroupPayload<ExtArgs>[]
       organization: Prisma.$OrganizationUserPayload<ExtArgs> | null
       createdProcesses: Prisma.$ProcessPayload<ExtArgs>[]
+      qrCodeDocuments: Prisma.$QrCodeDocumentPayload<ExtArgs>[]
       roles: Prisma.$UserRolePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3974,6 +3986,7 @@ export namespace Prisma {
     createdGroups<T extends User$createdGroupsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     organization<T extends User$organizationArgs<ExtArgs> = {}>(args?: Subset<T, User$organizationArgs<ExtArgs>>): Prisma__OrganizationUserClient<$Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     createdProcesses<T extends User$createdProcessesArgs<ExtArgs> = {}>(args?: Subset<T, User$createdProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    qrCodeDocuments<T extends User$qrCodeDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$qrCodeDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodeDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4571,6 +4584,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+  }
+
+  /**
+   * User.qrCodeDocuments
+   */
+  export type User$qrCodeDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the QrCodeDocument
+     */
+    select?: QrCodeDocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the QrCodeDocument
+     */
+    omit?: QrCodeDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
+    where?: QrCodeDocumentWhereInput
+    orderBy?: QrCodeDocumentOrderByWithRelationInput | QrCodeDocumentOrderByWithRelationInput[]
+    cursor?: QrCodeDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: QrCodeDocumentScalarFieldEnum | QrCodeDocumentScalarFieldEnum[]
   }
 
   /**
@@ -23966,6 +24003,7 @@ export namespace Prisma {
     creatorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    creator?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["qrCodeDocument"]>
 
   export type QrCodeDocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -23976,6 +24014,7 @@ export namespace Prisma {
     creatorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    creator?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["qrCodeDocument"]>
 
   export type QrCodeDocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -23986,6 +24025,7 @@ export namespace Prisma {
     creatorId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    creator?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["qrCodeDocument"]>
 
   export type QrCodeDocumentSelectScalar = {
@@ -23999,10 +24039,21 @@ export namespace Prisma {
   }
 
   export type QrCodeDocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "documentName" | "fileName" | "qrCodeId" | "creatorId" | "createdAt" | "updatedAt", ExtArgs["result"]["qrCodeDocument"]>
+  export type QrCodeDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type QrCodeDocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type QrCodeDocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $QrCodeDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "QrCodeDocument"
-    objects: {}
+    objects: {
+      creator: Prisma.$UserPayload<ExtArgs>
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       documentName: string
@@ -24405,6 +24456,7 @@ export namespace Prisma {
    */
   export interface Prisma__QrCodeDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24458,6 +24510,10 @@ export namespace Prisma {
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
+    /**
      * Filter, which QrCodeDocument to fetch.
      */
     where: QrCodeDocumentWhereUniqueInput
@@ -24477,6 +24533,10 @@ export namespace Prisma {
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
+    /**
      * Filter, which QrCodeDocument to fetch.
      */
     where: QrCodeDocumentWhereUniqueInput
@@ -24495,6 +24555,10 @@ export namespace Prisma {
      * Omit specific fields from the QrCodeDocument
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
     /**
      * Filter, which QrCodeDocument to fetch.
      */
@@ -24545,6 +24609,10 @@ export namespace Prisma {
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
+    /**
      * Filter, which QrCodeDocument to fetch.
      */
     where?: QrCodeDocumentWhereInput
@@ -24594,6 +24662,10 @@ export namespace Prisma {
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
+    /**
      * Filter, which QrCodeDocuments to fetch.
      */
     where?: QrCodeDocumentWhereInput
@@ -24638,6 +24710,10 @@ export namespace Prisma {
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
+    /**
      * The data needed to create a QrCodeDocument.
      */
     data: XOR<QrCodeDocumentCreateInput, QrCodeDocumentUncheckedCreateInput>
@@ -24672,6 +24748,10 @@ export namespace Prisma {
      */
     data: QrCodeDocumentCreateManyInput | QrCodeDocumentCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -24686,6 +24766,10 @@ export namespace Prisma {
      * Omit specific fields from the QrCodeDocument
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
     /**
      * The data needed to update a QrCodeDocument.
      */
@@ -24739,6 +24823,10 @@ export namespace Prisma {
      * Limit how many QrCodeDocuments to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -24753,6 +24841,10 @@ export namespace Prisma {
      * Omit specific fields from the QrCodeDocument
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
     /**
      * The filter to search for the QrCodeDocument to update in case it exists.
      */
@@ -24780,6 +24872,10 @@ export namespace Prisma {
      * Omit specific fields from the QrCodeDocument
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
     /**
      * Filter which QrCodeDocument to delete.
      */
@@ -24813,6 +24909,10 @@ export namespace Prisma {
      * Omit specific fields from the QrCodeDocument
      */
     omit?: QrCodeDocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: QrCodeDocumentInclude<ExtArgs> | null
   }
 
 
@@ -28642,6 +28742,7 @@ export namespace Prisma {
     createdGroups?: GroupListRelationFilter
     organization?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
     createdProcesses?: ProcessListRelationFilter
+    qrCodeDocuments?: QrCodeDocumentListRelationFilter
     roles?: UserRoleListRelationFilter
   }
 
@@ -28663,6 +28764,7 @@ export namespace Prisma {
     createdGroups?: GroupOrderByRelationAggregateInput
     organization?: OrganizationUserOrderByWithRelationInput
     createdProcesses?: ProcessOrderByRelationAggregateInput
+    qrCodeDocuments?: QrCodeDocumentOrderByRelationAggregateInput
     roles?: UserRoleOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
@@ -28688,6 +28790,7 @@ export namespace Prisma {
     createdGroups?: GroupListRelationFilter
     organization?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
     createdProcesses?: ProcessListRelationFilter
+    qrCodeDocuments?: QrCodeDocumentListRelationFilter
     roles?: UserRoleListRelationFilter
   }, "id" | "email" | "googleId">
 
@@ -29930,6 +30033,7 @@ export namespace Prisma {
     creatorId?: UuidFilter<"QrCodeDocument"> | string
     createdAt?: DateTimeFilter<"QrCodeDocument"> | Date | string
     updatedAt?: DateTimeFilter<"QrCodeDocument"> | Date | string
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
   export type QrCodeDocumentOrderByWithRelationInput = {
@@ -29940,6 +30044,7 @@ export namespace Prisma {
     creatorId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    creator?: UserOrderByWithRelationInput
     _relevance?: QrCodeDocumentOrderByRelevanceInput
   }
 
@@ -29954,6 +30059,7 @@ export namespace Prisma {
     creatorId?: UuidFilter<"QrCodeDocument"> | string
     createdAt?: DateTimeFilter<"QrCodeDocument"> | Date | string
     updatedAt?: DateTimeFilter<"QrCodeDocument"> | Date | string
+    creator?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "qrCodeId">
 
   export type QrCodeDocumentOrderByWithAggregationInput = {
@@ -30159,6 +30265,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -30180,6 +30287,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -30201,6 +30309,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -30222,6 +30331,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -31492,9 +31602,9 @@ export namespace Prisma {
     documentName: string
     fileName: string
     qrCodeId: string
-    creatorId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    creator: UserCreateNestedOneWithoutQrCodeDocumentsInput
   }
 
   export type QrCodeDocumentUncheckedCreateInput = {
@@ -31512,9 +31622,9 @@ export namespace Prisma {
     documentName?: StringFieldUpdateOperationsInput | string
     fileName?: StringFieldUpdateOperationsInput | string
     qrCodeId?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: UserUpdateOneRequiredWithoutQrCodeDocumentsNestedInput
   }
 
   export type QrCodeDocumentUncheckedUpdateInput = {
@@ -31542,7 +31652,6 @@ export namespace Prisma {
     documentName?: StringFieldUpdateOperationsInput | string
     fileName?: StringFieldUpdateOperationsInput | string
     qrCodeId?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31829,6 +31938,12 @@ export namespace Prisma {
     none?: ProcessWhereInput
   }
 
+  export type QrCodeDocumentListRelationFilter = {
+    every?: QrCodeDocumentWhereInput
+    some?: QrCodeDocumentWhereInput
+    none?: QrCodeDocumentWhereInput
+  }
+
   export type UserRoleListRelationFilter = {
     every?: UserRoleWhereInput
     some?: UserRoleWhereInput
@@ -31861,6 +31976,10 @@ export namespace Prisma {
   }
 
   export type ProcessOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type QrCodeDocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33246,6 +33365,13 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
   }
 
+  export type QrCodeDocumentCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput> | QrCodeDocumentCreateWithoutCreatorInput[] | QrCodeDocumentUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: QrCodeDocumentCreateOrConnectWithoutCreatorInput | QrCodeDocumentCreateOrConnectWithoutCreatorInput[]
+    createMany?: QrCodeDocumentCreateManyCreatorInputEnvelope
+    connect?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+  }
+
   export type UserRoleCreateNestedManyWithoutUserInput = {
     create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
@@ -33299,6 +33425,13 @@ export namespace Prisma {
     connectOrCreate?: ProcessCreateOrConnectWithoutCreatorInput | ProcessCreateOrConnectWithoutCreatorInput[]
     createMany?: ProcessCreateManyCreatorInputEnvelope
     connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+  }
+
+  export type QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput> | QrCodeDocumentCreateWithoutCreatorInput[] | QrCodeDocumentUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: QrCodeDocumentCreateOrConnectWithoutCreatorInput | QrCodeDocumentCreateOrConnectWithoutCreatorInput[]
+    createMany?: QrCodeDocumentCreateManyCreatorInputEnvelope
+    connect?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
   }
 
   export type UserRoleUncheckedCreateNestedManyWithoutUserInput = {
@@ -33418,6 +33551,20 @@ export namespace Prisma {
     deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
   }
 
+  export type QrCodeDocumentUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput> | QrCodeDocumentCreateWithoutCreatorInput[] | QrCodeDocumentUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: QrCodeDocumentCreateOrConnectWithoutCreatorInput | QrCodeDocumentCreateOrConnectWithoutCreatorInput[]
+    upsert?: QrCodeDocumentUpsertWithWhereUniqueWithoutCreatorInput | QrCodeDocumentUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: QrCodeDocumentCreateManyCreatorInputEnvelope
+    set?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    disconnect?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    delete?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    connect?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    update?: QrCodeDocumentUpdateWithWhereUniqueWithoutCreatorInput | QrCodeDocumentUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: QrCodeDocumentUpdateManyWithWhereWithoutCreatorInput | QrCodeDocumentUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: QrCodeDocumentScalarWhereInput | QrCodeDocumentScalarWhereInput[]
+  }
+
   export type UserRoleUpdateManyWithoutUserNestedInput = {
     create?: XOR<UserRoleCreateWithoutUserInput, UserRoleUncheckedCreateWithoutUserInput> | UserRoleCreateWithoutUserInput[] | UserRoleUncheckedCreateWithoutUserInput[]
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
@@ -33524,6 +33671,20 @@ export namespace Prisma {
     update?: ProcessUpdateWithWhereUniqueWithoutCreatorInput | ProcessUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: ProcessUpdateManyWithWhereWithoutCreatorInput | ProcessUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
+  }
+
+  export type QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput> | QrCodeDocumentCreateWithoutCreatorInput[] | QrCodeDocumentUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: QrCodeDocumentCreateOrConnectWithoutCreatorInput | QrCodeDocumentCreateOrConnectWithoutCreatorInput[]
+    upsert?: QrCodeDocumentUpsertWithWhereUniqueWithoutCreatorInput | QrCodeDocumentUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: QrCodeDocumentCreateManyCreatorInputEnvelope
+    set?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    disconnect?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    delete?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    connect?: QrCodeDocumentWhereUniqueInput | QrCodeDocumentWhereUniqueInput[]
+    update?: QrCodeDocumentUpdateWithWhereUniqueWithoutCreatorInput | QrCodeDocumentUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: QrCodeDocumentUpdateManyWithWhereWithoutCreatorInput | QrCodeDocumentUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: QrCodeDocumentScalarWhereInput | QrCodeDocumentScalarWhereInput[]
   }
 
   export type UserRoleUncheckedUpdateManyWithoutUserNestedInput = {
@@ -34628,6 +34789,20 @@ export namespace Prisma {
     update?: XOR<XOR<DashboardUpdateToOneWithWhereWithoutWidgetsInput, DashboardUpdateWithoutWidgetsInput>, DashboardUncheckedUpdateWithoutWidgetsInput>
   }
 
+  export type UserCreateNestedOneWithoutQrCodeDocumentsInput = {
+    create?: XOR<UserCreateWithoutQrCodeDocumentsInput, UserUncheckedCreateWithoutQrCodeDocumentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutQrCodeDocumentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutQrCodeDocumentsNestedInput = {
+    create?: XOR<UserCreateWithoutQrCodeDocumentsInput, UserUncheckedCreateWithoutQrCodeDocumentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutQrCodeDocumentsInput
+    upsert?: UserUpsertWithoutQrCodeDocumentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutQrCodeDocumentsInput, UserUpdateWithoutQrCodeDocumentsInput>, UserUncheckedUpdateWithoutQrCodeDocumentsInput>
+  }
+
   export type EnumManagementTypeFieldUpdateOperationsInput = {
     set?: $Enums.ManagementType
   }
@@ -35284,6 +35459,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type QrCodeDocumentCreateWithoutCreatorInput = {
+    id?: string
+    documentName: string
+    fileName: string
+    qrCodeId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QrCodeDocumentUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    documentName: string
+    fileName: string
+    qrCodeId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QrCodeDocumentCreateOrConnectWithoutCreatorInput = {
+    where: QrCodeDocumentWhereUniqueInput
+    create: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type QrCodeDocumentCreateManyCreatorInputEnvelope = {
+    data: QrCodeDocumentCreateManyCreatorInput | QrCodeDocumentCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserRoleCreateWithoutUserInput = {
     status?: $Enums.RoleStatus
     role: RoleCreateNestedOneWithoutUsersInput
@@ -35511,6 +35714,35 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Process"> | Date | string
   }
 
+  export type QrCodeDocumentUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: QrCodeDocumentWhereUniqueInput
+    update: XOR<QrCodeDocumentUpdateWithoutCreatorInput, QrCodeDocumentUncheckedUpdateWithoutCreatorInput>
+    create: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type QrCodeDocumentUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: QrCodeDocumentWhereUniqueInput
+    data: XOR<QrCodeDocumentUpdateWithoutCreatorInput, QrCodeDocumentUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type QrCodeDocumentUpdateManyWithWhereWithoutCreatorInput = {
+    where: QrCodeDocumentScalarWhereInput
+    data: XOR<QrCodeDocumentUpdateManyMutationInput, QrCodeDocumentUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type QrCodeDocumentScalarWhereInput = {
+    AND?: QrCodeDocumentScalarWhereInput | QrCodeDocumentScalarWhereInput[]
+    OR?: QrCodeDocumentScalarWhereInput[]
+    NOT?: QrCodeDocumentScalarWhereInput | QrCodeDocumentScalarWhereInput[]
+    id?: UuidFilter<"QrCodeDocument"> | string
+    documentName?: StringFilter<"QrCodeDocument"> | string
+    fileName?: StringFilter<"QrCodeDocument"> | string
+    qrCodeId?: StringFilter<"QrCodeDocument"> | string
+    creatorId?: UuidFilter<"QrCodeDocument"> | string
+    createdAt?: DateTimeFilter<"QrCodeDocument"> | Date | string
+    updatedAt?: DateTimeFilter<"QrCodeDocument"> | Date | string
+  }
+
   export type UserRoleUpsertWithWhereUniqueWithoutUserInput = {
     where: UserRoleWhereUniqueInput
     update: XOR<UserRoleUpdateWithoutUserInput, UserRoleUncheckedUpdateWithoutUserInput>
@@ -35707,6 +35939,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
   }
 
   export type UserUncheckedCreateWithoutRolesInput = {
@@ -35727,6 +35960,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type UserCreateOrConnectWithoutRolesInput = {
@@ -35796,6 +36030,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRolesInput = {
@@ -35816,6 +36051,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type UserCreateWithoutFilesInput = {
@@ -35835,6 +36071,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -35855,6 +36092,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -35891,6 +36129,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -35911,6 +36150,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -35931,6 +36171,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -35951,6 +36192,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -35987,6 +36229,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -36007,6 +36250,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -36047,6 +36291,7 @@ export namespace Prisma {
     createdForms?: FormCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -36067,6 +36312,7 @@ export namespace Prisma {
     createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -36163,6 +36409,7 @@ export namespace Prisma {
     createdForms?: FormUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -36183,6 +36430,7 @@ export namespace Prisma {
     createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -36459,6 +36707,7 @@ export namespace Prisma {
     createdForms?: FormCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -36479,6 +36728,7 @@ export namespace Prisma {
     createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -36639,6 +36889,7 @@ export namespace Prisma {
     createdForms?: FormUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -36659,6 +36910,7 @@ export namespace Prisma {
     createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -36880,6 +37132,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -36900,6 +37153,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -37000,6 +37254,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -37020,6 +37275,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -37440,6 +37696,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -37460,6 +37717,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -37612,6 +37870,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -37632,6 +37891,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -37895,6 +38155,7 @@ export namespace Prisma {
     createdForms?: FormCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -37915,6 +38176,7 @@ export namespace Prisma {
     createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -38002,6 +38264,7 @@ export namespace Prisma {
     createdForms?: FormUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -38022,6 +38285,7 @@ export namespace Prisma {
     createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -38145,6 +38409,106 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateWithoutQrCodeDocumentsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutQrCodeDocumentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutQrCodeDocumentsInput, UserUncheckedCreateWithoutQrCodeDocumentsInput>
+  }
+
+  export type UserUpsertWithoutQrCodeDocumentsInput = {
+    update: XOR<UserUpdateWithoutQrCodeDocumentsInput, UserUncheckedUpdateWithoutQrCodeDocumentsInput>
+    create: XOR<UserCreateWithoutQrCodeDocumentsInput, UserUncheckedCreateWithoutQrCodeDocumentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutQrCodeDocumentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutQrCodeDocumentsInput, UserUncheckedUpdateWithoutQrCodeDocumentsInput>
+  }
+
+  export type UserUpdateWithoutQrCodeDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type ApplicantProcessCreateManyApplicantInput = {
     id?: string
     processId: string
@@ -38203,6 +38567,15 @@ export namespace Prisma {
     archived?: boolean
     staffViewForms?: boolean
     applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type QrCodeDocumentCreateManyCreatorInput = {
+    id?: string
+    documentName: string
+    fileName: string
+    qrCodeId: string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38416,6 +38789,33 @@ export namespace Prisma {
     archived?: BoolFieldUpdateOperationsInput | boolean
     staffViewForms?: BoolFieldUpdateOperationsInput | boolean
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrCodeDocumentUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    qrCodeId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrCodeDocumentUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    qrCodeId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type QrCodeDocumentUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    documentName?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    qrCodeId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
