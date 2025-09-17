@@ -38,21 +38,7 @@ export class FormService {
       include: { creator: true },
     });
 
-    return forms.map(form => {
-      const formDesign = form.design ? true : false;
-      return {
-        id: form.id,
-        name: form.name,
-        status: form.status,
-        createdBy: form.creator ? {
-          firstName: form.creator.firstName,
-          lastName: form.creator.lastName,
-        } : null,
-        formCreated: formDesign,
-        createdAt: form.createdAt,
-        updatedAt: form.updatedAt,
-      };
-    });
+    return forms
   }
 
   async findOne(id: string): Promise<Form | null> {
