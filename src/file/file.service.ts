@@ -27,7 +27,7 @@ export class FileService {
   constructor(
     private configService: ConfigService,
     private auditLogService: AuditLogService,
-    private jobService: JobService
+    private jobService: JobService,
   ) {
     const endpoint = this.configService.get<string>('s3.endpoint');
     const region = this.configService.get<string>('s3.region');
@@ -176,7 +176,7 @@ export class FileService {
 
   async uploadFile(
     file: Express.Multer.File,
-    bucket: 'private' | 'public',
+    bucket: string,
   ): Promise<{ fileKey: string; thumbnailUrl?: string }> {
     const fileKey = `${randomUUID()}${extname(file.originalname)}`;
     try {
@@ -187,7 +187,8 @@ export class FileService {
           Key: fileKey,
           Body: Buffer.from(file.buffer),
           ContentType: file.mimetype,
-          ...(bucket === 'public' ? { ACL: 'public-read' } : {}),
+          ACL: 'public-read',
+          // ...(bucket === 'public' ? { ACL: 'public-read' } : {}),
         }),
       );
       this.logger.log(
@@ -198,7 +199,11 @@ export class FileService {
         resource: 'File',
         resourceId: fileKey,
         status: 'SUCCESS',
-        details: { fileName: file.originalname, bucket: bucket, size: file.size },
+        details: {
+          fileName: file.originalname,
+          bucket: bucket,
+          size: file.size,
+        },
       });
 
       return { fileKey };
@@ -238,7 +243,7 @@ export class FileService {
     return key;
   }
   async uploadImagePublic(file: Express.Multer.File): Promise<string> {
-    const { fileKey } = await this.uploadFile(file, this.bucketName as 'private' | 'public');
+    const { fileKey } = await this.uploadFile(file, this.bucketName);
     return `${this.publicUrlBase}/${this.bucketName}/${fileKey}`;
   }
 
@@ -316,17 +321,23 @@ export class FileService {
       resource: 'File',
       resourceId: key,
       status: 'SUCCESS',
-      details: { newFileKey: fileKey, bucket: bucket, originalFileName: file.originalname },
+      details: {
+        newFileKey: fileKey,
+        bucket: bucket,
+        originalFileName: file.originalname,
+      },
     });
     return fileKey;
   }
 
   async processFileForFormGeneration(
     file: Express.Multer.File,
-    userId: string
+    userId: string,
   ): Promise<string> {
     try {
-      this.logger.log(`Queuing file for form generation: ${file.originalname} for user: ${userId}`);
+      this.logger.log(
+        `Queuing file for form generation: ${file.originalname} for user: ${userId}`,
+      );
 
       const jobResult = await this.jobService.processFile({
         file: {
@@ -346,7 +357,7 @@ export class FileService {
         details: {
           fileName: file.originalname,
           userId,
-          jobId
+          jobId,
         },
       });
 
