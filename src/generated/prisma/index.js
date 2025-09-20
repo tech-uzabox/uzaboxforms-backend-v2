@@ -603,7 +603,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\aurum\\work\\uzaform\\ref-backend\\src\\generated\\prisma",
+      "value": "d:\\aurum\\work\\uzaform\\ref-backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -622,7 +622,7 @@ const config = {
       "queryCompiler",
       "relationJoins"
     ],
-    "sourceFilePath": "D:\\aurum\\work\\uzaform\\ref-backend\\prisma\\schema.prisma",
+    "sourceFilePath": "d:\\aurum\\work\\uzaform\\ref-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -636,6 +636,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {

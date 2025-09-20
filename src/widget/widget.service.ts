@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Widget } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
+import { CreateWidgetDto } from './dto/create-widget.dto';
+import { UpdateWidgetDto } from './dto/update-widget.dto';
 
 @Injectable()
 export class WidgetService {
@@ -10,7 +12,7 @@ export class WidgetService {
     private auditLogService: AuditLogService,
   ) {}
 
-  async create(data: Prisma.WidgetCreateInput): Promise<Widget> {
+  async create(data: CreateWidgetDto): Promise<Widget> {
     const newWidget = await this.prisma.widget.create({ data });
     await this.auditLogService.log({
       action: 'WIDGET_CREATED',
@@ -30,7 +32,7 @@ export class WidgetService {
     return this.prisma.widget.findUnique({ where: { id } });
   }
 
-  async update(id: string, data: Prisma.WidgetUpdateInput): Promise<Widget> {
+  async update(id: string, data: UpdateWidgetDto): Promise<Widget> {
     const updatedWidget = await this.prisma.widget.update({
       where: { id },
       data,
@@ -99,5 +101,54 @@ export class WidgetService {
       },
     });
     return duplicatedWidget;
+  }
+
+  async checkDashboardAccess(dashboardId: string, userId: string, userRoles: string[]): Promise<boolean> {
+    const dashboard = await this.prisma.dashboard.findUnique({
+      where: { id: dashboardId },
+    });
+
+    if (!dashboard) {
+      return false;
+    }
+
+    // Check if user is the owner
+    if (dashboard.ownerId === userId) {
+      return true;
+    }
+
+    // Check if user is in allowed users
+    if (dashboard.allowedUsers.includes(userId)) {
+      return true;
+    }
+
+    // Check if user has any of the allowed roles
+    return dashboard.allowedRoles.some(role => userRoles.includes(role));
+  }
+
+  async findAllForUser(userId: string, userRoles: string[]): Promise<Widget[]> {
+    // Get all dashboards the user has access to
+    const accessibleDashboards = await this.prisma.dashboard.findMany({
+      where: {
+        OR: [
+          { ownerId: userId },
+          { allowedUsers: { has: userId } },
+          { allowedRoles: { hasSome: userRoles } },
+        ],
+      },
+      select: { id: true },
+    });
+
+    const dashboardIds = accessibleDashboards.map(d => d.id);
+
+    // Get all widgets from accessible dashboards
+    return this.prisma.widget.findMany({
+      where: {
+        dashboardId: { in: dashboardIds },
+      },
+      include: {
+        dashboard: true,
+      },
+    });
   }
 }
