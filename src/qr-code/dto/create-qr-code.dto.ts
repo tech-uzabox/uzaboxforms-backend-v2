@@ -4,9 +4,7 @@ import { z } from 'zod';
 
 const CreateQrCodeSchema = z.object({
   documentName: z.string(),
-  fileName: z.string(),
-  qrCodeId: z.string(),
-  creatorId: z.string().uuid(),
+  host: z.string().url(),
 });
 
 export class CreateQrCodeDto extends createZodDto(CreateQrCodeSchema) {}
