@@ -196,6 +196,7 @@ model ProcessForm {
   nextStepType                     NextStepType @default(NOT_APPLICABLE)
   nextStepRoles                    String[]
   nextStaffId                      String?      @db.Uuid
+  nextStepSpecifiedTo              String?
   notificationType                 NextStepType @default(NOT_APPLICABLE)
   notificationRoles                String[]
   notificationToId                 String?      @db.Uuid
@@ -235,6 +236,14 @@ model APCompletedForm {
   applicantProcessId String           @db.Uuid
   formId             String           @db.Uuid
   reviewerId         String?          @db.Uuid
+  nextStaffId        String?          @db.Uuid
+  nextStepType       NextStepType     @default(NOT_APPLICABLE)
+  nextStepRoles      String[]
+  nextStepSpecifiedTo String?
+  notificationType   NextStepType     @default(NOT_APPLICABLE)
+  notificationToId   String?          @db.Uuid
+  notificationToRoles String[]
+  notificationComment String?
   createdAt          DateTime         @default(now())
   applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
 

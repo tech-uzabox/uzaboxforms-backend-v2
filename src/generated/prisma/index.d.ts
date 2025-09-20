@@ -15945,6 +15945,7 @@ export namespace Prisma {
     order: number | null
     nextStepType: $Enums.NextStepType | null
     nextStaffId: string | null
+    nextStepSpecifiedTo: string | null
     notificationType: $Enums.NextStepType | null
     notificationToId: string | null
     notificationComment: string | null
@@ -15963,6 +15964,7 @@ export namespace Prisma {
     order: number | null
     nextStepType: $Enums.NextStepType | null
     nextStaffId: string | null
+    nextStepSpecifiedTo: string | null
     notificationType: $Enums.NextStepType | null
     notificationToId: string | null
     notificationComment: string | null
@@ -15982,6 +15984,7 @@ export namespace Prisma {
     nextStepType: number
     nextStepRoles: number
     nextStaffId: number
+    nextStepSpecifiedTo: number
     notificationType: number
     notificationRoles: number
     notificationToId: number
@@ -16011,6 +16014,7 @@ export namespace Prisma {
     order?: true
     nextStepType?: true
     nextStaffId?: true
+    nextStepSpecifiedTo?: true
     notificationType?: true
     notificationToId?: true
     notificationComment?: true
@@ -16029,6 +16033,7 @@ export namespace Prisma {
     order?: true
     nextStepType?: true
     nextStaffId?: true
+    nextStepSpecifiedTo?: true
     notificationType?: true
     notificationToId?: true
     notificationComment?: true
@@ -16048,6 +16053,7 @@ export namespace Prisma {
     nextStepType?: true
     nextStepRoles?: true
     nextStaffId?: true
+    nextStepSpecifiedTo?: true
     notificationType?: true
     notificationRoles?: true
     notificationToId?: true
@@ -16155,6 +16161,7 @@ export namespace Prisma {
     nextStepType: $Enums.NextStepType
     nextStepRoles: string[]
     nextStaffId: string | null
+    nextStepSpecifiedTo: string | null
     notificationType: $Enums.NextStepType
     notificationRoles: string[]
     notificationToId: string | null
@@ -16194,6 +16201,7 @@ export namespace Prisma {
     nextStepType?: boolean
     nextStepRoles?: boolean
     nextStaffId?: boolean
+    nextStepSpecifiedTo?: boolean
     notificationType?: boolean
     notificationRoles?: boolean
     notificationToId?: boolean
@@ -16216,6 +16224,7 @@ export namespace Prisma {
     nextStepType?: boolean
     nextStepRoles?: boolean
     nextStaffId?: boolean
+    nextStepSpecifiedTo?: boolean
     notificationType?: boolean
     notificationRoles?: boolean
     notificationToId?: boolean
@@ -16238,6 +16247,7 @@ export namespace Prisma {
     nextStepType?: boolean
     nextStepRoles?: boolean
     nextStaffId?: boolean
+    nextStepSpecifiedTo?: boolean
     notificationType?: boolean
     notificationRoles?: boolean
     notificationToId?: boolean
@@ -16260,6 +16270,7 @@ export namespace Prisma {
     nextStepType?: boolean
     nextStepRoles?: boolean
     nextStaffId?: boolean
+    nextStepSpecifiedTo?: boolean
     notificationType?: boolean
     notificationRoles?: boolean
     notificationToId?: boolean
@@ -16272,7 +16283,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ProcessFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "formId" | "order" | "nextStepType" | "nextStepRoles" | "nextStaffId" | "notificationType" | "notificationRoles" | "notificationToId" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent" | "editApplicationStatus" | "applicantViewFormAfterCompletion" | "createdAt" | "updatedAt", ExtArgs["result"]["processForm"]>
+  export type ProcessFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "processId" | "formId" | "order" | "nextStepType" | "nextStepRoles" | "nextStaffId" | "nextStepSpecifiedTo" | "notificationType" | "notificationRoles" | "notificationToId" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent" | "editApplicationStatus" | "applicantViewFormAfterCompletion" | "createdAt" | "updatedAt", ExtArgs["result"]["processForm"]>
   export type ProcessFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     form?: boolean | FormDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
@@ -16300,6 +16311,7 @@ export namespace Prisma {
       nextStepType: $Enums.NextStepType
       nextStepRoles: string[]
       nextStaffId: string | null
+      nextStepSpecifiedTo: string | null
       notificationType: $Enums.NextStepType
       notificationRoles: string[]
       notificationToId: string | null
@@ -16742,6 +16754,7 @@ export namespace Prisma {
     readonly nextStepType: FieldRef<"ProcessForm", 'NextStepType'>
     readonly nextStepRoles: FieldRef<"ProcessForm", 'String[]'>
     readonly nextStaffId: FieldRef<"ProcessForm", 'String'>
+    readonly nextStepSpecifiedTo: FieldRef<"ProcessForm", 'String'>
     readonly notificationType: FieldRef<"ProcessForm", 'NextStepType'>
     readonly notificationRoles: FieldRef<"ProcessForm", 'String[]'>
     readonly notificationToId: FieldRef<"ProcessForm", 'String'>
@@ -18351,6 +18364,12 @@ export namespace Prisma {
     applicantProcessId: string | null
     formId: string | null
     reviewerId: string | null
+    nextStaffId: string | null
+    nextStepType: $Enums.NextStepType | null
+    nextStepSpecifiedTo: string | null
+    notificationType: $Enums.NextStepType | null
+    notificationToId: string | null
+    notificationComment: string | null
     createdAt: Date | null
   }
 
@@ -18359,6 +18378,12 @@ export namespace Prisma {
     applicantProcessId: string | null
     formId: string | null
     reviewerId: string | null
+    nextStaffId: string | null
+    nextStepType: $Enums.NextStepType | null
+    nextStepSpecifiedTo: string | null
+    notificationType: $Enums.NextStepType | null
+    notificationToId: string | null
+    notificationComment: string | null
     createdAt: Date | null
   }
 
@@ -18367,6 +18392,14 @@ export namespace Prisma {
     applicantProcessId: number
     formId: number
     reviewerId: number
+    nextStaffId: number
+    nextStepType: number
+    nextStepRoles: number
+    nextStepSpecifiedTo: number
+    notificationType: number
+    notificationToId: number
+    notificationToRoles: number
+    notificationComment: number
     createdAt: number
     _all: number
   }
@@ -18377,6 +18410,12 @@ export namespace Prisma {
     applicantProcessId?: true
     formId?: true
     reviewerId?: true
+    nextStaffId?: true
+    nextStepType?: true
+    nextStepSpecifiedTo?: true
+    notificationType?: true
+    notificationToId?: true
+    notificationComment?: true
     createdAt?: true
   }
 
@@ -18385,6 +18424,12 @@ export namespace Prisma {
     applicantProcessId?: true
     formId?: true
     reviewerId?: true
+    nextStaffId?: true
+    nextStepType?: true
+    nextStepSpecifiedTo?: true
+    notificationType?: true
+    notificationToId?: true
+    notificationComment?: true
     createdAt?: true
   }
 
@@ -18393,6 +18438,14 @@ export namespace Prisma {
     applicantProcessId?: true
     formId?: true
     reviewerId?: true
+    nextStaffId?: true
+    nextStepType?: true
+    nextStepRoles?: true
+    nextStepSpecifiedTo?: true
+    notificationType?: true
+    notificationToId?: true
+    notificationToRoles?: true
+    notificationComment?: true
     createdAt?: true
     _all?: true
   }
@@ -18474,6 +18527,14 @@ export namespace Prisma {
     applicantProcessId: string
     formId: string
     reviewerId: string | null
+    nextStaffId: string | null
+    nextStepType: $Enums.NextStepType
+    nextStepRoles: string[]
+    nextStepSpecifiedTo: string | null
+    notificationType: $Enums.NextStepType
+    notificationToId: string | null
+    notificationToRoles: string[]
+    notificationComment: string | null
     createdAt: Date
     _count: APCompletedFormCountAggregateOutputType | null
     _min: APCompletedFormMinAggregateOutputType | null
@@ -18499,6 +18560,14 @@ export namespace Prisma {
     applicantProcessId?: boolean
     formId?: boolean
     reviewerId?: boolean
+    nextStaffId?: boolean
+    nextStepType?: boolean
+    nextStepRoles?: boolean
+    nextStepSpecifiedTo?: boolean
+    notificationType?: boolean
+    notificationToId?: boolean
+    notificationToRoles?: boolean
+    notificationComment?: boolean
     createdAt?: boolean
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aPCompletedForm"]>
@@ -18508,6 +18577,14 @@ export namespace Prisma {
     applicantProcessId?: boolean
     formId?: boolean
     reviewerId?: boolean
+    nextStaffId?: boolean
+    nextStepType?: boolean
+    nextStepRoles?: boolean
+    nextStepSpecifiedTo?: boolean
+    notificationType?: boolean
+    notificationToId?: boolean
+    notificationToRoles?: boolean
+    notificationComment?: boolean
     createdAt?: boolean
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aPCompletedForm"]>
@@ -18517,6 +18594,14 @@ export namespace Prisma {
     applicantProcessId?: boolean
     formId?: boolean
     reviewerId?: boolean
+    nextStaffId?: boolean
+    nextStepType?: boolean
+    nextStepRoles?: boolean
+    nextStepSpecifiedTo?: boolean
+    notificationType?: boolean
+    notificationToId?: boolean
+    notificationToRoles?: boolean
+    notificationComment?: boolean
     createdAt?: boolean
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aPCompletedForm"]>
@@ -18526,10 +18611,18 @@ export namespace Prisma {
     applicantProcessId?: boolean
     formId?: boolean
     reviewerId?: boolean
+    nextStaffId?: boolean
+    nextStepType?: boolean
+    nextStepRoles?: boolean
+    nextStepSpecifiedTo?: boolean
+    notificationType?: boolean
+    notificationToId?: boolean
+    notificationToRoles?: boolean
+    notificationComment?: boolean
     createdAt?: boolean
   }
 
-  export type APCompletedFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicantProcessId" | "formId" | "reviewerId" | "createdAt", ExtArgs["result"]["aPCompletedForm"]>
+  export type APCompletedFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicantProcessId" | "formId" | "reviewerId" | "nextStaffId" | "nextStepType" | "nextStepRoles" | "nextStepSpecifiedTo" | "notificationType" | "notificationToId" | "notificationToRoles" | "notificationComment" | "createdAt", ExtArgs["result"]["aPCompletedForm"]>
   export type APCompletedFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }
@@ -18550,6 +18643,14 @@ export namespace Prisma {
       applicantProcessId: string
       formId: string
       reviewerId: string | null
+      nextStaffId: string | null
+      nextStepType: $Enums.NextStepType
+      nextStepRoles: string[]
+      nextStepSpecifiedTo: string | null
+      notificationType: $Enums.NextStepType
+      notificationToId: string | null
+      notificationToRoles: string[]
+      notificationComment: string | null
       createdAt: Date
     }, ExtArgs["result"]["aPCompletedForm"]>
     composites: {}
@@ -18979,6 +19080,14 @@ export namespace Prisma {
     readonly applicantProcessId: FieldRef<"APCompletedForm", 'String'>
     readonly formId: FieldRef<"APCompletedForm", 'String'>
     readonly reviewerId: FieldRef<"APCompletedForm", 'String'>
+    readonly nextStaffId: FieldRef<"APCompletedForm", 'String'>
+    readonly nextStepType: FieldRef<"APCompletedForm", 'NextStepType'>
+    readonly nextStepRoles: FieldRef<"APCompletedForm", 'String[]'>
+    readonly nextStepSpecifiedTo: FieldRef<"APCompletedForm", 'String'>
+    readonly notificationType: FieldRef<"APCompletedForm", 'NextStepType'>
+    readonly notificationToId: FieldRef<"APCompletedForm", 'String'>
+    readonly notificationToRoles: FieldRef<"APCompletedForm", 'String[]'>
+    readonly notificationComment: FieldRef<"APCompletedForm", 'String'>
     readonly createdAt: FieldRef<"APCompletedForm", 'DateTime'>
   }
     
@@ -28109,6 +28218,7 @@ export namespace Prisma {
     nextStepType: 'nextStepType',
     nextStepRoles: 'nextStepRoles',
     nextStaffId: 'nextStaffId',
+    nextStepSpecifiedTo: 'nextStepSpecifiedTo',
     notificationType: 'notificationType',
     notificationRoles: 'notificationRoles',
     notificationToId: 'notificationToId',
@@ -28140,6 +28250,14 @@ export namespace Prisma {
     applicantProcessId: 'applicantProcessId',
     formId: 'formId',
     reviewerId: 'reviewerId',
+    nextStaffId: 'nextStaffId',
+    nextStepType: 'nextStepType',
+    nextStepRoles: 'nextStepRoles',
+    nextStepSpecifiedTo: 'nextStepSpecifiedTo',
+    notificationType: 'notificationType',
+    notificationToId: 'notificationToId',
+    notificationToRoles: 'notificationToRoles',
+    notificationComment: 'notificationComment',
     createdAt: 'createdAt'
   };
 
@@ -28405,6 +28523,7 @@ export namespace Prisma {
     formId: 'formId',
     nextStepRoles: 'nextStepRoles',
     nextStaffId: 'nextStaffId',
+    nextStepSpecifiedTo: 'nextStepSpecifiedTo',
     notificationRoles: 'notificationRoles',
     notificationToId: 'notificationToId',
     notificationComment: 'notificationComment',
@@ -28427,7 +28546,13 @@ export namespace Prisma {
     id: 'id',
     applicantProcessId: 'applicantProcessId',
     formId: 'formId',
-    reviewerId: 'reviewerId'
+    reviewerId: 'reviewerId',
+    nextStaffId: 'nextStaffId',
+    nextStepRoles: 'nextStepRoles',
+    nextStepSpecifiedTo: 'nextStepSpecifiedTo',
+    notificationToId: 'notificationToId',
+    notificationToRoles: 'notificationToRoles',
+    notificationComment: 'notificationComment'
   };
 
   export type APCompletedFormOrderByRelevanceFieldEnum = (typeof APCompletedFormOrderByRelevanceFieldEnum)[keyof typeof APCompletedFormOrderByRelevanceFieldEnum]
@@ -29546,6 +29671,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
     nextStepRoles?: StringNullableListFilter<"ProcessForm">
     nextStaffId?: UuidNullableFilter<"ProcessForm"> | string | null
+    nextStepSpecifiedTo?: StringNullableFilter<"ProcessForm"> | string | null
     notificationType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
     notificationRoles?: StringNullableListFilter<"ProcessForm">
     notificationToId?: UuidNullableFilter<"ProcessForm"> | string | null
@@ -29568,6 +29694,7 @@ export namespace Prisma {
     nextStepType?: SortOrder
     nextStepRoles?: SortOrder
     nextStaffId?: SortOrderInput | SortOrder
+    nextStepSpecifiedTo?: SortOrderInput | SortOrder
     notificationType?: SortOrder
     notificationRoles?: SortOrder
     notificationToId?: SortOrderInput | SortOrder
@@ -29594,6 +29721,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
     nextStepRoles?: StringNullableListFilter<"ProcessForm">
     nextStaffId?: UuidNullableFilter<"ProcessForm"> | string | null
+    nextStepSpecifiedTo?: StringNullableFilter<"ProcessForm"> | string | null
     notificationType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
     notificationRoles?: StringNullableListFilter<"ProcessForm">
     notificationToId?: UuidNullableFilter<"ProcessForm"> | string | null
@@ -29616,6 +29744,7 @@ export namespace Prisma {
     nextStepType?: SortOrder
     nextStepRoles?: SortOrder
     nextStaffId?: SortOrderInput | SortOrder
+    nextStepSpecifiedTo?: SortOrderInput | SortOrder
     notificationType?: SortOrder
     notificationRoles?: SortOrder
     notificationToId?: SortOrderInput | SortOrder
@@ -29644,6 +29773,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeWithAggregatesFilter<"ProcessForm"> | $Enums.NextStepType
     nextStepRoles?: StringNullableListFilter<"ProcessForm">
     nextStaffId?: UuidNullableWithAggregatesFilter<"ProcessForm"> | string | null
+    nextStepSpecifiedTo?: StringNullableWithAggregatesFilter<"ProcessForm"> | string | null
     notificationType?: EnumNextStepTypeWithAggregatesFilter<"ProcessForm"> | $Enums.NextStepType
     notificationRoles?: StringNullableListFilter<"ProcessForm">
     notificationToId?: UuidNullableWithAggregatesFilter<"ProcessForm"> | string | null
@@ -29732,6 +29862,14 @@ export namespace Prisma {
     applicantProcessId?: UuidFilter<"APCompletedForm"> | string
     formId?: UuidFilter<"APCompletedForm"> | string
     reviewerId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    nextStaffId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    nextStepType?: EnumNextStepTypeFilter<"APCompletedForm"> | $Enums.NextStepType
+    nextStepRoles?: StringNullableListFilter<"APCompletedForm">
+    nextStepSpecifiedTo?: StringNullableFilter<"APCompletedForm"> | string | null
+    notificationType?: EnumNextStepTypeFilter<"APCompletedForm"> | $Enums.NextStepType
+    notificationToId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    notificationToRoles?: StringNullableListFilter<"APCompletedForm">
+    notificationComment?: StringNullableFilter<"APCompletedForm"> | string | null
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
     applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
   }
@@ -29741,6 +29879,14 @@ export namespace Prisma {
     applicantProcessId?: SortOrder
     formId?: SortOrder
     reviewerId?: SortOrderInput | SortOrder
+    nextStaffId?: SortOrderInput | SortOrder
+    nextStepType?: SortOrder
+    nextStepRoles?: SortOrder
+    nextStepSpecifiedTo?: SortOrderInput | SortOrder
+    notificationType?: SortOrder
+    notificationToId?: SortOrderInput | SortOrder
+    notificationToRoles?: SortOrder
+    notificationComment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     applicantProcess?: ApplicantProcessOrderByWithRelationInput
     _relevance?: APCompletedFormOrderByRelevanceInput
@@ -29754,6 +29900,14 @@ export namespace Prisma {
     applicantProcessId?: UuidFilter<"APCompletedForm"> | string
     formId?: UuidFilter<"APCompletedForm"> | string
     reviewerId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    nextStaffId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    nextStepType?: EnumNextStepTypeFilter<"APCompletedForm"> | $Enums.NextStepType
+    nextStepRoles?: StringNullableListFilter<"APCompletedForm">
+    nextStepSpecifiedTo?: StringNullableFilter<"APCompletedForm"> | string | null
+    notificationType?: EnumNextStepTypeFilter<"APCompletedForm"> | $Enums.NextStepType
+    notificationToId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    notificationToRoles?: StringNullableListFilter<"APCompletedForm">
+    notificationComment?: StringNullableFilter<"APCompletedForm"> | string | null
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
     applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
   }, "id">
@@ -29763,6 +29917,14 @@ export namespace Prisma {
     applicantProcessId?: SortOrder
     formId?: SortOrder
     reviewerId?: SortOrderInput | SortOrder
+    nextStaffId?: SortOrderInput | SortOrder
+    nextStepType?: SortOrder
+    nextStepRoles?: SortOrder
+    nextStepSpecifiedTo?: SortOrderInput | SortOrder
+    notificationType?: SortOrder
+    notificationToId?: SortOrderInput | SortOrder
+    notificationToRoles?: SortOrder
+    notificationComment?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: APCompletedFormCountOrderByAggregateInput
     _max?: APCompletedFormMaxOrderByAggregateInput
@@ -29777,6 +29939,14 @@ export namespace Prisma {
     applicantProcessId?: UuidWithAggregatesFilter<"APCompletedForm"> | string
     formId?: UuidWithAggregatesFilter<"APCompletedForm"> | string
     reviewerId?: UuidNullableWithAggregatesFilter<"APCompletedForm"> | string | null
+    nextStaffId?: UuidNullableWithAggregatesFilter<"APCompletedForm"> | string | null
+    nextStepType?: EnumNextStepTypeWithAggregatesFilter<"APCompletedForm"> | $Enums.NextStepType
+    nextStepRoles?: StringNullableListFilter<"APCompletedForm">
+    nextStepSpecifiedTo?: StringNullableWithAggregatesFilter<"APCompletedForm"> | string | null
+    notificationType?: EnumNextStepTypeWithAggregatesFilter<"APCompletedForm"> | $Enums.NextStepType
+    notificationToId?: UuidNullableWithAggregatesFilter<"APCompletedForm"> | string | null
+    notificationToRoles?: StringNullableListFilter<"APCompletedForm">
+    notificationComment?: StringNullableWithAggregatesFilter<"APCompletedForm"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"APCompletedForm"> | Date | string
   }
 
@@ -31101,6 +31271,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -31123,6 +31294,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -31141,6 +31313,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31163,6 +31336,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31183,6 +31357,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -31201,6 +31376,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31221,6 +31397,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31303,6 +31480,14 @@ export namespace Prisma {
     id?: string
     formId: string
     reviewerId?: string | null
+    nextStaffId?: string | null
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: APCompletedFormCreatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationToId?: string | null
+    notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
+    notificationComment?: string | null
     createdAt?: Date | string
     applicantProcess: ApplicantProcessCreateNestedOneWithoutCompletedFormsInput
   }
@@ -31312,6 +31497,14 @@ export namespace Prisma {
     applicantProcessId: string
     formId: string
     reviewerId?: string | null
+    nextStaffId?: string | null
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: APCompletedFormCreatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationToId?: string | null
+    notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
+    notificationComment?: string | null
     createdAt?: Date | string
   }
 
@@ -31319,6 +31512,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutCompletedFormsNestedInput
   }
@@ -31328,6 +31529,14 @@ export namespace Prisma {
     applicantProcessId?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31336,6 +31545,14 @@ export namespace Prisma {
     applicantProcessId: string
     formId: string
     reviewerId?: string | null
+    nextStaffId?: string | null
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: APCompletedFormCreatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationToId?: string | null
+    notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
+    notificationComment?: string | null
     createdAt?: Date | string
   }
 
@@ -31343,6 +31560,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31351,6 +31576,14 @@ export namespace Prisma {
     applicantProcessId?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -32880,6 +33113,7 @@ export namespace Prisma {
     nextStepType?: SortOrder
     nextStepRoles?: SortOrder
     nextStaffId?: SortOrder
+    nextStepSpecifiedTo?: SortOrder
     notificationType?: SortOrder
     notificationRoles?: SortOrder
     notificationToId?: SortOrder
@@ -32903,6 +33137,7 @@ export namespace Prisma {
     order?: SortOrder
     nextStepType?: SortOrder
     nextStaffId?: SortOrder
+    nextStepSpecifiedTo?: SortOrder
     notificationType?: SortOrder
     notificationToId?: SortOrder
     notificationComment?: SortOrder
@@ -32921,6 +33156,7 @@ export namespace Prisma {
     order?: SortOrder
     nextStepType?: SortOrder
     nextStaffId?: SortOrder
+    nextStepSpecifiedTo?: SortOrder
     notificationType?: SortOrder
     notificationToId?: SortOrder
     notificationComment?: SortOrder
@@ -33007,6 +33243,14 @@ export namespace Prisma {
     applicantProcessId?: SortOrder
     formId?: SortOrder
     reviewerId?: SortOrder
+    nextStaffId?: SortOrder
+    nextStepType?: SortOrder
+    nextStepRoles?: SortOrder
+    nextStepSpecifiedTo?: SortOrder
+    notificationType?: SortOrder
+    notificationToId?: SortOrder
+    notificationToRoles?: SortOrder
+    notificationComment?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -33015,6 +33259,12 @@ export namespace Prisma {
     applicantProcessId?: SortOrder
     formId?: SortOrder
     reviewerId?: SortOrder
+    nextStaffId?: SortOrder
+    nextStepType?: SortOrder
+    nextStepSpecifiedTo?: SortOrder
+    notificationType?: SortOrder
+    notificationToId?: SortOrder
+    notificationComment?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -33023,6 +33273,12 @@ export namespace Prisma {
     applicantProcessId?: SortOrder
     formId?: SortOrder
     reviewerId?: SortOrder
+    nextStaffId?: SortOrder
+    nextStepType?: SortOrder
+    nextStepSpecifiedTo?: SortOrder
+    notificationType?: SortOrder
+    notificationToId?: SortOrder
+    notificationComment?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -34645,10 +34901,28 @@ export namespace Prisma {
     deleteMany?: ProcessCommentScalarWhereInput | ProcessCommentScalarWhereInput[]
   }
 
+  export type APCompletedFormCreatenextStepRolesInput = {
+    set: string[]
+  }
+
+  export type APCompletedFormCreatenotificationToRolesInput = {
+    set: string[]
+  }
+
   export type ApplicantProcessCreateNestedOneWithoutCompletedFormsInput = {
     create?: XOR<ApplicantProcessCreateWithoutCompletedFormsInput, ApplicantProcessUncheckedCreateWithoutCompletedFormsInput>
     connectOrCreate?: ApplicantProcessCreateOrConnectWithoutCompletedFormsInput
     connect?: ApplicantProcessWhereUniqueInput
+  }
+
+  export type APCompletedFormUpdatenextStepRolesInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type APCompletedFormUpdatenotificationToRolesInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type ApplicantProcessUpdateOneRequiredWithoutCompletedFormsNestedInput = {
@@ -36658,6 +36932,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -36678,6 +36953,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -36863,6 +37139,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
     nextStepRoles?: StringNullableListFilter<"ProcessForm">
     nextStaffId?: UuidNullableFilter<"ProcessForm"> | string | null
+    nextStepSpecifiedTo?: StringNullableFilter<"ProcessForm"> | string | null
     notificationType?: EnumNextStepTypeFilter<"ProcessForm"> | $Enums.NextStepType
     notificationRoles?: StringNullableListFilter<"ProcessForm">
     notificationToId?: UuidNullableFilter<"ProcessForm"> | string | null
@@ -37198,6 +37475,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -37218,6 +37496,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -37689,6 +37968,14 @@ export namespace Prisma {
     id?: string
     formId: string
     reviewerId?: string | null
+    nextStaffId?: string | null
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: APCompletedFormCreatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationToId?: string | null
+    notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
+    notificationComment?: string | null
     createdAt?: Date | string
   }
 
@@ -37696,6 +37983,14 @@ export namespace Prisma {
     id?: string
     formId: string
     reviewerId?: string | null
+    nextStaffId?: string | null
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: APCompletedFormCreatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationToId?: string | null
+    notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
+    notificationComment?: string | null
     createdAt?: Date | string
   }
 
@@ -37869,6 +38164,14 @@ export namespace Prisma {
     applicantProcessId?: UuidFilter<"APCompletedForm"> | string
     formId?: UuidFilter<"APCompletedForm"> | string
     reviewerId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    nextStaffId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    nextStepType?: EnumNextStepTypeFilter<"APCompletedForm"> | $Enums.NextStepType
+    nextStepRoles?: StringNullableListFilter<"APCompletedForm">
+    nextStepSpecifiedTo?: StringNullableFilter<"APCompletedForm"> | string | null
+    notificationType?: EnumNextStepTypeFilter<"APCompletedForm"> | $Enums.NextStepType
+    notificationToId?: UuidNullableFilter<"APCompletedForm"> | string | null
+    notificationToRoles?: StringNullableListFilter<"APCompletedForm">
+    notificationComment?: StringNullableFilter<"APCompletedForm"> | string | null
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
   }
 
@@ -39027,6 +39330,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -39101,6 +39405,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39121,6 +39426,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39140,6 +39446,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39182,6 +39489,7 @@ export namespace Prisma {
     nextStepType?: $Enums.NextStepType
     nextStepRoles?: ProcessFormCreatenextStepRolesInput | string[]
     nextStaffId?: string | null
+    nextStepSpecifiedTo?: string | null
     notificationType?: $Enums.NextStepType
     notificationRoles?: ProcessFormCreatenotificationRolesInput | string[]
     notificationToId?: string | null
@@ -39224,6 +39532,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39244,6 +39553,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39263,6 +39573,7 @@ export namespace Prisma {
     nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     nextStepRoles?: ProcessFormUpdatenextStepRolesInput | string[]
     nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
     notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
     notificationRoles?: ProcessFormUpdatenotificationRolesInput | string[]
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39279,6 +39590,14 @@ export namespace Prisma {
     id?: string
     formId: string
     reviewerId?: string | null
+    nextStaffId?: string | null
+    nextStepType?: $Enums.NextStepType
+    nextStepRoles?: APCompletedFormCreatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: string | null
+    notificationType?: $Enums.NextStepType
+    notificationToId?: string | null
+    notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
+    notificationComment?: string | null
     createdAt?: Date | string
   }
 
@@ -39301,6 +39620,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -39308,6 +39635,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -39315,6 +39650,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     formId?: StringFieldUpdateOperationsInput | string
     reviewerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStaffId?: NullableStringFieldUpdateOperationsInput | string | null
+    nextStepType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    nextStepRoles?: APCompletedFormUpdatenextStepRolesInput | string[]
+    nextStepSpecifiedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationType?: EnumNextStepTypeFieldUpdateOperationsInput | $Enums.NextStepType
+    notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
+    notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
+    notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
