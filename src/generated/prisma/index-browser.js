@@ -327,6 +327,7 @@ exports.Prisma.OtpScalarFieldEnum = {
 exports.Prisma.ManagementScalarFieldEnum = {
   id: 'id',
   fileName: 'fileName',
+  fileUrl: 'fileUrl',
   type: 'type',
   uploadedAt: 'uploadedAt',
   updatedAt: 'updatedAt'
@@ -517,7 +518,8 @@ exports.Prisma.OtpOrderByRelevanceFieldEnum = {
 
 exports.Prisma.ManagementOrderByRelevanceFieldEnum = {
   id: 'id',
-  fileName: 'fileName'
+  fileName: 'fileName',
+  fileUrl: 'fileUrl'
 };
 
 exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {

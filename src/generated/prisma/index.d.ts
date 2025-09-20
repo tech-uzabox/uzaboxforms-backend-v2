@@ -25920,6 +25920,7 @@ export namespace Prisma {
   export type ManagementMinAggregateOutputType = {
     id: string | null
     fileName: string | null
+    fileUrl: string | null
     type: $Enums.ManagementType | null
     uploadedAt: Date | null
     updatedAt: Date | null
@@ -25928,6 +25929,7 @@ export namespace Prisma {
   export type ManagementMaxAggregateOutputType = {
     id: string | null
     fileName: string | null
+    fileUrl: string | null
     type: $Enums.ManagementType | null
     uploadedAt: Date | null
     updatedAt: Date | null
@@ -25936,6 +25938,7 @@ export namespace Prisma {
   export type ManagementCountAggregateOutputType = {
     id: number
     fileName: number
+    fileUrl: number
     type: number
     uploadedAt: number
     updatedAt: number
@@ -25946,6 +25949,7 @@ export namespace Prisma {
   export type ManagementMinAggregateInputType = {
     id?: true
     fileName?: true
+    fileUrl?: true
     type?: true
     uploadedAt?: true
     updatedAt?: true
@@ -25954,6 +25958,7 @@ export namespace Prisma {
   export type ManagementMaxAggregateInputType = {
     id?: true
     fileName?: true
+    fileUrl?: true
     type?: true
     uploadedAt?: true
     updatedAt?: true
@@ -25962,6 +25967,7 @@ export namespace Prisma {
   export type ManagementCountAggregateInputType = {
     id?: true
     fileName?: true
+    fileUrl?: true
     type?: true
     uploadedAt?: true
     updatedAt?: true
@@ -26043,6 +26049,7 @@ export namespace Prisma {
   export type ManagementGroupByOutputType = {
     id: string
     fileName: string
+    fileUrl: string | null
     type: $Enums.ManagementType
     uploadedAt: Date
     updatedAt: Date
@@ -26068,6 +26075,7 @@ export namespace Prisma {
   export type ManagementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fileName?: boolean
+    fileUrl?: boolean
     type?: boolean
     uploadedAt?: boolean
     updatedAt?: boolean
@@ -26076,6 +26084,7 @@ export namespace Prisma {
   export type ManagementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fileName?: boolean
+    fileUrl?: boolean
     type?: boolean
     uploadedAt?: boolean
     updatedAt?: boolean
@@ -26084,6 +26093,7 @@ export namespace Prisma {
   export type ManagementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     fileName?: boolean
+    fileUrl?: boolean
     type?: boolean
     uploadedAt?: boolean
     updatedAt?: boolean
@@ -26092,12 +26102,13 @@ export namespace Prisma {
   export type ManagementSelectScalar = {
     id?: boolean
     fileName?: boolean
+    fileUrl?: boolean
     type?: boolean
     uploadedAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ManagementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fileName" | "type" | "uploadedAt" | "updatedAt", ExtArgs["result"]["management"]>
+  export type ManagementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fileName" | "fileUrl" | "type" | "uploadedAt" | "updatedAt", ExtArgs["result"]["management"]>
 
   export type $ManagementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Management"
@@ -26105,6 +26116,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       fileName: string
+      fileUrl: string | null
       type: $Enums.ManagementType
       uploadedAt: Date
       updatedAt: Date
@@ -26533,6 +26545,7 @@ export namespace Prisma {
   interface ManagementFieldRefs {
     readonly id: FieldRef<"Management", 'String'>
     readonly fileName: FieldRef<"Management", 'String'>
+    readonly fileUrl: FieldRef<"Management", 'String'>
     readonly type: FieldRef<"Management", 'ManagementType'>
     readonly uploadedAt: FieldRef<"Management", 'DateTime'>
     readonly updatedAt: FieldRef<"Management", 'DateTime'>
@@ -28208,6 +28221,7 @@ export namespace Prisma {
   export const ManagementScalarFieldEnum: {
     id: 'id',
     fileName: 'fileName',
+    fileUrl: 'fileUrl',
     type: 'type',
     uploadedAt: 'uploadedAt',
     updatedAt: 'updatedAt'
@@ -28482,7 +28496,8 @@ export namespace Prisma {
 
   export const ManagementOrderByRelevanceFieldEnum: {
     id: 'id',
-    fileName: 'fileName'
+    fileName: 'fileName',
+    fileUrl: 'fileUrl'
   };
 
   export type ManagementOrderByRelevanceFieldEnum = (typeof ManagementOrderByRelevanceFieldEnum)[keyof typeof ManagementOrderByRelevanceFieldEnum]
@@ -30142,6 +30157,7 @@ export namespace Prisma {
     NOT?: ManagementWhereInput | ManagementWhereInput[]
     id?: UuidFilter<"Management"> | string
     fileName?: StringFilter<"Management"> | string
+    fileUrl?: StringNullableFilter<"Management"> | string | null
     type?: EnumManagementTypeFilter<"Management"> | $Enums.ManagementType
     uploadedAt?: DateTimeFilter<"Management"> | Date | string
     updatedAt?: DateTimeFilter<"Management"> | Date | string
@@ -30150,6 +30166,7 @@ export namespace Prisma {
   export type ManagementOrderByWithRelationInput = {
     id?: SortOrder
     fileName?: SortOrder
+    fileUrl?: SortOrderInput | SortOrder
     type?: SortOrder
     uploadedAt?: SortOrder
     updatedAt?: SortOrder
@@ -30162,6 +30179,7 @@ export namespace Prisma {
     OR?: ManagementWhereInput[]
     NOT?: ManagementWhereInput | ManagementWhereInput[]
     fileName?: StringFilter<"Management"> | string
+    fileUrl?: StringNullableFilter<"Management"> | string | null
     type?: EnumManagementTypeFilter<"Management"> | $Enums.ManagementType
     uploadedAt?: DateTimeFilter<"Management"> | Date | string
     updatedAt?: DateTimeFilter<"Management"> | Date | string
@@ -30170,6 +30188,7 @@ export namespace Prisma {
   export type ManagementOrderByWithAggregationInput = {
     id?: SortOrder
     fileName?: SortOrder
+    fileUrl?: SortOrderInput | SortOrder
     type?: SortOrder
     uploadedAt?: SortOrder
     updatedAt?: SortOrder
@@ -30184,6 +30203,7 @@ export namespace Prisma {
     NOT?: ManagementScalarWhereWithAggregatesInput | ManagementScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Management"> | string
     fileName?: StringWithAggregatesFilter<"Management"> | string
+    fileUrl?: StringNullableWithAggregatesFilter<"Management"> | string | null
     type?: EnumManagementTypeWithAggregatesFilter<"Management"> | $Enums.ManagementType
     uploadedAt?: DateTimeWithAggregatesFilter<"Management"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Management"> | Date | string
@@ -31718,6 +31738,7 @@ export namespace Prisma {
   export type ManagementCreateInput = {
     id?: string
     fileName: string
+    fileUrl?: string | null
     type: $Enums.ManagementType
     uploadedAt?: Date | string
     updatedAt?: Date | string
@@ -31726,6 +31747,7 @@ export namespace Prisma {
   export type ManagementUncheckedCreateInput = {
     id?: string
     fileName: string
+    fileUrl?: string | null
     type: $Enums.ManagementType
     uploadedAt?: Date | string
     updatedAt?: Date | string
@@ -31734,6 +31756,7 @@ export namespace Prisma {
   export type ManagementUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumManagementTypeFieldUpdateOperationsInput | $Enums.ManagementType
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31742,6 +31765,7 @@ export namespace Prisma {
   export type ManagementUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumManagementTypeFieldUpdateOperationsInput | $Enums.ManagementType
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31750,6 +31774,7 @@ export namespace Prisma {
   export type ManagementCreateManyInput = {
     id?: string
     fileName: string
+    fileUrl?: string | null
     type: $Enums.ManagementType
     uploadedAt?: Date | string
     updatedAt?: Date | string
@@ -31758,6 +31783,7 @@ export namespace Prisma {
   export type ManagementUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumManagementTypeFieldUpdateOperationsInput | $Enums.ManagementType
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -31766,6 +31792,7 @@ export namespace Prisma {
   export type ManagementUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     fileName?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumManagementTypeFieldUpdateOperationsInput | $Enums.ManagementType
     uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33238,6 +33265,7 @@ export namespace Prisma {
   export type ManagementCountOrderByAggregateInput = {
     id?: SortOrder
     fileName?: SortOrder
+    fileUrl?: SortOrder
     type?: SortOrder
     uploadedAt?: SortOrder
     updatedAt?: SortOrder
@@ -33246,6 +33274,7 @@ export namespace Prisma {
   export type ManagementMaxOrderByAggregateInput = {
     id?: SortOrder
     fileName?: SortOrder
+    fileUrl?: SortOrder
     type?: SortOrder
     uploadedAt?: SortOrder
     updatedAt?: SortOrder
@@ -33254,6 +33283,7 @@ export namespace Prisma {
   export type ManagementMinOrderByAggregateInput = {
     id?: SortOrder
     fileName?: SortOrder
+    fileUrl?: SortOrder
     type?: SortOrder
     uploadedAt?: SortOrder
     updatedAt?: SortOrder
