@@ -242,6 +242,7 @@ exports.Prisma.ProcessFormScalarFieldEnum = {
   nextStepType: 'nextStepType',
   nextStepRoles: 'nextStepRoles',
   nextStaffId: 'nextStaffId',
+  nextStepSpecifiedTo: 'nextStepSpecifiedTo',
   notificationType: 'notificationType',
   notificationRoles: 'notificationRoles',
   notificationToId: 'notificationToId',
@@ -267,6 +268,14 @@ exports.Prisma.APCompletedFormScalarFieldEnum = {
   applicantProcessId: 'applicantProcessId',
   formId: 'formId',
   reviewerId: 'reviewerId',
+  nextStaffId: 'nextStaffId',
+  nextStepType: 'nextStepType',
+  nextStepRoles: 'nextStepRoles',
+  nextStepSpecifiedTo: 'nextStepSpecifiedTo',
+  notificationType: 'notificationType',
+  notificationToId: 'notificationToId',
+  notificationToRoles: 'notificationToRoles',
+  notificationComment: 'notificationComment',
   createdAt: 'createdAt'
 };
 
@@ -327,6 +336,7 @@ exports.Prisma.OtpScalarFieldEnum = {
 exports.Prisma.ManagementScalarFieldEnum = {
   id: 'id',
   fileName: 'fileName',
+  fileUrl: 'fileUrl',
   type: 'type',
   uploadedAt: 'uploadedAt',
   updatedAt: 'updatedAt'
@@ -453,6 +463,7 @@ exports.Prisma.ProcessFormOrderByRelevanceFieldEnum = {
   formId: 'formId',
   nextStepRoles: 'nextStepRoles',
   nextStaffId: 'nextStaffId',
+  nextStepSpecifiedTo: 'nextStepSpecifiedTo',
   notificationRoles: 'notificationRoles',
   notificationToId: 'notificationToId',
   notificationComment: 'notificationComment',
@@ -469,7 +480,13 @@ exports.Prisma.APCompletedFormOrderByRelevanceFieldEnum = {
   id: 'id',
   applicantProcessId: 'applicantProcessId',
   formId: 'formId',
-  reviewerId: 'reviewerId'
+  reviewerId: 'reviewerId',
+  nextStaffId: 'nextStaffId',
+  nextStepRoles: 'nextStepRoles',
+  nextStepSpecifiedTo: 'nextStepSpecifiedTo',
+  notificationToId: 'notificationToId',
+  notificationToRoles: 'notificationToRoles',
+  notificationComment: 'notificationComment'
 };
 
 exports.Prisma.ProcessCommentOrderByRelevanceFieldEnum = {
@@ -517,7 +534,8 @@ exports.Prisma.OtpOrderByRelevanceFieldEnum = {
 
 exports.Prisma.ManagementOrderByRelevanceFieldEnum = {
   id: 'id',
-  fileName: 'fileName'
+  fileName: 'fileName',
+  fileUrl: 'fileUrl'
 };
 
 exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {

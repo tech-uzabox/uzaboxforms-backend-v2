@@ -580,6 +580,7 @@ export async function processMapWidget(
   config: any,
   service: any,
 ): Promise<WidgetDataPayload> {
+  console.log("Processing map widget with responses:", filteredResponses.length);
   const mapConfig = config.options?.map || {};
   const metrics: Array<{
     formId: string;
@@ -587,6 +588,16 @@ export async function processMapWidget(
     valueFieldId: string;
     label?: string;
   }> = mapConfig.metrics || [];
+  const appearance = mapConfig.appearance || {};
+  const coloringMode = appearance.coloringMode || "solid";
+  const optionsSource = appearance.optionsSource || null;
+  const optionColors: Record<string, string> = appearance.optionColors || {};
+
+  console.log("Map config:", { coloringMode, optionsSource, metricsCount: metrics.length });
+
+  const normalizedOptionColors: Record<string, string> = Object.fromEntries(
+    Object.entries(optionColors).map(([k, v]) => [normalizeScalarForCompare(k), v])
+  );
 
   if (!metrics || metrics.length === 0) {
     return {
@@ -604,7 +615,7 @@ export async function processMapWidget(
 
   for (const metric of metrics) {
     const perCountry: Record<string, { value: any; createdAt: Date }> = {};
-    const formIdStr = metric.formId;
+    const formIdStr = String(metric.formId);
     const formDesign = formDesignsMap.get(formIdStr);
 
     for (const resp of filteredResponses) {
@@ -650,8 +661,54 @@ export async function processMapWidget(
       values[label] = entry ? entry.value : null;
     });
 
-    countries[country] = { values };
+    let colorValue: string | undefined = undefined;
+    if (coloringMode === "options" && optionsSource) {
+      console.log(`Processing options coloring for country: ${country}`);
+      // Determine the country field to use for the options source form
+      const srcFormIdStr = String(optionsSource.formId);
+      const formDesign = formDesignsMap.get(srcFormIdStr);
+      const srcCountryFieldId =
+        optionsSource.countryFieldId ||
+        (metrics.find((m) => String(m.formId) === srcFormIdStr)?.countryFieldId);
+
+      console.log(`Options source config:`, { srcFormIdStr, srcCountryFieldId, fieldId: optionsSource.fieldId });
+
+      let latest: { value: any; createdAt: Date } | null = null;
+      if (srcCountryFieldId) {
+        for (const resp of filteredResponses) {
+          if (resp.formId !== srcFormIdStr) continue;
+          const countryRaw = service.getFieldValue(
+            resp,
+            srcCountryFieldId,
+            undefined,
+            formDesign,
+          );
+          if (!countryRaw) continue;
+          const key = canonicalizeCountryName(String(countryRaw));
+          if (key !== country) continue;
+          const optVal = service.getFieldValue(
+            resp,
+            optionsSource.fieldId,
+            undefined,
+            formDesign,
+          );
+          console.log(`Found option value for ${country}:`, optVal);
+          if (!latest || resp.createdAt > latest.createdAt) {
+            latest = { value: optVal, createdAt: resp.createdAt };
+          }
+        }
+      }
+      if (latest && latest.value != null) {
+        const k = normalizeScalarForCompare(latest.value);
+        colorValue = normalizedOptionColors[k] || undefined;
+        console.log(`Assigned color for ${country}:`, { optionKey: k, colorValue });
+      }
+    }
+
+    countries[country] = { values, colorValue };
   }
+
+  console.log(`Map widget processing complete. Countries processed: ${Object.keys(countries).length}`);
 
   return {
     type: 'map',
@@ -774,4 +831,12 @@ function canonicalizeCountryName(input: string): string {
     'the gambia': 'gambia',
   };
   return aliases[s] || s;
+}
+
+function normalizeScalarForCompare(x: any): string {
+  if (x === null || x === undefined) return "";
+  if (x instanceof Date) return x.toISOString();
+  if (typeof x === "boolean") return x ? "true" : "false";
+  if (typeof x === "number") return x.toString();
+  return String(x).trim().toLowerCase();
 }

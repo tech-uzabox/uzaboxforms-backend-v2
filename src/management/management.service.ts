@@ -2,15 +2,20 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Management, Prisma } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class ManagementService {
   constructor(
     private prisma: PrismaService,
     private auditLogService: AuditLogService,
+    private fileService: FileService,
   ) {}
 
-  async uploadImage(fileName: string, type: 'HEADER' | 'FOOTER', userId?: string): Promise<Management> {
+  async uploadImage(file: Express.Multer.File, type: 'HEADER' | 'FOOTER', userId?: string): Promise<Management> {
+    // Upload file to S3 and get public URL
+    const fileUrl = await this.fileService.uploadImagePublic(file);
+
     // Delete existing images of the same type
     await this.prisma.management.deleteMany({
       where: { type },
@@ -18,7 +23,8 @@ export class ManagementService {
 
     const newImage = await this.prisma.management.create({
       data: {
-        fileName,
+        fileName: file.originalname,
+        fileUrl,
         type,
       },
     });
@@ -29,7 +35,7 @@ export class ManagementService {
       resource: 'Management',
       resourceId: newImage.id,
       status: 'SUCCESS',
-      details: { fileName, type },
+      details: { fileName: file.originalname, type, fileUrl },
     });
 
     return newImage;

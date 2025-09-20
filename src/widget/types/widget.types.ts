@@ -110,6 +110,23 @@ export interface IWidgetSource {
   systemField?: 'responseId' | 'submissionDate';
 }
 
+export interface IWidgetMapMetric {
+  formId: string;
+  countryFieldId: string;
+  valueFieldId: string;
+  label?: string;
+}
+
+export interface IWidgetMapAppearance {
+  coloringMode?: 'solid' | 'options';
+  optionsSource?: {
+    formId: string;
+    fieldId: string;
+    countryFieldId?: string;
+  };
+  optionColors?: Record<string, string>;
+}
+
 export interface IWidgetDateRange {
   preset?:
     | 'custom'

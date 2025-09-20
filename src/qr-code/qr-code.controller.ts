@@ -2,7 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { QrCodeService } from './qr-code.service';
 import { CreateQrCodeDto } from './dto/create-qr-code.dto';
 import { UpdateQrCodeDto } from './dto/update-qr-code.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UseGuards } from '@nestjs/common';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 
 @ApiTags('QR Codes')
 @Controller('qr-codes')
@@ -10,8 +14,14 @@ export class QrCodeController {
   constructor(private readonly qrCodeService: QrCodeService) {}
 
   @Post()
-  create(@Body() createQrCodeDto: CreateQrCodeDto) {
-    return this.qrCodeService.create(createQrCodeDto);
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Generate QR code for document' })
+  @ApiResponse({ status: 200, description: 'QR code generated successfully.' })
+  @ApiResponse({ status: 400, description: 'Bad request.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  create(@Body() createQrCodeDto: CreateQrCodeDto, @GetUser() user: AuthenticatedUser) {
+    return this.qrCodeService.generateQrCode(createQrCodeDto, user.id);
   }
 
   @Get()

@@ -2,6 +2,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, QrCodeDocument } from 'db';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
+import QRCode from 'qrcode';
+import { v4 as uuidv4 } from 'uuid';
+import { CreateQrCodeDto } from './dto/create-qr-code.dto';
 
 @Injectable()
 export class QrCodeService {
@@ -10,26 +13,30 @@ export class QrCodeService {
     private auditLogService: AuditLogService,
   ) {}
 
-  async create(
-    data: Omit<Prisma.QrCodeDocumentCreateInput, 'creator'> & { creatorId: string },
-  ): Promise<QrCodeDocument> {
-    // Check if qrCodeId already exists
-    const existingDocument = await this.prisma.qrCodeDocument.findFirst({
-      where: { qrCodeId: data.qrCodeId },
-    });
-    if (existingDocument) {
-      throw new Error('QR Code ID already exists');
-    }
+  async generateQrCode(
+    createQrCodeDto: CreateQrCodeDto,
+    creatorId: string,
+  ): Promise<{ qrCodeDataUrl: string; qrCodeId: string }> {
+    const { documentName, host } = createQrCodeDto;
 
-    const { creatorId, ...rest } = data;
+    const qrCodeId = uuidv4();
+    const qrCodeUrl = `${host}/document/qr-code/${qrCodeId}`;
+
+    // Generate QR code as data URL
+    const qrCodeDataUrl = await QRCode.toDataURL(qrCodeUrl);
+
+    // Create the document in DB
     const newQrCodeDocument = await this.prisma.qrCodeDocument.create({
       data: {
-        ...rest,
+        documentName,
+        fileName: documentName, // Use documentName as fileName for now
+        qrCodeId,
         creator: {
           connect: { id: creatorId },
         },
       },
     });
+
     await this.auditLogService.log({
       userId: newQrCodeDocument.creatorId,
       action: 'QR_CODE_DOCUMENT_CREATED',
@@ -41,7 +48,8 @@ export class QrCodeService {
         qrCodeId: newQrCodeDocument.qrCodeId,
       },
     });
-    return newQrCodeDocument;
+
+    return { qrCodeDataUrl, qrCodeId };
   }
 
   async findAll(): Promise<QrCodeDocument[]> {

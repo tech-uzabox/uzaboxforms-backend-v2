@@ -1,5 +1,6 @@
-import { Controller, Post, Delete, Get, Body, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Post, Delete, Get, Body, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -12,11 +13,33 @@ export class ManagementController {
   constructor(private readonly managementService: ManagementService) {}
 
   @Post('upload-image')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload management image',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Image file to upload',
+        },
+        type: {
+          type: 'string',
+          enum: ['HEADER', 'FOOTER'],
+          description: 'Type of management image',
+        },
+      },
+      required: ['file', 'type'],
+    },
+  })
   uploadImage(
-    @Body() body: { fileName: string; type: 'HEADER' | 'FOOTER' },
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: { type: 'HEADER' | 'FOOTER' },
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.managementService.uploadImage(body.fileName, body.type, user.id);
+    return this.managementService.uploadImage(file, body.type, user.id);
   }
 
   @Delete('delete-image')
