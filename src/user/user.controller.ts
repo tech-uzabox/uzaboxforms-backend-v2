@@ -1,10 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, UnauthorizedException } from '@nestjs/common';
-import { UserService } from './user.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Request,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ChangeUserPasswordDto } from './dto/change-password.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ChangePasswordDto } from './dto/change-password.dto';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UserService } from './user.service';
 
 @ApiTags('Users')
 @Controller('users')
@@ -36,7 +47,7 @@ export class UserController {
   @ApiBearerAuth()
   changePassword(
     @Param('id') id: string,
-    @Body() changePasswordDto: ChangePasswordDto,
+    @Body() changePasswordDto: ChangeUserPasswordDto,
     @Request() req,
   ) {
     if (req.user.sub !== id) {
@@ -44,7 +55,11 @@ export class UserController {
       // Or implement role-based access control for admins
       throw new UnauthorizedException();
     }
-    return this.userService.changePassword(id, changePasswordDto.oldPassword, changePasswordDto.newPassword);
+    return this.userService.changePassword(
+      id,
+      changePasswordDto.oldPassword,
+      changePasswordDto.newPassword,
+    );
   }
 
   @Delete(':id')

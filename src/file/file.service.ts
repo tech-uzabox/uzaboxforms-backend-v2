@@ -244,7 +244,7 @@ export class FileService {
   }
   async uploadImagePublic(file: Express.Multer.File): Promise<string> {
     const { fileKey } = await this.uploadFile(file, this.bucketName);
-    return `${this.publicUrlBase}/${this.bucketName}/${fileKey}`;
+    return `${this.publicUrlBase}/${fileKey}`;
   }
 
   async getPresignedUrl(bucket: string, key: string): Promise<string> {
