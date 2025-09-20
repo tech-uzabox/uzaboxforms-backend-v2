@@ -75,7 +75,7 @@ export class FileService {
   ): Promise<Readable> {
     try {
       const command = new GetObjectCommand({
-        Bucket: folder,
+        Bucket: this.bucketName,
         Key: key,
       });
 
@@ -183,7 +183,7 @@ export class FileService {
       // Upload original file
       await this.s3Client.send(
         new PutObjectCommand({
-          Bucket: bucket,
+          Bucket: this.bucketName,
           Key: fileKey,
           Body: Buffer.from(file.buffer),
           ContentType: file.mimetype,
@@ -233,7 +233,7 @@ export class FileService {
 
     await this.s3Client.send(
       new PutObjectCommand({
-        Bucket: bucket,
+        Bucket: this.bucketName,
         Key: key,
         Body: Buffer.from(file.buffer),
         ContentType: file.mimetype,
@@ -276,7 +276,7 @@ export class FileService {
     try {
       await this.s3Client.send(
         new DeleteObjectCommand({
-          Bucket: bucket,
+          Bucket:this.bucketName,
           Key: key,
         }),
       );
@@ -311,7 +311,7 @@ export class FileService {
     key: string,
     file: Express.Multer.File,
   ): Promise<string> {
-    await this.deleteObject(bucket, key);
+    await this.deleteObject(this.bucketName, key);
     const { fileKey } = await this.uploadFile(
       file,
       bucket as 'private' | 'public',
