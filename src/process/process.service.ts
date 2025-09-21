@@ -88,7 +88,7 @@ export class ProcessService {
     return newProcess;
   }
 
-  async findAll(): Promise<ProcessWithRoles[]> {
+  async findAll(): Promise<{ success: boolean; data: any[] }> {
     const processes = await this.prisma.process.findMany({
       include: {
         group: true,
@@ -106,121 +106,95 @@ export class ProcessService {
       },
     });
 
-    // Hoist roles to return just Role[] instead of {role: Role}[]
-    return processes.map((process) => ({
-      ...process,
-      roles:
-        (process as unknown as { roles: { role: Role }[] }).roles?.map(
-          (roleRelation) => roleRelation.role,
-        ) || [],
-    })) as unknown as ProcessWithRoles[];
+    // Format to match old API response
+    const formattedProcesses = await Promise.all(
+      processes.map(async (process) => {
+        const processForms = process.forms || [];
+
+        const forms = processForms.map((pf) => {
+          const form = pf.form;
+          if (!form) return null;
+
+          return {
+            name: form.name,
+            status: form.status,
+            createdAt: form.createdAt?.toISOString(),
+            updatedAt: form.updatedAt?.toISOString(),
+            nextStepType: pf.nextStepType,
+            nextStepRoles: pf.nextStepRoles,
+            nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
+            nextStaff: pf.nextStaffId, // Changed from nextStaff to nextStaffId
+            notificationType: pf.notificationType,
+            notificationTo: pf.notificationToId, // Changed from notificationTo to notificationToId
+            notificationToRoles: pf.notificationRoles, // Changed from notificationToRoles to notificationRoles
+            notificationComment: pf.notificationComment,
+            notifyApplicant: pf.notifyApplicant,
+            applicantNotificationContent: pf.applicantNotificationContent,
+            editApplicationStatus: pf.editApplicationStatus,
+            applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion
+          };
+        });
+
+        return {
+          ...process,
+          processName: process.name,
+          processStatus: process.status,
+          updatedAt: process.updatedAt?.toISOString(),
+          processForms: forms.filter((form) => form !== null),
+        };
+      })
+    );
+
+    return {
+      success: true,
+      data: formattedProcesses,
+    };
   }
 
-  async findOne(id: string): Promise<Process | null> {
+  async findOne(id: string): Promise<{ success: boolean; data: any } | null> {
     const process = await this.prisma.process.findUnique({
       where: { id },
       include: {
-        group: true,
-        creator: true,
-        roles: {
-          select: {
-            role: true,
-          },
-        },
-        forms: {
-          include: {
-            form: true,
-          },
-        },
+        forms: true, // Only include forms, no form details like old
       },
     });
 
-    // Hoist roles to return just Role[] instead of {role: Role}[]
-    return process
-      ? ({
-          ...process,
-          roles:
-            (process as unknown as { roles: { role: Role }[] }).roles?.map(
-              (roleRelation) => roleRelation.role,
-            ) || [],
-        } as ProcessWithRoles)
-      : null;
+    if (!process) {
+      return null;
+    }
+
+    // Format forms to match old API (no form details, just ProcessForm fields)
+    const forms = process.forms.map((pf) => ({
+      formId: pf.formId,
+      nextStepType: pf.nextStepType,
+      nextStepRoles: pf.nextStepRoles,
+      nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
+      nextStaff: pf.nextStaffId, // Changed from nextStaff to nextStaffId
+      notificationType: pf.notificationType,
+      notificationTo: pf.notificationToId, // Changed from notificationTo to notificationToId
+      notificationToRoles: pf.notificationRoles, // Changed from notificationToRoles to notificationRoles
+      notificationComment: pf.notificationComment,
+      notifyApplicant: pf.notifyApplicant,
+      applicantNotificationContent: pf.applicantNotificationContent,
+      editApplicationStatus: pf.editApplicationStatus,
+      applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion
+    }));
+
+    return {
+      success: true,
+      data: {
+        ...process,
+        forms: forms.filter((form) => form !== null),
+      },
+    };
   }
 
   async update(id: string, data: UpdateProcessDto): Promise<Process> {
-    const { roles, ...processData } = data;
+    const { name, groupId, status, archived } = data;
 
-    // Use transaction to handle role synchronization atomically
-    const updatedProcess = await this.prisma.$transaction(async (tx) => {
-      // If roles is provided, handle role synchronization
-      if (roles !== undefined) {
-        // Validate roles exist if provided
-        if (roles.length > 0) {
-          const existingRoles = await tx.role.findMany({
-            where: { id: { in: roles } },
-            select: { id: true },
-          });
-          const existingRoleIds = existingRoles.map((r) => r.id);
-          const invalidRoleIds = roles.filter(
-            (id) => !existingRoleIds.includes(id),
-          );
-          if (invalidRoleIds.length > 0) {
-            throw new Error(
-              `Role(s) with ID(s) ${invalidRoleIds.join(', ')} not found`,
-            );
-          }
-        }
-
-        // Get current process roles
-        const currentProcessRoles = await tx.processRole.findMany({
-          where: { processId: id },
-          select: { roleId: true },
-        });
-        const currentRoleIds = currentProcessRoles.map((pr) => pr.roleId);
-
-        // Determine roles to add and remove
-        const rolesToAdd = roles.filter(
-          (roleId) => !currentRoleIds.includes(roleId),
-        );
-        const rolesToRemove = currentRoleIds.filter(
-          (roleId) => !roles.includes(roleId),
-        );
-
-        // Delete removed process roles
-        if (rolesToRemove.length > 0) {
-          await tx.processRole.deleteMany({
-            where: {
-              processId: id,
-              roleId: { in: rolesToRemove },
-            },
-          });
-        }
-
-        // Create new process roles
-        if (rolesToAdd.length > 0) {
-          await tx.processRole.createMany({
-            data: rolesToAdd.map((roleId) => ({
-              processId: id,
-              roleId,
-              status: 'ENABLED',
-            })),
-          });
-        }
-      }
-
-      // Update the process itself
-      return tx.process.update({
-        where: { id },
-        data: processData,
-        include: {
-          creator: true,
-          roles: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
+    const updatedProcess = await this.prisma.process.update({
+      where: { id },
+      data: { name, groupId, status, archived: archived !== undefined ? archived : false },
     });
 
     await this.auditLogService.log({
@@ -309,18 +283,9 @@ export class ProcessService {
       throw new NotFoundException(`Process with ID ${processId} not found.`);
     }
 
-    let newProcessName = `${originalProcess.name} - Copy`;
-    let counter = 1;
-    while (
-      await this.prisma.process.findFirst({ where: { name: newProcessName } })
-    ) {
-      counter++;
-      newProcessName = `${originalProcess.name} - Copy (${counter})`;
-    }
-
     const duplicatedProcess = await this.prisma.process.create({
       data: {
-        name: newProcessName,
+        name: `${originalProcess.name} - copy`,
         type: originalProcess.type,
         groupId: originalProcess.groupId,
         creatorId: creatorId,
@@ -333,6 +298,7 @@ export class ProcessService {
             formId: form.formId,
             order: form.order,
             nextStepType: form.nextStepType,
+            nextStepSpecifiedTo: form.nextStepSpecifiedTo,
             nextStaffId: form.nextStaffId,
             nextStepRoles: form.nextStepRoles,
             notificationType: form.notificationType,
@@ -341,6 +307,8 @@ export class ProcessService {
             notificationComment: form.notificationComment,
             notifyApplicant: form.notifyApplicant,
             applicantNotificationContent: form.applicantNotificationContent,
+            editApplicationStatus: form.editApplicationStatus,
+            applicantViewFormAfterCompletion: form.applicantViewFormAfterCompletion,
           })),
         },
         roles: {
@@ -365,83 +333,4 @@ export class ProcessService {
     return duplicatedProcess;
   }
 
-  async getProcessFormsByProcessIdAndUserId(
-    processId: string,
-    userId: string,
-    currentUser: { id: string; roles: string[] },
-  ): Promise<{ success: boolean; message?: string; data?: any[] }> {
-    // Get user's enabled roles
-    const userRoles = await this.prisma.userRole.findMany({
-      where: {
-        userId,
-        status: 'ENABLED',
-      },
-      select: { roleId: true },
-    });
-
-    if (!userRoles.length) {
-      return { success: false, message: 'User has no enabled roles' };
-    }
-
-    const roleIds = userRoles.map((role) => role.roleId);
-
-    // Get process forms with form details
-    const processForms = await this.prisma.processForm.findMany({
-      where: { processId },
-      include: {
-        form: true,
-      },
-    });
-
-    // Filter accessible forms based on roles
-    const accessibleForms: any[] = [];
-    for (const processForm of processForms) {
-      if (!processForm.form || processForm.form.status !== 'ENABLED') {
-        continue;
-      }
-
-      // Check if user has access to this form via roles
-      const formRoles = await this.prisma.role.findMany({
-        where: {
-          id: { in: roleIds },
-          status: 'ENABLED',
-        },
-      });
-
-      if (formRoles.length > 0) {
-        accessibleForms.push(processForm);
-      }
-    }
-
-    if (!accessibleForms.length) {
-      return { success: false, message: 'No accessible forms found' };
-    }
-
-    return {
-      success: true,
-      data: accessibleForms.map((form) => ({
-        _id: form.id,
-        formId: form.form,
-        nextStepType: form.nextStepType,
-        formName: form.form?.name,
-      })),
-    };
-  }
-
-  async getProcessForm(
-    processId: string,
-    formId: string,
-    currentUser: any,
-  ): Promise<any> {
-    const processForm = await this.prisma.processForm.findFirst({
-      where: { processId, formId },
-      include: { form: true },
-    });
-
-    if (!processForm) {
-      return { success: false, message: 'Process form not found' };
-    }
-
-    return { success: true, processForm };
-  }
 }

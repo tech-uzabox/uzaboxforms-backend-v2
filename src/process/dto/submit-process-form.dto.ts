@@ -9,6 +9,7 @@ const SubmitProcessFormSchema = z.object({
     formId: z.string().uuid(),
     order: z.number().int().positive(),
     nextStepType: z.string(), // This should be an enum in Prisma
+    nextStepSpecifiedTo: z.string().optional(),
     nextStaffId: z.string().uuid().optional(),
     nextStepRoles: z.array(z.string()).optional(),
     notificationType: z.string().optional(), // This should be an enum in Prisma
@@ -17,6 +18,8 @@ const SubmitProcessFormSchema = z.object({
     notificationComment: z.string().optional(),
     notifyApplicant: z.boolean().optional(),
     applicantNotificationContent: z.string().optional(),
+    editApplicationStatus: z.boolean().optional(),
+    applicantViewFormAfterCompletion: z.boolean().optional(),
   })),
 });
 

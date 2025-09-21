@@ -135,7 +135,6 @@ export class AiService {
     pipeDataStreamToResponse(response, {
       execute: async (dataStreamWriter) => {
         dataStreamWriter.writeData('initialized call');
-
         const result = streamText({
           model: openrouter('openai/gpt-5-mini'),
           system: systemPromptText,
@@ -152,6 +151,7 @@ export class AiService {
           },
           tools,
           onFinish: async ({ response }) => {
+            console.log(response.messages)
             try {
               const assistantId = getTrailingMessageId({
                 messages: response.messages.filter(
@@ -182,13 +182,17 @@ export class AiService {
             }
           },
         });
+
+        result.consumeStream()
+
         result.mergeIntoDataStream(dataStreamWriter);
       },
-      // onError: (error) => {
-      // Error messages are masked by default for security reasons.
-      // If you want to expose the error message to the client, you can do so here:
-      // return error instanceof Error ? error.message : String(error);
-      // },
+      onError: (error) => {
+        console.log('error', error instanceof Error ? error.message : String(error));
+        // Error messages are masked by default for security reasons.
+        // If you want to expose the error message to the client, you can do so here:
+        return error instanceof Error ? error.message : String(error);
+      },
     });
   }
 
@@ -267,8 +271,20 @@ export class AiService {
   }
 
   private async saveMessages(chatId: string, messages: DBMessageInput[]) {
-    await this.prisma.message.createMany({
-      data: messages,
+    const messageIds = messages.map((m) => m.id);
+    const existingMessages = await this.prisma.message.findMany({
+      where: {
+        id: { in: messageIds },
+      },
+      select: { id: true },
     });
+    const existingIds = new Set(existingMessages.map((m) => m.id));
+    const newMessages = messages.filter((m) => !existingIds.has(m.id));
+
+    if (newMessages.length > 0) {
+      await this.prisma.message.createMany({
+        data: newMessages,
+      });
+    }
   }
 }
