@@ -213,6 +213,49 @@ export class AiService {
     }
   }
 
+  async getChatById(chatId: string, userId: string) {
+    try {
+      const chat = await this.prisma.chat.findUnique({
+        where: { id: chatId },
+      });
+
+      if (!chat || chat.userId !== userId) {
+        return null;
+      }
+
+      return chat;
+    } catch (error) {
+      this.logger.error('Error fetching chat:', error);
+      return null;
+    }
+  }
+
+  async getChatMessagesById(chatId: string, userId: string) {
+    try {
+      // First check if chat exists and belongs to user
+      const chat = await this.prisma.chat.findUnique({
+        where: { id: chatId },
+        select: { userId: true },
+      });
+
+      if (!chat || chat.userId !== userId) {
+        return null;
+      }
+
+      const messages = await this.prisma.message.findMany({
+        where: { chatId },
+        orderBy: {
+          createdAt: 'asc',
+        },
+      });
+
+      return messages;
+    } catch (error) {
+      this.logger.error('Error fetching chat messages:', error);
+      return null;
+    }
+  }
+
   private async generateTitleFromMessage(message: string): Promise<string> {
     const words = message.split(' ').slice(0, 5);
     return words.join(' ') + (words.length >= 5 ? '...' : '');
