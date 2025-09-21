@@ -17,6 +17,7 @@ export class HistoryService {
     endingBefore?: string;
   }) {
     try {
+      limit = parseInt(String(limit), 10);
       const extendedLimit = limit + 1;
 
       let whereCondition: any = {
