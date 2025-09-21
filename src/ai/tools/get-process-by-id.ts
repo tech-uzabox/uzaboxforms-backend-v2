@@ -1,14 +1,8 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { ProcessService } from '../../process/process.service';
 import { PrismaService } from '../../db/prisma.service';
-import { FormResponseService } from '../../form-response/form-response.service';
 
-export const createGetProcessByIdTool = (
-  processService: ProcessService,
-  prismaService: PrismaService,
-  formResponseService: FormResponseService
-) => {
+export const createGetProcessByIdTool = (prisma: PrismaService) => {
   return tool({
     description:
       "get information about a specific process, the information include process forms, applications and their completed forms",
@@ -19,52 +13,84 @@ export const createGetProcessByIdTool = (
           "this is the processId or id of the process, it is used to fetch information about the process like forms, applications and their completed forms"
         ),
     }),
-    execute: async ({ processId }: any) => {
+    execute: async ({ processId }: { processId: string }) => {
       try {
-        const process = await processService.findOne(processId);
+        // Get process with forms using Prisma directly
+        const process = await prisma.process.findUnique({
+          where: { id: processId },
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            status: true,
+            forms: {
+              select: {
+                id: true,
+                formId: true,
+                order: true,
+                form: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+
         if (!process) {
           return null;
         }
 
-        // Get applicant processes for this process using Prisma directly
-        const applicantProcesses = await prismaService.applicantProcess.findMany({
+        // Get applicant processes with completed forms and responses in a single query
+        const applicantProcesses = await prisma.applicantProcess.findMany({
           where: { processId },
-          include: {
-            applicant: true,
-            completedForms: true,
+          select: {
+            id: true,
+            applicantId: true,
+            status: true,
+            applicant: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+              },
+            },
+            completedForms: {
+              select: {
+                id: true,
+                formId: true,
+                reviewerId: true,
+                createdAt: true,
+              },
+            },
+            responses: {
+              select: {
+                id: true,
+                formId: true,
+                responses: true,
+                createdAt: true,
+              },
+              take: 10, // Limit responses for performance
+            },
           },
+          take: 20, // Limit applications for performance
         });
-
-        // For each applicant process, get completed forms and responses
-        for (const applicantProcess of applicantProcesses) {
-          // For each completed form, get the response
-          for (const completedForm of applicantProcess.completedForms) {
-            try {
-              const response = await formResponseService.findByUserIdAndFormId(
-                applicantProcess.applicantId,
-                completedForm.formId,
-                applicantProcess.id
-              );
-
-              if (response && response.responses && response.responses.length > 0) {
-                (completedForm as any).response = response.responses[0];
-              }
-            } catch (error) {
-              console.error('Error fetching response for completed form:', error);
-            }
-          }
-        }
 
         return {
           _id: process.id,
           name: process.name,
           type: process.type,
           status: process.status,
-          forms: (process as any).forms?.map((pf: any) => ({
-            ...pf,
+          forms: process.forms.map((pf) => ({
+            id: pf.id,
+            formId: pf.formId,
+            order: pf.order,
             formName: pf.form?.name,
           })),
-          applications: applicantProcesses.map((ap: any) => ({
+          applications: applicantProcesses.map((ap) => ({
             _id: ap.id,
             applicantId: ap.applicantId,
             status: ap.status,
@@ -74,6 +100,7 @@ export const createGetProcessByIdTool = (
               email: ap.applicant?.email,
             },
             completedForms: ap.completedForms,
+            responses: ap.responses,
           })),
         };
       } catch (error) {

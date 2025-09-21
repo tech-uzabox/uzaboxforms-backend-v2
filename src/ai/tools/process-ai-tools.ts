@@ -2,11 +2,74 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { PrismaService } from '../../db/prisma.service';
 
+// Define proper types for form sections
+interface FormSection {
+  id: string;
+  name: string;
+  questions: FormQuestion[];
+}
+
+interface FormQuestion {
+  id: string;
+  label: string;
+  type: string;
+  required?: boolean;
+  options?: string[];
+}
+
+// Define types for different tool parameters
+interface GeneratedFormData {
+  formId: string;
+  name: string;
+  sections: FormSection[];
+}
+
+interface ProcessData {
+  name: string;
+  type: 'PRIVATE' | 'PUBLIC';
+  groupId: string;
+  staffViewForms: 'YES' | 'NO';
+  applicantViewProcessLevel: 'YES' | 'NO';
+}
+
+interface RolesData {
+  roles: string[];
+}
+
+interface StepData {
+  stepId: string;
+  formId: string;
+  nextStepType: 'STATIC' | 'DYNAMIC' | 'FOLLOW_ORGANIZATION_CHART' | 'NOT_APPLICABLE';
+  nextStepRoles?: string[];
+  nextStaff?: string;
+  notificationType: 'STATIC' | 'DYNAMIC' | 'FOLLOW_ORGANIZATION_CHART' | 'NOT_APPLICABLE';
+  notificationTo?: string;
+  notificationComment?: string;
+  editApplicationStatus: boolean;
+  applicantViewFormAfterCompletion: boolean;
+  notifyApplicant: boolean;
+  applicantNotificationContent: string;
+}
+
+interface StoredStepData extends StepData {
+  processId: string;
+}
+
 // Define the schema for GeneratedFormSchema based on the frontend types
 const GeneratedFormSchema = z.object({
   formId: z.string(),
   name: z.string(),
-  sections: z.any(),
+  sections: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    questions: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+      type: z.string(),
+      required: z.boolean().optional(),
+      options: z.array(z.string()).optional(),
+    })),
+  })),
 });
 
 export const createGenerateFormTool = () => {
@@ -19,7 +82,7 @@ export const createGenerateFormTool = () => {
           "Description of the form to generate a schema from"
         ),
     }),
-    execute: async ({ description }: any) => {
+    execute: async ({ description }: { description: string }) => {
       // This would typically call an AI service to generate the form
       // For now, return a placeholder
       const data = {
@@ -55,7 +118,7 @@ export const createGenerateFormTool = () => {
   } as any);
 };
 
-export const createSaveFormTool = (prisma: PrismaService) => {
+export const createSaveFormTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "if satisfied with the form schema, save it",
     parameters: GeneratedFormSchema,
@@ -65,7 +128,7 @@ export const createSaveFormTool = (prisma: PrismaService) => {
         // This would typically update an existing ProcessSave record
         // For now, create a new one or update existing
         const existingSave = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' }, // This would come from context
+          where: { chatId },
         });
 
         if (existingSave) {
@@ -78,7 +141,7 @@ export const createSaveFormTool = (prisma: PrismaService) => {
         } else {
           await prisma.processSave.create({
             data: {
-              chatId: 'current_chat_id', // This would come from context
+              chatId,
               formsData: [data],
             },
           });
@@ -97,7 +160,7 @@ export const createPreviewFormTool = () => {
     description:
       "preview the generated form in the ui for the user to view, always do this before saving the form, used to preview a single form only not multiple forms",
     parameters: GeneratedFormSchema,
-    execute: async (data: any) => {
+    execute: async (data: GeneratedFormData) => {
       return {
         name: data.name,
         formId: data.formId,
@@ -107,26 +170,26 @@ export const createPreviewFormTool = () => {
   } as any);
 };
 
-export const createDeleteFormTool = (prisma: PrismaService) => {
+export const createDeleteFormTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "delete form from save",
     parameters: GeneratedFormSchema,
-    execute: async (data: any) => {
+    execute: async (data: GeneratedFormData) => {
       try {
         // Remove form from ProcessSave
         const existingSave = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' },
+          where: { chatId },
         });
 
         if (existingSave && existingSave.formsData) {
-          const formsData = existingSave.formsData as any[];
+          const formsData = existingSave.formsData as unknown as GeneratedFormData[];
           const updatedFormsData = formsData.filter(
-            (form: any) => form.formId !== data.formId
+            (form: GeneratedFormData) => form.formId !== data.formId
           );
 
           await prisma.processSave.update({
             where: { id: existingSave.id },
-            data: { formsData: updatedFormsData },
+            data: { formsData: updatedFormsData as any },
           });
         }
 
@@ -138,7 +201,7 @@ export const createDeleteFormTool = (prisma: PrismaService) => {
   } as any);
 };
 
-export const createSaveProcessTool = (prisma: PrismaService) => {
+export const createSaveProcessTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "after defining the process, save its info",
     parameters: z.object({
@@ -148,7 +211,7 @@ export const createSaveProcessTool = (prisma: PrismaService) => {
       staffViewForms: z.enum(["YES", "NO"]),
       applicantViewProcessLevel: z.enum(["YES", "NO"]),
     }),
-    execute: async (data: any) => {
+    execute: async (data: ProcessData) => {
       try {
         const processData = {
           processId: `process_${Date.now()}`,
@@ -160,7 +223,7 @@ export const createSaveProcessTool = (prisma: PrismaService) => {
         };
 
         const existingSave = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' },
+          where: { chatId: chatId },
         });
 
         if (existingSave) {
@@ -171,7 +234,7 @@ export const createSaveProcessTool = (prisma: PrismaService) => {
         } else {
           await prisma.processSave.create({
             data: {
-              chatId: 'current_chat_id',
+              chatId: chatId,
               processData,
             },
           });
@@ -185,16 +248,16 @@ export const createSaveProcessTool = (prisma: PrismaService) => {
   } as any);
 };
 
-export const createSaveRolesTool = (prisma: PrismaService) => {
+export const createSaveRolesTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "save roles linked to the process",
     parameters: z.object({
       roles: z.array(z.string()).describe("Array of role names"),
     }),
-    execute: async ({ roles }: any) => {
+    execute: async ({ roles }: RolesData) => {
       try {
         const existingSave = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' },
+          where: { chatId: chatId },
         });
 
         if (existingSave) {
@@ -205,7 +268,7 @@ export const createSaveRolesTool = (prisma: PrismaService) => {
         } else {
           await prisma.processSave.create({
             data: {
-              chatId: 'current_chat_id',
+              chatId: chatId,
               rolesData: roles,
             },
           });
@@ -219,7 +282,7 @@ export const createSaveRolesTool = (prisma: PrismaService) => {
   } as any);
 };
 
-export const createSaveStepTool = (prisma: PrismaService) => {
+export const createSaveStepTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "save a step in the process",
     parameters: z.object({
@@ -246,7 +309,7 @@ export const createSaveStepTool = (prisma: PrismaService) => {
       notifyApplicant: z.boolean(),
       applicantNotificationContent: z.string(),
     }),
-    execute: async (input: any) => {
+    execute: async (input: StepData) => {
       try {
         const stepData = {
           processId: input.stepId,
@@ -264,21 +327,21 @@ export const createSaveStepTool = (prisma: PrismaService) => {
         };
 
         const existingSave = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' },
+          where: { chatId: chatId },
         });
 
         if (existingSave) {
-          const stepsData = (existingSave.stepsData as any[]) || [];
+          const stepsData = (existingSave.stepsData as unknown as StoredStepData[]) || [];
           const updatedStepsData = [...stepsData, stepData];
 
           await prisma.processSave.update({
             where: { id: existingSave.id },
-            data: { stepsData: updatedStepsData },
+            data: { stepsData: updatedStepsData as any },
           });
         } else {
           await prisma.processSave.create({
             data: {
-              chatId: 'current_chat_id',
+              chatId: chatId,
               stepsData: [stepData],
             },
           });
@@ -292,7 +355,7 @@ export const createSaveStepTool = (prisma: PrismaService) => {
   } as any);
 };
 
-export const createDeleteStepTool = (prisma: PrismaService) => {
+export const createDeleteStepTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "delete a step from save",
     parameters: z.object({
@@ -319,21 +382,21 @@ export const createDeleteStepTool = (prisma: PrismaService) => {
       notifyApplicant: z.boolean(),
       applicantNotificationContent: z.string(),
     }),
-    execute: async (input: any) => {
+    execute: async (input: StepData) => {
       try {
         const existingSave = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' },
+          where: { chatId: chatId },
         });
 
         if (existingSave && existingSave.stepsData) {
-          const stepsData = existingSave.stepsData as any[];
+          const stepsData = existingSave.stepsData as unknown as StoredStepData[];
           const updatedStepsData = stepsData.filter(
-            (step: any) => step.processId !== input.stepId || step.formId !== input.formId
+            (step: StoredStepData) => step.processId !== input.stepId || step.formId !== input.formId
           );
 
           await prisma.processSave.update({
             where: { id: existingSave.id },
-            data: { stepsData: updatedStepsData },
+            data: { stepsData: updatedStepsData as any },
           });
         }
 
@@ -345,7 +408,7 @@ export const createDeleteStepTool = (prisma: PrismaService) => {
   } as any);
 };
 
-export const createProcessTool = (prisma: PrismaService) => {
+export const createProcessTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description:
       "use all the saved process, roles and steps and create them in the main system",
@@ -353,7 +416,7 @@ export const createProcessTool = (prisma: PrismaService) => {
     execute: async () => {
       try {
         const processSaved = await prisma.processSave.findFirst({
-          where: { chatId: 'current_chat_id' },
+          where: { chatId: chatId },
         });
 
         if (!processSaved) {

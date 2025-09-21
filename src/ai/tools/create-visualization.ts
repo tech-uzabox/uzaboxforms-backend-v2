@@ -7,7 +7,7 @@ export const createChartVisualization = tool({
   parameters: z.object({
     config: z.string().describe("Chart.js config json stringified"),
   }),
-  execute: async ({ config }: any) => {
+  execute: async ({ config }: { config: string }) => {
     try {
         console.log(typeof config);
         const url = `https://quickchart.io/chart?c=${encodeURIComponent(
@@ -15,8 +15,9 @@ export const createChartVisualization = tool({
         )}`;
         console.log(url);
         return url;
-    } catch(e: any) {
-       return `error, please try regenerating: ${e?.message}`
+    } catch(e: unknown) {
+       const error = e as Error;
+       return `error, please try regenerating: ${error?.message || 'Unknown error'}`
     }
   },
 } as any);

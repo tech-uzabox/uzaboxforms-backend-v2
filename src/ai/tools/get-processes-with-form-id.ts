@@ -1,8 +1,8 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { ProcessService } from '../../process/process.service';
+import { PrismaService } from '../../db/prisma.service';
 
-export const createGetProcessesWithFormIdTool = (processService: ProcessService) => {
+export const createGetProcessesWithFormIdTool = (prisma: PrismaService) => {
   return tool({
     description: "get list of processes with specific formId",
     parameters: z.object({
@@ -12,16 +12,30 @@ export const createGetProcessesWithFormIdTool = (processService: ProcessService)
           "specifying this will help you find the process with a specific formId, it will help you understand which process the form is in so that you can answer the question about that process"
         ),
     }),
-    execute: async ({ formId }: any) => {
+    execute: async ({ formId }: { formId: string }) => {
       try {
-        const allProcesses = await processService.findAll();
+        // Use Prisma with join to find processes containing the specific form
+        const processes = await prisma.process.findMany({
+          where: {
+            forms: {
+              some: {
+                formId: formId,
+              },
+            },
+          },
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            status: true,
+            groupId: true,
+            creatorId: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 20, // Limit results for performance
+        });
 
-        // Filter processes that contain the specified formId
-        const processesWithForm = allProcesses.filter((process: any) =>
-          process.forms?.some((formRelation: any) => formRelation.form?.id === formId)
-        );
-
-        return processesWithForm.map((process: any) => ({
+        return processes.map((process) => ({
           _id: process.id,
           name: process.name,
           type: process.type,

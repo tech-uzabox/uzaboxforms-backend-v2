@@ -1,16 +1,26 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { FormService } from '../../form/form.service';
+import { PrismaService } from '../../db/prisma.service';
 
-export const createGetFormSchemaByIdTool = (formService: FormService) => {
+export const createGetFormSchemaByIdTool = (prisma: PrismaService) => {
   return tool({
     description: 'Get the form schema by ID',
     parameters: z.object({
       id: z.string().describe("the ID of the form to get the schema for"),
     }),
-    execute: async ({ id }: any) => {
+    execute: async ({ id }: { id: string }) => {
       try {
-        const form = await formService.findOne(id);
+        // Use Prisma directly with selective fields for optimal performance
+        const form = await prisma.form.findUnique({
+          where: { id },
+          select: {
+            id: true,
+            name: true,
+            design: true,
+            createdAt: true,
+          },
+        });
+
         if (!form) {
           return null;
         }

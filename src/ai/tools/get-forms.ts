@@ -1,8 +1,9 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { FormService } from '../../form/form.service';
+import { PrismaService } from '../../db/prisma.service';
+import { GetFormsFilter } from '../types/ai.types';
 
-export const createGetFormsTool = (formService: FormService) => {
+export const createGetFormsTool = (prisma: PrismaService) => {
   return tool({
     description: 'Get forms based on filter criteria',
     parameters: z.object({
@@ -12,29 +13,40 @@ export const createGetFormsTool = (formService: FormService) => {
         status: z.enum(['ENABLED', 'DISABLED']).optional().describe("")
       }).optional().describe("This is the filter object used to customize data to be returned, there is optional startDate, endDate and status"),
     }),
-    execute: async ({ filter }: any) => {
+    execute: async ({ filter }: { filter?: GetFormsFilter }) => {
       try {
-        // Get all forms and apply filters
-        const allForms = await formService.findAll();
-
-        let filteredForms = allForms;
+        // Build where clause for efficient database filtering
+        const where: {
+          createdAt?: { gte?: Date; lte?: Date };
+          status?: 'ENABLED' | 'DISABLED';
+        } = {};
 
         if (filter?.startDate) {
-          const startDate = new Date(filter.startDate);
-          filteredForms = filteredForms.filter((form: any) => form.createdAt >= startDate);
+          where.createdAt = { ...where.createdAt, gte: new Date(filter.startDate) };
         }
-
         if (filter?.endDate) {
-          const endDate = new Date(filter.endDate);
-          filteredForms = filteredForms.filter((form: any) => form.createdAt <= endDate);
+          where.createdAt = { ...where.createdAt, lte: new Date(filter.endDate) };
+        }
+        if (filter?.status) {
+          where.status = filter.status;
         }
 
-        if (filter?.status) {
-          filteredForms = filteredForms.filter((form: any) => form.status === filter.status);
-        }
+        // Use Prisma directly with selective fields for optimal performance
+        const forms = await prisma.form.findMany({
+          where,
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            createdAt: true,
+            creatorId: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 100, // Limit results for performance
+        });
 
         // Return in the format expected by the AI
-        return filteredForms.map((form: any) => ({
+        return forms.map((form) => ({
           _id: form.id,
           name: form.name,
           status: form.status,

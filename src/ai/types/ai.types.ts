@@ -64,6 +64,7 @@ export interface GetProcessesFilter {
   startDate?: string;
   endDate?: string;
   status?: 'ENABLED' | 'DISABLED';
+  type?: 'PUBLIC' | 'PRIVATE';
 }
 
 // Form schema types

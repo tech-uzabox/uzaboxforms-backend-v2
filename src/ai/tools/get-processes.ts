@@ -1,8 +1,9 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import { ProcessService } from '../../process/process.service';
+import { PrismaService } from '../../db/prisma.service';
+import { GetProcessesFilter } from '../types/ai.types';
 
-export const createGetProcessesTool = (processService: ProcessService) => {
+export const createGetProcessesTool = (prisma: PrismaService) => {
   return tool({
     description: 'Get processes based on filter criteria',
     parameters: z.object({
@@ -13,31 +14,45 @@ export const createGetProcessesTool = (processService: ProcessService) => {
         type: z.enum(['PUBLIC', 'PRIVATE']).optional().describe(""),
       }).optional().describe("This is the filter object used to customize data to be returned, there is optional startDate, endDate, status and type"),
     }),
-    execute: async ({ filter }: any) => {
+    execute: async ({ filter }: { filter?: GetProcessesFilter }) => {
       try {
-        const allProcesses = await processService.findAll();
-
-        let filteredProcesses = allProcesses;
+        // Build where clause for efficient database filtering
+        const where: {
+          createdAt?: { gte?: Date; lte?: Date };
+          status?: 'ENABLED' | 'DISABLED';
+          type?: 'PUBLIC' | 'PRIVATE';
+        } = {};
 
         if (filter?.startDate) {
-          const startDate = new Date(filter.startDate);
-          filteredProcesses = filteredProcesses.filter((process: any) => process.createdAt >= startDate);
+          where.createdAt = { ...where.createdAt, gte: new Date(filter.startDate) };
         }
-
         if (filter?.endDate) {
-          const endDate = new Date(filter.endDate);
-          filteredProcesses = filteredProcesses.filter((process: any) => process.createdAt <= endDate);
+          where.createdAt = { ...where.createdAt, lte: new Date(filter.endDate) };
         }
-
         if (filter?.status) {
-          filteredProcesses = filteredProcesses.filter((process: any) => process.status === filter.status);
+          where.status = filter.status;
         }
-
         if (filter?.type) {
-          filteredProcesses = filteredProcesses.filter((process: any) => process.type === filter.type);
+          where.type = filter.type;
         }
 
-        return filteredProcesses.map((process: any) => ({
+        // Use Prisma directly with selective fields for optimal performance
+        const processes = await prisma.process.findMany({
+          where,
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            status: true,
+            createdAt: true,
+            creatorId: true,
+            groupId: true,
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 50, // Limit results for performance
+        });
+
+        return processes.map((process) => ({
           _id: process.id,
           name: process.name,
           type: process.type,

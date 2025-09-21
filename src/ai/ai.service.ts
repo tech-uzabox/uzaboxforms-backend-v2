@@ -1,12 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../db/prisma.service';
-import { FormService } from '../form/form.service';
-import { ProcessService } from '../process/process.service';
-import { FormResponseService } from '../form-response/form-response.service';
-import { GroupService } from '../group/group.service';
-import { RoleService } from '../role/role.service';
-import { UserService } from '../user/user.service';
-import { ApplicantProcessService } from '../applicant-process/applicant-process.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
 import { UIMessage, DBMessageInput } from './types/ai.types';
 import { Observable, from } from 'rxjs';
@@ -38,16 +31,7 @@ import {
 export class AiService {
   private readonly logger = new Logger(AiService.name);
 
-  constructor(
-    private prisma: PrismaService,
-    private formService: FormService,
-    private processService: ProcessService,
-    private formResponseService: FormResponseService,
-    private groupService: GroupService,
-    private roleService: RoleService,
-    private userService: UserService,
-    private applicantProcessService: ApplicantProcessService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async processChat(
     dto: ChatProcessDto,
@@ -86,11 +70,20 @@ export class AiService {
       })));
     }
 
-    // Get available roles, groups, users for context
+    // Get available roles, groups, users for context using Prisma directly
     const [roles, groups, users] = await Promise.all([
-      this.roleService.findAll(),
-      this.groupService.findAll(),
-      this.userService.findAll(),
+      this.prisma.role.findMany({
+        select: { id: true, name: true },
+        take: 50, // Limit for performance
+      }),
+      this.prisma.group.findMany({
+        select: { id: true, name: true },
+        take: 50, // Limit for performance
+      }),
+      this.prisma.user.findMany({
+        select: { id: true, firstName: true, lastName: true, email: true },
+        take: 100, // Limit for performance
+      }),
     ]);
 
     // Create system prompt with context
@@ -104,27 +97,27 @@ export class AiService {
     // Create tools with injected services
     const tools = {
       // Data retrieval tools
-      get_forms: createGetFormsTool(this.formService),
-      get_form_responses: createGetFormResponsesTool(this.formResponseService),
-      get_form_schema_by_id: createGetFormSchemaByIdTool(this.formService),
-      get_processes: createGetProcessesTool(this.processService),
-      get_processes_with_formid: createGetProcessesWithFormIdTool(this.processService),
-      get_process_by_id: createGetProcessByIdTool(this.processService, this.prisma, this.formResponseService),
-      get_user_by_id: createGetUserByIdTool(this.userService),
+      get_forms: createGetFormsTool(this.prisma),
+      get_form_responses: createGetFormResponsesTool(this.prisma),
+      get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
+      get_processes: createGetProcessesTool(this.prisma),
+      get_processes_with_formid: createGetProcessesWithFormIdTool(this.prisma),
+      get_process_by_id: createGetProcessByIdTool(this.prisma),
+      get_user_by_id: createGetUserByIdTool(this.prisma),
 
       // Visualization tool
       create_chart_visualization: createChartVisualization,
 
       // Process AI tools
       generate_form: createGenerateFormTool(),
-      save_form: createSaveFormTool(this.prisma),
+      save_form: createSaveFormTool(this.prisma, id),
       preview_form: createPreviewFormTool(),
-      delete_form: createDeleteFormTool(this.prisma),
-      save_process: createSaveProcessTool(this.prisma),
-      save_roles: createSaveRolesTool(this.prisma),
-      save_step: createSaveStepTool(this.prisma),
-      delete_step: createDeleteStepTool(this.prisma),
-      create_process: createProcessTool(this.prisma),
+      delete_form: createDeleteFormTool(this.prisma, id),
+      save_process: createSaveProcessTool(this.prisma, id),
+      save_roles: createSaveRolesTool(this.prisma, id),
+      save_step: createSaveStepTool(this.prisma, id),
+      delete_step: createDeleteStepTool(this.prisma, id),
+      create_process: createProcessTool(this.prisma, id),
     };
 
     // Create observable for streaming response
