@@ -351,6 +351,61 @@ exports.Prisma.AddToDatabaseScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChatScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  title: 'title',
+  userId: 'userId',
+  visibility: 'visibility'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  role: 'role',
+  parts: 'parts',
+  attachments: 'attachments',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.VoteScalarFieldEnum = {
+  chatId: 'chatId',
+  messageId: 'messageId',
+  isUpvoted: 'isUpvoted'
+};
+
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  title: 'title',
+  content: 'content',
+  kind: 'kind',
+  userId: 'userId'
+};
+
+exports.Prisma.SuggestionScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  documentCreatedAt: 'documentCreatedAt',
+  originalText: 'originalText',
+  suggestedText: 'suggestedText',
+  description: 'description',
+  isResolved: 'isResolved',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProcessSaveScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  rolesData: 'rolesData',
+  processData: 'processData',
+  stepsData: 'stepsData',
+  formsData: 'formsData',
+  isComplete: 'isComplete',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -542,6 +597,46 @@ exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name'
 };
+
+exports.Prisma.ChatOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId',
+  visibility: 'visibility'
+};
+
+exports.Prisma.MessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  role: 'role'
+};
+
+exports.Prisma.VoteOrderByRelevanceFieldEnum = {
+  chatId: 'chatId',
+  messageId: 'messageId'
+};
+
+exports.Prisma.DocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  kind: 'kind',
+  userId: 'userId'
+};
+
+exports.Prisma.SuggestionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  originalText: 'originalText',
+  suggestedText: 'suggestedText',
+  description: 'description',
+  userId: 'userId'
+};
+
+exports.Prisma.ProcessSaveOrderByRelevanceFieldEnum = {
+  id: 'id',
+  chatId: 'chatId'
+};
 exports.UserStatus = exports.$Enums.UserStatus = {
   ENABLED: 'ENABLED',
   DISABLED: 'DISABLED',
@@ -617,7 +712,13 @@ exports.Prisma.ModelName = {
   QrCodeDocument: 'QrCodeDocument',
   Otp: 'Otp',
   Management: 'Management',
-  AddToDatabase: 'AddToDatabase'
+  AddToDatabase: 'AddToDatabase',
+  Chat: 'Chat',
+  Message: 'Message',
+  Vote: 'Vote',
+  Document: 'Document',
+  Suggestion: 'Suggestion',
+  ProcessSave: 'ProcessSave'
 };
 
 /**
