@@ -217,6 +217,11 @@ export class AiService {
     try {
       const chat = await this.prisma.chat.findUnique({
         where: { id: chatId },
+        include: {
+          messages: {
+            orderBy: { createdAt: 'asc' },
+          },
+        },
       });
 
       if (!chat || chat.userId !== userId) {

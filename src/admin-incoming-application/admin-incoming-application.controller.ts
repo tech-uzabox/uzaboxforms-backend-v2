@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { AdminIncomingApplicationService } from './admin-incoming-application.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -15,8 +15,9 @@ export class AdminIncomingApplicationController {
   @ApiOperation({ summary: 'Get all applications for a specific process for admin' })
   @ApiParam({ name: 'processId', description: 'ID of the process' })
   @ApiResponse({ status: 200, description: 'List of applications for the process.' })
-  async getAllApplicationsForProcess(@Param('processId') processId: string) {
-    return this.adminIncomingApplicationService.getAllApplicationsForProcess(processId);
+  async getAllApplicationsForProcess(@Param('processId') processId: string, @Query('status') status?: string) {
+    const data = await this.adminIncomingApplicationService.getAllApplicationsForProcess(processId, status);
+    return { success: true, data };
   }
   @Get(':processId/:applicantProcessId')
   @ApiOperation({ summary: 'Get a single application for admin' })
@@ -28,27 +29,31 @@ export class AdminIncomingApplicationController {
     @Param('processId') processId: string,
     @Param('applicantProcessId') applicantProcessId: string,
   ) {
-    return this.adminIncomingApplicationService.getSingleApplication(processId, applicantProcessId);
+    const data = await this.adminIncomingApplicationService.getSingleApplication(processId, applicantProcessId);
+    return { success: true, data };
   }
   @Get('pending')
   @ApiOperation({ summary: 'Get all pending applications for admin' })
   @ApiResponse({ status: 200, description: 'List of pending applications.' })
   async getAllPendingApplications() {
-    return this.adminIncomingApplicationService.getAllPendingApplications();
+    const data = await this.adminIncomingApplicationService.getAllPendingApplications();
+    return { success: true, data };
   }
 
   @Get('completed')
   @ApiOperation({ summary: 'Get all completed applications for admin' })
   @ApiResponse({ status: 200, description: 'List of completed applications.' })
   async getAllCompletedApplications() {
-    return this.adminIncomingApplicationService.getAllCompletedApplications();
+    const data = await this.adminIncomingApplicationService.getAllCompletedApplications();
+    return { success: true, data };
   }
 
   @Get('disabled')
   @ApiOperation({ summary: 'Get all disabled applications for admin' })
   @ApiResponse({ status: 200, description: 'List of disabled applications.' })
   async getAllDisabledApplications() {
-    return this.adminIncomingApplicationService.getAllDisabledApplications();
+    const data = await this.adminIncomingApplicationService.getAllDisabledApplications();
+    return { success: true, data };
   }
 
 
