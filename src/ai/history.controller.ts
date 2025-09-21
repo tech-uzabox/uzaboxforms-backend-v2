@@ -13,7 +13,7 @@ import { ChatHistoryQueryDto } from './dto/chat-history-query.dto';
 
 @ApiTags('AI History')
 @ApiBearerAuth()
-@Controller('ai/history')
+@Controller('history')
 export class HistoryController {
   constructor(
     private readonly historyService: HistoryService,

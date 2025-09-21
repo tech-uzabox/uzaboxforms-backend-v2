@@ -25,8 +25,9 @@ export class FormResponseService {
     });
   }
 
-  async findAll(): Promise<FormResponse[]> {
-    return this.prisma.formResponse.findMany();
+  async findAll(): Promise<{ success: boolean; responses: FormResponse[] }> {
+    const responses = await this.prisma.formResponse.findMany();
+    return { success: true, responses };
   }
 
   async findOne(id: string): Promise<FormResponse | null> {
@@ -51,14 +52,14 @@ export class FormResponseService {
     formId: string,
     applicantProcessId: string,
     responses: any,
-  ): Promise<FormResponse> {
+  ): Promise<{ success: boolean; message: string; response: FormResponse }> {
     const applicantProcess = await this.prisma.applicantProcess.findUnique({
       where: { id: applicantProcessId },
     });
     if (!applicantProcess) {
       throw new Error('Applicant process not found');
     }
-    return this.prisma.formResponse.upsert({
+    const existingResponse = await this.prisma.formResponse.upsert({
       where: {
         formId_applicantProcessId: {
           formId,
@@ -73,12 +74,18 @@ export class FormResponseService {
         responses,
       },
     });
+
+    return {
+      success: true,
+      message: 'Response submitted successfully',
+      response: existingResponse
+    };
   }
 
   async submitPublicResponse(
     formId: string,
     responses: any,
-  ): Promise<FormResponse> {
+  ): Promise<{ success: boolean; message: string; response: FormResponse }> {
     const form = await this.prisma.form.findUnique({
       where: { id: formId },
       include: { processForms: true },
@@ -86,30 +93,70 @@ export class FormResponseService {
     if (!form || !form.processForms.length) {
       throw new Error('Form not found or not associated with a process');
     }
-    // For public responses, we might not have an applicantProcessId initially.
-    // A new applicantProcessId might be generated or assigned later.
-    // For now, we'll create a new record.
-    return this.prisma.formResponse.create({
-      data: {
-        form: { connect: { id: formId } },
-        process: { connect: { id: form.processForms[0].processId } },
-        applicantProcess: {
-          create: {
-            applicant: { create: { email: 'public@user.com', password: '' } },
-            process: { connect: { id: form.processForms[0].processId } },
-          },
+
+    const processId = form.processForms[0].processId;
+
+    // For public responses, use a special public applicant process
+    // First, try to find existing public applicant process for this process
+    let publicApplicantProcess = await this.prisma.applicantProcess.findFirst({
+      where: {
+        processId,
+        applicant: { email: 'public@system.local' },
+      },
+    });
+
+    if (!publicApplicantProcess) {
+      // Create public applicant if not exists
+      const publicApplicant = await this.prisma.user.upsert({
+        where: { email: 'public@system.local' },
+        update: {},
+        create: {
+          email: 'public@system.local',
+          password: '',
+          firstName: 'Public',
+          lastName: 'User',
         },
+      });
+
+      publicApplicantProcess = await this.prisma.applicantProcess.create({
+        data: {
+          applicantId: publicApplicant.id,
+          processId,
+        },
+      });
+    }
+
+    // Upsert the response for this form and public applicant process
+    const existingResponse = await this.prisma.formResponse.upsert({
+      where: {
+        formId_applicantProcessId: {
+          formId,
+          applicantProcessId: publicApplicantProcess.id,
+        },
+      },
+      update: { responses },
+      create: {
+        form: { connect: { id: formId } },
+        process: { connect: { id: processId } },
+        applicantProcess: { connect: { id: publicApplicantProcess.id } },
         responses,
       },
     });
+
+    return {
+      success: true,
+      message: 'Response submitted successfully',
+      response: existingResponse
+    };
   }
 
-  async findByUserId(userId: string): Promise<FormResponse[]> {
-    return this.prisma.formResponse.findMany({
+  async findByUserId(userId: string): Promise<{ success: boolean; responses: FormResponse[] }> {
+    const responses = await this.prisma.formResponse.findMany({
       where: {
         applicantProcess: { applicantId: userId },
       },
     });
+    return { success: true, responses };
   }
 
   async findByUserIdAndFormId(
@@ -205,11 +252,6 @@ export class FormResponseService {
     return {
       success: true,
       responses,
-      process: {
-        name: process.name,
-        totalForms,
-        completedFormsCount,
-      },
     };
   }
 }
