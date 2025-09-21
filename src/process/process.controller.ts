@@ -53,22 +53,4 @@ export class ProcessController {
   duplicate(@Body() duplicateProcessDto: DuplicateProcessDto) {
     return this.processService.duplicate(duplicateProcessDto.processId, duplicateProcessDto.creatorId);
   }
-
-  @Get('process-forms/:processId/:userId')
-  getProcessFormsByProcessIdAndUserId(
-    @Param('processId') processId: string,
-    @Param('userId') userId: string,
-    @GetUser() user: AuthenticatedUser,
-  ) {
-    return this.processService.getProcessFormsByProcessIdAndUserId(processId, userId, user);
-  }
-
-  @Get('process-form/:processId/:formId')
-  getProcessForm(
-    @Param('processId') processId: string,
-    @Param('formId') formId: string,
-    @GetUser() user: AuthenticatedUser,
-  ) {
-    return this.processService.getProcessForm(processId, formId, user);
-  }
 }
