@@ -273,6 +273,17 @@ exports.Prisma.ApplicantProcessScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.ProcessedApplicationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  processId: 'processId',
+  applicantProcessId: 'applicantProcessId',
+  formId: 'formId',
+  formRoleIds: 'formRoleIds',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.APCompletedFormScalarFieldEnum = {
   id: 'id',
   applicantProcessId: 'applicantProcessId',
@@ -286,6 +297,10 @@ exports.Prisma.APCompletedFormScalarFieldEnum = {
   notificationToId: 'notificationToId',
   notificationToRoles: 'notificationToRoles',
   notificationComment: 'notificationComment',
+  notifyApplicant: 'notifyApplicant',
+  applicantNotificationContent: 'applicantNotificationContent',
+  editApplicationStatus: 'editApplicationStatus',
+  applicantViewFormAfterCompletion: 'applicantViewFormAfterCompletion',
   createdAt: 'createdAt'
 };
 
@@ -549,6 +564,15 @@ exports.Prisma.ApplicantProcessOrderByRelevanceFieldEnum = {
   processId: 'processId'
 };
 
+exports.Prisma.ProcessedApplicationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  processId: 'processId',
+  applicantProcessId: 'applicantProcessId',
+  formId: 'formId',
+  formRoleIds: 'formRoleIds'
+};
+
 exports.Prisma.APCompletedFormOrderByRelevanceFieldEnum = {
   id: 'id',
   applicantProcessId: 'applicantProcessId',
@@ -559,7 +583,8 @@ exports.Prisma.APCompletedFormOrderByRelevanceFieldEnum = {
   nextStepSpecifiedTo: 'nextStepSpecifiedTo',
   notificationToId: 'notificationToId',
   notificationToRoles: 'notificationToRoles',
-  notificationComment: 'notificationComment'
+  notificationComment: 'notificationComment',
+  applicantNotificationContent: 'applicantNotificationContent'
 };
 
 exports.Prisma.ProcessCommentOrderByRelevanceFieldEnum = {
@@ -723,6 +748,7 @@ exports.Prisma.ModelName = {
   FormResponse: 'FormResponse',
   ProcessForm: 'ProcessForm',
   ApplicantProcess: 'ApplicantProcess',
+  ProcessedApplication: 'ProcessedApplication',
   APCompletedForm: 'APCompletedForm',
   ProcessComment: 'ProcessComment',
   OrganizationUser: 'OrganizationUser',

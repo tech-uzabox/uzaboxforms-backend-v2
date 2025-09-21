@@ -10,26 +10,27 @@ datasource db {
 }
 
 model User {
-  id                 String             @id @default(uuid()) @db.Uuid
-  email              String             @unique @db.VarChar(255)
-  password           String             @db.VarChar(255)
-  firstName          String?
-  lastName           String?
-  photo              String?
-  googleId           String?            @unique
-  status             UserStatus         @default(ENABLED)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  applicantProcesses ApplicantProcess[]
-  auditLogs          AuditLog[]
-  files              File[]
-  createdForms       Form[]             @relation("FormCreator")
-  createdFolders     Folder[]           @relation("FolderCreator")
-  createdGroups      Group[]            @relation("GroupCreator")
-  organization       OrganizationUser?
-  createdProcesses   Process[]          @relation("ProcessCreator")
-  qrCodeDocuments    QrCodeDocument[]
-  roles              UserRole[]
+  id                    String                 @id @default(uuid()) @db.Uuid
+  email                 String                 @unique @db.VarChar(255)
+  password              String                 @db.VarChar(255)
+  firstName             String?
+  lastName              String?
+  photo                 String?
+  googleId              String?                @unique
+  status                UserStatus             @default(ENABLED)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  applicantProcesses    ApplicantProcess[]
+  auditLogs             AuditLog[]
+  files                 File[]
+  createdForms          Form[]                 @relation("FormCreator")
+  createdFolders        Folder[]               @relation("FolderCreator")
+  createdGroups         Group[]                @relation("GroupCreator")
+  organization          OrganizationUser?
+  createdProcesses      Process[]              @relation("ProcessCreator")
+  processedApplications ProcessedApplication[]
+  qrCodeDocuments       QrCodeDocument[]
+  roles                 UserRole[]
 
   @@index([email])
   @@map("users")
@@ -119,23 +120,24 @@ model GroupRole {
 }
 
 model Process {
-  id                        String             @id @default(uuid()) @db.Uuid
+  id                        String                 @id @default(uuid()) @db.Uuid
   name                      String
-  type                      ProcessType        @default(PRIVATE)
-  groupId                   String             @db.Uuid
-  creatorId                 String             @db.Uuid
-  status                    ProcessStatus      @default(ENABLED)
-  archived                  Boolean            @default(false)
-  staffViewForms            Boolean            @default(false)
-  applicantViewProcessLevel Boolean            @default(false)
-  createdAt                 DateTime           @default(now())
-  updatedAt                 DateTime           @updatedAt
+  type                      ProcessType            @default(PRIVATE)
+  groupId                   String                 @db.Uuid
+  creatorId                 String                 @db.Uuid
+  status                    ProcessStatus          @default(ENABLED)
+  archived                  Boolean                @default(false)
+  staffViewForms            Boolean                @default(false)
+  applicantViewProcessLevel Boolean                @default(false)
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
   applicantProcesses        ApplicantProcess[]
   formResponses             FormResponse[]
   forms                     ProcessForm[]
+  processedApplications     ProcessedApplication[]
   roles                     ProcessRole[]
-  creator                   User               @relation("ProcessCreator", fields: [creatorId], references: [id])
-  group                     Group              @relation(fields: [groupId], references: [id])
+  creator                   User                   @relation("ProcessCreator", fields: [creatorId], references: [id])
+  group                     Group                  @relation(fields: [groupId], references: [id])
 
   @@index([groupId])
   @@index([creatorId])
@@ -233,37 +235,61 @@ model ProcessForm {
 }
 
 model ApplicantProcess {
-  id             String            @id @default(uuid()) @db.Uuid
-  applicantId    String            @db.Uuid
-  processId      String            @db.Uuid
-  status         ProcessStatus     @default(ENABLED)
-  createdAt      DateTime          @default(now())
-  completedForms APCompletedForm[]
-  applicant      User              @relation(fields: [applicantId], references: [id])
-  process        Process           @relation(fields: [processId], references: [id])
-  responses      FormResponse[]
-  comments       ProcessComment[]
+  id                    String                 @id @default(uuid()) @db.Uuid
+  applicantId           String                 @db.Uuid
+  processId             String                 @db.Uuid
+  status                ProcessStatus          @default(ENABLED)
+  createdAt             DateTime               @default(now())
+  completedForms        APCompletedForm[]
+  applicant             User                   @relation(fields: [applicantId], references: [id])
+  process               Process                @relation(fields: [processId], references: [id])
+  processedApplications ProcessedApplication[]
+  responses             FormResponse[]
+  comments              ProcessComment[]
 
   @@index([applicantId])
   @@index([processId])
   @@map("applicant_processes")
 }
 
+model ProcessedApplication {
+  id                 String           @id @default(uuid()) @db.Uuid
+  userId             String           @db.Uuid
+  processId          String           @db.Uuid
+  applicantProcessId String           @db.Uuid
+  formId             String           @db.Uuid
+  formRoleIds        String[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  user               User             @relation(fields: [userId], references: [id])
+  process            Process          @relation(fields: [processId], references: [id])
+  applicantProcess   ApplicantProcess @relation(fields: [applicantProcessId], references: [id])
+
+  @@index([userId])
+  @@index([processId])
+  @@index([applicantProcessId])
+  @@map("processed_applications")
+}
+
 model APCompletedForm {
-  id                  String           @id @default(uuid()) @db.Uuid
-  applicantProcessId  String           @db.Uuid
-  formId              String           @db.Uuid
-  reviewerId          String?          @db.Uuid
-  nextStaffId         String?          @db.Uuid
-  nextStepType        NextStepType     @default(NOT_APPLICABLE)
-  nextStepRoles       String[]
-  nextStepSpecifiedTo String?
-  notificationType    NextStepType     @default(NOT_APPLICABLE)
-  notificationToId    String?          @db.Uuid
-  notificationToRoles String[]
-  notificationComment String?
-  createdAt           DateTime         @default(now())
-  applicantProcess    ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
+  id                               String           @id @default(uuid()) @db.Uuid
+  applicantProcessId               String           @db.Uuid
+  formId                           String           @db.Uuid
+  reviewerId                       String?          @db.Uuid
+  nextStaffId                      String?          @db.Uuid
+  nextStepType                     NextStepType     @default(NOT_APPLICABLE)
+  nextStepRoles                    String[]
+  nextStepSpecifiedTo              String?
+  notificationType                 NextStepType     @default(NOT_APPLICABLE)
+  notificationToId                 String?          @db.Uuid
+  notificationToRoles              String[]
+  notificationComment              String?
+  notifyApplicant                  Boolean          @default(false)
+  applicantNotificationContent     String?
+  editApplicationStatus            Boolean          @default(false)
+  applicantViewFormAfterCompletion Boolean          @default(false)
+  createdAt                        DateTime         @default(now())
+  applicantProcess                 ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
 
   @@index([applicantProcessId])
   @@map("ap_completed_forms")

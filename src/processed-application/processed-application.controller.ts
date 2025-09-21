@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GetUser, type AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -30,6 +30,11 @@ export class ProcessedApplicationController {
         @GetUser() user: AuthenticatedUser,
     ) {
         return this.processedApplicationService.getProcessedApplicationsByUserAndProcess(userId, processId);
+    }
+
+    @Put(':id')
+    update(@Param('id') id: string, @Body() updateData: Partial<CreateProcessedApplicationDto>, @GetUser() user: AuthenticatedUser) {
+        return this.processedApplicationService.update(id, updateData);
     }
 
     @Get(':userId/:processId/:applicantProcessId')

@@ -84,6 +84,11 @@ export type ProcessForm = $Result.DefaultSelection<Prisma.$ProcessFormPayload>
  */
 export type ApplicantProcess = $Result.DefaultSelection<Prisma.$ApplicantProcessPayload>
 /**
+ * Model ProcessedApplication
+ * 
+ */
+export type ProcessedApplication = $Result.DefaultSelection<Prisma.$ProcessedApplicationPayload>
+/**
  * Model APCompletedForm
  * 
  */
@@ -544,6 +549,16 @@ export class PrismaClient<
     * ```
     */
   get applicantProcess(): Prisma.ApplicantProcessDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.processedApplication`: Exposes CRUD operations for the **ProcessedApplication** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProcessedApplications
+    * const processedApplications = await prisma.processedApplication.findMany()
+    * ```
+    */
+  get processedApplication(): Prisma.ProcessedApplicationDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.aPCompletedForm`: Exposes CRUD operations for the **APCompletedForm** model.
@@ -1148,6 +1163,7 @@ export namespace Prisma {
     FormResponse: 'FormResponse',
     ProcessForm: 'ProcessForm',
     ApplicantProcess: 'ApplicantProcess',
+    ProcessedApplication: 'ProcessedApplication',
     APCompletedForm: 'APCompletedForm',
     ProcessComment: 'ProcessComment',
     OrganizationUser: 'OrganizationUser',
@@ -1181,7 +1197,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave"
+      modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2218,6 +2234,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ApplicantProcessCountArgs<ExtArgs>
             result: $Utils.Optional<ApplicantProcessCountAggregateOutputType> | number
+          }
+        }
+      }
+      ProcessedApplication: {
+        payload: Prisma.$ProcessedApplicationPayload<ExtArgs>
+        fields: Prisma.ProcessedApplicationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProcessedApplicationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProcessedApplicationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>
+          }
+          findFirst: {
+            args: Prisma.ProcessedApplicationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProcessedApplicationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>
+          }
+          findMany: {
+            args: Prisma.ProcessedApplicationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>[]
+          }
+          create: {
+            args: Prisma.ProcessedApplicationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>
+          }
+          createMany: {
+            args: Prisma.ProcessedApplicationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProcessedApplicationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>[]
+          }
+          delete: {
+            args: Prisma.ProcessedApplicationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>
+          }
+          update: {
+            args: Prisma.ProcessedApplicationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProcessedApplicationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProcessedApplicationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProcessedApplicationUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProcessedApplicationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProcessedApplicationPayload>
+          }
+          aggregate: {
+            args: Prisma.ProcessedApplicationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProcessedApplication>
+          }
+          groupBy: {
+            args: Prisma.ProcessedApplicationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProcessedApplicationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProcessedApplicationCountArgs<ExtArgs>
+            result: $Utils.Optional<ProcessedApplicationCountAggregateOutputType> | number
           }
         }
       }
@@ -3441,6 +3531,7 @@ export namespace Prisma {
     formResponse?: FormResponseOmit
     processForm?: ProcessFormOmit
     applicantProcess?: ApplicantProcessOmit
+    processedApplication?: ProcessedApplicationOmit
     aPCompletedForm?: APCompletedFormOmit
     processComment?: ProcessCommentOmit
     organizationUser?: OrganizationUserOmit
@@ -3543,6 +3634,7 @@ export namespace Prisma {
     createdFolders: number
     createdGroups: number
     createdProcesses: number
+    processedApplications: number
     qrCodeDocuments: number
     roles: number
   }
@@ -3555,6 +3647,7 @@ export namespace Prisma {
     createdFolders?: boolean | UserCountOutputTypeCountCreatedFoldersArgs
     createdGroups?: boolean | UserCountOutputTypeCountCreatedGroupsArgs
     createdProcesses?: boolean | UserCountOutputTypeCountCreatedProcessesArgs
+    processedApplications?: boolean | UserCountOutputTypeCountProcessedApplicationsArgs
     qrCodeDocuments?: boolean | UserCountOutputTypeCountQrCodeDocumentsArgs
     roles?: boolean | UserCountOutputTypeCountRolesArgs
   }
@@ -3617,6 +3710,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCreatedProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProcessWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountProcessedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessedApplicationWhereInput
   }
 
   /**
@@ -3731,6 +3831,7 @@ export namespace Prisma {
     applicantProcesses: number
     formResponses: number
     forms: number
+    processedApplications: number
     roles: number
   }
 
@@ -3738,6 +3839,7 @@ export namespace Prisma {
     applicantProcesses?: boolean | ProcessCountOutputTypeCountApplicantProcessesArgs
     formResponses?: boolean | ProcessCountOutputTypeCountFormResponsesArgs
     forms?: boolean | ProcessCountOutputTypeCountFormsArgs
+    processedApplications?: boolean | ProcessCountOutputTypeCountProcessedApplicationsArgs
     roles?: boolean | ProcessCountOutputTypeCountRolesArgs
   }
 
@@ -3771,6 +3873,13 @@ export namespace Prisma {
    */
   export type ProcessCountOutputTypeCountFormsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProcessFormWhereInput
+  }
+
+  /**
+   * ProcessCountOutputType without action
+   */
+  export type ProcessCountOutputTypeCountProcessedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessedApplicationWhereInput
   }
 
   /**
@@ -3858,12 +3967,14 @@ export namespace Prisma {
 
   export type ApplicantProcessCountOutputType = {
     completedForms: number
+    processedApplications: number
     responses: number
     comments: number
   }
 
   export type ApplicantProcessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     completedForms?: boolean | ApplicantProcessCountOutputTypeCountCompletedFormsArgs
+    processedApplications?: boolean | ApplicantProcessCountOutputTypeCountProcessedApplicationsArgs
     responses?: boolean | ApplicantProcessCountOutputTypeCountResponsesArgs
     comments?: boolean | ApplicantProcessCountOutputTypeCountCommentsArgs
   }
@@ -3884,6 +3995,13 @@ export namespace Prisma {
    */
   export type ApplicantProcessCountOutputTypeCountCompletedFormsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: APCompletedFormWhereInput
+  }
+
+  /**
+   * ApplicantProcessCountOutputType without action
+   */
+  export type ApplicantProcessCountOutputTypeCountProcessedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessedApplicationWhereInput
   }
 
   /**
@@ -4272,6 +4390,7 @@ export namespace Prisma {
     createdGroups?: boolean | User$createdGroupsArgs<ExtArgs>
     organization?: boolean | User$organizationArgs<ExtArgs>
     createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
+    processedApplications?: boolean | User$processedApplicationsArgs<ExtArgs>
     qrCodeDocuments?: boolean | User$qrCodeDocumentsArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4326,6 +4445,7 @@ export namespace Prisma {
     createdGroups?: boolean | User$createdGroupsArgs<ExtArgs>
     organization?: boolean | User$organizationArgs<ExtArgs>
     createdProcesses?: boolean | User$createdProcessesArgs<ExtArgs>
+    processedApplications?: boolean | User$processedApplicationsArgs<ExtArgs>
     qrCodeDocuments?: boolean | User$qrCodeDocumentsArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4344,6 +4464,7 @@ export namespace Prisma {
       createdGroups: Prisma.$GroupPayload<ExtArgs>[]
       organization: Prisma.$OrganizationUserPayload<ExtArgs> | null
       createdProcesses: Prisma.$ProcessPayload<ExtArgs>[]
+      processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
       qrCodeDocuments: Prisma.$QrCodeDocumentPayload<ExtArgs>[]
       roles: Prisma.$UserRolePayload<ExtArgs>[]
     }
@@ -4760,6 +4881,7 @@ export namespace Prisma {
     createdGroups<T extends User$createdGroupsArgs<ExtArgs> = {}>(args?: Subset<T, User$createdGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     organization<T extends User$organizationArgs<ExtArgs> = {}>(args?: Subset<T, User$organizationArgs<ExtArgs>>): Prisma__OrganizationUserClient<$Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     createdProcesses<T extends User$createdProcessesArgs<ExtArgs> = {}>(args?: Subset<T, User$createdProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    processedApplications<T extends User$processedApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     qrCodeDocuments<T extends User$qrCodeDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$qrCodeDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodeDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -5382,6 +5504,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProcessScalarFieldEnum | ProcessScalarFieldEnum[]
+  }
+
+  /**
+   * User.processedApplications
+   */
+  export type User$processedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    where?: ProcessedApplicationWhereInput
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    cursor?: ProcessedApplicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessedApplicationScalarFieldEnum | ProcessedApplicationScalarFieldEnum[]
   }
 
   /**
@@ -12350,6 +12496,7 @@ export namespace Prisma {
     applicantProcesses?: boolean | Process$applicantProcessesArgs<ExtArgs>
     formResponses?: boolean | Process$formResponsesArgs<ExtArgs>
     forms?: boolean | Process$formsArgs<ExtArgs>
+    processedApplications?: boolean | Process$processedApplicationsArgs<ExtArgs>
     roles?: boolean | Process$rolesArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
     group?: boolean | GroupDefaultArgs<ExtArgs>
@@ -12407,6 +12554,7 @@ export namespace Prisma {
     applicantProcesses?: boolean | Process$applicantProcessesArgs<ExtArgs>
     formResponses?: boolean | Process$formResponsesArgs<ExtArgs>
     forms?: boolean | Process$formsArgs<ExtArgs>
+    processedApplications?: boolean | Process$processedApplicationsArgs<ExtArgs>
     roles?: boolean | Process$rolesArgs<ExtArgs>
     creator?: boolean | UserDefaultArgs<ExtArgs>
     group?: boolean | GroupDefaultArgs<ExtArgs>
@@ -12427,6 +12575,7 @@ export namespace Prisma {
       applicantProcesses: Prisma.$ApplicantProcessPayload<ExtArgs>[]
       formResponses: Prisma.$FormResponsePayload<ExtArgs>[]
       forms: Prisma.$ProcessFormPayload<ExtArgs>[]
+      processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
       roles: Prisma.$ProcessRolePayload<ExtArgs>[]
       creator: Prisma.$UserPayload<ExtArgs>
       group: Prisma.$GroupPayload<ExtArgs>
@@ -12840,6 +12989,7 @@ export namespace Prisma {
     applicantProcesses<T extends Process$applicantProcessesArgs<ExtArgs> = {}>(args?: Subset<T, Process$applicantProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     formResponses<T extends Process$formResponsesArgs<ExtArgs> = {}>(args?: Subset<T, Process$formResponsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     forms<T extends Process$formsArgs<ExtArgs> = {}>(args?: Subset<T, Process$formsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    processedApplications<T extends Process$processedApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, Process$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends Process$rolesArgs<ExtArgs> = {}>(args?: Subset<T, Process$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     creator<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     group<T extends GroupDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GroupDefaultArgs<ExtArgs>>): Prisma__GroupClient<$Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -13357,6 +13507,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProcessFormScalarFieldEnum | ProcessFormScalarFieldEnum[]
+  }
+
+  /**
+   * Process.processedApplications
+   */
+  export type Process$processedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    where?: ProcessedApplicationWhereInput
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    cursor?: ProcessedApplicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessedApplicationScalarFieldEnum | ProcessedApplicationScalarFieldEnum[]
   }
 
   /**
@@ -19303,6 +19477,7 @@ export namespace Prisma {
     completedForms?: boolean | ApplicantProcess$completedFormsArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
+    processedApplications?: boolean | ApplicantProcess$processedApplicationsArgs<ExtArgs>
     responses?: boolean | ApplicantProcess$responsesArgs<ExtArgs>
     comments?: boolean | ApplicantProcess$commentsArgs<ExtArgs>
     _count?: boolean | ApplicantProcessCountOutputTypeDefaultArgs<ExtArgs>
@@ -19341,6 +19516,7 @@ export namespace Prisma {
     completedForms?: boolean | ApplicantProcess$completedFormsArgs<ExtArgs>
     applicant?: boolean | UserDefaultArgs<ExtArgs>
     process?: boolean | ProcessDefaultArgs<ExtArgs>
+    processedApplications?: boolean | ApplicantProcess$processedApplicationsArgs<ExtArgs>
     responses?: boolean | ApplicantProcess$responsesArgs<ExtArgs>
     comments?: boolean | ApplicantProcess$commentsArgs<ExtArgs>
     _count?: boolean | ApplicantProcessCountOutputTypeDefaultArgs<ExtArgs>
@@ -19360,6 +19536,7 @@ export namespace Prisma {
       completedForms: Prisma.$APCompletedFormPayload<ExtArgs>[]
       applicant: Prisma.$UserPayload<ExtArgs>
       process: Prisma.$ProcessPayload<ExtArgs>
+      processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
       responses: Prisma.$FormResponsePayload<ExtArgs>[]
       comments: Prisma.$ProcessCommentPayload<ExtArgs>[]
     }
@@ -19766,6 +19943,7 @@ export namespace Prisma {
     completedForms<T extends ApplicantProcess$completedFormsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$completedFormsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$APCompletedFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     applicant<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    processedApplications<T extends ApplicantProcess$processedApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     responses<T extends ApplicantProcess$responsesArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FormResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     comments<T extends ApplicantProcess$commentsArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcess$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -20231,6 +20409,30 @@ export namespace Prisma {
   }
 
   /**
+   * ApplicantProcess.processedApplications
+   */
+  export type ApplicantProcess$processedApplicationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    where?: ProcessedApplicationWhereInput
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    cursor?: ProcessedApplicationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProcessedApplicationScalarFieldEnum | ProcessedApplicationScalarFieldEnum[]
+  }
+
+  /**
    * ApplicantProcess.responses
    */
   export type ApplicantProcess$responsesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -20298,6 +20500,1124 @@ export namespace Prisma {
 
 
   /**
+   * Model ProcessedApplication
+   */
+
+  export type AggregateProcessedApplication = {
+    _count: ProcessedApplicationCountAggregateOutputType | null
+    _min: ProcessedApplicationMinAggregateOutputType | null
+    _max: ProcessedApplicationMaxAggregateOutputType | null
+  }
+
+  export type ProcessedApplicationMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    processId: string | null
+    applicantProcessId: string | null
+    formId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProcessedApplicationMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    processId: string | null
+    applicantProcessId: string | null
+    formId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ProcessedApplicationCountAggregateOutputType = {
+    id: number
+    userId: number
+    processId: number
+    applicantProcessId: number
+    formId: number
+    formRoleIds: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ProcessedApplicationMinAggregateInputType = {
+    id?: true
+    userId?: true
+    processId?: true
+    applicantProcessId?: true
+    formId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProcessedApplicationMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    processId?: true
+    applicantProcessId?: true
+    formId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ProcessedApplicationCountAggregateInputType = {
+    id?: true
+    userId?: true
+    processId?: true
+    applicantProcessId?: true
+    formId?: true
+    formRoleIds?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ProcessedApplicationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProcessedApplication to aggregate.
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessedApplications to fetch.
+     */
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProcessedApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessedApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessedApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProcessedApplications
+    **/
+    _count?: true | ProcessedApplicationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProcessedApplicationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProcessedApplicationMaxAggregateInputType
+  }
+
+  export type GetProcessedApplicationAggregateType<T extends ProcessedApplicationAggregateArgs> = {
+        [P in keyof T & keyof AggregateProcessedApplication]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProcessedApplication[P]>
+      : GetScalarType<T[P], AggregateProcessedApplication[P]>
+  }
+
+
+
+
+  export type ProcessedApplicationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProcessedApplicationWhereInput
+    orderBy?: ProcessedApplicationOrderByWithAggregationInput | ProcessedApplicationOrderByWithAggregationInput[]
+    by: ProcessedApplicationScalarFieldEnum[] | ProcessedApplicationScalarFieldEnum
+    having?: ProcessedApplicationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProcessedApplicationCountAggregateInputType | true
+    _min?: ProcessedApplicationMinAggregateInputType
+    _max?: ProcessedApplicationMaxAggregateInputType
+  }
+
+  export type ProcessedApplicationGroupByOutputType = {
+    id: string
+    userId: string
+    processId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds: string[]
+    createdAt: Date
+    updatedAt: Date
+    _count: ProcessedApplicationCountAggregateOutputType | null
+    _min: ProcessedApplicationMinAggregateOutputType | null
+    _max: ProcessedApplicationMaxAggregateOutputType | null
+  }
+
+  type GetProcessedApplicationGroupByPayload<T extends ProcessedApplicationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProcessedApplicationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProcessedApplicationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProcessedApplicationGroupByOutputType[P]>
+            : GetScalarType<T[P], ProcessedApplicationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProcessedApplicationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    processId?: boolean
+    applicantProcessId?: boolean
+    formId?: boolean
+    formRoleIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["processedApplication"]>
+
+  export type ProcessedApplicationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    processId?: boolean
+    applicantProcessId?: boolean
+    formId?: boolean
+    formRoleIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["processedApplication"]>
+
+  export type ProcessedApplicationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    processId?: boolean
+    applicantProcessId?: boolean
+    formId?: boolean
+    formRoleIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["processedApplication"]>
+
+  export type ProcessedApplicationSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    processId?: boolean
+    applicantProcessId?: boolean
+    formId?: boolean
+    formRoleIds?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ProcessedApplicationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "processId" | "applicantProcessId" | "formId" | "formRoleIds" | "createdAt" | "updatedAt", ExtArgs["result"]["processedApplication"]>
+  export type ProcessedApplicationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
+  }
+  export type ProcessedApplicationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
+  }
+  export type ProcessedApplicationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+    process?: boolean | ProcessDefaultArgs<ExtArgs>
+    applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
+  }
+
+  export type $ProcessedApplicationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ProcessedApplication"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+      process: Prisma.$ProcessPayload<ExtArgs>
+      applicantProcess: Prisma.$ApplicantProcessPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      processId: string
+      applicantProcessId: string
+      formId: string
+      formRoleIds: string[]
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["processedApplication"]>
+    composites: {}
+  }
+
+  type ProcessedApplicationGetPayload<S extends boolean | null | undefined | ProcessedApplicationDefaultArgs> = $Result.GetResult<Prisma.$ProcessedApplicationPayload, S>
+
+  type ProcessedApplicationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProcessedApplicationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit' | 'relationLoadStrategy'> & {
+      select?: ProcessedApplicationCountAggregateInputType | true
+    }
+
+  export interface ProcessedApplicationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ProcessedApplication'], meta: { name: 'ProcessedApplication' } }
+    /**
+     * Find zero or one ProcessedApplication that matches the filter.
+     * @param {ProcessedApplicationFindUniqueArgs} args - Arguments to find a ProcessedApplication
+     * @example
+     * // Get one ProcessedApplication
+     * const processedApplication = await prisma.processedApplication.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProcessedApplicationFindUniqueArgs>(args: SelectSubset<T, ProcessedApplicationFindUniqueArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ProcessedApplication that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProcessedApplicationFindUniqueOrThrowArgs} args - Arguments to find a ProcessedApplication
+     * @example
+     * // Get one ProcessedApplication
+     * const processedApplication = await prisma.processedApplication.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProcessedApplicationFindUniqueOrThrowArgs>(args: SelectSubset<T, ProcessedApplicationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProcessedApplication that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationFindFirstArgs} args - Arguments to find a ProcessedApplication
+     * @example
+     * // Get one ProcessedApplication
+     * const processedApplication = await prisma.processedApplication.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProcessedApplicationFindFirstArgs>(args?: SelectSubset<T, ProcessedApplicationFindFirstArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ProcessedApplication that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationFindFirstOrThrowArgs} args - Arguments to find a ProcessedApplication
+     * @example
+     * // Get one ProcessedApplication
+     * const processedApplication = await prisma.processedApplication.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProcessedApplicationFindFirstOrThrowArgs>(args?: SelectSubset<T, ProcessedApplicationFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ProcessedApplications that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProcessedApplications
+     * const processedApplications = await prisma.processedApplication.findMany()
+     * 
+     * // Get first 10 ProcessedApplications
+     * const processedApplications = await prisma.processedApplication.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const processedApplicationWithIdOnly = await prisma.processedApplication.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProcessedApplicationFindManyArgs>(args?: SelectSubset<T, ProcessedApplicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ProcessedApplication.
+     * @param {ProcessedApplicationCreateArgs} args - Arguments to create a ProcessedApplication.
+     * @example
+     * // Create one ProcessedApplication
+     * const ProcessedApplication = await prisma.processedApplication.create({
+     *   data: {
+     *     // ... data to create a ProcessedApplication
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProcessedApplicationCreateArgs>(args: SelectSubset<T, ProcessedApplicationCreateArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ProcessedApplications.
+     * @param {ProcessedApplicationCreateManyArgs} args - Arguments to create many ProcessedApplications.
+     * @example
+     * // Create many ProcessedApplications
+     * const processedApplication = await prisma.processedApplication.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProcessedApplicationCreateManyArgs>(args?: SelectSubset<T, ProcessedApplicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ProcessedApplications and returns the data saved in the database.
+     * @param {ProcessedApplicationCreateManyAndReturnArgs} args - Arguments to create many ProcessedApplications.
+     * @example
+     * // Create many ProcessedApplications
+     * const processedApplication = await prisma.processedApplication.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ProcessedApplications and only return the `id`
+     * const processedApplicationWithIdOnly = await prisma.processedApplication.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProcessedApplicationCreateManyAndReturnArgs>(args?: SelectSubset<T, ProcessedApplicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ProcessedApplication.
+     * @param {ProcessedApplicationDeleteArgs} args - Arguments to delete one ProcessedApplication.
+     * @example
+     * // Delete one ProcessedApplication
+     * const ProcessedApplication = await prisma.processedApplication.delete({
+     *   where: {
+     *     // ... filter to delete one ProcessedApplication
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProcessedApplicationDeleteArgs>(args: SelectSubset<T, ProcessedApplicationDeleteArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ProcessedApplication.
+     * @param {ProcessedApplicationUpdateArgs} args - Arguments to update one ProcessedApplication.
+     * @example
+     * // Update one ProcessedApplication
+     * const processedApplication = await prisma.processedApplication.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProcessedApplicationUpdateArgs>(args: SelectSubset<T, ProcessedApplicationUpdateArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ProcessedApplications.
+     * @param {ProcessedApplicationDeleteManyArgs} args - Arguments to filter ProcessedApplications to delete.
+     * @example
+     * // Delete a few ProcessedApplications
+     * const { count } = await prisma.processedApplication.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProcessedApplicationDeleteManyArgs>(args?: SelectSubset<T, ProcessedApplicationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProcessedApplications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProcessedApplications
+     * const processedApplication = await prisma.processedApplication.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProcessedApplicationUpdateManyArgs>(args: SelectSubset<T, ProcessedApplicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProcessedApplications and returns the data updated in the database.
+     * @param {ProcessedApplicationUpdateManyAndReturnArgs} args - Arguments to update many ProcessedApplications.
+     * @example
+     * // Update many ProcessedApplications
+     * const processedApplication = await prisma.processedApplication.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ProcessedApplications and only return the `id`
+     * const processedApplicationWithIdOnly = await prisma.processedApplication.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProcessedApplicationUpdateManyAndReturnArgs>(args: SelectSubset<T, ProcessedApplicationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ProcessedApplication.
+     * @param {ProcessedApplicationUpsertArgs} args - Arguments to update or create a ProcessedApplication.
+     * @example
+     * // Update or create a ProcessedApplication
+     * const processedApplication = await prisma.processedApplication.upsert({
+     *   create: {
+     *     // ... data to create a ProcessedApplication
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProcessedApplication we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProcessedApplicationUpsertArgs>(args: SelectSubset<T, ProcessedApplicationUpsertArgs<ExtArgs>>): Prisma__ProcessedApplicationClient<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ProcessedApplications.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationCountArgs} args - Arguments to filter ProcessedApplications to count.
+     * @example
+     * // Count the number of ProcessedApplications
+     * const count = await prisma.processedApplication.count({
+     *   where: {
+     *     // ... the filter for the ProcessedApplications we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProcessedApplicationCountArgs>(
+      args?: Subset<T, ProcessedApplicationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProcessedApplicationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProcessedApplication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProcessedApplicationAggregateArgs>(args: Subset<T, ProcessedApplicationAggregateArgs>): Prisma.PrismaPromise<GetProcessedApplicationAggregateType<T>>
+
+    /**
+     * Group by ProcessedApplication.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProcessedApplicationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProcessedApplicationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProcessedApplicationGroupByArgs['orderBy'] }
+        : { orderBy?: ProcessedApplicationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProcessedApplicationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProcessedApplicationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ProcessedApplication model
+   */
+  readonly fields: ProcessedApplicationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProcessedApplication.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProcessedApplicationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    process<T extends ProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProcessDefaultArgs<ExtArgs>>): Prisma__ProcessClient<$Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    applicantProcess<T extends ApplicantProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ApplicantProcessDefaultArgs<ExtArgs>>): Prisma__ApplicantProcessClient<$Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ProcessedApplication model
+   */
+  interface ProcessedApplicationFieldRefs {
+    readonly id: FieldRef<"ProcessedApplication", 'String'>
+    readonly userId: FieldRef<"ProcessedApplication", 'String'>
+    readonly processId: FieldRef<"ProcessedApplication", 'String'>
+    readonly applicantProcessId: FieldRef<"ProcessedApplication", 'String'>
+    readonly formId: FieldRef<"ProcessedApplication", 'String'>
+    readonly formRoleIds: FieldRef<"ProcessedApplication", 'String[]'>
+    readonly createdAt: FieldRef<"ProcessedApplication", 'DateTime'>
+    readonly updatedAt: FieldRef<"ProcessedApplication", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ProcessedApplication findUnique
+   */
+  export type ProcessedApplicationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessedApplication to fetch.
+     */
+    where: ProcessedApplicationWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication findUniqueOrThrow
+   */
+  export type ProcessedApplicationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessedApplication to fetch.
+     */
+    where: ProcessedApplicationWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication findFirst
+   */
+  export type ProcessedApplicationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessedApplication to fetch.
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessedApplications to fetch.
+     */
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProcessedApplications.
+     */
+    cursor?: ProcessedApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessedApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessedApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProcessedApplications.
+     */
+    distinct?: ProcessedApplicationScalarFieldEnum | ProcessedApplicationScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication findFirstOrThrow
+   */
+  export type ProcessedApplicationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessedApplication to fetch.
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessedApplications to fetch.
+     */
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProcessedApplications.
+     */
+    cursor?: ProcessedApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessedApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessedApplications.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProcessedApplications.
+     */
+    distinct?: ProcessedApplicationScalarFieldEnum | ProcessedApplicationScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication findMany
+   */
+  export type ProcessedApplicationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * Filter, which ProcessedApplications to fetch.
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProcessedApplications to fetch.
+     */
+    orderBy?: ProcessedApplicationOrderByWithRelationInput | ProcessedApplicationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProcessedApplications.
+     */
+    cursor?: ProcessedApplicationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProcessedApplications from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProcessedApplications.
+     */
+    skip?: number
+    distinct?: ProcessedApplicationScalarFieldEnum | ProcessedApplicationScalarFieldEnum[]
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication create
+   */
+  export type ProcessedApplicationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ProcessedApplication.
+     */
+    data: XOR<ProcessedApplicationCreateInput, ProcessedApplicationUncheckedCreateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication createMany
+   */
+  export type ProcessedApplicationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ProcessedApplications.
+     */
+    data: ProcessedApplicationCreateManyInput | ProcessedApplicationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ProcessedApplication createManyAndReturn
+   */
+  export type ProcessedApplicationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * The data used to create many ProcessedApplications.
+     */
+    data: ProcessedApplicationCreateManyInput | ProcessedApplicationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProcessedApplication update
+   */
+  export type ProcessedApplicationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ProcessedApplication.
+     */
+    data: XOR<ProcessedApplicationUpdateInput, ProcessedApplicationUncheckedUpdateInput>
+    /**
+     * Choose, which ProcessedApplication to update.
+     */
+    where: ProcessedApplicationWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication updateMany
+   */
+  export type ProcessedApplicationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ProcessedApplications.
+     */
+    data: XOR<ProcessedApplicationUpdateManyMutationInput, ProcessedApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which ProcessedApplications to update
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * Limit how many ProcessedApplications to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessedApplication updateManyAndReturn
+   */
+  export type ProcessedApplicationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * The data used to update ProcessedApplications.
+     */
+    data: XOR<ProcessedApplicationUpdateManyMutationInput, ProcessedApplicationUncheckedUpdateManyInput>
+    /**
+     * Filter which ProcessedApplications to update
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * Limit how many ProcessedApplications to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ProcessedApplication upsert
+   */
+  export type ProcessedApplicationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ProcessedApplication to update in case it exists.
+     */
+    where: ProcessedApplicationWhereUniqueInput
+    /**
+     * In case the ProcessedApplication found by the `where` argument doesn't exist, create a new ProcessedApplication with this data.
+     */
+    create: XOR<ProcessedApplicationCreateInput, ProcessedApplicationUncheckedCreateInput>
+    /**
+     * In case the ProcessedApplication was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProcessedApplicationUpdateInput, ProcessedApplicationUncheckedUpdateInput>
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication delete
+   */
+  export type ProcessedApplicationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+    /**
+     * Filter which ProcessedApplication to delete.
+     */
+    where: ProcessedApplicationWhereUniqueInput
+    relationLoadStrategy?: RelationLoadStrategy
+  }
+
+  /**
+   * ProcessedApplication deleteMany
+   */
+  export type ProcessedApplicationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ProcessedApplications to delete
+     */
+    where?: ProcessedApplicationWhereInput
+    /**
+     * Limit how many ProcessedApplications to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ProcessedApplication without action
+   */
+  export type ProcessedApplicationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProcessedApplication
+     */
+    select?: ProcessedApplicationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ProcessedApplication
+     */
+    omit?: ProcessedApplicationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProcessedApplicationInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model APCompletedForm
    */
 
@@ -20318,6 +21638,10 @@ export namespace Prisma {
     notificationType: $Enums.NextStepType | null
     notificationToId: string | null
     notificationComment: string | null
+    notifyApplicant: boolean | null
+    applicantNotificationContent: string | null
+    editApplicationStatus: boolean | null
+    applicantViewFormAfterCompletion: boolean | null
     createdAt: Date | null
   }
 
@@ -20332,6 +21656,10 @@ export namespace Prisma {
     notificationType: $Enums.NextStepType | null
     notificationToId: string | null
     notificationComment: string | null
+    notifyApplicant: boolean | null
+    applicantNotificationContent: string | null
+    editApplicationStatus: boolean | null
+    applicantViewFormAfterCompletion: boolean | null
     createdAt: Date | null
   }
 
@@ -20348,6 +21676,10 @@ export namespace Prisma {
     notificationToId: number
     notificationToRoles: number
     notificationComment: number
+    notifyApplicant: number
+    applicantNotificationContent: number
+    editApplicationStatus: number
+    applicantViewFormAfterCompletion: number
     createdAt: number
     _all: number
   }
@@ -20364,6 +21696,10 @@ export namespace Prisma {
     notificationType?: true
     notificationToId?: true
     notificationComment?: true
+    notifyApplicant?: true
+    applicantNotificationContent?: true
+    editApplicationStatus?: true
+    applicantViewFormAfterCompletion?: true
     createdAt?: true
   }
 
@@ -20378,6 +21714,10 @@ export namespace Prisma {
     notificationType?: true
     notificationToId?: true
     notificationComment?: true
+    notifyApplicant?: true
+    applicantNotificationContent?: true
+    editApplicationStatus?: true
+    applicantViewFormAfterCompletion?: true
     createdAt?: true
   }
 
@@ -20394,6 +21734,10 @@ export namespace Prisma {
     notificationToId?: true
     notificationToRoles?: true
     notificationComment?: true
+    notifyApplicant?: true
+    applicantNotificationContent?: true
+    editApplicationStatus?: true
+    applicantViewFormAfterCompletion?: true
     createdAt?: true
     _all?: true
   }
@@ -20483,6 +21827,10 @@ export namespace Prisma {
     notificationToId: string | null
     notificationToRoles: string[]
     notificationComment: string | null
+    notifyApplicant: boolean
+    applicantNotificationContent: string | null
+    editApplicationStatus: boolean
+    applicantViewFormAfterCompletion: boolean
     createdAt: Date
     _count: APCompletedFormCountAggregateOutputType | null
     _min: APCompletedFormMinAggregateOutputType | null
@@ -20516,6 +21864,10 @@ export namespace Prisma {
     notificationToId?: boolean
     notificationToRoles?: boolean
     notificationComment?: boolean
+    notifyApplicant?: boolean
+    applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aPCompletedForm"]>
@@ -20533,6 +21885,10 @@ export namespace Prisma {
     notificationToId?: boolean
     notificationToRoles?: boolean
     notificationComment?: boolean
+    notifyApplicant?: boolean
+    applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aPCompletedForm"]>
@@ -20550,6 +21906,10 @@ export namespace Prisma {
     notificationToId?: boolean
     notificationToRoles?: boolean
     notificationComment?: boolean
+    notifyApplicant?: boolean
+    applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["aPCompletedForm"]>
@@ -20567,10 +21927,14 @@ export namespace Prisma {
     notificationToId?: boolean
     notificationToRoles?: boolean
     notificationComment?: boolean
+    notifyApplicant?: boolean
+    applicantNotificationContent?: boolean
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: boolean
   }
 
-  export type APCompletedFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicantProcessId" | "formId" | "reviewerId" | "nextStaffId" | "nextStepType" | "nextStepRoles" | "nextStepSpecifiedTo" | "notificationType" | "notificationToId" | "notificationToRoles" | "notificationComment" | "createdAt", ExtArgs["result"]["aPCompletedForm"]>
+  export type APCompletedFormOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "applicantProcessId" | "formId" | "reviewerId" | "nextStaffId" | "nextStepType" | "nextStepRoles" | "nextStepSpecifiedTo" | "notificationType" | "notificationToId" | "notificationToRoles" | "notificationComment" | "notifyApplicant" | "applicantNotificationContent" | "editApplicationStatus" | "applicantViewFormAfterCompletion" | "createdAt", ExtArgs["result"]["aPCompletedForm"]>
   export type APCompletedFormInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     applicantProcess?: boolean | ApplicantProcessDefaultArgs<ExtArgs>
   }
@@ -20599,6 +21963,10 @@ export namespace Prisma {
       notificationToId: string | null
       notificationToRoles: string[]
       notificationComment: string | null
+      notifyApplicant: boolean
+      applicantNotificationContent: string | null
+      editApplicationStatus: boolean
+      applicantViewFormAfterCompletion: boolean
       createdAt: Date
     }, ExtArgs["result"]["aPCompletedForm"]>
     composites: {}
@@ -21036,6 +22404,10 @@ export namespace Prisma {
     readonly notificationToId: FieldRef<"APCompletedForm", 'String'>
     readonly notificationToRoles: FieldRef<"APCompletedForm", 'String[]'>
     readonly notificationComment: FieldRef<"APCompletedForm", 'String'>
+    readonly notifyApplicant: FieldRef<"APCompletedForm", 'Boolean'>
+    readonly applicantNotificationContent: FieldRef<"APCompletedForm", 'String'>
+    readonly editApplicationStatus: FieldRef<"APCompletedForm", 'Boolean'>
+    readonly applicantViewFormAfterCompletion: FieldRef<"APCompletedForm", 'Boolean'>
     readonly createdAt: FieldRef<"APCompletedForm", 'DateTime'>
   }
     
@@ -36666,6 +38038,20 @@ export namespace Prisma {
   export type ApplicantProcessScalarFieldEnum = (typeof ApplicantProcessScalarFieldEnum)[keyof typeof ApplicantProcessScalarFieldEnum]
 
 
+  export const ProcessedApplicationScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    processId: 'processId',
+    applicantProcessId: 'applicantProcessId',
+    formId: 'formId',
+    formRoleIds: 'formRoleIds',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ProcessedApplicationScalarFieldEnum = (typeof ProcessedApplicationScalarFieldEnum)[keyof typeof ProcessedApplicationScalarFieldEnum]
+
+
   export const APCompletedFormScalarFieldEnum: {
     id: 'id',
     applicantProcessId: 'applicantProcessId',
@@ -36679,6 +38065,10 @@ export namespace Prisma {
     notificationToId: 'notificationToId',
     notificationToRoles: 'notificationToRoles',
     notificationComment: 'notificationComment',
+    notifyApplicant: 'notifyApplicant',
+    applicantNotificationContent: 'applicantNotificationContent',
+    editApplicationStatus: 'editApplicationStatus',
+    applicantViewFormAfterCompletion: 'applicantViewFormAfterCompletion',
     createdAt: 'createdAt'
   };
 
@@ -37047,6 +38437,18 @@ export namespace Prisma {
   export type ApplicantProcessOrderByRelevanceFieldEnum = (typeof ApplicantProcessOrderByRelevanceFieldEnum)[keyof typeof ApplicantProcessOrderByRelevanceFieldEnum]
 
 
+  export const ProcessedApplicationOrderByRelevanceFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    processId: 'processId',
+    applicantProcessId: 'applicantProcessId',
+    formId: 'formId',
+    formRoleIds: 'formRoleIds'
+  };
+
+  export type ProcessedApplicationOrderByRelevanceFieldEnum = (typeof ProcessedApplicationOrderByRelevanceFieldEnum)[keyof typeof ProcessedApplicationOrderByRelevanceFieldEnum]
+
+
   export const APCompletedFormOrderByRelevanceFieldEnum: {
     id: 'id',
     applicantProcessId: 'applicantProcessId',
@@ -37057,7 +38459,8 @@ export namespace Prisma {
     nextStepSpecifiedTo: 'nextStepSpecifiedTo',
     notificationToId: 'notificationToId',
     notificationToRoles: 'notificationToRoles',
-    notificationComment: 'notificationComment'
+    notificationComment: 'notificationComment',
+    applicantNotificationContent: 'applicantNotificationContent'
   };
 
   export type APCompletedFormOrderByRelevanceFieldEnum = (typeof APCompletedFormOrderByRelevanceFieldEnum)[keyof typeof APCompletedFormOrderByRelevanceFieldEnum]
@@ -37446,6 +38849,7 @@ export namespace Prisma {
     createdGroups?: GroupListRelationFilter
     organization?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
     createdProcesses?: ProcessListRelationFilter
+    processedApplications?: ProcessedApplicationListRelationFilter
     qrCodeDocuments?: QrCodeDocumentListRelationFilter
     roles?: UserRoleListRelationFilter
   }
@@ -37469,6 +38873,7 @@ export namespace Prisma {
     createdGroups?: GroupOrderByRelationAggregateInput
     organization?: OrganizationUserOrderByWithRelationInput
     createdProcesses?: ProcessOrderByRelationAggregateInput
+    processedApplications?: ProcessedApplicationOrderByRelationAggregateInput
     qrCodeDocuments?: QrCodeDocumentOrderByRelationAggregateInput
     roles?: UserRoleOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
@@ -37496,6 +38901,7 @@ export namespace Prisma {
     createdGroups?: GroupListRelationFilter
     organization?: XOR<OrganizationUserNullableScalarRelationFilter, OrganizationUserWhereInput> | null
     createdProcesses?: ProcessListRelationFilter
+    processedApplications?: ProcessedApplicationListRelationFilter
     qrCodeDocuments?: QrCodeDocumentListRelationFilter
     roles?: UserRoleListRelationFilter
   }, "id" | "email" | "googleId">
@@ -37943,6 +39349,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessListRelationFilter
     formResponses?: FormResponseListRelationFilter
     forms?: ProcessFormListRelationFilter
+    processedApplications?: ProcessedApplicationListRelationFilter
     roles?: ProcessRoleListRelationFilter
     creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
@@ -37963,6 +39370,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessOrderByRelationAggregateInput
     formResponses?: FormResponseOrderByRelationAggregateInput
     forms?: ProcessFormOrderByRelationAggregateInput
+    processedApplications?: ProcessedApplicationOrderByRelationAggregateInput
     roles?: ProcessRoleOrderByRelationAggregateInput
     creator?: UserOrderByWithRelationInput
     group?: GroupOrderByWithRelationInput
@@ -37987,6 +39395,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessListRelationFilter
     formResponses?: FormResponseListRelationFilter
     forms?: ProcessFormListRelationFilter
+    processedApplications?: ProcessedApplicationListRelationFilter
     roles?: ProcessRoleListRelationFilter
     creator?: XOR<UserScalarRelationFilter, UserWhereInput>
     group?: XOR<GroupScalarRelationFilter, GroupWhereInput>
@@ -38436,6 +39845,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormListRelationFilter
     applicant?: XOR<UserScalarRelationFilter, UserWhereInput>
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    processedApplications?: ProcessedApplicationListRelationFilter
     responses?: FormResponseListRelationFilter
     comments?: ProcessCommentListRelationFilter
   }
@@ -38449,6 +39859,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormOrderByRelationAggregateInput
     applicant?: UserOrderByWithRelationInput
     process?: ProcessOrderByWithRelationInput
+    processedApplications?: ProcessedApplicationOrderByRelationAggregateInput
     responses?: FormResponseOrderByRelationAggregateInput
     comments?: ProcessCommentOrderByRelationAggregateInput
     _relevance?: ApplicantProcessOrderByRelevanceInput
@@ -38466,6 +39877,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormListRelationFilter
     applicant?: XOR<UserScalarRelationFilter, UserWhereInput>
     process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    processedApplications?: ProcessedApplicationListRelationFilter
     responses?: FormResponseListRelationFilter
     comments?: ProcessCommentListRelationFilter
   }, "id">
@@ -38492,6 +39904,83 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"ApplicantProcess"> | Date | string
   }
 
+  export type ProcessedApplicationWhereInput = {
+    AND?: ProcessedApplicationWhereInput | ProcessedApplicationWhereInput[]
+    OR?: ProcessedApplicationWhereInput[]
+    NOT?: ProcessedApplicationWhereInput | ProcessedApplicationWhereInput[]
+    id?: UuidFilter<"ProcessedApplication"> | string
+    userId?: UuidFilter<"ProcessedApplication"> | string
+    processId?: UuidFilter<"ProcessedApplication"> | string
+    applicantProcessId?: UuidFilter<"ProcessedApplication"> | string
+    formId?: UuidFilter<"ProcessedApplication"> | string
+    formRoleIds?: StringNullableListFilter<"ProcessedApplication">
+    createdAt?: DateTimeFilter<"ProcessedApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessedApplication"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
+  }
+
+  export type ProcessedApplicationOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    processId?: SortOrder
+    applicantProcessId?: SortOrder
+    formId?: SortOrder
+    formRoleIds?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+    process?: ProcessOrderByWithRelationInput
+    applicantProcess?: ApplicantProcessOrderByWithRelationInput
+    _relevance?: ProcessedApplicationOrderByRelevanceInput
+  }
+
+  export type ProcessedApplicationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProcessedApplicationWhereInput | ProcessedApplicationWhereInput[]
+    OR?: ProcessedApplicationWhereInput[]
+    NOT?: ProcessedApplicationWhereInput | ProcessedApplicationWhereInput[]
+    userId?: UuidFilter<"ProcessedApplication"> | string
+    processId?: UuidFilter<"ProcessedApplication"> | string
+    applicantProcessId?: UuidFilter<"ProcessedApplication"> | string
+    formId?: UuidFilter<"ProcessedApplication"> | string
+    formRoleIds?: StringNullableListFilter<"ProcessedApplication">
+    createdAt?: DateTimeFilter<"ProcessedApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessedApplication"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    process?: XOR<ProcessScalarRelationFilter, ProcessWhereInput>
+    applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
+  }, "id">
+
+  export type ProcessedApplicationOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    processId?: SortOrder
+    applicantProcessId?: SortOrder
+    formId?: SortOrder
+    formRoleIds?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ProcessedApplicationCountOrderByAggregateInput
+    _max?: ProcessedApplicationMaxOrderByAggregateInput
+    _min?: ProcessedApplicationMinOrderByAggregateInput
+  }
+
+  export type ProcessedApplicationScalarWhereWithAggregatesInput = {
+    AND?: ProcessedApplicationScalarWhereWithAggregatesInput | ProcessedApplicationScalarWhereWithAggregatesInput[]
+    OR?: ProcessedApplicationScalarWhereWithAggregatesInput[]
+    NOT?: ProcessedApplicationScalarWhereWithAggregatesInput | ProcessedApplicationScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"ProcessedApplication"> | string
+    userId?: UuidWithAggregatesFilter<"ProcessedApplication"> | string
+    processId?: UuidWithAggregatesFilter<"ProcessedApplication"> | string
+    applicantProcessId?: UuidWithAggregatesFilter<"ProcessedApplication"> | string
+    formId?: UuidWithAggregatesFilter<"ProcessedApplication"> | string
+    formRoleIds?: StringNullableListFilter<"ProcessedApplication">
+    createdAt?: DateTimeWithAggregatesFilter<"ProcessedApplication"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ProcessedApplication"> | Date | string
+  }
+
   export type APCompletedFormWhereInput = {
     AND?: APCompletedFormWhereInput | APCompletedFormWhereInput[]
     OR?: APCompletedFormWhereInput[]
@@ -38508,6 +39997,10 @@ export namespace Prisma {
     notificationToId?: UuidNullableFilter<"APCompletedForm"> | string | null
     notificationToRoles?: StringNullableListFilter<"APCompletedForm">
     notificationComment?: StringNullableFilter<"APCompletedForm"> | string | null
+    notifyApplicant?: BoolFilter<"APCompletedForm"> | boolean
+    applicantNotificationContent?: StringNullableFilter<"APCompletedForm"> | string | null
+    editApplicationStatus?: BoolFilter<"APCompletedForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolFilter<"APCompletedForm"> | boolean
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
     applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
   }
@@ -38525,6 +40018,10 @@ export namespace Prisma {
     notificationToId?: SortOrderInput | SortOrder
     notificationToRoles?: SortOrder
     notificationComment?: SortOrderInput | SortOrder
+    notifyApplicant?: SortOrder
+    applicantNotificationContent?: SortOrderInput | SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     applicantProcess?: ApplicantProcessOrderByWithRelationInput
     _relevance?: APCompletedFormOrderByRelevanceInput
@@ -38546,6 +40043,10 @@ export namespace Prisma {
     notificationToId?: UuidNullableFilter<"APCompletedForm"> | string | null
     notificationToRoles?: StringNullableListFilter<"APCompletedForm">
     notificationComment?: StringNullableFilter<"APCompletedForm"> | string | null
+    notifyApplicant?: BoolFilter<"APCompletedForm"> | boolean
+    applicantNotificationContent?: StringNullableFilter<"APCompletedForm"> | string | null
+    editApplicationStatus?: BoolFilter<"APCompletedForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolFilter<"APCompletedForm"> | boolean
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
     applicantProcess?: XOR<ApplicantProcessScalarRelationFilter, ApplicantProcessWhereInput>
   }, "id">
@@ -38563,6 +40064,10 @@ export namespace Prisma {
     notificationToId?: SortOrderInput | SortOrder
     notificationToRoles?: SortOrder
     notificationComment?: SortOrderInput | SortOrder
+    notifyApplicant?: SortOrder
+    applicantNotificationContent?: SortOrderInput | SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
     _count?: APCompletedFormCountOrderByAggregateInput
     _max?: APCompletedFormMaxOrderByAggregateInput
@@ -38585,6 +40090,10 @@ export namespace Prisma {
     notificationToId?: UuidNullableWithAggregatesFilter<"APCompletedForm"> | string | null
     notificationToRoles?: StringNullableListFilter<"APCompletedForm">
     notificationComment?: StringNullableWithAggregatesFilter<"APCompletedForm"> | string | null
+    notifyApplicant?: BoolWithAggregatesFilter<"APCompletedForm"> | boolean
+    applicantNotificationContent?: StringNullableWithAggregatesFilter<"APCompletedForm"> | string | null
+    editApplicationStatus?: BoolWithAggregatesFilter<"APCompletedForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolWithAggregatesFilter<"APCompletedForm"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"APCompletedForm"> | Date | string
   }
 
@@ -39467,6 +40976,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -39490,6 +41000,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -39513,6 +41024,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -39536,6 +41048,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -39990,6 +41503,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
     forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleCreateNestedManyWithoutProcessInput
     creator: UserCreateNestedOneWithoutCreatedProcessesInput
     group: GroupCreateNestedOneWithoutProcessesInput
@@ -40010,6 +41524,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
     forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
@@ -40026,6 +41541,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
     group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
@@ -40046,6 +41562,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
@@ -40504,6 +42021,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
@@ -40515,6 +42033,7 @@ export namespace Prisma {
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
     completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
@@ -40526,6 +42045,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -40537,6 +42057,7 @@ export namespace Prisma {
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -40563,6 +42084,80 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ProcessedApplicationCreateInput = {
+    id?: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutProcessedApplicationsInput
+    process: ProcessCreateNestedOneWithoutProcessedApplicationsInput
+    applicantProcess: ApplicantProcessCreateNestedOneWithoutProcessedApplicationsInput
+  }
+
+  export type ProcessedApplicationUncheckedCreateInput = {
+    id?: string
+    userId: string
+    processId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessedApplicationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+    process?: ProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+    applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+  }
+
+  export type ProcessedApplicationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    applicantProcessId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationCreateManyInput = {
+    id?: string
+    userId: string
+    processId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessedApplicationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    applicantProcessId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type APCompletedFormCreateInput = {
     id?: string
     formId: string
@@ -40575,6 +42170,10 @@ export namespace Prisma {
     notificationToId?: string | null
     notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
     notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
     applicantProcess: ApplicantProcessCreateNestedOneWithoutCompletedFormsInput
   }
@@ -40592,6 +42191,10 @@ export namespace Prisma {
     notificationToId?: string | null
     notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
     notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
   }
 
@@ -40607,6 +42210,10 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutCompletedFormsNestedInput
   }
@@ -40624,6 +42231,10 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40640,6 +42251,10 @@ export namespace Prisma {
     notificationToId?: string | null
     notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
     notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
   }
 
@@ -40655,6 +42270,10 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40671,6 +42290,10 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -41682,6 +43305,12 @@ export namespace Prisma {
     none?: ProcessWhereInput
   }
 
+  export type ProcessedApplicationListRelationFilter = {
+    every?: ProcessedApplicationWhereInput
+    some?: ProcessedApplicationWhereInput
+    none?: ProcessedApplicationWhereInput
+  }
+
   export type QrCodeDocumentListRelationFilter = {
     every?: QrCodeDocumentWhereInput
     some?: QrCodeDocumentWhereInput
@@ -41724,6 +43353,10 @@ export namespace Prisma {
   }
 
   export type ProcessOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProcessedApplicationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -42761,6 +44394,43 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type ProcessedApplicationOrderByRelevanceInput = {
+    fields: ProcessedApplicationOrderByRelevanceFieldEnum | ProcessedApplicationOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ProcessedApplicationCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    processId?: SortOrder
+    applicantProcessId?: SortOrder
+    formId?: SortOrder
+    formRoleIds?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessedApplicationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    processId?: SortOrder
+    applicantProcessId?: SortOrder
+    formId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ProcessedApplicationMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    processId?: SortOrder
+    applicantProcessId?: SortOrder
+    formId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type APCompletedFormOrderByRelevanceInput = {
     fields: APCompletedFormOrderByRelevanceFieldEnum | APCompletedFormOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -42780,6 +44450,10 @@ export namespace Prisma {
     notificationToId?: SortOrder
     notificationToRoles?: SortOrder
     notificationComment?: SortOrder
+    notifyApplicant?: SortOrder
+    applicantNotificationContent?: SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -42794,6 +44468,10 @@ export namespace Prisma {
     notificationType?: SortOrder
     notificationToId?: SortOrder
     notificationComment?: SortOrder
+    notifyApplicant?: SortOrder
+    applicantNotificationContent?: SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -42808,6 +44486,10 @@ export namespace Prisma {
     notificationType?: SortOrder
     notificationToId?: SortOrder
     notificationComment?: SortOrder
+    notifyApplicant?: SortOrder
+    applicantNotificationContent?: SortOrder
+    editApplicationStatus?: SortOrder
+    applicantViewFormAfterCompletion?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -43431,6 +45113,13 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
   }
 
+  export type ProcessedApplicationCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutUserInput, ProcessedApplicationUncheckedCreateWithoutUserInput> | ProcessedApplicationCreateWithoutUserInput[] | ProcessedApplicationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutUserInput | ProcessedApplicationCreateOrConnectWithoutUserInput[]
+    createMany?: ProcessedApplicationCreateManyUserInputEnvelope
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+  }
+
   export type QrCodeDocumentCreateNestedManyWithoutCreatorInput = {
     create?: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput> | QrCodeDocumentCreateWithoutCreatorInput[] | QrCodeDocumentUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: QrCodeDocumentCreateOrConnectWithoutCreatorInput | QrCodeDocumentCreateOrConnectWithoutCreatorInput[]
@@ -43498,6 +45187,13 @@ export namespace Prisma {
     connectOrCreate?: ProcessCreateOrConnectWithoutCreatorInput | ProcessCreateOrConnectWithoutCreatorInput[]
     createMany?: ProcessCreateManyCreatorInputEnvelope
     connect?: ProcessWhereUniqueInput | ProcessWhereUniqueInput[]
+  }
+
+  export type ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutUserInput, ProcessedApplicationUncheckedCreateWithoutUserInput> | ProcessedApplicationCreateWithoutUserInput[] | ProcessedApplicationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutUserInput | ProcessedApplicationCreateOrConnectWithoutUserInput[]
+    createMany?: ProcessedApplicationCreateManyUserInputEnvelope
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
   }
 
   export type QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput = {
@@ -43638,6 +45334,20 @@ export namespace Prisma {
     deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
   }
 
+  export type ProcessedApplicationUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutUserInput, ProcessedApplicationUncheckedCreateWithoutUserInput> | ProcessedApplicationCreateWithoutUserInput[] | ProcessedApplicationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutUserInput | ProcessedApplicationCreateOrConnectWithoutUserInput[]
+    upsert?: ProcessedApplicationUpsertWithWhereUniqueWithoutUserInput | ProcessedApplicationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProcessedApplicationCreateManyUserInputEnvelope
+    set?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    disconnect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    delete?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    update?: ProcessedApplicationUpdateWithWhereUniqueWithoutUserInput | ProcessedApplicationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProcessedApplicationUpdateManyWithWhereWithoutUserInput | ProcessedApplicationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
+  }
+
   export type QrCodeDocumentUpdateManyWithoutCreatorNestedInput = {
     create?: XOR<QrCodeDocumentCreateWithoutCreatorInput, QrCodeDocumentUncheckedCreateWithoutCreatorInput> | QrCodeDocumentCreateWithoutCreatorInput[] | QrCodeDocumentUncheckedCreateWithoutCreatorInput[]
     connectOrCreate?: QrCodeDocumentCreateOrConnectWithoutCreatorInput | QrCodeDocumentCreateOrConnectWithoutCreatorInput[]
@@ -43772,6 +45482,20 @@ export namespace Prisma {
     update?: ProcessUpdateWithWhereUniqueWithoutCreatorInput | ProcessUpdateWithWhereUniqueWithoutCreatorInput[]
     updateMany?: ProcessUpdateManyWithWhereWithoutCreatorInput | ProcessUpdateManyWithWhereWithoutCreatorInput[]
     deleteMany?: ProcessScalarWhereInput | ProcessScalarWhereInput[]
+  }
+
+  export type ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutUserInput, ProcessedApplicationUncheckedCreateWithoutUserInput> | ProcessedApplicationCreateWithoutUserInput[] | ProcessedApplicationUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutUserInput | ProcessedApplicationCreateOrConnectWithoutUserInput[]
+    upsert?: ProcessedApplicationUpsertWithWhereUniqueWithoutUserInput | ProcessedApplicationUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: ProcessedApplicationCreateManyUserInputEnvelope
+    set?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    disconnect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    delete?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    update?: ProcessedApplicationUpdateWithWhereUniqueWithoutUserInput | ProcessedApplicationUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: ProcessedApplicationUpdateManyWithWhereWithoutUserInput | ProcessedApplicationUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
   }
 
   export type QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput = {
@@ -44153,6 +45877,13 @@ export namespace Prisma {
     connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
   }
 
+  export type ProcessedApplicationCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutProcessInput, ProcessedApplicationUncheckedCreateWithoutProcessInput> | ProcessedApplicationCreateWithoutProcessInput[] | ProcessedApplicationUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutProcessInput | ProcessedApplicationCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessedApplicationCreateManyProcessInputEnvelope
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+  }
+
   export type ProcessRoleCreateNestedManyWithoutProcessInput = {
     create?: XOR<ProcessRoleCreateWithoutProcessInput, ProcessRoleUncheckedCreateWithoutProcessInput> | ProcessRoleCreateWithoutProcessInput[] | ProcessRoleUncheckedCreateWithoutProcessInput[]
     connectOrCreate?: ProcessRoleCreateOrConnectWithoutProcessInput | ProcessRoleCreateOrConnectWithoutProcessInput[]
@@ -44191,6 +45922,13 @@ export namespace Prisma {
     connectOrCreate?: ProcessFormCreateOrConnectWithoutProcessInput | ProcessFormCreateOrConnectWithoutProcessInput[]
     createMany?: ProcessFormCreateManyProcessInputEnvelope
     connect?: ProcessFormWhereUniqueInput | ProcessFormWhereUniqueInput[]
+  }
+
+  export type ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutProcessInput, ProcessedApplicationUncheckedCreateWithoutProcessInput> | ProcessedApplicationCreateWithoutProcessInput[] | ProcessedApplicationUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutProcessInput | ProcessedApplicationCreateOrConnectWithoutProcessInput[]
+    createMany?: ProcessedApplicationCreateManyProcessInputEnvelope
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
   }
 
   export type ProcessRoleUncheckedCreateNestedManyWithoutProcessInput = {
@@ -44248,6 +45986,20 @@ export namespace Prisma {
     update?: ProcessFormUpdateWithWhereUniqueWithoutProcessInput | ProcessFormUpdateWithWhereUniqueWithoutProcessInput[]
     updateMany?: ProcessFormUpdateManyWithWhereWithoutProcessInput | ProcessFormUpdateManyWithWhereWithoutProcessInput[]
     deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+  }
+
+  export type ProcessedApplicationUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutProcessInput, ProcessedApplicationUncheckedCreateWithoutProcessInput> | ProcessedApplicationCreateWithoutProcessInput[] | ProcessedApplicationUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutProcessInput | ProcessedApplicationCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessedApplicationUpsertWithWhereUniqueWithoutProcessInput | ProcessedApplicationUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessedApplicationCreateManyProcessInputEnvelope
+    set?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    disconnect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    delete?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    update?: ProcessedApplicationUpdateWithWhereUniqueWithoutProcessInput | ProcessedApplicationUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessedApplicationUpdateManyWithWhereWithoutProcessInput | ProcessedApplicationUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
   }
 
   export type ProcessRoleUpdateManyWithoutProcessNestedInput = {
@@ -44320,6 +46072,20 @@ export namespace Prisma {
     update?: ProcessFormUpdateWithWhereUniqueWithoutProcessInput | ProcessFormUpdateWithWhereUniqueWithoutProcessInput[]
     updateMany?: ProcessFormUpdateManyWithWhereWithoutProcessInput | ProcessFormUpdateManyWithWhereWithoutProcessInput[]
     deleteMany?: ProcessFormScalarWhereInput | ProcessFormScalarWhereInput[]
+  }
+
+  export type ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutProcessInput, ProcessedApplicationUncheckedCreateWithoutProcessInput> | ProcessedApplicationCreateWithoutProcessInput[] | ProcessedApplicationUncheckedCreateWithoutProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutProcessInput | ProcessedApplicationCreateOrConnectWithoutProcessInput[]
+    upsert?: ProcessedApplicationUpsertWithWhereUniqueWithoutProcessInput | ProcessedApplicationUpsertWithWhereUniqueWithoutProcessInput[]
+    createMany?: ProcessedApplicationCreateManyProcessInputEnvelope
+    set?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    disconnect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    delete?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    update?: ProcessedApplicationUpdateWithWhereUniqueWithoutProcessInput | ProcessedApplicationUpdateWithWhereUniqueWithoutProcessInput[]
+    updateMany?: ProcessedApplicationUpdateManyWithWhereWithoutProcessInput | ProcessedApplicationUpdateManyWithWhereWithoutProcessInput[]
+    deleteMany?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
   }
 
   export type ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput = {
@@ -44653,6 +46419,13 @@ export namespace Prisma {
     connect?: ProcessWhereUniqueInput
   }
 
+  export type ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutApplicantProcessInput, ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput> | ProcessedApplicationCreateWithoutApplicantProcessInput[] | ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput | ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput[]
+    createMany?: ProcessedApplicationCreateManyApplicantProcessInputEnvelope
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+  }
+
   export type FormResponseCreateNestedManyWithoutApplicantProcessInput = {
     create?: XOR<FormResponseCreateWithoutApplicantProcessInput, FormResponseUncheckedCreateWithoutApplicantProcessInput> | FormResponseCreateWithoutApplicantProcessInput[] | FormResponseUncheckedCreateWithoutApplicantProcessInput[]
     connectOrCreate?: FormResponseCreateOrConnectWithoutApplicantProcessInput | FormResponseCreateOrConnectWithoutApplicantProcessInput[]
@@ -44672,6 +46445,13 @@ export namespace Prisma {
     connectOrCreate?: APCompletedFormCreateOrConnectWithoutApplicantProcessInput | APCompletedFormCreateOrConnectWithoutApplicantProcessInput[]
     createMany?: APCompletedFormCreateManyApplicantProcessInputEnvelope
     connect?: APCompletedFormWhereUniqueInput | APCompletedFormWhereUniqueInput[]
+  }
+
+  export type ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutApplicantProcessInput, ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput> | ProcessedApplicationCreateWithoutApplicantProcessInput[] | ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput | ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput[]
+    createMany?: ProcessedApplicationCreateManyApplicantProcessInputEnvelope
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
   }
 
   export type FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput = {
@@ -44718,6 +46498,20 @@ export namespace Prisma {
     update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutApplicantProcessesInput, ProcessUpdateWithoutApplicantProcessesInput>, ProcessUncheckedUpdateWithoutApplicantProcessesInput>
   }
 
+  export type ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutApplicantProcessInput, ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput> | ProcessedApplicationCreateWithoutApplicantProcessInput[] | ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput | ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput[]
+    upsert?: ProcessedApplicationUpsertWithWhereUniqueWithoutApplicantProcessInput | ProcessedApplicationUpsertWithWhereUniqueWithoutApplicantProcessInput[]
+    createMany?: ProcessedApplicationCreateManyApplicantProcessInputEnvelope
+    set?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    disconnect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    delete?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    update?: ProcessedApplicationUpdateWithWhereUniqueWithoutApplicantProcessInput | ProcessedApplicationUpdateWithWhereUniqueWithoutApplicantProcessInput[]
+    updateMany?: ProcessedApplicationUpdateManyWithWhereWithoutApplicantProcessInput | ProcessedApplicationUpdateManyWithWhereWithoutApplicantProcessInput[]
+    deleteMany?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
+  }
+
   export type FormResponseUpdateManyWithoutApplicantProcessNestedInput = {
     create?: XOR<FormResponseCreateWithoutApplicantProcessInput, FormResponseUncheckedCreateWithoutApplicantProcessInput> | FormResponseCreateWithoutApplicantProcessInput[] | FormResponseUncheckedCreateWithoutApplicantProcessInput[]
     connectOrCreate?: FormResponseCreateOrConnectWithoutApplicantProcessInput | FormResponseCreateOrConnectWithoutApplicantProcessInput[]
@@ -44760,6 +46554,20 @@ export namespace Prisma {
     deleteMany?: APCompletedFormScalarWhereInput | APCompletedFormScalarWhereInput[]
   }
 
+  export type ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput = {
+    create?: XOR<ProcessedApplicationCreateWithoutApplicantProcessInput, ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput> | ProcessedApplicationCreateWithoutApplicantProcessInput[] | ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput[]
+    connectOrCreate?: ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput | ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput[]
+    upsert?: ProcessedApplicationUpsertWithWhereUniqueWithoutApplicantProcessInput | ProcessedApplicationUpsertWithWhereUniqueWithoutApplicantProcessInput[]
+    createMany?: ProcessedApplicationCreateManyApplicantProcessInputEnvelope
+    set?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    disconnect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    delete?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    connect?: ProcessedApplicationWhereUniqueInput | ProcessedApplicationWhereUniqueInput[]
+    update?: ProcessedApplicationUpdateWithWhereUniqueWithoutApplicantProcessInput | ProcessedApplicationUpdateWithWhereUniqueWithoutApplicantProcessInput[]
+    updateMany?: ProcessedApplicationUpdateManyWithWhereWithoutApplicantProcessInput | ProcessedApplicationUpdateManyWithWhereWithoutApplicantProcessInput[]
+    deleteMany?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
+  }
+
   export type FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput = {
     create?: XOR<FormResponseCreateWithoutApplicantProcessInput, FormResponseUncheckedCreateWithoutApplicantProcessInput> | FormResponseCreateWithoutApplicantProcessInput[] | FormResponseUncheckedCreateWithoutApplicantProcessInput[]
     connectOrCreate?: FormResponseCreateOrConnectWithoutApplicantProcessInput | FormResponseCreateOrConnectWithoutApplicantProcessInput[]
@@ -44786,6 +46594,57 @@ export namespace Prisma {
     update?: ProcessCommentUpdateWithWhereUniqueWithoutApplicantProcessInput | ProcessCommentUpdateWithWhereUniqueWithoutApplicantProcessInput[]
     updateMany?: ProcessCommentUpdateManyWithWhereWithoutApplicantProcessInput | ProcessCommentUpdateManyWithWhereWithoutApplicantProcessInput[]
     deleteMany?: ProcessCommentScalarWhereInput | ProcessCommentScalarWhereInput[]
+  }
+
+  export type ProcessedApplicationCreateformRoleIdsInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutProcessedApplicationsInput = {
+    create?: XOR<UserCreateWithoutProcessedApplicationsInput, UserUncheckedCreateWithoutProcessedApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProcessedApplicationsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProcessCreateNestedOneWithoutProcessedApplicationsInput = {
+    create?: XOR<ProcessCreateWithoutProcessedApplicationsInput, ProcessUncheckedCreateWithoutProcessedApplicationsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutProcessedApplicationsInput
+    connect?: ProcessWhereUniqueInput
+  }
+
+  export type ApplicantProcessCreateNestedOneWithoutProcessedApplicationsInput = {
+    create?: XOR<ApplicantProcessCreateWithoutProcessedApplicationsInput, ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput>
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutProcessedApplicationsInput
+    connect?: ApplicantProcessWhereUniqueInput
+  }
+
+  export type ProcessedApplicationUpdateformRoleIdsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdateOneRequiredWithoutProcessedApplicationsNestedInput = {
+    create?: XOR<UserCreateWithoutProcessedApplicationsInput, UserUncheckedCreateWithoutProcessedApplicationsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProcessedApplicationsInput
+    upsert?: UserUpsertWithoutProcessedApplicationsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProcessedApplicationsInput, UserUpdateWithoutProcessedApplicationsInput>, UserUncheckedUpdateWithoutProcessedApplicationsInput>
+  }
+
+  export type ProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput = {
+    create?: XOR<ProcessCreateWithoutProcessedApplicationsInput, ProcessUncheckedCreateWithoutProcessedApplicationsInput>
+    connectOrCreate?: ProcessCreateOrConnectWithoutProcessedApplicationsInput
+    upsert?: ProcessUpsertWithoutProcessedApplicationsInput
+    connect?: ProcessWhereUniqueInput
+    update?: XOR<XOR<ProcessUpdateToOneWithWhereWithoutProcessedApplicationsInput, ProcessUpdateWithoutProcessedApplicationsInput>, ProcessUncheckedUpdateWithoutProcessedApplicationsInput>
+  }
+
+  export type ApplicantProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput = {
+    create?: XOR<ApplicantProcessCreateWithoutProcessedApplicationsInput, ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput>
+    connectOrCreate?: ApplicantProcessCreateOrConnectWithoutProcessedApplicationsInput
+    upsert?: ApplicantProcessUpsertWithoutProcessedApplicationsInput
+    connect?: ApplicantProcessWhereUniqueInput
+    update?: XOR<XOR<ApplicantProcessUpdateToOneWithWhereWithoutProcessedApplicationsInput, ApplicantProcessUpdateWithoutProcessedApplicationsInput>, ApplicantProcessUncheckedUpdateWithoutProcessedApplicationsInput>
   }
 
   export type APCompletedFormCreatenextStepRolesInput = {
@@ -45599,6 +47458,7 @@ export namespace Prisma {
     createdAt?: Date | string
     completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
@@ -45609,6 +47469,7 @@ export namespace Prisma {
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
     completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
@@ -45817,6 +47678,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
     forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleCreateNestedManyWithoutProcessInput
     group: GroupCreateNestedOneWithoutProcessesInput
   }
@@ -45835,6 +47697,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
     forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
@@ -45845,6 +47708,36 @@ export namespace Prisma {
 
   export type ProcessCreateManyCreatorInputEnvelope = {
     data: ProcessCreateManyCreatorInput | ProcessCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProcessedApplicationCreateWithoutUserInput = {
+    id?: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    process: ProcessCreateNestedOneWithoutProcessedApplicationsInput
+    applicantProcess: ApplicantProcessCreateNestedOneWithoutProcessedApplicationsInput
+  }
+
+  export type ProcessedApplicationUncheckedCreateWithoutUserInput = {
+    id?: string
+    processId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessedApplicationCreateOrConnectWithoutUserInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    create: XOR<ProcessedApplicationCreateWithoutUserInput, ProcessedApplicationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProcessedApplicationCreateManyUserInputEnvelope = {
+    data: ProcessedApplicationCreateManyUserInput | ProcessedApplicationCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -46132,6 +48025,36 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Process"> | Date | string
   }
 
+  export type ProcessedApplicationUpsertWithWhereUniqueWithoutUserInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    update: XOR<ProcessedApplicationUpdateWithoutUserInput, ProcessedApplicationUncheckedUpdateWithoutUserInput>
+    create: XOR<ProcessedApplicationCreateWithoutUserInput, ProcessedApplicationUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProcessedApplicationUpdateWithWhereUniqueWithoutUserInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    data: XOR<ProcessedApplicationUpdateWithoutUserInput, ProcessedApplicationUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ProcessedApplicationUpdateManyWithWhereWithoutUserInput = {
+    where: ProcessedApplicationScalarWhereInput
+    data: XOR<ProcessedApplicationUpdateManyMutationInput, ProcessedApplicationUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type ProcessedApplicationScalarWhereInput = {
+    AND?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
+    OR?: ProcessedApplicationScalarWhereInput[]
+    NOT?: ProcessedApplicationScalarWhereInput | ProcessedApplicationScalarWhereInput[]
+    id?: UuidFilter<"ProcessedApplication"> | string
+    userId?: UuidFilter<"ProcessedApplication"> | string
+    processId?: UuidFilter<"ProcessedApplication"> | string
+    applicantProcessId?: UuidFilter<"ProcessedApplication"> | string
+    formId?: UuidFilter<"ProcessedApplication"> | string
+    formRoleIds?: StringNullableListFilter<"ProcessedApplication">
+    createdAt?: DateTimeFilter<"ProcessedApplication"> | Date | string
+    updatedAt?: DateTimeFilter<"ProcessedApplication"> | Date | string
+  }
+
   export type QrCodeDocumentUpsertWithWhereUniqueWithoutCreatorInput = {
     where: QrCodeDocumentWhereUniqueInput
     update: XOR<QrCodeDocumentUpdateWithoutCreatorInput, QrCodeDocumentUncheckedUpdateWithoutCreatorInput>
@@ -46358,6 +48281,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
   }
 
@@ -46380,6 +48304,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
   }
 
@@ -46451,6 +48376,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
   }
 
@@ -46473,6 +48399,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
@@ -46494,6 +48421,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -46516,6 +48444,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -46554,6 +48483,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -46576,6 +48506,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -46598,6 +48529,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -46620,6 +48552,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -46658,6 +48591,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -46680,6 +48614,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -46722,6 +48657,7 @@ export namespace Prisma {
     createdFolders?: FolderCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -46744,6 +48680,7 @@ export namespace Prisma {
     createdFolders?: FolderUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -46766,6 +48703,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
     forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleCreateNestedManyWithoutProcessInput
     creator: UserCreateNestedOneWithoutCreatedProcessesInput
   }
@@ -46784,6 +48722,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
     forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
@@ -46842,6 +48781,7 @@ export namespace Prisma {
     createdFolders?: FolderUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -46864,6 +48804,7 @@ export namespace Prisma {
     createdFolders?: FolderUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -47006,6 +48947,7 @@ export namespace Prisma {
     createdAt?: Date | string
     completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
@@ -47016,6 +48958,7 @@ export namespace Prisma {
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
     completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
@@ -47106,6 +49049,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProcessedApplicationCreateWithoutProcessInput = {
+    id?: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutProcessedApplicationsInput
+    applicantProcess: ApplicantProcessCreateNestedOneWithoutProcessedApplicationsInput
+  }
+
+  export type ProcessedApplicationUncheckedCreateWithoutProcessInput = {
+    id?: string
+    userId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessedApplicationCreateOrConnectWithoutProcessInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    create: XOR<ProcessedApplicationCreateWithoutProcessInput, ProcessedApplicationUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessedApplicationCreateManyProcessInputEnvelope = {
+    data: ProcessedApplicationCreateManyProcessInput | ProcessedApplicationCreateManyProcessInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProcessRoleCreateWithoutProcessInput = {
     status?: $Enums.RoleStatus
     role: RoleCreateNestedOneWithoutProcessesInput
@@ -47144,6 +49117,7 @@ export namespace Prisma {
     createdFolders?: FolderCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -47166,6 +49140,7 @@ export namespace Prisma {
     createdFolders?: FolderUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -47284,6 +49259,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ProcessForm"> | Date | string
   }
 
+  export type ProcessedApplicationUpsertWithWhereUniqueWithoutProcessInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    update: XOR<ProcessedApplicationUpdateWithoutProcessInput, ProcessedApplicationUncheckedUpdateWithoutProcessInput>
+    create: XOR<ProcessedApplicationCreateWithoutProcessInput, ProcessedApplicationUncheckedCreateWithoutProcessInput>
+  }
+
+  export type ProcessedApplicationUpdateWithWhereUniqueWithoutProcessInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    data: XOR<ProcessedApplicationUpdateWithoutProcessInput, ProcessedApplicationUncheckedUpdateWithoutProcessInput>
+  }
+
+  export type ProcessedApplicationUpdateManyWithWhereWithoutProcessInput = {
+    where: ProcessedApplicationScalarWhereInput
+    data: XOR<ProcessedApplicationUpdateManyMutationInput, ProcessedApplicationUncheckedUpdateManyWithoutProcessInput>
+  }
+
   export type ProcessRoleUpsertWithWhereUniqueWithoutProcessInput = {
     where: ProcessRoleWhereUniqueInput
     update: XOR<ProcessRoleUpdateWithoutProcessInput, ProcessRoleUncheckedUpdateWithoutProcessInput>
@@ -47329,6 +49320,7 @@ export namespace Prisma {
     createdFolders?: FolderUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -47351,6 +49343,7 @@ export namespace Prisma {
     createdFolders?: FolderUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -47399,6 +49392,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
     forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     creator: UserCreateNestedOneWithoutCreatedProcessesInput
     group: GroupCreateNestedOneWithoutProcessesInput
   }
@@ -47418,6 +49412,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
     forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessCreateOrConnectWithoutRolesInput = {
@@ -47476,6 +49471,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
     group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
@@ -47495,6 +49491,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   }
 
   export type RoleUpsertWithoutProcessesInput = {
@@ -47548,6 +49545,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -47570,6 +49568,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -47646,6 +49645,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -47668,6 +49668,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -47732,6 +49733,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -47754,6 +49756,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -47881,6 +49884,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -47903,6 +49907,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -47959,6 +49964,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
 
@@ -47969,6 +49975,7 @@ export namespace Prisma {
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
     completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
 
@@ -48022,6 +50029,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleCreateNestedManyWithoutProcessInput
     creator: UserCreateNestedOneWithoutCreatedProcessesInput
     group: GroupCreateNestedOneWithoutProcessesInput
@@ -48041,6 +50049,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
@@ -48067,6 +50076,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
 
@@ -48077,6 +50087,7 @@ export namespace Prisma {
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
 
@@ -48142,6 +50153,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
     group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
@@ -48161,6 +50173,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
@@ -48209,6 +50222,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleCreateNestedManyWithoutProcessInput
     creator: UserCreateNestedOneWithoutCreatedProcessesInput
     group: GroupCreateNestedOneWithoutProcessesInput
@@ -48228,6 +50242,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
@@ -48298,6 +50313,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
     group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
@@ -48317,6 +50333,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
@@ -48332,6 +50349,10 @@ export namespace Prisma {
     notificationToId?: string | null
     notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
     notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
   }
 
@@ -48347,6 +50368,10 @@ export namespace Prisma {
     notificationToId?: string | null
     notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
     notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
   }
 
@@ -48378,6 +50403,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -48400,6 +50426,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -48421,6 +50448,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     formResponses?: FormResponseCreateNestedManyWithoutProcessInput
     forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleCreateNestedManyWithoutProcessInput
     creator: UserCreateNestedOneWithoutCreatedProcessesInput
     group: GroupCreateNestedOneWithoutProcessesInput
@@ -48440,12 +50468,43 @@ export namespace Prisma {
     updatedAt?: Date | string
     formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
     forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
     roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
   }
 
   export type ProcessCreateOrConnectWithoutApplicantProcessesInput = {
     where: ProcessWhereUniqueInput
     create: XOR<ProcessCreateWithoutApplicantProcessesInput, ProcessUncheckedCreateWithoutApplicantProcessesInput>
+  }
+
+  export type ProcessedApplicationCreateWithoutApplicantProcessInput = {
+    id?: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutProcessedApplicationsInput
+    process: ProcessCreateNestedOneWithoutProcessedApplicationsInput
+  }
+
+  export type ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput = {
+    id?: string
+    userId: string
+    processId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ProcessedApplicationCreateOrConnectWithoutApplicantProcessInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    create: XOR<ProcessedApplicationCreateWithoutApplicantProcessInput, ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput>
+  }
+
+  export type ProcessedApplicationCreateManyApplicantProcessInputEnvelope = {
+    data: ProcessedApplicationCreateManyApplicantProcessInput | ProcessedApplicationCreateManyApplicantProcessInput[]
+    skipDuplicates?: boolean
   }
 
   export type FormResponseCreateWithoutApplicantProcessInput = {
@@ -48530,6 +50589,10 @@ export namespace Prisma {
     notificationToId?: UuidNullableFilter<"APCompletedForm"> | string | null
     notificationToRoles?: StringNullableListFilter<"APCompletedForm">
     notificationComment?: StringNullableFilter<"APCompletedForm"> | string | null
+    notifyApplicant?: BoolFilter<"APCompletedForm"> | boolean
+    applicantNotificationContent?: StringNullableFilter<"APCompletedForm"> | string | null
+    editApplicationStatus?: BoolFilter<"APCompletedForm"> | boolean
+    applicantViewFormAfterCompletion?: BoolFilter<"APCompletedForm"> | boolean
     createdAt?: DateTimeFilter<"APCompletedForm"> | Date | string
   }
 
@@ -48562,6 +50625,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -48584,6 +50648,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -48611,6 +50676,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
     group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
@@ -48630,7 +50696,24 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ProcessedApplicationUpsertWithWhereUniqueWithoutApplicantProcessInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    update: XOR<ProcessedApplicationUpdateWithoutApplicantProcessInput, ProcessedApplicationUncheckedUpdateWithoutApplicantProcessInput>
+    create: XOR<ProcessedApplicationCreateWithoutApplicantProcessInput, ProcessedApplicationUncheckedCreateWithoutApplicantProcessInput>
+  }
+
+  export type ProcessedApplicationUpdateWithWhereUniqueWithoutApplicantProcessInput = {
+    where: ProcessedApplicationWhereUniqueInput
+    data: XOR<ProcessedApplicationUpdateWithoutApplicantProcessInput, ProcessedApplicationUncheckedUpdateWithoutApplicantProcessInput>
+  }
+
+  export type ProcessedApplicationUpdateManyWithWhereWithoutApplicantProcessInput = {
+    where: ProcessedApplicationScalarWhereInput
+    data: XOR<ProcessedApplicationUpdateManyMutationInput, ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessInput>
   }
 
   export type FormResponseUpsertWithWhereUniqueWithoutApplicantProcessInput = {
@@ -48676,12 +50759,269 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProcessComment"> | Date | string
   }
 
+  export type UserCreateWithoutProcessedApplicationsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdFolders?: FolderCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdFolders?: FolderUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutProcessedApplicationsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProcessedApplicationsInput, UserUncheckedCreateWithoutProcessedApplicationsInput>
+  }
+
+  export type ProcessCreateWithoutProcessedApplicationsInput = {
+    id?: string
+    name: string
+    type?: $Enums.ProcessType
+    status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutProcessInput
+    formResponses?: FormResponseCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleCreateNestedManyWithoutProcessInput
+    creator: UserCreateNestedOneWithoutCreatedProcessesInput
+    group: GroupCreateNestedOneWithoutProcessesInput
+  }
+
+  export type ProcessUncheckedCreateWithoutProcessedApplicationsInput = {
+    id?: string
+    name: string
+    type?: $Enums.ProcessType
+    groupId: string
+    creatorId: string
+    status?: $Enums.ProcessStatus
+    archived?: boolean
+    staffViewForms?: boolean
+    applicantViewProcessLevel?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
+    formResponses?: FormResponseUncheckedCreateNestedManyWithoutProcessInput
+    forms?: ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+    roles?: ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  }
+
+  export type ProcessCreateOrConnectWithoutProcessedApplicationsInput = {
+    where: ProcessWhereUniqueInput
+    create: XOR<ProcessCreateWithoutProcessedApplicationsInput, ProcessUncheckedCreateWithoutProcessedApplicationsInput>
+  }
+
+  export type ApplicantProcessCreateWithoutProcessedApplicationsInput = {
+    id?: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+    completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
+    applicant: UserCreateNestedOneWithoutApplicantProcessesInput
+    process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
+    comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  }
+
+  export type ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput = {
+    id?: string
+    applicantId: string
+    processId: string
+    status?: $Enums.ProcessStatus
+    createdAt?: Date | string
+    completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
+    comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  }
+
+  export type ApplicantProcessCreateOrConnectWithoutProcessedApplicationsInput = {
+    where: ApplicantProcessWhereUniqueInput
+    create: XOR<ApplicantProcessCreateWithoutProcessedApplicationsInput, ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput>
+  }
+
+  export type UserUpsertWithoutProcessedApplicationsInput = {
+    update: XOR<UserUpdateWithoutProcessedApplicationsInput, UserUncheckedUpdateWithoutProcessedApplicationsInput>
+    create: XOR<UserCreateWithoutProcessedApplicationsInput, UserUncheckedCreateWithoutProcessedApplicationsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutProcessedApplicationsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutProcessedApplicationsInput, UserUncheckedUpdateWithoutProcessedApplicationsInput>
+  }
+
+  export type UserUpdateWithoutProcessedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdFolders?: FolderUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdFolders?: FolderUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ProcessUpsertWithoutProcessedApplicationsInput = {
+    update: XOR<ProcessUpdateWithoutProcessedApplicationsInput, ProcessUncheckedUpdateWithoutProcessedApplicationsInput>
+    create: XOR<ProcessCreateWithoutProcessedApplicationsInput, ProcessUncheckedCreateWithoutProcessedApplicationsInput>
+    where?: ProcessWhereInput
+  }
+
+  export type ProcessUpdateToOneWithWhereWithoutProcessedApplicationsInput = {
+    where?: ProcessWhereInput
+    data: XOR<ProcessUpdateWithoutProcessedApplicationsInput, ProcessUncheckedUpdateWithoutProcessedApplicationsInput>
+  }
+
+  export type ProcessUpdateWithoutProcessedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    archived?: BoolFieldUpdateOperationsInput | boolean
+    staffViewForms?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
+    formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+    group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
+  }
+
+  export type ProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+    groupId?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    archived?: BoolFieldUpdateOperationsInput | boolean
+    staffViewForms?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
+    formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+    forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  }
+
+  export type ApplicantProcessUpsertWithoutProcessedApplicationsInput = {
+    update: XOR<ApplicantProcessUpdateWithoutProcessedApplicationsInput, ApplicantProcessUncheckedUpdateWithoutProcessedApplicationsInput>
+    create: XOR<ApplicantProcessCreateWithoutProcessedApplicationsInput, ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput>
+    where?: ApplicantProcessWhereInput
+  }
+
+  export type ApplicantProcessUpdateToOneWithWhereWithoutProcessedApplicationsInput = {
+    where?: ApplicantProcessWhereInput
+    data: XOR<ApplicantProcessUpdateWithoutProcessedApplicationsInput, ApplicantProcessUncheckedUpdateWithoutProcessedApplicationsInput>
+  }
+
+  export type ApplicantProcessUpdateWithoutProcessedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
+    applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
+    comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  }
+
+  export type ApplicantProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    applicantId?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  }
+
   export type ApplicantProcessCreateWithoutCompletedFormsInput = {
     id?: string
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentCreateNestedManyWithoutApplicantProcessInput
   }
@@ -48692,6 +51032,7 @@ export namespace Prisma {
     processId: string
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
     comments?: ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
@@ -48718,6 +51059,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -48728,6 +51070,7 @@ export namespace Prisma {
     processId?: StringFieldUpdateOperationsInput | string
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -48739,6 +51082,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormCreateNestedManyWithoutApplicantProcessInput
     applicant: UserCreateNestedOneWithoutApplicantProcessesInput
     process: ProcessCreateNestedOneWithoutApplicantProcessesInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseCreateNestedManyWithoutApplicantProcessInput
   }
 
@@ -48749,6 +51093,7 @@ export namespace Prisma {
     status?: $Enums.ProcessStatus
     createdAt?: Date | string
     completedForms?: APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
     responses?: FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
   }
 
@@ -48775,6 +51120,7 @@ export namespace Prisma {
     completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
   }
 
@@ -48785,6 +51131,7 @@ export namespace Prisma {
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
 
@@ -48849,6 +51196,7 @@ export namespace Prisma {
     createdFolders?: FolderCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
@@ -48871,6 +51219,7 @@ export namespace Prisma {
     createdFolders?: FolderUncheckedCreateNestedManyWithoutCreatorInput
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -48960,6 +51309,7 @@ export namespace Prisma {
     createdFolders?: FolderUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
@@ -48982,6 +51332,7 @@ export namespace Prisma {
     createdFolders?: FolderUncheckedUpdateManyWithoutCreatorNestedInput
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -49125,6 +51476,7 @@ export namespace Prisma {
     createdGroups?: GroupCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
   }
 
@@ -49147,6 +51499,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
     organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -49185,6 +51538,7 @@ export namespace Prisma {
     createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
   }
 
@@ -49207,6 +51561,7 @@ export namespace Prisma {
     createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
     organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -49595,6 +51950,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProcessedApplicationCreateManyUserInput = {
+    id?: string
+    processId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type QrCodeDocumentCreateManyCreatorInput = {
     id?: string
     documentName: string
@@ -49615,6 +51980,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     process?: ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -49625,6 +51991,7 @@ export namespace Prisma {
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -49812,6 +52179,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     group?: GroupUpdateOneRequiredWithoutProcessesNestedInput
   }
@@ -49830,6 +52198,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
@@ -49842,6 +52211,36 @@ export namespace Prisma {
     archived?: BoolFieldUpdateOperationsInput | boolean
     staffViewForms?: BoolFieldUpdateOperationsInput | boolean
     applicantViewProcessLevel?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    process?: ProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+    applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+  }
+
+  export type ProcessedApplicationUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    applicantProcessId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    applicantProcessId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -49994,6 +52393,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUpdateManyWithoutProcessNestedInput
     creator?: UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   }
@@ -50012,6 +52412,7 @@ export namespace Prisma {
     applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
     formResponses?: FormResponseUncheckedUpdateManyWithoutProcessNestedInput
     forms?: ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
     roles?: ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
   }
 
@@ -50063,6 +52464,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ProcessedApplicationCreateManyProcessInput = {
+    id?: string
+    userId: string
+    applicantProcessId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ProcessRoleCreateManyProcessInput = {
     roleId: string
     status?: $Enums.RoleStatus
@@ -50074,6 +52485,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
     applicant?: UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -50084,6 +52496,7 @@ export namespace Prisma {
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     completedForms?: APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
     responses?: FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
     comments?: ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
   }
@@ -50175,6 +52588,36 @@ export namespace Prisma {
     applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
     editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
     applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+    applicantProcess?: ApplicantProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+  }
+
+  export type ProcessedApplicationUncheckedUpdateWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    applicantProcessId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUncheckedUpdateManyWithoutProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    applicantProcessId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -50370,7 +52813,21 @@ export namespace Prisma {
     notificationToId?: string | null
     notificationToRoles?: APCompletedFormCreatenotificationToRolesInput | string[]
     notificationComment?: string | null
+    notifyApplicant?: boolean
+    applicantNotificationContent?: string | null
+    editApplicationStatus?: boolean
+    applicantViewFormAfterCompletion?: boolean
     createdAt?: Date | string
+  }
+
+  export type ProcessedApplicationCreateManyApplicantProcessInput = {
+    id?: string
+    userId: string
+    processId: string
+    formId: string
+    formRoleIds?: ProcessedApplicationCreateformRoleIdsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type FormResponseCreateManyApplicantProcessInput = {
@@ -50400,6 +52857,10 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -50415,6 +52876,10 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -50430,7 +52895,41 @@ export namespace Prisma {
     notificationToId?: NullableStringFieldUpdateOperationsInput | string | null
     notificationToRoles?: APCompletedFormUpdatenotificationToRolesInput | string[]
     notificationComment?: NullableStringFieldUpdateOperationsInput | string | null
+    notifyApplicant?: BoolFieldUpdateOperationsInput | boolean
+    applicantNotificationContent?: NullableStringFieldUpdateOperationsInput | string | null
+    editApplicationStatus?: BoolFieldUpdateOperationsInput | boolean
+    applicantViewFormAfterCompletion?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUpdateWithoutApplicantProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+    process?: ProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput
+  }
+
+  export type ProcessedApplicationUncheckedUpdateWithoutApplicantProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    processId?: StringFieldUpdateOperationsInput | string
+    formId?: StringFieldUpdateOperationsInput | string
+    formRoleIds?: ProcessedApplicationUpdateformRoleIdsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FormResponseUpdateWithoutApplicantProcessInput = {
