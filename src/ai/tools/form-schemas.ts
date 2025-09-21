@@ -1,296 +1,321 @@
 // Form input types and schemas for AI form generation
 export const formInputTypes = [
   {
-    type: "short text input",
+    type: 'short text input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Short Text",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Short Text',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "email text input",
+    type: 'email text input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Email",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Email',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "phone number text input",
+    type: 'phone number text input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Phone Number",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Phone Number',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "long text (paragraph) input",
+    type: 'long text (paragraph) input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Paragraph",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Paragraph',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "number input",
+    type: 'number input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Number",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Number',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "checkbox input",
+    type: 'checkbox input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Checkbox",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Checkbox',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
       options: {
         required: true,
-        dataType: "string array",
-        description: "here is where you put all the option of the question",
+        dataType: 'string array',
+        description: 'here is where you put all the option of the question',
       },
       numberOfOptions: {
         required: true,
-        dataType: "number",
-        description: "here is where you put the number of options it number of options should match the options array",
+        dataType: 'number',
+        description:
+          'here is where you put the number of options it number of options should match the options array',
       },
       selectOptions: {
         required: true,
-        dataType: "select-at-least | select-at-most | select-exactly",
-        description: "this determines how many options should be selected",
+        dataType: 'select-at-least | select-at-most | select-exactly',
+        description: 'this determines how many options should be selected',
       },
     },
   },
   {
-    type: "date input",
+    type: 'date input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Date",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Date',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
       timeType: {
         required: true,
-        value: "all-time | future-only | past-only",
-        note: "this is used to determine the date boundaries where the date will be selected from, if not sure set the value to all-time, for example date of birth should be past-only",
+        value: 'all-time | future-only | past-only',
+        note: 'this is used to determine the date boundaries where the date will be selected from, if not sure set the value to all-time, for example date of birth should be past-only',
       },
     },
   },
   {
-    type: "datetime input",
+    type: 'datetime input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "DateTime",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'DateTime',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
       timeType: {
         required: true,
-        value: "all-time | future-only | past-only",
-        note: "this is used to determine the date boundaries where the date will be selected from, if not sure set the value to all-time, for example date of birth should be past-only",
+        value: 'all-time | future-only | past-only',
+        note: 'this is used to determine the date boundaries where the date will be selected from, if not sure set the value to all-time, for example date of birth should be past-only',
       },
     },
   },
   {
-    type: "date range input",
+    type: 'date range input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Date Range",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Date Range',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "time input",
+    type: 'time input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Time",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Time',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "signature input",
+    type: 'signature input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Signature",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Signature',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
     },
   },
   {
-    type: "select (dropdown) input",
+    type: 'select (dropdown) input',
     schema: {
       label: {
         required: true,
-        dataType: "string",
-        description: "question label, make sure it stays as original as possible, do not change the language",
+        dataType: 'string',
+        description:
+          'question label, make sure it stays as original as possible, do not change the language',
       },
       type: {
         required: true,
-        value: "Dropdown",
-        dataType: "string",
-        note: "set it to the value specified in the schema literaly",
-        description: "this is a unique identifier for the question type",
+        value: 'Dropdown',
+        dataType: 'string',
+        note: 'set it to the value specified in the schema literaly',
+        description: 'this is a unique identifier for the question type',
       },
       required: {
         required: true,
-        dataType: "yes | no",
-        description: "whether or not the question is option, if unsure, set it to yes",
+        dataType: 'yes | no',
+        description:
+          'whether or not the question is option, if unsure, set it to yes',
       },
       options: {
         required: true,
-        dataType: "string array",
-        description: "here is where you put all the option of the question",
+        dataType: 'string array',
+        description: 'here is where you put all the option of the question',
       },
     },
   },
@@ -301,33 +326,65 @@ import { z } from 'zod';
 
 const SectionSchema = z.object({
   name: z.string(),
-  id: z.string().nullable().describe("unique identifier for the section, used when linking it with the next section"),
-  nextSectionId: z.string().nullable().describe("unique identified that links the current section to the next section, the last section does not have a nextsection, set it to null"),
-  questions: z.array(z.object({
-    label: z.string(),
-    type: z.string(),
-    required: z.enum(["yes", "no"]),
-    options: z.array(z.string()).nullable(),
-    timeType: z.enum(["all-time", "future-only", "past-only"]).nullable(),
-    selectOptions: z.enum(["select-at-least", "select-at-most", "select-exactly"]).nullable(),
-    numberOfOptions: z.number().nullable(),
-  })).describe("Questions schema according to the input type schema"),
+  id: z
+    .string()
+    .nullable()
+    .describe(
+      'unique identifier for the section, used when linking it with the next section',
+    ),
+  nextSectionId: z
+    .string()
+    .nullable()
+    .describe(
+      'unique identified that links the current section to the next section, the last section does not have a nextsection, set it to null',
+    ),
+  questions: z
+    .array(
+      z.object({
+        label: z.string(),
+        type: z.string(),
+        required: z.enum(['yes', 'no']),
+        options: z.array(z.string()).nullable(),
+        timeType: z.enum(['all-time', 'future-only', 'past-only']).nullable(),
+        selectOptions: z
+          .enum(['select-at-least', 'select-at-most', 'select-exactly'])
+          .nullable(),
+        numberOfOptions: z.number().nullable(),
+      }),
+    )
+    .describe('Questions schema according to the input type schema'),
 });
 
 const SectionSchemaV2 = z.object({
   name: z.string(),
-  id: z.string().nullable().describe("unique identifier for the section, used when linking it with the next section"),
-  nextSectionId: z.string().nullable().describe("unique identified that links the current section to the next section, the last section does not have a nextsection, set it to null"),
-  questions: z.array(z.object({
-    id: z.string(),
-    label: z.string(),
-    type: z.string(),
-    required: z.enum(["yes", "no"]),
-    options: z.array(z.string()).nullable(),
-    timeType: z.enum(["all-time", "future-only", "past-only"]).nullable(),
-    selectOptions: z.enum(["select-at-least", "select-at-most", "select-exactly"]).nullable(),
-    numberOfOptions: z.number().nullable(),
-  })).describe("Questions schema according to the input type schema"),
+  id: z
+    .string()
+    .nullable()
+    .describe(
+      'unique identifier for the section, used when linking it with the next section',
+    ),
+  nextSectionId: z
+    .string()
+    .nullable()
+    .describe(
+      'unique identified that links the current section to the next section, the last section does not have a nextsection, set it to null',
+    ),
+  questions: z
+    .array(
+      z.object({
+        id: z.string(),
+        label: z.string(),
+        type: z.string(),
+        required: z.enum(['yes', 'no']),
+        options: z.array(z.string()).nullable(),
+        timeType: z.enum(['all-time', 'future-only', 'past-only']).nullable(),
+        selectOptions: z
+          .enum(['select-at-least', 'select-at-most', 'select-exactly'])
+          .nullable(),
+        numberOfOptions: z.number().nullable(),
+      }),
+    )
+    .describe('Questions schema according to the input type schema'),
 });
 
 export const FormSchema = z.object({
@@ -335,9 +392,9 @@ export const FormSchema = z.object({
 });
 
 export const GeneratedFormSchema = z.object({
-  formId: z.string().describe("The form id"),
-  name: z.string().describe("name of the form"),
-  sections: z.array(SectionSchemaV2).describe("form sections"),
+  formId: z.string().describe('The form id'),
+  name: z.string().describe('name of the form'),
+  sections: z.array(SectionSchemaV2).describe('form sections'),
 });
 
 // Type definitions
@@ -376,10 +433,18 @@ export interface RolesData {
 export interface StepData {
   stepId: string;
   formId: string;
-  nextStepType: 'STATIC' | 'DYNAMIC' | 'FOLLOW_ORGANIZATION_CHART' | 'NOT_APPLICABLE';
+  nextStepType:
+    | 'STATIC'
+    | 'DYNAMIC'
+    | 'FOLLOW_ORGANIZATION_CHART'
+    | 'NOT_APPLICABLE';
   nextStepRoles?: string[];
   nextStaff?: string;
-  notificationType: 'STATIC' | 'DYNAMIC' | 'FOLLOW_ORGANIZATION_CHART' | 'NOT_APPLICABLE';
+  notificationType:
+    | 'STATIC'
+    | 'DYNAMIC'
+    | 'FOLLOW_ORGANIZATION_CHART'
+    | 'NOT_APPLICABLE';
   notificationTo?: string;
   notificationComment?: string;
   editApplicationStatus: boolean;

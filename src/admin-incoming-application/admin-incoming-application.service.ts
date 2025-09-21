@@ -87,7 +87,7 @@ export class AdminIncomingApplicationService {
             formName: form?.name || 'Unknown Form',
             completedAt: completedForm.createdAt,
             reviewer: reviewer ? {
-              _id: reviewer!.id,
+              id: reviewer!.id,
               firstName: reviewer!.firstName || '',
               lastName: reviewer!.lastName || '',
               email: reviewer!.email,
@@ -98,9 +98,9 @@ export class AdminIncomingApplicationService {
         }
 
         applicantProcessesForProcess.push({
-          _id: applicantProcess.id,
+          id: applicantProcess.id,
           applicant: {
-            _id: applicant.id,
+            id: applicant.id,
             firstName: applicant.firstName || '',
             lastName: applicant.lastName || '',
             email: applicant.email,
@@ -108,11 +108,11 @@ export class AdminIncomingApplicationService {
           currentLevel,
           totalForms: processForms.length,
           nextForm: {
-            _id: nextForm.formId,
+            id: nextForm.formId,
             formName: nextForm.form?.name || 'Unknown Form',
           },
           currentReviewer: currentReviewer ? {
-            _id: currentReviewer!.id,
+            id: currentReviewer!.id,
             firstName: currentReviewer!.firstName || '',
             lastName: currentReviewer!.lastName || '',
             email: currentReviewer!.email,
@@ -126,7 +126,7 @@ export class AdminIncomingApplicationService {
       if (applicantProcessesForProcess.length > 0) {
         groupedPendingApplications.push({
           process: {
-            _id: process.id,
+            id: process.id,
             name: process.name,
             type: process.type,
             group: process.groupId,
@@ -207,7 +207,7 @@ export class AdminIncomingApplicationService {
             formName: form?.name || 'Unknown Form',
             completedAt: completedForm.createdAt,
             reviewer: reviewer ? {
-              _id: reviewer!.id,
+              id: reviewer!.id,
               firstName: reviewer!.firstName || '',
               lastName: reviewer!.lastName || '',
               email: reviewer!.email,
@@ -218,9 +218,9 @@ export class AdminIncomingApplicationService {
         }
 
         applicantProcessesForProcess.push({
-          _id: applicantProcess.id,
+          id: applicantProcess.id,
           applicant: {
-            _id: applicant.id,
+            id: applicant.id,
             firstName: applicant.firstName || '',
             lastName: applicant.lastName || '',
             email: applicant.email,
@@ -237,7 +237,7 @@ export class AdminIncomingApplicationService {
       if (applicantProcessesForProcess.length > 0) {
         groupedCompletedApplications.push({
           process: {
-            _id: process.id,
+            id: process.id,
             name: process.name,
             type: process.type,
             group: process.groupId,
@@ -313,7 +313,7 @@ export class AdminIncomingApplicationService {
             formName: form?.name || 'Unknown Form',
             completedAt: completedForm.createdAt,
             reviewer: reviewer ? {
-              _id: reviewer!.id,
+              id: reviewer!.id,
               firstName: reviewer!.firstName || '',
               lastName: reviewer!.lastName || '',
               email: reviewer!.email,
@@ -324,9 +324,9 @@ export class AdminIncomingApplicationService {
         }
 
         applicantProcessesForProcess.push({
-          _id: applicantProcess.id,
+          id: applicantProcess.id,
           applicant: {
-            _id: applicant.id,
+            id: applicant.id,
             firstName: applicant.firstName || '',
             lastName: applicant.lastName || '',
             email: applicant.email,
@@ -342,7 +342,7 @@ export class AdminIncomingApplicationService {
       if (applicantProcessesForProcess.length > 0) {
         groupedDisabledApplications.push({
           process: {
-            _id: process.id,
+            id: process.id,
             name: process.name,
             type: process.type,
             group: process.groupId,
@@ -452,7 +452,7 @@ export class AdminIncomingApplicationService {
         formName: form?.name || 'Unknown Form',
         completedAt: completedForm.createdAt,
         reviewer: reviewer ? {
-          _id: reviewer!.id,
+          id: reviewer!.id,
           firstName: reviewer!.firstName || '',
           lastName: reviewer!.lastName || '',
           email: reviewer!.email,
@@ -474,7 +474,7 @@ export class AdminIncomingApplicationService {
         where: { id: nextFormConfig.formId },
       });
       nextForm = {
-        _id: nextFormConfig.formId,
+        id: nextFormConfig.formId,
         formName: nextFormDetails?.name || 'Unknown Form',
         config: nextFormConfig,
       };
@@ -482,15 +482,15 @@ export class AdminIncomingApplicationService {
 
     const response = {
       process: {
-        _id: process.id,
+        id: process.id,
         name: process.name,
         type: process.type,
         group: process.groupId,
       },
       application: {
-        _id: applicantProcess.id,
+        id: applicantProcess.id,
         applicant: {
-          _id: applicant.id,
+          id: applicant.id,
           firstName: applicant.firstName || '',
           lastName: applicant.lastName || '',
           email: applicant.email,
@@ -593,7 +593,7 @@ export class AdminIncomingApplicationService {
           formName: form?.name || 'Unknown Form',
           completedAt: completedForm.createdAt,
           reviewer: reviewer ? {
-            _id: reviewer!.id,
+            id: reviewer!.id,
             firstName: reviewer!.firstName || '',
             lastName: reviewer!.lastName || '',
             email: reviewer!.email,
@@ -602,9 +602,9 @@ export class AdminIncomingApplicationService {
       }
 
       applications.push({
-        _id: applicantProcess.id,
+        id: applicantProcess.id,
         applicant: {
-          _id: applicant.id,
+          id: applicant.id,
           firstName: applicant.firstName || '',
           lastName: applicant.lastName || '',
           email: applicant.email,
@@ -628,7 +628,7 @@ export class AdminIncomingApplicationService {
 
     return {
       process: {
-        _id: process.id,
+        id: process.id,
         name: process.name,
         type: process.type,
         group: process.groupId,
