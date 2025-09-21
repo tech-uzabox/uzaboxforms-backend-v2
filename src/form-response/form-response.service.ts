@@ -78,7 +78,7 @@ export class FormResponseService {
     return {
       success: true,
       message: 'Response submitted successfully',
-      response: existingResponse
+      response: existingResponse,
     };
   }
 
@@ -146,11 +146,13 @@ export class FormResponseService {
     return {
       success: true,
       message: 'Response submitted successfully',
-      response: existingResponse
+      response: existingResponse,
     };
   }
 
-  async findByUserId(userId: string): Promise<{ success: boolean; responses: FormResponse[] }> {
+  async findByUserId(
+    userId: string,
+  ): Promise<{ success: boolean; responses: FormResponse[] }> {
     const responses = await this.prisma.formResponse.findMany({
       where: {
         applicantProcess: { applicantId: userId },
@@ -200,7 +202,7 @@ export class FormResponseService {
     });
 
     const relatedProcessForms = allProcessForms.filter(
-      pf => pf.processId === userResponse.processId,
+      (pf) => pf.processId === userResponse.processId,
     );
 
     // Step 5: Fetch completed forms by this applicant process
@@ -222,7 +224,9 @@ export class FormResponseService {
 
     // Step 6: Include forms where applicantViewFormAfterCompletion is true
     if (applicantProcess) {
-      const viewableForms = relatedProcessForms.filter(pf => pf.applicantViewFormAfterCompletion);
+      const viewableForms = relatedProcessForms.filter(
+        (pf) => pf.applicantViewFormAfterCompletion,
+      );
 
       for (const viewableForm of viewableForms) {
         const formResponse = await this.prisma.formResponse.findFirst({
@@ -235,7 +239,6 @@ export class FormResponseService {
         if (formResponse) {
           const formData = await this.prisma.form.findUnique({
             where: { id: formResponse.formId },
-            select: { name: true },
           });
           const formResult = {
             formName: formData?.name || 'Untitled Form',
