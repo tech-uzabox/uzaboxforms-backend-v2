@@ -53,18 +53,58 @@ export class ProcessedApplicationService {
         throw new NotFoundException('Process form not found');
     }
 
+    // Determine next staff based on nextStepType
+    let nextStaffId: string | null = null;
+    if (processForm.nextStepType === 'STATIC') {
+        nextStaffId = processForm.nextStaffId;
+    }
+
     await this.prisma.aPCompletedForm.create({
         data: {
             applicantProcessId,
             formId,
             reviewerId,
+            nextStaffId,
+            nextStepType: processForm.nextStepType,
+            nextStepRoles: processForm.nextStepRoles,
+            nextStepSpecifiedTo: processForm.nextStepSpecifiedTo,
+            notificationType: processForm.notificationType,
+            notificationToId: processForm.notificationToId,
+            notificationToRoles: processForm.notificationRoles,
+            notificationComment: processForm.notificationComment,
+            notifyApplicant: processForm.notifyApplicant,
+            applicantNotificationContent: processForm.applicantNotificationContent,
+            editApplicationStatus: processForm.editApplicationStatus,
+            applicantViewFormAfterCompletion: processForm.applicantViewFormAfterCompletion,
         }
     });
 
-    // 3. Send notifications based on process form configuration
+    // 3. Create processed application record for tracking
+    await this.prisma.processedApplication.create({
+        data: {
+            userId: reviewerId,
+            processId: applicantProcess.processId,
+            applicantProcessId,
+            formId,
+            formRoleIds: [], // Will be populated based on user roles
+        }
+    });
+
+    // 4. Send immediate email to next staff if STATIC
+    if (processForm.nextStepType === 'STATIC' && nextStaffId) {
+        const nextStaff = await this.prisma.user.findUnique({ where: { id: nextStaffId } });
+        if (nextStaff) {
+            await this.emailService.sendEmail(
+                nextStaff.email,
+                'You have an incoming pending application for review.'
+            );
+        }
+    }
+
+    // 5. Send notifications based on process form configuration
     await this.sendNotifications(processForm, applicantProcess, reviewer);
 
-    // 4. Send email notifications
+    // 6. Send email notifications
     await this.sendEmailNotifications(processForm, applicantProcess, reviewer);
 
     await this.auditLogService.log({
@@ -79,6 +119,34 @@ export class ProcessedApplicationService {
     return { message: 'Application step processed successfully.' };
   }
 
+  async update(id: string, data: Partial<CreateProcessedApplicationDto>) {
+    const existing = await this.prisma.processedApplication.findUnique({
+      where: { id }
+    });
+
+    if (!existing) {
+      throw new NotFoundException('Processed application not found');
+    }
+
+    const updated = await this.prisma.processedApplication.update({
+      where: { id },
+      data: {
+        ...data,
+        updatedAt: new Date(),
+      }
+    });
+
+    await this.auditLogService.log({
+      userId: data.reviewerId || existing.userId,
+      action: 'PROCESSED_APPLICATION_UPDATED',
+      resource: 'ProcessedApplication',
+      resourceId: id,
+      status: 'SUCCESS',
+    });
+
+    return updated;
+  }
+
   async getProcessedApplicationsByUser(userId: string) {
     // Get user's roles for access control
     const userRoles = await this.prisma.userRole.findMany({
@@ -90,6 +158,7 @@ export class ProcessedApplicationService {
     // Get enabled processes
     const processes = await this.prisma.process.findMany({
       where: { status: 'ENABLED' },
+      include: { group: true },
     });
 
     const groupedApplications: any[] = [];
@@ -313,7 +382,7 @@ export class ProcessedApplicationService {
   private async checkUserAccessToForm(
     userId: string,
     roleIds: string[],
-    lastCompletedFormInfo: { nextStepType: NextStepType; nextStaffId: string | null; nextStepRoles: string[]; reviewerId: string },
+    lastCompletedFormInfo: { nextStepType: NextStepType; nextStaffId: string | null; nextStepRoles: string[]; nextStepSpecifiedTo?: string; reviewerId: string },
     applicantId: string,
   ): Promise<boolean> {
     switch (lastCompletedFormInfo.nextStepType) {
@@ -321,10 +390,13 @@ export class ProcessedApplicationService {
         return lastCompletedFormInfo.nextStaffId === userId;
 
       case 'DYNAMIC':
-        // Check if user has any of the required roles
-        return lastCompletedFormInfo.nextStepRoles?.some((roleId: string) =>
-          roleIds.includes(roleId)
-        ) ?? false;
+        if (lastCompletedFormInfo.nextStepSpecifiedTo === 'ALL_STAFF') {
+          return lastCompletedFormInfo.nextStepRoles?.some((roleId: string) =>
+            roleIds.includes(roleId)
+          ) ?? false;
+        } else {
+          return lastCompletedFormInfo.nextStaffId === userId;
+        }
 
       case 'FOLLOW_ORGANIZATION_CHART':
         const applicantOrg = await this.prisma.organizationUser.findUnique({
