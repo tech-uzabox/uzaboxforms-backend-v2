@@ -104,44 +104,58 @@ export class IncomingApplicationService {
       const applicantProcessesForProcess: any[] = [];
 
       for (const ap of applicantProcesses) {
-        if (ap._count.completedForms >= process.forms.length) continue; // Skip completed
-
-        const lastCompletedForm = ap.completedForms[0];
-        if (!lastCompletedForm) continue; // Should not happen if count > 0, but for safety
-
-        const processForm = await this.prisma.processForm.findFirst({
-            where: { processId: process.id, formId: lastCompletedForm.formId }
+        // Get completed forms for this applicant process in order
+        const completedForms = await this.prisma.aPCompletedForm.findMany({
+          where: { applicantProcessId: ap.id },
+          orderBy: { createdAt: 'asc' },
         });
 
-        if (!processForm) continue;
+        const currentLevel = completedForms.length;
 
-        const hasAccess = await this.userHasAccess(actor, {
+        // Check if process is completed (no more forms to complete)
+        if (currentLevel >= process.forms.length) continue;
+
+        // Get the next form to be completed
+        const nextForm = process.forms[currentLevel];
+        if (!nextForm) continue;
+
+        // Get the last completed form to determine next step info
+        const lastCompletedForm = completedForms[currentLevel - 1];
+
+        let shouldInclude = false;
+
+        // If this is the first form (no completed forms yet), show to everyone
+        if (currentLevel === 0) {
+          shouldInclude = true;
+        }
+
+        // For subsequent forms, check based on last completed form's nextStep info
+        else if (lastCompletedForm) {
+          shouldInclude = await this.userHasAccess(actor, {
             reviewerId: lastCompletedForm.reviewerId || '',
-            nextStepType: processForm.nextStepType,
-            nextStaffId: processForm.nextStaffId || '',
-            nextStepRoles: processForm.nextStepRoles,
+            nextStepType: lastCompletedForm.nextStepType,
+            nextStaffId: lastCompletedForm.nextStaffId || '',
+            nextStepRoles: lastCompletedForm.nextStepRoles,
             formId: lastCompletedForm.formId,
             applicantProcessId: lastCompletedForm.applicantProcessId,
-        });
-
-        if (hasAccess) {
-          const currentLevel = ap._count.completedForms;
-          const nextForm = process.forms[currentLevel];
-
-          applicantProcessesForProcess.push({
-            applicantProcessId: ap.id,
-            applicantId: ap.applicantId,
-            status: ap.status,
-            completedForms: ap.completedForms.map(cf => cf.formId),
-            pendingForm: {
-              formId: nextForm?.formId,
-              nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-              nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-              nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-            },
-            processLevel: `${currentLevel}/${process.forms.length}`,
           });
         }
+
+        if (!shouldInclude) continue;
+
+        applicantProcessesForProcess.push({
+          applicantProcessId: ap.id,
+          applicantId: ap.applicantId,
+          status: ap.status,
+          completedForms: completedForms.map(cf => cf.formId),
+          pendingForm: {
+            formId: nextForm.formId,
+            nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
+            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
+          },
+          processLevel: `${currentLevel}/${process.forms.length}`,
+        });
       }
 
       if (applicantProcessesForProcess.length > 0) {
@@ -209,47 +223,61 @@ export class IncomingApplicationService {
     });
 
     for (const ap of applicantProcesses) {
-      if (ap._count.completedForms >= process.forms.length) continue;
-
-      const lastCompletedForm = ap.completedForms[0];
-      if (!lastCompletedForm) continue;
-
-      const processForm = await this.prisma.processForm.findFirst({
-          where: { processId: process.id, formId: lastCompletedForm.formId }
+      // Get completed forms for this applicant process in order
+      const completedForms = await this.prisma.aPCompletedForm.findMany({
+        where: { applicantProcessId: ap.id },
+        orderBy: { createdAt: 'asc' },
       });
 
-      if (!processForm) continue;
+      const currentLevel = completedForms.length;
 
-      const hasAccess = await this.userHasAccess(actor, {
+      // Check if process is completed (no more forms to complete)
+      if (currentLevel >= process.forms.length) continue;
+
+      // Get the next form to be completed
+      const nextForm = process.forms[currentLevel];
+      if (!nextForm) continue;
+
+      // Get the last completed form to determine next step info
+      const lastCompletedForm = completedForms[currentLevel - 1];
+
+      let shouldInclude = false;
+
+      // If this is the first form (no completed forms yet), show to everyone
+      if (currentLevel === 0) {
+        shouldInclude = true;
+      }
+
+      // For subsequent forms, check based on last completed form's nextStep info
+      else if (lastCompletedForm) {
+        shouldInclude = await this.userHasAccess(actor, {
           reviewerId: lastCompletedForm.reviewerId || '',
-          nextStepType: processForm.nextStepType,
-          nextStaffId: processForm.nextStaffId || '',
-          nextStepRoles: processForm.nextStepRoles,
+          nextStepType: lastCompletedForm.nextStepType,
+          nextStaffId: lastCompletedForm.nextStaffId || '',
+          nextStepRoles: lastCompletedForm.nextStepRoles,
           formId: lastCompletedForm.formId,
           applicantProcessId: lastCompletedForm.applicantProcessId,
-      });
-
-      if (hasAccess) {
-        const currentLevel = ap._count.completedForms;
-        const nextForm = process.forms[currentLevel];
-
-        const editApplicationStatus = process.forms.find((form) => form.formId === nextForm?.formId)?.editApplicationStatus;
-
-        pendingApplications.push({
-          applicantProcessId: ap.id,
-          applicantId: ap.applicantId,
-          status: ap.status,
-          completedForms: ap.completedForms.map(cf => cf.formId),
-          pendingForm: {
-            formId: nextForm?.formId,
-            nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-          },
-          editApplicationStatus,
-          processLevel: `${currentLevel}/${process.forms.length}`,
         });
       }
+
+      if (!shouldInclude) continue;
+
+      const editApplicationStatus = process.forms.find((form) => form.formId === nextForm.formId)?.editApplicationStatus;
+
+      pendingApplications.push({
+        applicantProcessId: ap.id,
+        applicantId: ap.applicantId,
+        status: ap.status,
+        completedForms: completedForms.map(cf => cf.formId),
+        pendingForm: {
+          formId: nextForm.formId,
+          nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
+          nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+          nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
+        },
+        editApplicationStatus,
+        processLevel: `${currentLevel}/${process.forms.length}`,
+      });
     }
 
     await this.auditLogService.log({
@@ -933,43 +961,51 @@ export class IncomingApplicationService {
       const applicantProcessesForProcess: any[] = [];
 
       for (const ap of applicantProcesses) {
-        if (ap._count.completedForms >= process.forms.length) continue; // Skip completed
-
-        const lastCompletedForm = ap.completedForms[0];
-        if (!lastCompletedForm) continue; // Should not happen if count > 0, but for safety
-
-        const processForm = await this.prisma.processForm.findFirst({
-            where: { processId: process.id, formId: lastCompletedForm.formId }
+        // Get completed forms for this applicant process in order
+        const completedForms = await this.prisma.aPCompletedForm.findMany({
+          where: { applicantProcessId: ap.id },
+          orderBy: { createdAt: 'asc' },
         });
 
-        if (!processForm) continue;
+        const currentLevel = completedForms.length;
 
-        const hasAccess = await this.userHasAccess(actor, {
+        if (currentLevel >= process.forms.length) continue;
+
+        const nextForm = process.forms[currentLevel];
+        if (!nextForm) continue;
+
+        const lastCompletedForm = completedForms[currentLevel - 1];
+
+        let shouldInclude = false;
+
+        if (currentLevel === 0) {
+          shouldInclude = true;
+        } else if (lastCompletedForm) {
+          shouldInclude = await this.userHasAccess(actor, {
             reviewerId: lastCompletedForm.reviewerId || '',
-            nextStepType: processForm.nextStepType,
-            nextStaffId: processForm.nextStaffId || '',
-            nextStepRoles: processForm.nextStepRoles,
+            nextStepType: lastCompletedForm.nextStepType,
+            nextStaffId: lastCompletedForm.nextStaffId || '',
+            nextStepRoles: lastCompletedForm.nextStepRoles,
             formId: lastCompletedForm.formId,
             applicantProcessId: lastCompletedForm.applicantProcessId,
-        });
-
-        if (hasAccess) {
-          const currentLevel = ap._count.completedForms;
-
-          applicantProcessesForProcess.push({
-            applicantProcessId: ap.id,
-            applicantId: ap.applicantId,
-            status: ap.status,
-            completedForms: ap.completedForms.map(cf => cf.formId),
-            pendingForm: {
-              formId: process.forms[currentLevel]?.formId,
-              nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-              nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-              nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-            },
-            processLevel: `${currentLevel}/${process.forms.length}`,
           });
         }
+
+        if (!shouldInclude) continue;
+
+        applicantProcessesForProcess.push({
+          applicantProcessId: ap.id,
+          applicantId: ap.applicantId,
+          status: ap.status,
+          completedForms: completedForms.map(cf => cf.formId),
+          pendingForm: {
+            formId: nextForm.formId,
+            nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
+            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
+          },
+          processLevel: `${currentLevel}/${process.forms.length}`,
+        });
       }
 
       if (applicantProcessesForProcess.length > 0) {
