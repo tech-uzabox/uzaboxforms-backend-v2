@@ -213,6 +213,15 @@ exports.Prisma.ProcessRoleScalarFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.FolderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.FormScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -220,6 +229,7 @@ exports.Prisma.FormScalarFieldEnum = {
   status: 'status',
   archived: 'archived',
   creatorId: 'creatorId',
+  folderId: 'folderId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   design: 'design'
@@ -351,6 +361,61 @@ exports.Prisma.AddToDatabaseScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChatScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  title: 'title',
+  userId: 'userId',
+  visibility: 'visibility'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  role: 'role',
+  parts: 'parts',
+  attachments: 'attachments',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.VoteScalarFieldEnum = {
+  chatId: 'chatId',
+  messageId: 'messageId',
+  isUpvoted: 'isUpvoted'
+};
+
+exports.Prisma.DocumentScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  title: 'title',
+  content: 'content',
+  kind: 'kind',
+  userId: 'userId'
+};
+
+exports.Prisma.SuggestionScalarFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  documentCreatedAt: 'documentCreatedAt',
+  originalText: 'originalText',
+  suggestedText: 'suggestedText',
+  description: 'description',
+  isResolved: 'isResolved',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ProcessSaveScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  rolesData: 'rolesData',
+  processData: 'processData',
+  stepsData: 'stepsData',
+  formsData: 'formsData',
+  isComplete: 'isComplete',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -444,10 +509,18 @@ exports.Prisma.ProcessRoleOrderByRelevanceFieldEnum = {
   roleId: 'roleId'
 };
 
+exports.Prisma.FolderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId'
+};
+
 exports.Prisma.FormOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
-  creatorId: 'creatorId'
+  creatorId: 'creatorId',
+  folderId: 'folderId'
 };
 
 exports.Prisma.FormResponseOrderByRelevanceFieldEnum = {
@@ -542,6 +615,46 @@ exports.Prisma.AddToDatabaseOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name'
 };
+
+exports.Prisma.ChatOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  userId: 'userId',
+  visibility: 'visibility'
+};
+
+exports.Prisma.MessageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  role: 'role'
+};
+
+exports.Prisma.VoteOrderByRelevanceFieldEnum = {
+  chatId: 'chatId',
+  messageId: 'messageId'
+};
+
+exports.Prisma.DocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  kind: 'kind',
+  userId: 'userId'
+};
+
+exports.Prisma.SuggestionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  documentId: 'documentId',
+  originalText: 'originalText',
+  suggestedText: 'suggestedText',
+  description: 'description',
+  userId: 'userId'
+};
+
+exports.Prisma.ProcessSaveOrderByRelevanceFieldEnum = {
+  id: 'id',
+  chatId: 'chatId'
+};
 exports.UserStatus = exports.$Enums.UserStatus = {
   ENABLED: 'ENABLED',
   DISABLED: 'DISABLED',
@@ -605,6 +718,7 @@ exports.Prisma.ModelName = {
   GroupRole: 'GroupRole',
   Process: 'Process',
   ProcessRole: 'ProcessRole',
+  Folder: 'Folder',
   Form: 'Form',
   FormResponse: 'FormResponse',
   ProcessForm: 'ProcessForm',
@@ -617,7 +731,13 @@ exports.Prisma.ModelName = {
   QrCodeDocument: 'QrCodeDocument',
   Otp: 'Otp',
   Management: 'Management',
-  AddToDatabase: 'AddToDatabase'
+  AddToDatabase: 'AddToDatabase',
+  Chat: 'Chat',
+  Message: 'Message',
+  Vote: 'Vote',
+  Document: 'Document',
+  Suggestion: 'Suggestion',
+  ProcessSave: 'ProcessSave'
 };
 
 /**

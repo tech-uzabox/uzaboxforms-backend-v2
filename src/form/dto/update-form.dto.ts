@@ -7,6 +7,7 @@ const UpdateFormSchema = z.object({
   type: z.nativeEnum(FormType).optional(),
   status: z.nativeEnum(FormStatus).optional(),
   archived: z.boolean().optional(),
+  folderId: z.string().uuid().nullable().optional(),
   design: z.any().optional(), // Design is JSON
 });
 

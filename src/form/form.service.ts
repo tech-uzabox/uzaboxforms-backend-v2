@@ -12,15 +12,16 @@ export class FormService {
   ) {}
 
   async create(data: CreateFormDto): Promise<Form> {
-    const { name, type, status, creatorId, design } = data;
+    const { name, type, status, creatorId, folderId, design } = data;
     const newForm = await this.prisma.form.create({
       data: {
         name,
         type,
         status,
         creator: { connect: { id: creatorId } },
+        folderId: folderId || null,
         design,
-      },
+      } as any,
     });
     await this.auditLogService.log({
       userId: newForm.creatorId,
@@ -33,8 +34,9 @@ export class FormService {
     return newForm;
   }
 
-  async findAll(): Promise<any[]> {
+  async findAll(folderId?: string): Promise<any[]> {
     const forms = await this.prisma.form.findMany({
+      where: folderId ? { folderId } : undefined,
       include: { creator: true },
     });
 
@@ -97,6 +99,7 @@ export class FormService {
         status: originalForm.status,
         archived: originalForm.archived,
         creatorId: creatorId,
+        folderId: originalForm.folderId,
         design: originalForm.design || Prisma.JsonNull, // Duplicate the design as JSON
       },
     });

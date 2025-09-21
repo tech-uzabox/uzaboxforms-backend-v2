@@ -24,6 +24,7 @@ model User {
   auditLogs          AuditLog[]
   files              File[]
   createdForms       Form[]             @relation("FormCreator")
+  createdFolders     Folder[]           @relation("FolderCreator")
   createdGroups      Group[]            @relation("GroupCreator")
   organization       OrganizationUser?
   createdProcesses   Process[]          @relation("ProcessCreator")
@@ -152,6 +153,20 @@ model ProcessRole {
   @@map("process_roles")
 }
 
+model Folder {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  creatorId   String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  creator     User     @relation("FolderCreator", fields: [creatorId], references: [id])
+  forms       Form[]
+
+  @@index([creatorId])
+  @@map("folders")
+}
+
 model Form {
   id           String         @id @default(uuid()) @db.Uuid
   name         String
@@ -159,14 +174,17 @@ model Form {
   status       FormStatus     @default(ENABLED)
   archived     Boolean        @default(false)
   creatorId    String         @db.Uuid
+  folderId     String?        @db.Uuid
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   design       Json?
   responses    FormResponse[]
   creator      User           @relation("FormCreator", fields: [creatorId], references: [id])
+  folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: SetNull)
   processForms ProcessForm[]
 
   @@index([creatorId])
+  @@index([folderId])
   @@map("forms")
 }
 
@@ -403,4 +421,82 @@ enum ManagementType {
 enum AddToDatabaseStatus {
   ENABLED
   DISABLED
+}
+
+model Chat {
+  id         String    @id @default(uuid()) @db.Uuid
+  createdAt  DateTime  @default(now())
+  title      String
+  userId     String    @db.Uuid
+  visibility String    @default("private")
+  messages   Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id          String   @id @default(uuid()) @db.Uuid
+  chatId      String   @db.Uuid
+  role        String
+  parts       Json
+  attachments Json
+  createdAt   DateTime @default(now())
+  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  votes       Vote[]
+
+  @@index([chatId])
+  @@map("messages")
+}
+
+model Vote {
+  chatId    String  @db.Uuid
+  messageId String  @db.Uuid
+  isUpvoted Boolean
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([chatId, messageId])
+  @@map("votes")
+}
+
+model Document {
+  id          String       @id @default(uuid()) @db.Uuid
+  createdAt   DateTime     @default(now())
+  title       String
+  content     String?
+  kind        String       @default("text")
+  userId      String       @db.Uuid
+  suggestions Suggestion[]
+
+  @@unique([id, createdAt])
+  @@index([userId])
+  @@map("documents")
+}
+
+model Suggestion {
+  id                String   @id @default(uuid()) @db.Uuid
+  documentId        String   @db.Uuid
+  documentCreatedAt DateTime
+  originalText      String
+  suggestedText     String
+  description       String?
+  isResolved        Boolean  @default(false)
+  userId            String   @db.Uuid
+  createdAt         DateTime @default(now())
+  document          Document @relation(fields: [documentId, documentCreatedAt], references: [id, createdAt], onDelete: Cascade)
+
+  @@index([documentId, documentCreatedAt])
+  @@map("suggestions")
+}
+
+model ProcessSave {
+  id          String   @id @default(uuid()) @db.Uuid
+  chatId      String   @unique @db.Uuid
+  rolesData   Json?
+  processData Json?
+  stepsData   Json?
+  formsData   Json?
+  isComplete  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@map("process_saves")
 }

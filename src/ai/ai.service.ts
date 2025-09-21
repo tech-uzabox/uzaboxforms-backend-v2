@@ -1,0 +1,226 @@
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  appendResponseMessages,
+  pipeDataStreamToResponse,
+  smoothStream,
+  streamText,
+} from 'ai';
+import type { Response } from 'express';
+import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
+import { generateUUID } from 'src/utils/generate-uuid';
+import { PrismaService } from '../db/prisma.service';
+import { ChatProcessDto } from './dto/chat-process.dto';
+import { systemPrompt } from './prompts';
+import { openrouter } from './providers';
+import {
+  createDeleteFormTool,
+  createDeleteStepTool,
+  createGenerateFormTool,
+  createPreviewFormTool,
+  createProcessTool,
+  createSaveFormTool,
+  createSaveProcessTool,
+  createSaveRolesTool,
+  createSaveStepTool,
+} from './tools';
+import { createChartVisualization } from './tools/create-visualization';
+import { createGetFormResponsesTool } from './tools/get-form-responses';
+import { createGetFormSchemaByIdTool } from './tools/get-form-schema';
+import { createGetFormsTool } from './tools/get-forms';
+import { createGetProcessByIdTool } from './tools/get-process-by-id';
+import { createGetProcessesTool } from './tools/get-processes';
+import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
+import { createGetUserByIdTool } from './tools/get-user-by-id';
+import { DBMessageInput } from './types/ai.types';
+import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
+
+@Injectable()
+export class AiService {
+  private readonly logger = new Logger(AiService.name);
+
+  constructor(private prisma: PrismaService) {}
+
+  async processChat(
+    dto: ChatProcessDto,
+    currentUser: AuthenticatedUser,
+    response: Response,
+  ) {
+    const { id, messages, selectedChatModel } = dto;
+
+    let chat = await this.prisma.chat.findUnique({ where: { id } });
+    if (!chat) {
+      const firstUserMessage = messages.find((m) => m.role === 'user');
+      const title = firstUserMessage
+        ? await this.generateTitleFromMessage(firstUserMessage.content)
+        : 'New Chat';
+
+      chat = await this.prisma.chat.create({
+        data: {
+          id,
+          userId: currentUser.id,
+          title,
+        },
+      });
+    } else if (chat.userId !== currentUser.id) {
+      throw new Error('Unauthorized access to chat');
+    }
+
+    const userMessages = messages.filter((m) => m.role === 'user');
+    if (userMessages.length > 0) {
+      await this.saveMessages(
+        id,
+        userMessages.map((m) => ({
+          id: m.id,
+          chatId: id,
+          role: m.role,
+          parts: m.parts,
+          attachments: m.experimental_attachments || [],
+          createdAt: new Date(),
+        })),
+      );
+    }
+
+    const userMessage = getMostRecentUserMessage(messages);
+
+    if (!userMessage) {
+      throw new BadRequestException('No user message found');
+    }
+
+    const [roles, groups, users] = await Promise.all([
+      this.prisma.role.findMany({
+        select: { id: true, name: true },
+      }),
+      this.prisma.group.findMany({
+        select: { id: true, name: true },
+      }),
+      this.prisma.user.findMany({
+        select: { id: true, firstName: true, lastName: true, email: true },
+      }),
+    ]);
+
+    const systemPromptText = systemPrompt({
+      selectedChatModel: selectedChatModel || 'chat-model',
+      roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+      groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+      users: users.map((u) => ({
+        _id: u.id,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        email: u.email,
+      })),
+    });
+
+    const tools = {
+      get_forms: createGetFormsTool(this.prisma),
+      get_form_responses: createGetFormResponsesTool(this.prisma),
+      get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
+      get_processes: createGetProcessesTool(this.prisma),
+      get_processes_with_formid: createGetProcessesWithFormIdTool(this.prisma),
+      get_process_by_id: createGetProcessByIdTool(this.prisma),
+      get_user_by_id: createGetUserByIdTool(this.prisma),
+
+      create_chart_visualization: createChartVisualization,
+
+      generate_form: createGenerateFormTool(),
+      save_form: createSaveFormTool(this.prisma, id),
+      preview_form: createPreviewFormTool(),
+      delete_form: createDeleteFormTool(this.prisma, id),
+      save_process: createSaveProcessTool(this.prisma, id),
+      save_roles: createSaveRolesTool(this.prisma, id),
+      save_step: createSaveStepTool(this.prisma, id),
+      delete_step: createDeleteStepTool(this.prisma, id),
+      create_process: createProcessTool(this.prisma, id, currentUser.id),
+    };
+
+    pipeDataStreamToResponse(response, {
+      execute: async (dataStreamWriter) => {
+        dataStreamWriter.writeData('initialized call');
+
+        const result = streamText({
+          model: openrouter('openai/gpt-5-mini'),
+          system: systemPromptText,
+          messages,
+          experimental_generateMessageId: generateUUID,
+          maxSteps: 100,
+          experimental_transform: smoothStream({ chunking: 'word' }),
+          providerOptions: {
+            openrouter: {
+              reasoning: {
+                max_tokens: 4000,
+              },
+            },
+          },
+          tools,
+          onFinish: async ({ response }) => {
+            try {
+              const assistantId = getTrailingMessageId({
+                messages: response.messages.filter(
+                  (message) => message.role === 'assistant',
+                ),
+              });
+
+              if (!assistantId) {
+                throw new Error('No assistant message found!');
+              }
+
+              const [, assistantMessage] = appendResponseMessages({
+                messages: [userMessage],
+                responseMessages: response.messages,
+              });
+              await this.saveMessages(id, [
+                {
+                  id: assistantId,
+                  chatId: id,
+                  role: assistantMessage.role,
+                  parts: assistantMessage.parts as any[],
+                  attachments: assistantMessage.experimental_attachments ?? [],
+                  createdAt: new Date(),
+                },
+              ]);
+            } catch (error) {
+              this.logger.error('Failed to save assistant message:', error);
+            }
+          },
+        });
+        result.mergeIntoDataStream(dataStreamWriter);
+      },
+      // onError: (error) => {
+      // Error messages are masked by default for security reasons.
+      // If you want to expose the error message to the client, you can do so here:
+      // return error instanceof Error ? error.message : String(error);
+      // },
+    });
+  }
+
+  async deleteChat(chatId: string, userId: string): Promise<boolean> {
+    try {
+      const chat = await this.prisma.chat.findUnique({
+        where: { id: chatId },
+      });
+
+      if (!chat || chat.userId !== userId) {
+        return false;
+      }
+
+      await this.prisma.chat.delete({
+        where: { id: chatId },
+      });
+
+      return true;
+    } catch (error) {
+      this.logger.error('Error deleting chat:', error);
+      return false;
+    }
+  }
+
+  private async generateTitleFromMessage(message: string): Promise<string> {
+    const words = message.split(' ').slice(0, 5);
+    return words.join(' ') + (words.length >= 5 ? '...' : '');
+  }
+
+  private async saveMessages(chatId: string, messages: DBMessageInput[]) {
+    await this.prisma.message.createMany({
+      data: messages,
+    });
+  }
+}

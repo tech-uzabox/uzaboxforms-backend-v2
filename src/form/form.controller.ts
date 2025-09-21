@@ -1,12 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { FormService } from './form.service';
 import { CreateFormDto } from './dto/create-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
 import { DuplicateFormDto } from './dto/duplicate-form.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Forms')
 @Controller('forms')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class FormController {
   constructor(private readonly formService: FormService) {}
 
@@ -16,8 +19,8 @@ export class FormController {
   }
 
   @Get()
-  findAll() {
-    return this.formService.findAll();
+  findAll(@Query('folderId') folderId?: string) {
+    return this.formService.findAll(folderId);
   }
 
   @Get(':id')
