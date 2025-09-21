@@ -88,10 +88,18 @@ export interface ProcessMetadata {
 export interface ProcessStepData {
   stepId: string;
   formId: string;
-  nextStepType: 'STATIC' | 'DYNAMIC' | 'FOLLOW_ORGANIZATION_CHART' | 'NOT_APPLICABLE';
+  nextStepType:
+    | 'STATIC'
+    | 'DYNAMIC'
+    | 'FOLLOW_ORGANIZATION_CHART'
+    | 'NOT_APPLICABLE';
   nextStepRoles?: string[];
   nextStaff?: string;
-  notificationType: 'STATIC' | 'DYNAMIC' | 'FOLLOW_ORGANIZATION_CHART' | 'NOT_APPLICABLE';
+  notificationType:
+    | 'STATIC'
+    | 'DYNAMIC'
+    | 'FOLLOW_ORGANIZATION_CHART'
+    | 'NOT_APPLICABLE';
   notificationTo?: string;
   notificationComment?: string;
   editApplicationStatus: boolean;

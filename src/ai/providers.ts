@@ -19,7 +19,7 @@ export const chatModels: Array<AIChatModel> = [
   },
 ];
 
-const openrouter = createOpenRouter({
+export const openrouter = createOpenRouter({
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 

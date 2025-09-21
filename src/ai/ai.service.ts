@@ -1,10 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { generateId, streamText } from 'ai';
-import { Observable } from 'rxjs';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  appendResponseMessages,
+  pipeDataStreamToResponse,
+  smoothStream,
+  streamText,
+} from 'ai';
+import type { Response } from 'express';
+import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
+import { generateUUID } from 'src/utils/generate-uuid';
 import { PrismaService } from '../db/prisma.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
 import { systemPrompt } from './prompts';
-import { myProvider } from './providers';
+import { openrouter } from './providers';
 import {
   createDeleteFormTool,
   createDeleteStepTool,
@@ -25,6 +32,7 @@ import { createGetProcessesTool } from './tools/get-processes';
 import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
 import { createGetUserByIdTool } from './tools/get-user-by-id';
 import { DBMessageInput } from './types/ai.types';
+import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
 
 @Injectable()
 export class AiService {
@@ -34,14 +42,13 @@ export class AiService {
 
   async processChat(
     dto: ChatProcessDto,
-    currentUser: { id: string },
-  ): Promise<Observable<MessageEvent>> {
+    currentUser: AuthenticatedUser,
+    response: Response,
+  ) {
     const { id, messages, selectedChatModel } = dto;
 
-    // Check if chat exists, create if not
     let chat = await this.prisma.chat.findUnique({ where: { id } });
     if (!chat) {
-      // Generate title from first user message
       const firstUserMessage = messages.find((m) => m.role === 'user');
       const title = firstUserMessage
         ? await this.generateTitleFromMessage(firstUserMessage.content)
@@ -58,7 +65,6 @@ export class AiService {
       throw new Error('Unauthorized access to chat');
     }
 
-    // Save user messages
     const userMessages = messages.filter((m) => m.role === 'user');
     if (userMessages.length > 0) {
       await this.saveMessages(
@@ -74,23 +80,24 @@ export class AiService {
       );
     }
 
-    // Get available roles, groups, users for context using Prisma directly
+    const userMessage = getMostRecentUserMessage(messages);
+
+    if (!userMessage) {
+      throw new BadRequestException('No user message found');
+    }
+
     const [roles, groups, users] = await Promise.all([
       this.prisma.role.findMany({
         select: { id: true, name: true },
-
       }),
       this.prisma.group.findMany({
         select: { id: true, name: true },
-
       }),
       this.prisma.user.findMany({
         select: { id: true, firstName: true, lastName: true, email: true },
-
       }),
     ]);
 
-    // Create system prompt with context
     const systemPromptText = systemPrompt({
       selectedChatModel: selectedChatModel || 'chat-model',
       roles: roles.map((r) => ({ _id: r.id, name: r.name })),
@@ -103,9 +110,7 @@ export class AiService {
       })),
     });
 
-    // Create tools with injected services
     const tools = {
-      // Data retrieval tools
       get_forms: createGetFormsTool(this.prisma),
       get_form_responses: createGetFormResponsesTool(this.prisma),
       get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
@@ -114,10 +119,8 @@ export class AiService {
       get_process_by_id: createGetProcessByIdTool(this.prisma),
       get_user_by_id: createGetUserByIdTool(this.prisma),
 
-      // Visualization tool
       create_chart_visualization: createChartVisualization,
 
-      // Process AI tools
       generate_form: createGenerateFormTool(),
       save_form: createSaveFormTool(this.prisma, id),
       preview_form: createPreviewFormTool(),
@@ -129,59 +132,63 @@ export class AiService {
       create_process: createProcessTool(this.prisma, id, currentUser.id),
     };
 
-    // Create observable for streaming response
-    return new Observable<MessageEvent>((subscriber) => {
-      (async () => {
-        try {
-          const result = await streamText({
-            model: myProvider('chat-model'),
-            system: systemPromptText,
-            messages,
-            tools,
-            onFinish: async ({ response }) => {
-              try {
-                // Save assistant messages - simplified for now
-                await this.saveMessages(id, [
-                  {
-                    id: generateId(),
-                    chatId: id,
-                    role: 'assistant',
-                    parts: [{ type: 'text', text: 'Assistant response' }],
-                    attachments: [],
-                    createdAt: new Date(),
-                  },
-                ]);
-              } catch (error) {
-                this.logger.error('Failed to save assistant message:', error);
-              }
+    pipeDataStreamToResponse(response, {
+      execute: async (dataStreamWriter) => {
+        dataStreamWriter.writeData('initialized call');
+
+        const result = streamText({
+          model: openrouter('openai/gpt-5-mini'),
+          system: systemPromptText,
+          messages,
+          experimental_generateMessageId: generateUUID,
+          maxSteps: 100,
+          experimental_transform: smoothStream({ chunking: 'word' }),
+          providerOptions: {
+            openrouter: {
+              reasoning: {
+                max_tokens: 4000,
+              },
             },
-          });
+          },
+          tools,
+          onFinish: async ({ response }) => {
+            try {
+              const assistantId = getTrailingMessageId({
+                messages: response.messages.filter(
+                  (message) => message.role === 'assistant',
+                ),
+              });
 
-          // Stream the response
-          for await (const delta of result.textStream) {
-            subscriber.next(
-              new MessageEvent('data', {
-                data: JSON.stringify({ type: 'text-delta', content: delta }),
-              }),
-            );
-          }
+              if (!assistantId) {
+                throw new Error('No assistant message found!');
+              }
 
-          // Send finish event
-          subscriber.next(
-            new MessageEvent('data', {
-              data: JSON.stringify({
-                type: 'finish',
-                finishReason: result.finishReason,
-              }),
-            }),
-          );
-
-          subscriber.complete();
-        } catch (error) {
-          this.logger.error('Error in AI streaming:', error);
-          subscriber.error(error);
-        }
-      })();
+              const [, assistantMessage] = appendResponseMessages({
+                messages: [userMessage],
+                responseMessages: response.messages,
+              });
+              await this.saveMessages(id, [
+                {
+                  id: assistantId,
+                  chatId: id,
+                  role: assistantMessage.role,
+                  parts: assistantMessage.parts as any[],
+                  attachments: assistantMessage.experimental_attachments ?? [],
+                  createdAt: new Date(),
+                },
+              ]);
+            } catch (error) {
+              this.logger.error('Failed to save assistant message:', error);
+            }
+          },
+        });
+        result.mergeIntoDataStream(dataStreamWriter);
+      },
+      // onError: (error) => {
+      // Error messages are masked by default for security reasons.
+      // If you want to expose the error message to the client, you can do so here:
+      // return error instanceof Error ? error.message : String(error);
+      // },
     });
   }
 
@@ -206,10 +213,7 @@ export class AiService {
     }
   }
 
-  // Helper methods for AI tools will be added here
-
   private async generateTitleFromMessage(message: string): Promise<string> {
-    // Simple title generation - in a real implementation, this could use AI
     const words = message.split(' ').slice(0, 5);
     return words.join(' ') + (words.length >= 5 ? '...' : '');
   }
