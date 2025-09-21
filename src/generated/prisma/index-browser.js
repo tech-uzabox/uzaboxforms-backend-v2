@@ -213,6 +213,15 @@ exports.Prisma.ProcessRoleScalarFieldEnum = {
   status: 'status'
 };
 
+exports.Prisma.FolderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.FormScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -220,6 +229,7 @@ exports.Prisma.FormScalarFieldEnum = {
   status: 'status',
   archived: 'archived',
   creatorId: 'creatorId',
+  folderId: 'folderId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   design: 'design'
@@ -499,10 +509,18 @@ exports.Prisma.ProcessRoleOrderByRelevanceFieldEnum = {
   roleId: 'roleId'
 };
 
+exports.Prisma.FolderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId'
+};
+
 exports.Prisma.FormOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
-  creatorId: 'creatorId'
+  creatorId: 'creatorId',
+  folderId: 'folderId'
 };
 
 exports.Prisma.FormResponseOrderByRelevanceFieldEnum = {
@@ -700,6 +718,7 @@ exports.Prisma.ModelName = {
   GroupRole: 'GroupRole',
   Process: 'Process',
   ProcessRole: 'ProcessRole',
+  Folder: 'Folder',
   Form: 'Form',
   FormResponse: 'FormResponse',
   ProcessForm: 'ProcessForm',

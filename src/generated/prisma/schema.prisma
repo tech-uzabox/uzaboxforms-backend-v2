@@ -24,6 +24,7 @@ model User {
   auditLogs          AuditLog[]
   files              File[]
   createdForms       Form[]             @relation("FormCreator")
+  createdFolders     Folder[]           @relation("FolderCreator")
   createdGroups      Group[]            @relation("GroupCreator")
   organization       OrganizationUser?
   createdProcesses   Process[]          @relation("ProcessCreator")
@@ -152,6 +153,20 @@ model ProcessRole {
   @@map("process_roles")
 }
 
+model Folder {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  creatorId   String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  creator     User     @relation("FolderCreator", fields: [creatorId], references: [id])
+  forms       Form[]
+
+  @@index([creatorId])
+  @@map("folders")
+}
+
 model Form {
   id           String         @id @default(uuid()) @db.Uuid
   name         String
@@ -159,14 +174,17 @@ model Form {
   status       FormStatus     @default(ENABLED)
   archived     Boolean        @default(false)
   creatorId    String         @db.Uuid
+  folderId     String?        @db.Uuid
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   design       Json?
   responses    FormResponse[]
   creator      User           @relation("FormCreator", fields: [creatorId], references: [id])
+  folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: SetNull)
   processForms ProcessForm[]
 
   @@index([creatorId])
+  @@index([folderId])
   @@map("forms")
 }
 
