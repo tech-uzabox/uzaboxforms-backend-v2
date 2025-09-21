@@ -1,31 +1,30 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { generateId, streamText } from 'ai';
+import { Observable } from 'rxjs';
 import { PrismaService } from '../db/prisma.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
-import { UIMessage, DBMessageInput } from './types/ai.types';
-import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { streamText, tool, generateId, smoothStream } from 'ai';
-import { myProvider } from './providers';
 import { systemPrompt } from './prompts';
-import { createGetFormResponsesTool } from './tools/get-form-responses';
-import { createGetFormsTool } from './tools/get-forms';
-import { createGetProcessesTool } from './tools/get-processes';
-import { createGetFormSchemaByIdTool } from './tools/get-form-schema';
-import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
-import { createGetProcessByIdTool } from './tools/get-process-by-id';
-import { createGetUserByIdTool } from './tools/get-user-by-id';
-import { createChartVisualization } from './tools/create-visualization';
+import { myProvider } from './providers';
 import {
-  createGenerateFormTool,
-  createSaveFormTool,
-  createPreviewFormTool,
   createDeleteFormTool,
+  createDeleteStepTool,
+  createGenerateFormTool,
+  createPreviewFormTool,
+  createProcessTool,
+  createSaveFormTool,
   createSaveProcessTool,
   createSaveRolesTool,
   createSaveStepTool,
-  createDeleteStepTool,
-  createProcessTool,
-} from './tools/process-ai-tools';
+} from './tools';
+import { createChartVisualization } from './tools/create-visualization';
+import { createGetFormResponsesTool } from './tools/get-form-responses';
+import { createGetFormSchemaByIdTool } from './tools/get-form-schema';
+import { createGetFormsTool } from './tools/get-forms';
+import { createGetProcessByIdTool } from './tools/get-process-by-id';
+import { createGetProcessesTool } from './tools/get-processes';
+import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
+import { createGetUserByIdTool } from './tools/get-user-by-id';
+import { DBMessageInput } from './types/ai.types';
 
 @Injectable()
 export class AiService {
@@ -43,8 +42,10 @@ export class AiService {
     let chat = await this.prisma.chat.findUnique({ where: { id } });
     if (!chat) {
       // Generate title from first user message
-      const firstUserMessage = messages.find(m => m.role === 'user');
-      const title = firstUserMessage ? await this.generateTitleFromMessage(firstUserMessage.content) : 'New Chat';
+      const firstUserMessage = messages.find((m) => m.role === 'user');
+      const title = firstUserMessage
+        ? await this.generateTitleFromMessage(firstUserMessage.content)
+        : 'New Chat';
 
       chat = await this.prisma.chat.create({
         data: {
@@ -58,40 +59,48 @@ export class AiService {
     }
 
     // Save user messages
-    const userMessages = messages.filter(m => m.role === 'user');
+    const userMessages = messages.filter((m) => m.role === 'user');
     if (userMessages.length > 0) {
-      await this.saveMessages(id, userMessages.map(m => ({
-        id: m.id,
-        chatId: id,
-        role: m.role,
-        parts: m.parts,
-        attachments: m.experimental_attachments || [],
-        createdAt: new Date(),
-      })));
+      await this.saveMessages(
+        id,
+        userMessages.map((m) => ({
+          id: m.id,
+          chatId: id,
+          role: m.role,
+          parts: m.parts,
+          attachments: m.experimental_attachments || [],
+          createdAt: new Date(),
+        })),
+      );
     }
 
     // Get available roles, groups, users for context using Prisma directly
     const [roles, groups, users] = await Promise.all([
       this.prisma.role.findMany({
         select: { id: true, name: true },
-        take: 50, // Limit for performance
+
       }),
       this.prisma.group.findMany({
         select: { id: true, name: true },
-        take: 50, // Limit for performance
+
       }),
       this.prisma.user.findMany({
         select: { id: true, firstName: true, lastName: true, email: true },
-        take: 100, // Limit for performance
+
       }),
     ]);
 
     // Create system prompt with context
     const systemPromptText = systemPrompt({
       selectedChatModel: selectedChatModel || 'chat-model',
-      roles: roles.map(r => ({ _id: r.id, name: r.name })),
-      groups: groups.map(g => ({ _id: g.id, name: g.name })),
-      users: users.map(u => ({ _id: u.id, firstName: u.firstName, lastName: u.lastName, email: u.email })),
+      roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+      groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+      users: users.map((u) => ({
+        _id: u.id,
+        firstName: u.firstName,
+        lastName: u.lastName,
+        email: u.email,
+      })),
     });
 
     // Create tools with injected services
@@ -117,7 +126,7 @@ export class AiService {
       save_roles: createSaveRolesTool(this.prisma, id),
       save_step: createSaveStepTool(this.prisma, id),
       delete_step: createDeleteStepTool(this.prisma, id),
-      create_process: createProcessTool(this.prisma, id),
+      create_process: createProcessTool(this.prisma, id, currentUser.id),
     };
 
     // Create observable for streaming response
@@ -132,14 +141,16 @@ export class AiService {
             onFinish: async ({ response }) => {
               try {
                 // Save assistant messages - simplified for now
-                await this.saveMessages(id, [{
-                  id: generateId(),
-                  chatId: id,
-                  role: 'assistant',
-                  parts: [{ type: 'text', text: 'Assistant response' }],
-                  attachments: [],
-                  createdAt: new Date(),
-                }]);
+                await this.saveMessages(id, [
+                  {
+                    id: generateId(),
+                    chatId: id,
+                    role: 'assistant',
+                    parts: [{ type: 'text', text: 'Assistant response' }],
+                    attachments: [],
+                    createdAt: new Date(),
+                  },
+                ]);
               } catch (error) {
                 this.logger.error('Failed to save assistant message:', error);
               }
@@ -148,15 +159,22 @@ export class AiService {
 
           // Stream the response
           for await (const delta of result.textStream) {
-            subscriber.next(new MessageEvent('data', {
-              data: JSON.stringify({ type: 'text-delta', content: delta })
-            }));
+            subscriber.next(
+              new MessageEvent('data', {
+                data: JSON.stringify({ type: 'text-delta', content: delta }),
+              }),
+            );
           }
 
           // Send finish event
-          subscriber.next(new MessageEvent('data', {
-            data: JSON.stringify({ type: 'finish', finishReason: result.finishReason })
-          }));
+          subscriber.next(
+            new MessageEvent('data', {
+              data: JSON.stringify({
+                type: 'finish',
+                finishReason: result.finishReason,
+              }),
+            }),
+          );
 
           subscriber.complete();
         } catch (error) {
