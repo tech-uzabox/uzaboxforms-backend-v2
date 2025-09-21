@@ -136,7 +136,7 @@ export class AiService {
       execute: async (dataStreamWriter) => {
         dataStreamWriter.writeData('initialized call');
         const result = streamText({
-          model: openrouter('openai/gpt-5-mini'),
+          model: openrouter('x-ai/grok-4-fast:free'),
           system: systemPromptText,
           messages,
           experimental_generateMessageId: generateUUID,
