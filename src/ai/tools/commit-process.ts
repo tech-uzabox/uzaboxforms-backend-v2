@@ -1,14 +1,12 @@
 import { tool } from 'ai';
 import { PrismaService } from '../../db/prisma.service';
+import z from 'zod';
 
 export const createProcessTool = (prisma: PrismaService, chatId: string, currentUserId: string) => {
   return tool({
     description:
       "use all the saved process, roles and steps and create them in the main system",
-    parameters: {
-      type: "object",
-      properties: {},
-    },
+    parameters: z.object({}),
     execute: async () => {
       return await prisma.$transaction(async (tx) => {
         const processSaved = await tx.processSave.findFirst({
