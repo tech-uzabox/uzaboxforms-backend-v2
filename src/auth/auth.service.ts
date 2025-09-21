@@ -139,10 +139,10 @@ export class AuthService {
       });
 
       // Assign a default role (e.g., 'USER') to the new Google user
-      let userRole = await this.roleService.findOneByName('USER');
+      let userRole = await this.roleService.findOneByName('User');
       if (!userRole) {
         userRole = await this.roleService.create({
-          name: 'USER',
+          name: 'User',
           description: 'Standard User',
           status: RoleStatus.ENABLED,
         });
@@ -213,7 +213,11 @@ export class AuthService {
     }
   }
 
-  async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<{ message: string }> {
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<{ message: string }> {
     const user = await this.userService.findOne(userId);
     if (!user) {
       throw new BadRequestException('User not found.');
@@ -242,12 +246,21 @@ export class AuthService {
           const role = await this.roleService.findOne(ur.roleId);
           return {
             roleName: role?.name,
-            status: role?.status === RoleStatus.ENABLED && ur.status === RoleStatus.ENABLED ? 'ENABLED' : 'DISABLED',
+            status:
+              role?.status === RoleStatus.ENABLED &&
+              ur.status === RoleStatus.ENABLED
+                ? 'ENABLED'
+                : 'DISABLED',
           };
         }),
       );
       const { password, ...userWithoutPass } = user;
-      return { success: true, message: 'Token is valid', user: userWithoutPass, roles };
+      return {
+        success: true,
+        message: 'Token is valid',
+        user: userWithoutPass,
+        roles,
+      };
     } catch (error) {
       throw new BadRequestException('Unauthorized');
     }
@@ -272,13 +285,19 @@ export class AuthService {
 
     const pendingRole = await this.roleService.findOneByName('PENDING');
     if (pendingRole) {
-      const existingPending = await this.userRoleService.findOne(user.id, pendingRole.id);
+      const existingPending = await this.userRoleService.findOne(
+        user.id,
+        pendingRole.id,
+      );
       if (existingPending) {
         await this.userRoleService.remove(user.id, pendingRole.id);
       }
     }
 
-    const existingUserRole = await this.userRoleService.findOne(user.id, userRole.id);
+    const existingUserRole = await this.userRoleService.findOne(
+      user.id,
+      userRole.id,
+    );
     if (!existingUserRole) {
       await this.userRoleService.create(user.id, userRole.id);
     }
