@@ -116,7 +116,7 @@ export class ProcessService {
           if (!form) return null;
 
           return {
-            formName: form.name,
+            name: form.name,
             status: form.status,
             createdAt: form.createdAt?.toISOString(),
             updatedAt: form.updatedAt?.toISOString(),
