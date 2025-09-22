@@ -13,7 +13,15 @@ export class WidgetService {
   ) {}
 
   async create(data: CreateWidgetDto): Promise<Widget> {
-    const newWidget = await this.prisma.widget.create({ data });
+    const newWidget = await this.prisma.widget.create({ data: {
+      title: data.title,
+      visualizationType: data.visualizationType,
+      config: data.config,
+      order: data.order,
+      dashboardId: data.dashboardId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } });
     await this.auditLogService.log({
       action: 'WIDGET_CREATED',
       resource: 'Widget',

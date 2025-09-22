@@ -1,6 +1,6 @@
 import { tool } from 'ai';
 import { OpenAI } from 'openai';
-import { zodResponseFormat } from 'openai/helpers/zod';
+import { zodTextFormat } from 'openai/helpers/zod';
 import z from 'zod';
 import {
   formInputTypes,
@@ -8,26 +8,24 @@ import {
   GeneratedFormSchema,
 } from './form-schemas';
 
-export const createGenerateFormTool = () => {
-  return tool({
-    description: 'generate form schema according to description',
-    parameters: z.object({
-      description: z
-        .string()
-        .describe('description of the form to be generated'),
-    }),
-    execute: async ({ description }: { description: string }) => {
-      const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-      });
+export const createGenerateFormTool = tool({
+  description: 'generate form schema according to description',
+  parameters: z.object({
+    description: z.string().describe('description of the form to be generated'),
+  }),
+  execute: async ({ description }: { description: string }) => {
+    console.log('generating form for description', description);
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
-      try {
-        const formCreation = await openai.chat.completions.parse({
-          model: 'gpt-5-mini',
-          messages: [
-            {
-              role: 'system',
-              content: `
+    try {
+      const formCreation = await openai.responses.parse({
+        model: 'gpt-5-mini',
+        input: [
+          {
+            role: 'system',
+            content: `
                 you are a form generation expert, you will use the received formation about the form questions and input types and select from the available question types and their schema to construct the form schema, divide the formSchema into sections as in the information provided
                 - keep the question names and description as original as possible do not change anything
                 QUESTION TYPES WITH THEIR SCHEMA:
@@ -39,47 +37,48 @@ export const createGenerateFormTool = () => {
                 if for a specific question a property in formSchema.sections.questions is not mentioned in the schema, set it to null
                 make sure to link each section with the next section using the 'nextSectionId' which links using the next section's id
                 `,
-            },
-            {
-              role: 'user',
-              content: `${description}`,
-            },
-          ],
-          response_format: zodResponseFormat(FormSchema, 'formSchema'),
-        });
+          },
+          {
+            role: 'user',
+            content: `${description}`,
+          },
+        ],
+        text: {
+          format: zodTextFormat(FormSchema, 'formSchema'),
+        },
+      });
 
-        const formSchema = formCreation.choices[0].message.parsed;
-        const mappedSections = formSchema?.sections.map(
-          (section: any, sectionIndex: number) => ({
-            ...section,
-            id: section?.id ?? `section-${Date.now() + sectionIndex}`,
-            questions: section.questions.map(
-              (question: any, questionIndex: number) => ({
-                ...question,
-                id: `question-${Date.now() + sectionIndex + questionIndex}`,
-              }),
-            ),
-          }),
-        );
-        const formReturn = {
-          formId: `form_${Date.now()}`,
-          sections: mappedSections,
-        };
-        const isValid = GeneratedFormSchema.omit({ name: true }).safeParse(
-          formReturn,
-        ).success;
-        console.log('isValid', isValid);
-        return {
-          success: true,
-          data: formReturn,
-        };
-      } catch (error) {
-        console.log('error generating form', error);
-        return {
-          error: 'Failed to generate form, please try again',
-          success: false,
-        };
-      }
-    },
-  } as any);
-};
+      const formSchema = formCreation.output_parsed;
+      const mappedSections = formSchema?.sections.map(
+        (section: any, sectionIndex: number) => ({
+          ...section,
+          id: section?.id ?? `section-${Date.now() + sectionIndex}`,
+          questions: section.questions.map(
+            (question: any, questionIndex: number) => ({
+              ...question,
+              id: `question-${Date.now() + sectionIndex + questionIndex}`,
+            }),
+          ),
+        }),
+      );
+      const formReturn = {
+        formId: `form_${Date.now()}`,
+        sections: mappedSections,
+      };
+      const isValid = GeneratedFormSchema.omit({ name: true }).safeParse(
+        formReturn,
+      ).success;
+      console.log('isValid', isValid);
+      return {
+        success: true,
+        data: formReturn,
+      };
+    } catch (error) {
+      console.log('error generating form', error);
+      return {
+        error: 'Failed to generate form, please try again',
+        success: false,
+      };
+    }
+  },
+} as any);

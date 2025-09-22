@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import {
   appendResponseMessages,
+  generateText,
+  Message,
   pipeDataStreamToResponse,
   smoothStream,
   streamText,
@@ -51,7 +53,9 @@ export class AiService {
     if (!chat) {
       const firstUserMessage = messages.find((m) => m.role === 'user');
       const title = firstUserMessage
-        ? await this.generateTitleFromMessage(firstUserMessage.content)
+        ? await this.generateTitleFromUserMessage({
+            message: firstUserMessage,
+          })
         : 'New Chat';
 
       chat = await this.prisma.chat.create({
@@ -121,9 +125,9 @@ export class AiService {
 
       create_chart_visualization: createChartVisualization,
 
-      generate_form: createGenerateFormTool(),
+      generate_form: createGenerateFormTool,
       save_form: createSaveFormTool(this.prisma, id),
-      preview_form: createPreviewFormTool(),
+      preview_form: createPreviewFormTool,
       delete_form: createDeleteFormTool(this.prisma, id),
       save_process: createSaveProcessTool(this.prisma, id),
       save_roles: createSaveRolesTool(this.prisma, id),
@@ -265,10 +269,23 @@ export class AiService {
     }
   }
 
-  private async generateTitleFromMessage(message: string): Promise<string> {
-    const words = message.split(' ').slice(0, 5);
-    return words.join(' ') + (words.length >= 5 ? '...' : '');
-  }
+  private async generateTitleFromUserMessage({
+  message,
+}: {
+  message: Message;
+}) {
+  const { text: title } = await generateText({
+    model: openrouter('x-ai/grok-4-fast:free'),
+    system: `\n
+    - you will generate a short title based on the first message a user begins a conversation with
+    - ensure it is not more than 80 characters long
+    - the title should be a summary of the user's message
+    - do not use quotes or colons`,
+    prompt: JSON.stringify(message),
+  });
+
+  return title;
+}
 
   private async saveMessages(chatId: string, messages: DBMessageInput[]) {
     const messageIds = messages.map((m) => m.id);

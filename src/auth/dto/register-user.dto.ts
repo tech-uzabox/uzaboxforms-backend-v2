@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { passwordSchema } from '../zod/password.zod';
 
 const RegisterUserSchema = z.object({
-  email: z.email(),
+  email: z.string().email(),
   password: passwordSchema,
 });
 
