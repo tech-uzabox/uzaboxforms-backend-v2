@@ -355,7 +355,7 @@ const SectionSchema = z.object({
     .describe('Questions schema according to the input type schema'),
 });
 
-const SectionSchemaV2 = z.object({
+export const SectionSchemaV2 = z.object({
   name: z.string(),
   id: z
     .string()
@@ -440,12 +440,14 @@ export interface StepData {
     | 'NOT_APPLICABLE';
   nextStepRoles?: string[];
   nextStaff?: string;
+  nextStepSpecifiedTo?: string;
   notificationType:
     | 'STATIC'
     | 'DYNAMIC'
     | 'FOLLOW_ORGANIZATION_CHART'
     | 'NOT_APPLICABLE';
   notificationTo?: string;
+  notificationRoles?: string[];
   notificationComment?: string;
   editApplicationStatus: boolean;
   applicantViewFormAfterCompletion: boolean;
