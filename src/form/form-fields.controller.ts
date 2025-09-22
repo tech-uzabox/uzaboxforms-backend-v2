@@ -84,6 +84,7 @@ export class FormFieldsController {
     @Param('id') formId: string,
     @GetUser() user: AuthenticatedUser
   ) {
+    console.log(formId, user)
     return this.formFieldsService.getFormFields(formId, user.id);
   }
 

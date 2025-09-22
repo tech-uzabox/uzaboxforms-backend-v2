@@ -41,7 +41,7 @@ export class FormFieldsService {
 
   async getFormFields(formId: string, userId: string) {
     // Validate form ID
-    if (!formId || formId.length !== 36) {
+    if (!formId) {
       throw new BadRequestException('Invalid form ID');
     }
 
@@ -54,6 +54,8 @@ export class FormFieldsService {
       throw new NotFoundException('Form not found');
     }
 
+    console.log(form)
+
     let fields: FormField[] = [];
 
     // Add system fields first
@@ -63,8 +65,8 @@ export class FormFieldsService {
       sectionId: 'system',
       sectionName: 'System Fields'
     }));
-    fields.push(...systemFields);
-
+    // fields.push(...systemFields);
+    console.log(form)
     // Extract fields from form design
     if (form.design && Array.isArray(form.design)) {
       for (const section of form.design) {

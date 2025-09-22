@@ -154,8 +154,8 @@ export class FormService {
 
       if (form.design && typeof form.design === 'object') {
         const design = form.design as any;
-        if (Array.isArray(design.sections)) {
-          for (const section of design.sections) {
+        if (Array.isArray(design)) {
+          for (const section of design) {
             if (Array.isArray(section?.questions)) {
               for (const question of section.questions) {
                 if (question?.type === "Countries") {
@@ -211,8 +211,8 @@ export class FormService {
     let formFields: any[] = [];
     if (form.design) {
       const design = form.design as any;
-      if (Array.isArray(design.sections)) {
-        design.sections.forEach((section: any) => {
+      if (Array.isArray(design)) {
+        design.forEach((section: any) => {
           if (Array.isArray(section.questions)) {
             section.questions.forEach((question: any) => {
               const type = this.mapQuestionTypeToFieldType(question.type);
@@ -256,28 +256,47 @@ export class FormService {
   }
 
   mapQuestionTypeToFieldType(questionType: string): string {
-    switch (questionType) {
-      case 'text':
-      case 'textarea':
-      case 'email':
-      case 'number':
-      case 'phoneNumber':
-      case 'url':
-        return 'text';
-      case 'select':
-      case 'dropdown':
-      case 'radio':
-        return 'select';
-      case 'checkbox':
-      case 'yesno':
-        return 'boolean';
-      case 'date':
-      case 'time':
-      case 'datetime':
-      case 'dateRange':
-        return 'date';
-      default:
-        return 'text';
-    }
-  }
+  const typeMapping: { [key: string]: string } = {
+    // Text types
+    'textfield': 'text',
+    'textarea': 'text',
+    'email': 'text',
+    'url': 'text',
+    'phone': 'text',
+    'paragraph': "text",
+
+    // Numeric types
+    'number': 'number',
+    'currency': 'number',
+    'calculation': 'number',
+
+    // Date/time types
+    'datetime': 'datetime',
+    'date': 'date',
+    'time': 'time',
+
+    // Selection types
+    'dropdown': 'select',
+    'radio': 'select',
+    'checkbox': 'multiselect',
+    'select': 'select',
+    'multiselect': 'multiselect',
+
+    // Boolean types
+    'yesno': 'boolean',
+    'boolean': 'boolean',
+
+    // File types
+    'file': 'file',
+    'image': 'file',
+    'document': 'file',
+
+    // Other types
+    'signature': 'file',
+    'location': 'text',
+    'rating': 'number'
+  };
+
+  return typeMapping[questionType.toLowerCase()] || 'text';
+}
 }

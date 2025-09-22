@@ -106,7 +106,7 @@ export function getQuestion(formDesign: any, fieldId: string): any | null {
     !Array.isArray(formDesign.sections)
   )
     return null;
-  for (const section of formDesign.sections) {
+  for (const section of formDesign) {
     if (section.questions && Array.isArray(section.questions)) {
       const question = section.questions.find((q: any) => q.id === fieldId);
       if (question) return question;

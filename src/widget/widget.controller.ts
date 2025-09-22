@@ -68,7 +68,6 @@ export class WidgetController {
         description: createWidgetDto.description,
         visualizationType: createWidgetDto.visualizationType,
         config: createWidgetDto.config,
-        order: createWidgetDto.order,
       });
 
       return {
@@ -77,6 +76,7 @@ export class WidgetController {
         data: widget,
       };
     } catch (error) {
+      console.log(error);
       if (error instanceof HttpException) throw error;
       throw new HttpException(
         {

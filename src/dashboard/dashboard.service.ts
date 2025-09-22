@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Dashboard, Prisma } from 'db';
+import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
+import { CreateDashboardDto } from './dto/create-dashboard.dto';
 
 @Injectable()
 export class DashboardService {
@@ -10,8 +12,16 @@ export class DashboardService {
     private auditLogService: AuditLogService,
   ) {}
 
-  async create(data: Prisma.DashboardCreateInput): Promise<Dashboard> {
-    const newDashboard = await this.prisma.dashboard.create({ data });
+  async create(
+    data: CreateDashboardDto,
+    user: AuthenticatedUser,
+  ): Promise<Dashboard> {
+    const newDashboard = await this.prisma.dashboard.create({
+      data: {
+        ...data,
+        ownerId: user.id,
+      },
+    });
     await this.auditLogService.log({
       userId: newDashboard.ownerId,
       action: 'DASHBOARD_CREATED',
@@ -36,13 +46,6 @@ export class DashboardService {
           { allowedRoles: { hasSome: roles } },
         ],
       },
-    });
-    await this.auditLogService.log({
-      userId: userId,
-      action: 'GET_DASHBOARDS_FOR_USER',
-      resource: 'Dashboard',
-      status: 'SUCCESS',
-      details: { count: dashboards.length, roles: roles },
     });
     return dashboards;
   }

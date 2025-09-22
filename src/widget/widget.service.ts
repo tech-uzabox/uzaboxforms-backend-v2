@@ -13,11 +13,12 @@ export class WidgetService {
   ) {}
 
   async create(data: CreateWidgetDto): Promise<Widget> {
+    const count = await this.prisma.widget.count();
     const newWidget = await this.prisma.widget.create({ data: {
       title: data.title,
       visualizationType: data.visualizationType,
       config: data.config,
-      order: data.order,
+      order: count + 1,
       dashboardId: data.dashboardId,
       createdAt: new Date(),
       updatedAt: new Date(),

@@ -1,10 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { DashboardService } from './dashboard.service';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
 import { UpdateDashboardDto } from './dto/update-dashboard.dto';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 
 @ApiTags('Dashboards')
 @Controller('dashboards')
@@ -14,8 +26,11 @@ export class DashboardController {
   constructor(private readonly dashboardService: DashboardService) {}
 
   @Post()
-  create(@Body() createDashboardDto: CreateDashboardDto) {
-    return this.dashboardService.create(createDashboardDto);
+  create(
+    @Body() createDashboardDto: CreateDashboardDto,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    return this.dashboardService.create(createDashboardDto, user);
   }
 
   @Get()
@@ -29,7 +44,10 @@ export class DashboardController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDashboardDto: UpdateDashboardDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDashboardDto: UpdateDashboardDto,
+  ) {
     return this.dashboardService.update(id, updateDashboardDto);
   }
 
