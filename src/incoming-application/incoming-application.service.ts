@@ -37,8 +37,8 @@ export class IncomingApplicationService {
         if (lastCompletedForm.nextStepSpecifiedTo === 'SINGLE_STAFF') {
           return lastCompletedForm.nextStaffId === user.id;
         } else {
-          // Check if user has any of the required roles
-          return lastCompletedForm.nextStepRoles.some(role => user.roles.includes(role));
+          const userRoleIds = await this.getUserRoleIds(user.roles);
+          return lastCompletedForm.nextStepRoles.some(roleId => userRoleIds.includes(roleId));
         }
 
       case NextStepType.FOLLOW_ORGANIZATION_CHART:
@@ -301,7 +301,14 @@ export class IncomingApplicationService {
       where: { id: applicantProcessId },
       include: {
         applicant: true,
-        process: { include: { forms: { orderBy: { order: 'asc' } } } },
+        process: { 
+          include: { 
+            forms: { 
+              orderBy: { order: 'asc' },
+              include: { form: true }
+            } 
+          } 
+        },
         completedForms: { orderBy: { createdAt: 'desc' } },
         responses: { include: { form: true } },
       },
@@ -352,6 +359,25 @@ export class IncomingApplicationService {
 
     const editApplicationStatus = applicantProcess.process.forms.find((form) => form.formId === nextForm?.formId)?.editApplicationStatus;
 
+    // Create form history with names
+    const formHistory = applicantProcess.process.forms.map(pf => ({
+      formId: pf.formId,
+      formName: pf.form.name,
+      order: pf.order,
+      nextStepType: pf.nextStepType,
+      nextStepRoles: pf.nextStepRoles,
+      nextStaffId: pf.nextStaffId,
+      nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
+      notificationType: pf.notificationType,
+      notificationRoles: pf.notificationRoles,
+      notificationToId: pf.notificationToId,
+      notificationComment: pf.notificationComment,
+      notifyApplicant: pf.notifyApplicant,
+      applicantNotificationContent: pf.applicantNotificationContent,
+      editApplicationStatus: pf.editApplicationStatus,
+      applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion,
+    }));
+
     const response = {
       process: {
         processId: applicantProcess.process.id,
@@ -372,7 +398,8 @@ export class IncomingApplicationService {
         } : null,
         processLevel: `${currentLevel}/${applicantProcess.process.forms.length}`,
         editApplicationStatus
-      }
+      },
+      formHistory
     };
 
     await this.auditLogService.log({
@@ -1043,5 +1070,24 @@ export class IncomingApplicationService {
     });
 
     return groupedDisabledApplications;
+  }
+
+  /**
+   * Convert role names to role IDs for comparison
+   */
+  private async getUserRoleIds(roleNames: string[]): Promise<string[]> {
+    if (!roleNames || roleNames.length === 0) {
+      return [];
+    }
+
+    const roles = await this.prisma.role.findMany({
+      where: {
+        name: { in: roleNames },
+        status: 'ENABLED',
+      },
+      select: { id: true },
+    });
+
+    return roles.map(role => role.id);
   }
 }

@@ -50,89 +50,47 @@ export class AdminIncomingApplicationService {
         const nextForm = processForms[currentLevel];
         if (!nextForm) continue;
 
-        // Get applicant details
-        const applicant = await this.prisma.user.findUnique({
-          where: { id: applicantProcess.applicantId },
-        });
-        if (!applicant) continue;
-
-        // Get current reviewer info
-        let currentReviewer: any = null;
-        if (currentLevel > 0) {
-          const lastCompletedForm = completedForms[currentLevel - 1];
-          if (lastCompletedForm.nextStaffId) {
-            currentReviewer = await this.prisma.user.findUnique({
-              where: { id: lastCompletedForm.nextStaffId },
-            });
-          }
-        }
-
-        // Build complete form history with reviewers
-        const formHistory: any[] = [];
-        for (let i = 0; i < completedForms.length; i++) {
-          const completedForm = completedForms[i];
-          const form = await this.prisma.form.findUnique({
-            where: { id: completedForm.formId },
-          });
-
-          let reviewer: any = null;
-          if (completedForm.reviewerId) {
-            reviewer = await this.prisma.user.findUnique({
-              where: { id: completedForm.reviewerId },
-            });
-          }
-
-          formHistory.push({
-            formId: completedForm.formId,
-            formName: form?.name || 'Unknown Form',
-            completedAt: completedForm.createdAt,
-            reviewer: reviewer ? {
-              id: reviewer!.id,
-              firstName: reviewer!.firstName || '',
-              lastName: reviewer!.lastName || '',
-              email: reviewer!.email,
-            } : null,
-            nextStepType: completedForm.nextStepType,
-            nextStepRoles: completedForm.nextStepRoles,
-          });
-        }
+        // Get the last completed form to determine next step info
+        const lastCompletedForm = completedForms[currentLevel - 1];
 
         applicantProcessesForProcess.push({
-          id: applicantProcess.id,
-          applicant: {
-            id: applicant.id,
-            firstName: applicant.firstName || '',
-            lastName: applicant.lastName || '',
-            email: applicant.email,
+          applicantProcessId: applicantProcess.id,
+          applicantId: applicantProcess.applicantId,
+          status: applicantProcess.status,
+          completedForms: completedForms.map(cf => cf.formId),
+          pendingForm: {
+            formId: nextForm.formId,
+            nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
+            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
           },
-          currentLevel,
-          totalForms: processForms.length,
-          nextForm: {
-            id: nextForm.formId,
-            formName: nextForm.form?.name || 'Unknown Form',
-          },
-          currentReviewer: currentReviewer ? {
-            id: currentReviewer!.id,
-            firstName: currentReviewer!.firstName || '',
-            lastName: currentReviewer!.lastName || '',
-            email: currentReviewer!.email,
-          } : null,
-          formHistory,
-          createdAt: applicantProcess.createdAt,
-          status: 'PENDING',
+          processLevel: `${currentLevel}/${processForms.length}`,
         });
       }
 
       if (applicantProcessesForProcess.length > 0) {
-        groupedPendingApplications.push({
-          process: {
-            id: process.id,
+        // Grouping logic
+        const groupIndex = groupedPendingApplications.findIndex(
+          group => group.groupId.toString() === process.groupId.toString()
+        );
+
+        if (groupIndex !== -1) {
+          groupedPendingApplications[groupIndex].processes.push({
+            processId: process.id,
             name: process.name,
-            type: process.type,
-            group: process.groupId,
-          },
-          applications: applicantProcessesForProcess,
-        });
+            applicantProcesses: applicantProcessesForProcess,
+          });
+        } else {
+          groupedPendingApplications.push({
+            groupName: process.group.name,
+            groupId: process.group.id,
+            processes: [{
+              processId: process.id,
+              name: process.name,
+              applicantProcesses: applicantProcessesForProcess,
+            }],
+          });
+        }
       }
     }
 
@@ -182,11 +140,6 @@ export class AdminIncomingApplicationService {
         // Only include fully completed processes
         if (currentLevel !== totalFormsInProcess) continue;
 
-        const applicant = await this.prisma.user.findUnique({
-          where: { id: applicantProcess.applicantId },
-        });
-        if (!applicant) continue;
-
         // Build complete form history with all reviewers
         const formHistory: any[] = [];
         for (let i = 0; i < completedForms.length; i++) {
@@ -218,32 +171,39 @@ export class AdminIncomingApplicationService {
         }
 
         applicantProcessesForProcess.push({
-          id: applicantProcess.id,
-          applicant: {
-            id: applicant.id,
-            firstName: applicant.firstName || '',
-            lastName: applicant.lastName || '',
-            email: applicant.email,
-          },
-          currentLevel: totalFormsInProcess,
-          totalForms: totalFormsInProcess,
+          applicantProcessId: applicantProcess.id,
+          applicantId: applicantProcess.applicantId,
+          status: applicantProcess.status,
+          completedForms: completedForms.map(cf => cf.formId),
           formHistory,
           completedAt: completedForms[completedForms.length - 1]?.createdAt,
-          createdAt: applicantProcess.createdAt,
-          status: 'COMPLETED',
+          processLevel: `${currentLevel}/${totalFormsInProcess}`,
         });
       }
 
       if (applicantProcessesForProcess.length > 0) {
-        groupedCompletedApplications.push({
-          process: {
-            id: process.id,
+        // Grouping logic
+        const groupIndex = groupedCompletedApplications.findIndex(
+          group => group.groupId.toString() === process.groupId.toString()
+        );
+
+        if (groupIndex !== -1) {
+          groupedCompletedApplications[groupIndex].processes.push({
+            processId: process.id,
             name: process.name,
-            type: process.type,
-            group: process.groupId,
-          },
-          applications: applicantProcessesForProcess,
-        });
+            applicantProcesses: applicantProcessesForProcess,
+          });
+        } else {
+          groupedCompletedApplications.push({
+            groupName: process.group.name,
+            groupId: process.group.id,
+            processes: [{
+              processId: process.id,
+              name: process.name,
+              applicantProcesses: applicantProcessesForProcess,
+            }],
+          });
+        }
       }
     }
 
@@ -288,11 +248,6 @@ export class AdminIncomingApplicationService {
           orderBy: { createdAt: 'asc' },
         });
 
-        const applicant = await this.prisma.user.findUnique({
-          where: { id: applicantProcess.applicantId },
-        });
-        if (!applicant) continue;
-
         // Build form history
         const formHistory: any[] = [];
         for (let i = 0; i < completedForms.length; i++) {
@@ -324,31 +279,38 @@ export class AdminIncomingApplicationService {
         }
 
         applicantProcessesForProcess.push({
-          id: applicantProcess.id,
-          applicant: {
-            id: applicant.id,
-            firstName: applicant.firstName || '',
-            lastName: applicant.lastName || '',
-            email: applicant.email,
-          },
-          currentLevel: completedForms.length,
-          totalForms: processForms.length,
+          applicantProcessId: applicantProcess.id,
+          applicantId: applicantProcess.applicantId,
+          status: applicantProcess.status,
+          completedForms: completedForms.map(cf => cf.formId),
           formHistory,
-          createdAt: applicantProcess.createdAt,
-          status: 'DISABLED',
+          processLevel: `${completedForms.length}/${processForms.length}`,
         });
       }
 
       if (applicantProcessesForProcess.length > 0) {
-        groupedDisabledApplications.push({
-          process: {
-            id: process.id,
+        // Grouping logic
+        const groupIndex = groupedDisabledApplications.findIndex(
+          group => group.groupId.toString() === process.groupId.toString()
+        );
+
+        if (groupIndex !== -1) {
+          groupedDisabledApplications[groupIndex].processes.push({
+            processId: process.id,
             name: process.name,
-            type: process.type,
-            group: process.groupId,
-          },
-          applications: applicantProcessesForProcess,
-        });
+            applicantProcesses: applicantProcessesForProcess,
+          });
+        } else {
+          groupedDisabledApplications.push({
+            groupName: process.group.name,
+            groupId: process.group.id,
+            processes: [{
+              processId: process.id,
+              name: process.name,
+              applicantProcesses: applicantProcessesForProcess,
+            }],
+          });
+        }
       }
     }
 

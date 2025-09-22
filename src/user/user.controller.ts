@@ -10,12 +10,12 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ChangeUserPasswordDto } from './dto/change-password.dto';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserService } from './user.service';
 
 @ApiTags('Users')
 @Controller('users')

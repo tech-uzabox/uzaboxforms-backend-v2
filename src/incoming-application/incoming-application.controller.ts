@@ -16,7 +16,8 @@ export class IncomingApplicationController {
   @ApiOperation({ summary: 'Get all pending applications for the current user' })
   @ApiResponse({ status: 200, description: 'List of pending applications.' })
   async getPendingApplications(@GetUser() user: AuthenticatedUser) {
-    return this.incomingApplicationService.getPendingApplications(user.id, user);
+    const data = await this.incomingApplicationService.getPendingApplications(user.id, user);
+    return { success: true, data };
   }
 
   @Get('pending/process/:processId')
@@ -27,7 +28,8 @@ export class IncomingApplicationController {
     @Param('processId') processId: string,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.incomingApplicationService.getPendingApplicationForProcess(processId, user.id, user);
+    const data = await this.incomingApplicationService.getPendingApplicationForProcess(processId, user.id, user);
+    return { success: true, data };
   }
 
   @Get('single/:applicantProcessId')
@@ -39,14 +41,16 @@ export class IncomingApplicationController {
     @Param('applicantProcessId') applicantProcessId: string,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.incomingApplicationService.getSingleApplicantProcess(applicantProcessId, user.id, user);
+    const data = await this.incomingApplicationService.getSingleApplicantProcess(applicantProcessId, user.id, user);
+    return { success: true, data };
   }
 
   @Get('completed')
   @ApiOperation({ summary: 'Get all completed applications for the current user' })
   @ApiResponse({ status: 200, description: 'List of completed applications.' })
   async getCompletedApplications(@GetUser() user: AuthenticatedUser) {
-    return this.incomingApplicationService.getCompletedApplications(user.id, user);
+    const data = await this.incomingApplicationService.getCompletedApplications(user.id, user);
+    return { success: true, data };
   }
 
   @Get('completed/process/:processId')
@@ -57,7 +61,8 @@ export class IncomingApplicationController {
     @Param('processId') processId: string,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.incomingApplicationService.getCompletedFormsForProcess(processId, user.id, user);
+    const data = await this.incomingApplicationService.getCompletedFormsForProcess(processId, user.id, user);
+    return { success: true, data };
   }
 
   @Get('completed/single/:applicantProcessId')
@@ -69,13 +74,15 @@ export class IncomingApplicationController {
     @Param('applicantProcessId') applicantProcessId: string,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.incomingApplicationService.getCompletedSingleApplicantProcess(applicantProcessId, user.id, user);
+    const data = await this.incomingApplicationService.getCompletedSingleApplicantProcess(applicantProcessId, user.id, user);
+    return { success: true, data };
   }
 
   @Get('disabled')
   @ApiOperation({ summary: 'Get all disabled applications for the current user' })
   @ApiResponse({ status: 200, description: 'List of disabled applications.' })
   async getDisabledApplications(@GetUser() user: AuthenticatedUser) {
-    return this.incomingApplicationService.getDisabledApplications(user.id, user);
+    const data = await this.incomingApplicationService.getDisabledApplications(user.id, user);
+    return { success: true, data };
   }
 }

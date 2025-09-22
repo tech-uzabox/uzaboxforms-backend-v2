@@ -155,7 +155,23 @@ export class ProcessService {
     const process = await this.prisma.process.findUnique({
       where: { id },
       include: {
-        forms: true, // Only include forms, no form details like old
+        forms: {
+          include: {
+            form: {
+              select: {
+                id: true,
+                name: true,
+                type: true,
+                status: true,
+                archived: true,
+                creatorId: true,
+                createdAt: true,
+                updatedAt: true,
+                design: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -163,21 +179,27 @@ export class ProcessService {
       return null;
     }
 
-    // Format forms to match old API (no form details, just ProcessForm fields)
+    // Format forms to include both ProcessForm fields and form details
     const forms = process.forms.map((pf) => ({
+      id: pf.id,
+      processId: pf.processId,
       formId: pf.formId,
+      order: pf.order,
       nextStepType: pf.nextStepType,
       nextStepRoles: pf.nextStepRoles,
+      nextStaffId: pf.nextStaffId,
       nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
-      nextStaff: pf.nextStaffId, // Changed from nextStaff to nextStaffId
       notificationType: pf.notificationType,
-      notificationTo: pf.notificationToId, // Changed from notificationTo to notificationToId
-      notificationToRoles: pf.notificationRoles, // Changed from notificationToRoles to notificationRoles
+      notificationRoles: pf.notificationRoles,
+      notificationToId: pf.notificationToId,
       notificationComment: pf.notificationComment,
       notifyApplicant: pf.notifyApplicant,
       applicantNotificationContent: pf.applicantNotificationContent,
       editApplicationStatus: pf.editApplicationStatus,
-      applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion
+      applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion,
+      createdAt: pf.createdAt,
+      updatedAt: pf.updatedAt,
+      form: pf.form,
     }));
 
     return {

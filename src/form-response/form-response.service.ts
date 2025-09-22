@@ -175,7 +175,11 @@ export class FormResponseService {
     });
 
     if (!userResponse) {
-      throw new Error('Response not found');
+      return {
+        success: false,
+        message: 'No response found for this form',
+        data: null,
+      };
     }
 
     // Step 2: Get form name
