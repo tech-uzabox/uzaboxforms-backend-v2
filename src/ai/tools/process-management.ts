@@ -6,6 +6,35 @@ import { StepDataSchema } from './commit-process';
 import { ProcessForm } from 'src/generated/prisma';
 import { ProcessStepData } from '../types/ai.types';
 
+/**
+ * Updates steps data by either replacing matching items or adding new ones
+ */
+function handleStepsDataUpdate(
+  newStepData: StoredStepData,
+  existingStepsData: StoredStepData[] | null | undefined
+): StoredStepData[] {
+  if (!existingStepsData?.length) {
+    return [newStepData];
+  }
+
+  const isExistingStep = existingStepsData.some(
+    (step) =>
+      step.formId === newStepData.formId &&
+      step.processId === newStepData.processId
+  );
+
+  if (isExistingStep) {
+    return existingStepsData.map((step) =>
+      step.formId === newStepData.formId &&
+      step.processId === newStepData.processId
+        ? newStepData  // Replace
+        : step         // Keep
+    );
+  }
+
+  return [...existingStepsData, newStepData];  // Add new
+}
+
 export const createSaveProcessTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "after defining the process, save its info",
@@ -90,19 +119,42 @@ export const createSaveRolesTool = (prisma: PrismaService, chatId: string) => {
 export const createSaveStepTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "save a step in the process",
-    parameters: StepDataSchema,
-    execute: async (input: StepData) => {
+    parameters: z.object({
+      stepId: z.string(),
+      formId: z.string(),
+      nextStepType: z.enum([
+        "STATIC",
+        "DYNAMIC",
+        "FOLLOW_ORGANIZATION_CHART",
+        "NOT_APPLICABLE",
+      ]),
+      nextStepRoles: z.array(z.string()).optional(),
+      nextStaff: z.string().optional(),
+      notificationType: z.enum([
+        "STATIC",
+        "DYNAMIC",
+        "FOLLOW_ORGANIZATION_CHART",
+        "NOT_APPLICABLE",
+      ]),
+      notificationTo: z.string().optional(),
+      notificationComment: z.string().optional(),
+      editApplicationStatus: z.boolean(),
+      applicantViewFormAfterCompletion: z.boolean(),
+      notifyApplicant: z.boolean(),
+      applicantNotificationContent: z.string(),
+    }),
+    execute: async (input) => {
       try {
-        const stepData = {
-          processId: input.stepId,
+        // Use proper data merging logic like the original Next.js implementation
+        const stepData: StoredStepData = {
+          processId: input.stepId,  // stepId becomes processId
           formId: input.formId,
           nextStepType: input.nextStepType,
           nextStepRoles: input.nextStepRoles,
           nextStaff: input.nextStaff,
-          nextStepSpecifiedTo: input.nextStepSpecifiedTo,
           notificationType: input.notificationType,
           notificationTo: input.notificationTo,
-          notificationRoles: input.notificationRoles,
+          notificationToRoles: input.notificationToRoles,  // Fixed field name
           notificationComment: input.notificationComment,
           editApplicationStatus: input.editApplicationStatus,
           applicantViewFormAfterCompletion: input.applicantViewFormAfterCompletion,
@@ -116,7 +168,8 @@ export const createSaveStepTool = (prisma: PrismaService, chatId: string) => {
 
         if (existingSave) {
           const stepsData = (existingSave.stepsData as unknown as StoredStepData[]) || [];
-          const updatedStepsData = [...stepsData, stepData];
+          // Use proper merging logic instead of just appending
+          const updatedStepsData = handleStepsDataUpdate(stepData, stepsData);
 
           await prisma.processSave.update({
             where: { id: existingSave.id },
@@ -126,7 +179,7 @@ export const createSaveStepTool = (prisma: PrismaService, chatId: string) => {
           await prisma.processSave.create({
             data: {
               chatId: chatId,
-              stepsData: [stepData],
+              stepsData: [stepData] as any,
             },
           });
         }
@@ -145,30 +198,8 @@ export const createDeleteStepTool = (prisma: PrismaService, chatId: string) => {
     parameters: z.object({
       stepId: z.string(),
       formId: z.string(),
-      nextStepType: z.enum([
-        "STATIC",
-        "DYNAMIC",
-        "FOLLOW_ORGANIZATION_CHART",
-        "NOT_APPLICABLE",
-      ]),
-      nextStepRoles: z.array(z.string()).optional(),
-      nextStaff: z.string().optional(),
-      nextStepSpecifiedTo: z.string().optional(),
-      notificationType: z.enum([
-        "STATIC",
-        "DYNAMIC",
-        "FOLLOW_ORGANIZATION_CHART",
-        "NOT_APPLICABLE",
-      ]),
-      notificationTo: z.string().optional(),
-      notificationRoles: z.array(z.string()).optional(),
-      notificationComment: z.string().optional(),
-      editApplicationStatus: z.boolean(),
-      applicantViewFormAfterCompletion: z.boolean(),
-      notifyApplicant: z.boolean(),
-      applicantNotificationContent: z.string(),
     }),
-    execute: async (input: StepData) => {
+    execute: async (input) => {
       try {
         const existingSave = await prisma.processSave.findFirst({
           where: { chatId: chatId },
@@ -194,31 +225,6 @@ export const createDeleteStepTool = (prisma: PrismaService, chatId: string) => {
   } as any);
 };
 
-function handleStepsDataUpdate(
-  newStepData: ProcessStepData,
-  existingStepsData: ProcessStepData[] | null | undefined
-): ProcessStepData[] {
-  if (!existingStepsData?.length) {
-    return [newStepData];
-  }
-
-  const isExistingStep = existingStepsData.some(
-    (step) =>
-      step.formId === newStepData.formId &&
-      step.processId === newStepData.processId
-  );
-
-  if (isExistingStep) {
-    return existingStepsData.map((step) =>
-      step.formId === newStepData.formId &&
-      step.processId === newStepData.processId
-        ? newStepData
-        : step
-    );
-  }
-
-  return [...existingStepsData, newStepData];
-}
 
 /**
  * Updates forms data by either replacing matching items or adding new ones

@@ -19,7 +19,6 @@ const FormDataSchema = z.object({
 });
 
 export const StepDataSchema = z.object({
-  stepId: z.string(),
   formId: z.string(),
   nextStepType: z.enum([
     'STATIC',
@@ -29,7 +28,6 @@ export const StepDataSchema = z.object({
   ]),
   nextStepRoles: z.array(z.string()).optional(),
   nextStaff: z.string().optional(),
-  nextStepSpecifiedTo: z.string().optional(),
   notificationType: z.enum([
     'STATIC',
     'DYNAMIC',
@@ -37,7 +35,7 @@ export const StepDataSchema = z.object({
     'NOT_APPLICABLE',
   ]),
   notificationTo: z.string().optional(),
-  notificationRoles: z.array(z.string()).optional(),
+  notificationToRoles: z.array(z.string()).optional(),  // Fixed: was notificationRoles
   notificationComment: z.string().optional(),
   editApplicationStatus: z.boolean(),
   applicantViewFormAfterCompletion: z.boolean(),
@@ -122,6 +120,7 @@ export const createProcessTool = (
           console.log(
             'DEBUG: Forms validation success:',
             formsValidation.success,
+
           );
           if (!formsValidation.success) {
             return {
@@ -172,6 +171,7 @@ export const createProcessTool = (
             stepsValidation.success,
           );
           console.dir(processSaved.stepsData, { depth: null });
+          console.dir(stepsValidation.error, { depth: null });
           if (!stepsValidation.success) {
             return {
               message: `Invalid steps data: ${stepsValidation.error.errors.map((e) => e.message).join(', ')}`,
@@ -327,13 +327,13 @@ export const createProcessTool = (
               continue;
             }
 
-            // Map role names to IDs for nextStepRoles and notificationRoles
+            // Map role names to IDs for nextStepRoles and notificationToRoles
             const nextStepRoleIds =
               step.nextStepRoles
                 ?.map((name) => roleMap.get(name))
                 .filter((id): id is string => id !== undefined) || [];
             const notificationRoleIds =
-              step.notificationRoles
+              step.notificationToRoles
                 ?.map((name) => roleMap.get(name))
                 .filter((id): id is string => id !== undefined) || [];
             console.log(
@@ -344,25 +344,24 @@ export const createProcessTool = (
             );
 
             await tx.processForm.create({
-              data: {
-                processId: process.id,
-                formId: realFormId,
-                order: i,
-                nextStepType: step.nextStepType,
-                nextStepRoles: nextStepRoleIds,
-                nextStaffId: step.nextStaff,
-                nextStepSpecifiedTo: step.nextStepSpecifiedTo,
-                notificationType: step.notificationType,
-                notificationRoles: notificationRoleIds,
-                notificationToId: step.notificationTo,
-                notificationComment: step.notificationComment,
-                notifyApplicant: step.notifyApplicant,
-                applicantNotificationContent: step.applicantNotificationContent,
-                editApplicationStatus: step.editApplicationStatus,
-                applicantViewFormAfterCompletion:
-                  step.applicantViewFormAfterCompletion,
-              },
-            });
+               data: {
+                 processId: process.id,
+                 formId: realFormId,
+                 order: i,
+                 nextStepType: step.nextStepType,
+                 nextStepRoles: nextStepRoleIds,
+                 nextStaffId: step.nextStaff,
+                 notificationType: step.notificationType,
+                 notificationRoles: notificationRoleIds,
+                 notificationToId: step.notificationTo,
+                 notificationComment: step.notificationComment,
+                 notifyApplicant: step.notifyApplicant,
+                 applicantNotificationContent: step.applicantNotificationContent,
+                 editApplicationStatus: step.editApplicationStatus,
+                 applicantViewFormAfterCompletion:
+                   step.applicantViewFormAfterCompletion,
+               },
+             });
             console.log('DEBUG: Step created successfully');
           }
           console.log('DEBUG: All steps created');

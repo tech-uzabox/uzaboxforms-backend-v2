@@ -440,14 +440,13 @@ export interface StepData {
     | 'NOT_APPLICABLE';
   nextStepRoles?: string[];
   nextStaff?: string;
-  nextStepSpecifiedTo?: string;
   notificationType:
     | 'STATIC'
     | 'DYNAMIC'
     | 'FOLLOW_ORGANIZATION_CHART'
     | 'NOT_APPLICABLE';
   notificationTo?: string;
-  notificationRoles?: string[];
+  notificationToRoles?: string[];  // Fixed: was notificationRoles
   notificationComment?: string;
   editApplicationStatus: boolean;
   applicantViewFormAfterCompletion: boolean;
@@ -455,6 +454,26 @@ export interface StepData {
   applicantNotificationContent: string;
 }
 
-export interface StoredStepData extends StepData {
+export interface StoredStepData {
   processId: string;
+  formId: string;
+  nextStepType:
+    | 'STATIC'
+    | 'DYNAMIC'
+    | 'FOLLOW_ORGANIZATION_CHART'
+    | 'NOT_APPLICABLE';
+  nextStepRoles?: string[];
+  nextStaff?: string;
+  notificationType:
+    | 'STATIC'
+    | 'DYNAMIC'
+    | 'FOLLOW_ORGANIZATION_CHART'
+    | 'NOT_APPLICABLE';
+  notificationTo?: string;
+  notificationToRoles?: string[];
+  notificationComment?: string;
+  editApplicationStatus: boolean;
+  applicantViewFormAfterCompletion: boolean;
+  notifyApplicant: boolean;
+  applicantNotificationContent: string;
 }

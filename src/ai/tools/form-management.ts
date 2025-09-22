@@ -2,31 +2,67 @@ import { tool } from 'ai';
 import { PrismaService } from '../../db/prisma.service';
 import { GeneratedFormData, GeneratedFormSchema } from './form-schemas';
 
+interface SavedProcessForm {
+  formId: string;
+  name: string;
+  sections: any;
+}
+
+/**
+ * Updates forms data by either replacing matching items or adding new ones
+ */
+function handleFormsDataUpdate(
+  newFormData: SavedProcessForm,
+  existingFormsData: SavedProcessForm[] | null | undefined
+): SavedProcessForm[] {
+  if (!existingFormsData?.length) {
+    return [newFormData];
+  }
+
+  const isExistingForm = existingFormsData.some(
+    (form) => form.formId === newFormData.formId
+  );
+
+  if (isExistingForm) {
+    return existingFormsData.map((form) =>
+      form.formId === newFormData.formId ? newFormData : form
+    );
+  }
+
+  return [...existingFormsData, newFormData];
+}
+
 export const createSaveFormTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: 'if satisfied with the form schema, save it',
     parameters: GeneratedFormSchema,
     execute: async (data: any) => {
       try {
-        // Save form data to ProcessSave table
-        // This would typically update an existing ProcessSave record
-        // For now, create a new one or update existing
         const existingSave = await prisma.processSave.findFirst({
           where: { chatId },
         });
 
+        const formData = {
+          formId: data.formId,
+          name: data.name,
+          sections: data.sections,
+        };
+
         if (existingSave) {
+          const formsData = (existingSave.formsData as unknown as SavedProcessForm[]) || [];
+          const updatedFormsData = handleFormsDataUpdate(formData, formsData);
+
           await prisma.processSave.update({
             where: { id: existingSave.id },
             data: {
-              formsData: [data], // This should merge with existing forms
+              formsData: updatedFormsData as any,
             },
           });
         } else {
           await prisma.processSave.create({
             data: {
               chatId,
-              formsData: [data],
+              formsData: [formData] as any,
             },
           });
         }
@@ -58,16 +94,14 @@ export const createDeleteFormTool = (prisma: PrismaService, chatId: string) => {
     parameters: GeneratedFormSchema,
     execute: async (data: GeneratedFormData) => {
       try {
-        // Remove form from ProcessSave
         const existingSave = await prisma.processSave.findFirst({
           where: { chatId },
         });
 
         if (existingSave && existingSave.formsData) {
-          const formsData =
-            existingSave.formsData as unknown as GeneratedFormData[];
+          const formsData = existingSave.formsData as unknown as SavedProcessForm[];
           const updatedFormsData = formsData.filter(
-            (form: GeneratedFormData) => form.formId !== data.formId,
+            (form: SavedProcessForm) => form.formId !== data.formId,
           );
 
           await prisma.processSave.update({
