@@ -2,6 +2,9 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { PrismaService } from '../../db/prisma.service';
 import { ProcessData, RolesData, StepData, StoredStepData } from './form-schemas';
+import { StepDataSchema } from './commit-process';
+import { ProcessForm } from 'src/generated/prisma';
+import { ProcessStepData } from '../types/ai.types';
 
 export const createSaveProcessTool = (prisma: PrismaService, chatId: string) => {
   return tool({
@@ -87,32 +90,7 @@ export const createSaveRolesTool = (prisma: PrismaService, chatId: string) => {
 export const createSaveStepTool = (prisma: PrismaService, chatId: string) => {
   return tool({
     description: "save a step in the process",
-    parameters: z.object({
-      stepId: z.string(),
-      formId: z.string(),
-      nextStepType: z.enum([
-        "STATIC",
-        "DYNAMIC",
-        "FOLLOW_ORGANIZATION_CHART",
-        "NOT_APPLICABLE",
-      ]),
-      nextStepRoles: z.array(z.string()).optional(),
-      nextStaff: z.string().optional(),
-      nextStepSpecifiedTo: z.string().optional(),
-      notificationType: z.enum([
-        "STATIC",
-        "DYNAMIC",
-        "FOLLOW_ORGANIZATION_CHART",
-        "NOT_APPLICABLE",
-      ]),
-      notificationTo: z.string().optional(),
-      notificationRoles: z.array(z.string()).optional(),
-      notificationComment: z.string().optional(),
-      editApplicationStatus: z.boolean(),
-      applicantViewFormAfterCompletion: z.boolean(),
-      notifyApplicant: z.boolean(),
-      applicantNotificationContent: z.string(),
-    }),
+    parameters: StepDataSchema,
     execute: async (input: StepData) => {
       try {
         const stepData = {
@@ -215,3 +193,53 @@ export const createDeleteStepTool = (prisma: PrismaService, chatId: string) => {
     },
   } as any);
 };
+
+function handleStepsDataUpdate(
+  newStepData: ProcessStepData,
+  existingStepsData: ProcessStepData[] | null | undefined
+): ProcessStepData[] {
+  if (!existingStepsData?.length) {
+    return [newStepData];
+  }
+
+  const isExistingStep = existingStepsData.some(
+    (step) =>
+      step.formId === newStepData.formId &&
+      step.processId === newStepData.processId
+  );
+
+  if (isExistingStep) {
+    return existingStepsData.map((step) =>
+      step.formId === newStepData.formId &&
+      step.processId === newStepData.processId
+        ? newStepData
+        : step
+    );
+  }
+
+  return [...existingStepsData, newStepData];
+}
+
+/**
+ * Updates forms data by either replacing matching items or adding new ones
+ */
+function handleFormsDataUpdate(
+  newFormData: ProcessForm,
+  existingFormsData: ProcessForm[] | null | undefined
+): ProcessForm[] {
+  if (!existingFormsData?.length) {
+    return [newFormData];
+  }
+
+  const isExistingForm = existingFormsData.some(
+    (form) => form.formId === newFormData.formId
+  );
+
+  if (isExistingForm) {
+    return existingFormsData.map((form) =>
+      form.formId === newFormData.formId ? newFormData : form
+    );
+  }
+
+  return [...existingFormsData, newFormData];
+}

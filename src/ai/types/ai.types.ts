@@ -86,7 +86,7 @@ export interface ProcessMetadata {
 
 // Step types
 export interface ProcessStepData {
-  stepId: string;
+  processId: string;
   formId: string;
   nextStepType:
     | 'STATIC'

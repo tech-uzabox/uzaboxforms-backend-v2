@@ -155,7 +155,6 @@ export class AiService {
           },
           tools,
           onFinish: async ({ response }) => {
-            console.log(response.messages)
             try {
               const assistantId = getTrailingMessageId({
                 messages: response.messages.filter(
@@ -192,7 +191,8 @@ export class AiService {
         result.mergeIntoDataStream(dataStreamWriter);
       },
       onError: (error) => {
-        console.log('error', error instanceof Error ? error.message : String(error));
+        console.log('error generation:', error instanceof Error ? error.message : String(error));
+        console.error(error)
         // Error messages are masked by default for security reasons.
         // If you want to expose the error message to the client, you can do so here:
         return error instanceof Error ? error.message : String(error);
