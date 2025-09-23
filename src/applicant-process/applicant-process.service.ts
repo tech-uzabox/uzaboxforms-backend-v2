@@ -112,6 +112,7 @@ export class ApplicantProcessService {
   async update(
     id: string,
     data: Prisma.ApplicantProcessUpdateInput,
+    userId?: string,
   ): Promise<ApplicantProcess> {
     const existingProcess = await this.prisma.applicantProcess.findUnique({
       where: { id },
@@ -146,7 +147,7 @@ export class ApplicantProcessService {
     }
 
     await this.auditLogService.log({
-      userId: updatedApplicantProcess.applicantId,
+      userId: userId || updatedApplicantProcess.applicantId,
       action: 'APPLICANT_PROCESS_UPDATED',
       resource: 'ApplicantProcess',
       resourceId: updatedApplicantProcess.id,

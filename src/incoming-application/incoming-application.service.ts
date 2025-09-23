@@ -38,65 +38,85 @@ export class IncomingApplicationService {
           return lastCompletedForm.nextStaffId === user.id;
         } else {
           const userRoleIds = await this.getUserRoleIds(user.roles);
-          return lastCompletedForm.nextStepRoles.some(roleId => userRoleIds.includes(roleId));
+          return lastCompletedForm.nextStepRoles.some((roleId) =>
+            userRoleIds.includes(roleId),
+          );
         }
 
       case NextStepType.FOLLOW_ORGANIZATION_CHART:
         if (!lastCompletedForm.applicantProcessId) return false;
 
-        // Get the applicant process to find the applicant
         const applicantProcess = await this.prisma.applicantProcess.findUnique({
           where: { id: lastCompletedForm.applicantProcessId },
         });
 
         if (!applicantProcess?.applicantId) return false;
 
-        // Get the applicant's organization info
         const applicantOrgUser = await this.prisma.organizationUser.findFirst({
           where: { userId: applicantProcess.applicantId },
         });
 
         if (!applicantOrgUser) return false;
 
-        // Get current user's organization info
         const currentUserOrg = await this.prisma.organizationUser.findFirst({
           where: { userId: user.id },
         });
 
         if (!currentUserOrg) return false;
 
-        // Check if current user is the applicant's superior
         return applicantOrgUser.superiorId === currentUserOrg.id;
 
       case NextStepType.NOT_APPLICABLE:
-        return true; // Allow access for completed processes
+        return true;
 
       default:
         return false;
     }
   }
 
-  async getPendingApplications(
+  private async getUserRoleIds(roleNames: string[]): Promise<string[]> {
+    if (!roleNames || roleNames.length === 0) {
+      return [];
+    }
+
+    const roles = await this.prisma.role.findMany({
+      where: {
+        name: { in: roleNames },
+        status: 'ENABLED',
+      },
+      select: { id: true },
+    });
+
+    return roles.map((role) => role.id);
+  }
+
+  // 1. Get all applications by type
+  async getAllApplications(
+    type: 'pending' | 'completed' | 'disabled' | 'processed',
     userId: string,
     actor: AuthenticatedUser,
+    isAdminView: boolean = false,
   ): Promise<any[]> {
     const processes = await this.prisma.process.findMany({
       where: { status: ProcessStatus.ENABLED },
       include: {
         forms: { orderBy: { order: 'asc' } },
-        group: true
+        group: true,
       },
     });
 
-    const groupedPendingApplications: any[] = [];
+    const groupedApplications: any[] = [];
 
     for (const process of processes) {
       if (process.forms.length === 0) continue;
 
+      const statusFilter = type === 'disabled' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
+
       const applicantProcesses = await this.prisma.applicantProcess.findMany({
-        where: { processId: process.id, status: ProcessStatus.ENABLED },
+        where: { processId: process.id, status: statusFilter },
         include: {
-          completedForms: { orderBy: { createdAt: 'desc' } },
+          applicant: true,
+          completedForms: { orderBy: { createdAt: 'asc' } },
           _count: { select: { completedForms: true } },
         },
       });
@@ -104,7 +124,6 @@ export class IncomingApplicationService {
       const applicantProcessesForProcess: any[] = [];
 
       for (const ap of applicantProcesses) {
-        // Get completed forms for this applicant process in order
         const completedForms = await this.prisma.aPCompletedForm.findMany({
           where: { applicantProcessId: ap.id },
           orderBy: { createdAt: 'asc' },
@@ -112,25 +131,172 @@ export class IncomingApplicationService {
 
         const currentLevel = completedForms.length;
 
-        // Check if process is completed (no more forms to complete)
-        if (currentLevel >= process.forms.length) continue;
+        // For completed/processed: only include if all forms are completed
+        if ((type === 'completed' || type === 'processed') && currentLevel < process.forms.length) {
+          continue;
+        }
 
-        // Get the next form to be completed
+        // For pending/disabled: only include if not all forms are completed
+        if ((type === 'pending' || type === 'disabled') && currentLevel >= process.forms.length) {
+          continue;
+        }
+
         const nextForm = process.forms[currentLevel];
-        if (!nextForm) continue;
+        if (!nextForm && (type === 'pending' || type === 'disabled')) continue;
 
-        // Get the last completed form to determine next step info
         const lastCompletedForm = completedForms[currentLevel - 1];
 
         let shouldInclude = false;
 
-        // If this is the first form (no completed forms yet), show to everyone
-        if (currentLevel === 0) {
+        if (isAdminView) {
           shouldInclude = true;
+        } else {
+          if (currentLevel === 0) {
+            shouldInclude = true;
+          } else if (lastCompletedForm) {
+            shouldInclude = await this.userHasAccess(actor, {
+              reviewerId: lastCompletedForm.reviewerId || '',
+              nextStepType: lastCompletedForm.nextStepType,
+              nextStaffId: lastCompletedForm.nextStaffId || '',
+              nextStepRoles: lastCompletedForm.nextStepRoles,
+              formId: lastCompletedForm.formId,
+              applicantProcessId: lastCompletedForm.applicantProcessId,
+            });
+          }
         }
 
-        // For subsequent forms, check based on last completed form's nextStep info
-        else if (lastCompletedForm) {
+        if (!shouldInclude) continue;
+
+        const applicationData: any = {
+          applicantProcessId: ap.id,
+          applicantId: ap.applicantId,
+          applicant: ap.applicant,
+          status: ap.status,
+          completedForms: completedForms.map((cf) => cf.formId),
+          processLevel: `${currentLevel}/${process.forms.length}`,
+        };
+
+        // Only add pendingForm for ENABLED applications
+        if (ap.status === ProcessStatus.ENABLED && nextForm) {
+          applicationData.pendingForm = {
+            formId: nextForm.formId,
+            nextStepType: lastCompletedForm?.nextStepType || 'NOT_APPLICABLE',
+            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo,
+          };
+        }
+
+        applicantProcessesForProcess.push(applicationData);
+      }
+
+      if (applicantProcessesForProcess.length > 0) {
+        const groupIndex = groupedApplications.findIndex(
+          (group) => group.groupId.toString() === process.groupId.toString(),
+        );
+
+        if (groupIndex !== -1) {
+          groupedApplications[groupIndex].processes.push({
+            processId: process.id,
+            name: process.name,
+            applicantProcesses: applicantProcessesForProcess,
+          });
+        } else {
+          groupedApplications.push({
+            groupName: process.group.name,
+            groupId: process.group.id,
+            processes: [
+              {
+              processId: process.id,
+              name: process.name,
+              applicantProcesses: applicantProcessesForProcess,
+              },
+            ],
+          });
+        }
+      }
+    }
+
+    await this.auditLogService.log({
+      userId: actor.id,
+      action: `GET_${type.toUpperCase()}_APPLICATIONS`,
+      resource: 'IncomingApplication',
+      status: 'SUCCESS',
+      details: { count: groupedApplications.length },
+    });
+
+    return groupedApplications;
+  }
+
+  // 2. Get applications for a specific process by type
+  async getApplicationsForProcess(
+    processId: string,
+    type: 'pending' | 'completed' | 'disabled' | 'processed',
+    userId: string,
+    actor: AuthenticatedUser,
+    isAdminView: boolean = false,
+    status?: string,
+  ): Promise<any> {
+    const process = await this.prisma.process.findUnique({
+      where: { id: processId },
+      include: { forms: { orderBy: { order: 'asc' } } },
+    });
+
+    if (!process || process.forms.length === 0) {
+      return {
+        process: {
+          processId: process?.id || processId,
+          name: process?.name || 'Unknown Process',
+          groupId: process?.groupId,
+          status: process?.status,
+        },
+        applicantProcesses: [],
+      };
+    }
+
+    const statusFilter = type === 'disabled' || status === 'DISABLED' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
+    
+    const applicantProcesses = await this.prisma.applicantProcess.findMany({
+      where: { processId: process.id, status: statusFilter },
+      include: {
+        applicant: true,
+        completedForms: { orderBy: { createdAt: 'asc' } },
+        _count: { select: { completedForms: true } },
+      },
+    });
+
+    const applicantProcessesForProcess: any[] = [];
+
+    for (const ap of applicantProcesses) {
+      const completedForms = await this.prisma.aPCompletedForm.findMany({
+        where: { applicantProcessId: ap.id },
+        orderBy: { createdAt: 'asc' },
+      });
+
+      const currentLevel = completedForms.length;
+
+      // For completed/processed: only include if all forms are completed
+      if ((type === 'completed' || type === 'processed') && currentLevel < process.forms.length) {
+        continue;
+      }
+
+      // For pending/disabled: only include if not all forms are completed
+      if ((type === 'pending' || type === 'disabled') && currentLevel >= process.forms.length) {
+        continue;
+      }
+
+      const nextForm = process.forms[currentLevel];
+      if (!nextForm && (type === 'pending' || type === 'disabled')) continue;
+
+      const lastCompletedForm = completedForms[currentLevel - 1];
+
+      let shouldInclude = false;
+
+      if (isAdminView) {
+        shouldInclude = true;
+      } else {
+        if (currentLevel === 0) {
+          shouldInclude = true;
+        } else if (lastCompletedForm) {
           shouldInclude = await this.userHasAccess(actor, {
             reviewerId: lastCompletedForm.reviewerId || '',
             nextStepType: lastCompletedForm.nextStepType,
@@ -140,625 +306,35 @@ export class IncomingApplicationService {
             applicantProcessId: lastCompletedForm.applicantProcessId,
           });
         }
-
-        if (!shouldInclude) continue;
-
-        applicantProcessesForProcess.push({
-          applicantProcessId: ap.id,
-          applicantId: ap.applicantId,
-          status: ap.status,
-          completedForms: completedForms.map(cf => cf.formId),
-          pendingForm: {
-            formId: nextForm.formId,
-            nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-          },
-          processLevel: `${currentLevel}/${process.forms.length}`,
-        });
-      }
-
-      if (applicantProcessesForProcess.length > 0) {
-        // Grouping logic
-        const groupIndex = groupedPendingApplications.findIndex(
-          group => group.groupId.toString() === process.groupId.toString()
-        );
-
-        if (groupIndex !== -1) {
-          groupedPendingApplications[groupIndex].processes.push({
-            processId: process.id,
-            name: process.name,
-            applicantProcesses: applicantProcessesForProcess,
-          });
-        } else {
-          groupedPendingApplications.push({
-            groupName: process.group.name,
-            groupId: process.group.id,
-            processes: [{
-              processId: process.id,
-              name: process.name,
-              applicantProcesses: applicantProcessesForProcess,
-            }],
-          });
-        }
-      }
-    }
-
-    await this.auditLogService.log({
-      userId: actor.id,
-      action: 'GET_PENDING_APPLICATIONS',
-      resource: 'IncomingApplication',
-      status: 'SUCCESS',
-      details: { count: groupedPendingApplications.length },
-    });
-
-    return groupedPendingApplications;
-  }
-
-  async getPendingApplicationForProcess(
-    processId: string,
-    userId: string,
-    actor: AuthenticatedUser,
-  ): Promise<any[]> {
-    const process = await this.prisma.process.findUnique({
-      where: { id: processId },
-      include: { forms: { orderBy: { order: 'asc' } } },
-    });
-
-    if (!process || process.forms.length === 0) {
-      return [];
-    }
-
-    const pendingApplications: any[] = [];
-    const applicantProcesses = await this.prisma.applicantProcess.findMany({
-      where: { processId: process.id, status: ProcessStatus.ENABLED },
-      include: {
-        applicant: true,
-        completedForms: {
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-        },
-        _count: { select: { completedForms: true } },
-      },
-    });
-
-    for (const ap of applicantProcesses) {
-      // Get completed forms for this applicant process in order
-      const completedForms = await this.prisma.aPCompletedForm.findMany({
-        where: { applicantProcessId: ap.id },
-        orderBy: { createdAt: 'asc' },
-      });
-
-      const currentLevel = completedForms.length;
-
-      // Check if process is completed (no more forms to complete)
-      if (currentLevel >= process.forms.length) continue;
-
-      // Get the next form to be completed
-      const nextForm = process.forms[currentLevel];
-      if (!nextForm) continue;
-
-      // Get the last completed form to determine next step info
-      const lastCompletedForm = completedForms[currentLevel - 1];
-
-      let shouldInclude = false;
-
-      // If this is the first form (no completed forms yet), show to everyone
-      if (currentLevel === 0) {
-        shouldInclude = true;
-      }
-
-      // For subsequent forms, check based on last completed form's nextStep info
-      else if (lastCompletedForm) {
-        shouldInclude = await this.userHasAccess(actor, {
-          reviewerId: lastCompletedForm.reviewerId || '',
-          nextStepType: lastCompletedForm.nextStepType,
-          nextStaffId: lastCompletedForm.nextStaffId || '',
-          nextStepRoles: lastCompletedForm.nextStepRoles,
-          formId: lastCompletedForm.formId,
-          applicantProcessId: lastCompletedForm.applicantProcessId,
-        });
       }
 
       if (!shouldInclude) continue;
 
-      const editApplicationStatus = process.forms.find((form) => form.formId === nextForm.formId)?.editApplicationStatus;
+      const editApplicationStatus = process.forms.find(
+        (form) => form.formId === nextForm?.formId,
+      )?.editApplicationStatus;
 
-      pendingApplications.push({
+      const applicationData: any = {
         applicantProcessId: ap.id,
         applicantId: ap.applicantId,
+        applicant: ap.applicant,
         status: ap.status,
-        completedForms: completedForms.map(cf => cf.formId),
-        pendingForm: {
-          formId: nextForm.formId,
-          nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-          nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-          nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-        },
+        completedForms: completedForms.map((cf) => cf.formId),
         editApplicationStatus,
         processLevel: `${currentLevel}/${process.forms.length}`,
-      });
-    }
-
-    await this.auditLogService.log({
-      userId: actor.id,
-      action: 'GET_PENDING_APPLICATIONS_FOR_PROCESS',
-      resource: 'IncomingApplication',
-      resourceId: processId,
-      status: 'SUCCESS',
-      details: { count: pendingApplications.length },
-    });
-
-    return pendingApplications;
-  }
-
-  async getSingleApplicantProcess(
-    applicantProcessId: string,
-    userId: string,
-    actor: AuthenticatedUser,
-  ): Promise<any> {
-    const applicantProcess = await this.prisma.applicantProcess.findUnique({
-      where: { id: applicantProcessId },
-      include: {
-        applicant: true,
-        process: { 
-          include: { 
-            forms: { 
-              orderBy: { order: 'asc' },
-              include: { form: true }
-            } 
-          } 
-        },
-        completedForms: { orderBy: { createdAt: 'desc' } },
-        responses: { include: { form: true } },
-      },
-    });
-
-    if (!applicantProcess) {
-      await this.auditLogService.log({
-        userId: actor.id,
-        action: 'GET_SINGLE_APPLICANT_PROCESS',
-        resource: 'IncomingApplication',
-        resourceId: applicantProcessId,
-        status: 'FAILURE',
-        errorMessage: 'Applicant process not found.',
-      });
-      throw new NotFoundException('Applicant process not found.');
-    }
-
-    const lastCompletedForm = applicantProcess.completedForms[0];
-    const processForm = lastCompletedForm ? await this.prisma.processForm.findFirst({
-        where: { processId: applicantProcess.processId, formId: lastCompletedForm.formId }
-    }) : null;
-
-    const hasAccess = await this.userHasAccess(actor, {
-        reviewerId: lastCompletedForm?.reviewerId || '',
-        nextStepType: processForm?.nextStepType || NextStepType.NOT_APPLICABLE,
-        nextStaffId: processForm?.nextStaffId || '',
-        nextStepRoles: processForm?.nextStepRoles || [],
-        formId: lastCompletedForm?.formId,
-        applicantProcessId: lastCompletedForm?.applicantProcessId,
-    });
-
-    if (!hasAccess && applicantProcess.applicantId !== userId) {
-      await this.auditLogService.log({
-        userId: actor.id,
-        action: 'GET_SINGLE_APPLICANT_PROCESS',
-        resource: 'IncomingApplication',
-        resourceId: applicantProcessId,
-        status: 'FAILURE',
-        errorMessage: 'Unauthorized access.',
-      });
-      throw new ForbiddenException(
-        'You are not authorized to access this application.',
-      );
-    }
-
-    const currentLevel = applicantProcess.completedForms.length;
-    const nextForm = applicantProcess.process.forms[currentLevel];
-
-    const editApplicationStatus = applicantProcess.process.forms.find((form) => form.formId === nextForm?.formId)?.editApplicationStatus;
-
-    // Create form history with names
-    const formHistory = applicantProcess.process.forms.map(pf => ({
-      formId: pf.formId,
-      formName: pf.form.name,
-      order: pf.order,
-      nextStepType: pf.nextStepType,
-      nextStepRoles: pf.nextStepRoles,
-      nextStaffId: pf.nextStaffId,
-      nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
-      notificationType: pf.notificationType,
-      notificationRoles: pf.notificationRoles,
-      notificationToId: pf.notificationToId,
-      notificationComment: pf.notificationComment,
-      notifyApplicant: pf.notifyApplicant,
-      applicantNotificationContent: pf.applicantNotificationContent,
-      editApplicationStatus: pf.editApplicationStatus,
-      applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion,
-    }));
-
-    const response = {
-      process: {
-        processId: applicantProcess.process.id,
-        name: applicantProcess.process.name,
-        groupId: applicantProcess.process.groupId,
-        status: applicantProcess.process.status,
-      },
-      applicantProcess: {
-        applicantProcessId: applicantProcess.id,
-        applicantId: applicantProcess.applicantId,
-        status: applicantProcess.status,
-        completedForms: applicantProcess.completedForms.map(cf => cf.formId),
-        pendingForm: nextForm ? {
-          formId: nextForm.formId,
-          nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-          nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-          nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-        } : null,
-        processLevel: `${currentLevel}/${applicantProcess.process.forms.length}`,
-        editApplicationStatus
-      },
-      formHistory
-    };
-
-    await this.auditLogService.log({
-      userId: actor.id,
-      action: 'GET_SINGLE_APPLICANT_PROCESS',
-      resource: 'IncomingApplication',
-      resourceId: applicantProcessId,
-      status: 'SUCCESS',
-    });
-
-    return response;
-  }
-
-  async getCompletedApplications(
-    userId: string,
-    actor: AuthenticatedUser,
-  ): Promise<any[]> {
-    const processes = await this.prisma.process.findMany({
-      where: { status: ProcessStatus.ENABLED },
-      include: {
-        forms: { orderBy: { order: 'asc' } },
-        group: true
-      },
-    });
-
-    const groupedByGroup: any[] = [];
-
-    for (const process of processes) {
-      if (process.forms.length === 0) continue;
-
-      const applicantProcesses = await this.prisma.applicantProcess.findMany({
-        where: { processId: process.id, status: ProcessStatus.ENABLED },
-        include: {
-          completedForms: { orderBy: { createdAt: 'asc' } },
-          _count: { select: { completedForms: true } },
-        },
-      });
-
-      const applicantProcessesForProcess: any[] = [];
-
-      for (const ap of applicantProcesses) {
-        if (ap._count.completedForms === process.forms.length) {
-          let visibleForms: string[] = [];
-
-          // Handle staff view permission
-          if (!process.staffViewForms) { // staffViewForms === false means NO
-            visibleForms = [];
-            for (const [index, form] of ap.completedForms.entries()) {
-              let hasAccess = false;
-
-              // Get the form response to check access
-              const formResponse = await this.prisma.formResponse.findFirst({
-                where: {
-                  formId: form.formId,
-                  applicantProcessId: form.applicantProcessId,
-                },
-              });
-
-              if (formResponse) {
-                // Use the same access logic as pending
-                hasAccess = await this.userHasAccess(actor, {
-                  reviewerId: form.reviewerId || '',
-                  nextStepType: form.nextStepType,
-                  nextStaffId: form.nextStaffId || '',
-                  nextStepRoles: form.nextStepRoles,
-                  formId: form.formId,
-                  applicantProcessId: form.applicantProcessId,
-                });
-              }
-
-              // If the user has access, check if the next form is completed
-              if (hasAccess) {
-                // Find the index of the current form in processForms
-                const currentFormIndex = process.forms.findIndex(
-                  pf => pf.formId === form.formId
-                );
-
-                // Check if there is a next form (index + 1)
-                const nextFormIndex = currentFormIndex + 1;
-                let isNextFormCompleted = false;
-
-                if (nextFormIndex < process.forms.length) {
-                  // Get the next form's formId from processForms
-                  const nextForm = process.forms[nextFormIndex];
-                  // Check if the next form is in APCompletedForms
-                  const nextFormCompleted = ap.completedForms.find(cf => cf.formId === nextForm.formId);
-                  isNextFormCompleted = !!nextFormCompleted;
-                } else {
-                  // If there is no next form (last form), consider it completed
-                  isNextFormCompleted = true;
-                }
-
-                // Only include the form if the next form is completed
-                if (isNextFormCompleted) {
-                  visibleForms.push(form.formId);
-                }
-              }
-            }
-          } else {
-            // If staffViewForms is true (YES), include all forms where user has access
-            for (const form of ap.completedForms) {
-              let hasAccess = false;
-
-              // Get the form response to check access
-              const formResponse = await this.prisma.formResponse.findFirst({
-                where: {
-                  formId: form.formId,
-                  applicantProcessId: form.applicantProcessId,
-                },
-              });
-
-              if (formResponse) {
-                hasAccess = await this.userHasAccess(actor, {
-                  reviewerId: form.reviewerId || '',
-                  nextStepType: form.nextStepType,
-                  nextStaffId: form.nextStaffId || '',
-                  nextStepRoles: form.nextStepRoles,
-                  formId: form.formId,
-                  applicantProcessId: form.applicantProcessId,
-                });
-              }
-
-              // If the user has access, check if the next form is completed
-              if (hasAccess) {
-                // Find the index of the current form in processForms
-                const currentFormIndex = process.forms.findIndex(
-                  pf => pf.formId === form.formId
-                );
-
-                // Check if there is a next form (index + 1)
-                const nextFormIndex = currentFormIndex + 1;
-                let isNextFormCompleted = false;
-
-                if (nextFormIndex < process.forms.length) {
-                  // Get the next form's formId from processForms
-                  const nextForm = process.forms[nextFormIndex];
-                  // Check if the next form is in APCompletedForms
-                  const nextFormCompleted = ap.completedForms.find(cf => cf.formId === nextForm.formId);
-                  isNextFormCompleted = !!nextFormCompleted;
-                } else {
-                  // If there is no next form (last form), consider it completed
-                  isNextFormCompleted = true;
-                }
-
-                // Only include the form if the next form is completed
-                if (isNextFormCompleted) {
-                  visibleForms.push(form.formId);
-                }
-              }
-            }
-          }
-
-          if (visibleForms.length > 0) {
-            applicantProcessesForProcess.push({
-              applicantProcessId: ap.id,
-              applicantId: ap.applicantId,
-              status: 'COMPLETED',
-              completedForms: visibleForms,
-              processLevel: `${ap.completedForms.length}/${process.forms.length}`,
-            });
-          }
-        }
-      }
-
-      // Group results
-      if (applicantProcessesForProcess.length > 0) {
-        const groupIndex = groupedByGroup.findIndex(
-          group => group.groupId.toString() === process.groupId.toString()
-        );
-
-        if (groupIndex !== -1) {
-          groupedByGroup[groupIndex].processes.push({
-            processId: process.id,
-            name: process.name,
-            applicantProcesses: applicantProcessesForProcess,
-          });
-        } else {
-          groupedByGroup.push({
-            groupName: process.group.name,
-            groupId: process.group.id,
-            processes: [{
-              processId: process.id,
-              name: process.name,
-              applicantProcesses: applicantProcessesForProcess,
-            }],
-          });
-        }
-      }
-    }
-
-    await this.auditLogService.log({
-      userId: actor.id,
-      action: 'GET_COMPLETED_APPLICATIONS',
-      resource: 'IncomingApplication',
-      status: 'SUCCESS',
-      details: { count: groupedByGroup.length },
-    });
-
-    return groupedByGroup;
-  }
-
-  async getCompletedFormsForProcess(
-    processId: string,
-    userId: string,
-    actor: AuthenticatedUser,
-  ): Promise<any> {
-    const process = await this.prisma.process.findUnique({
-      where: { id: processId },
-      include: { forms: { orderBy: { order: 'asc' } } },
-    });
-
-    if (!process) {
-      throw new NotFoundException('Process not found or disabled');
-    }
-
-    if (process.forms.length === 0) {
-      return {
-        process: {
-          processId: process.id,
-          name: process.name,
-          groupId: process.groupId,
-          status: process.status,
-        },
-        applicantProcesses: []
       };
-    }
 
-    const applicantProcesses = await this.prisma.applicantProcess.findMany({
-      where: { processId: process.id, status: ProcessStatus.ENABLED },
-      include: {
-        completedForms: { orderBy: { createdAt: 'asc' } },
-        _count: { select: { completedForms: true } },
-      },
-    });
-
-    const applicantProcessesForProcess: any[] = [];
-
-    for (const ap of applicantProcesses) {
-      if (ap._count.completedForms === process.forms.length) {
-        let visibleForms: string[] = [];
-
-        // Check staff view permission
-        if (!process.staffViewForms) { // staffViewForms === false means NO
-          visibleForms = [];
-          for (const form of ap.completedForms) {
-            let hasAccess = false;
-
-            // Get the form response to check access
-            const formResponse = await this.prisma.formResponse.findFirst({
-              where: {
-                formId: form.formId,
-                applicantProcessId: form.applicantProcessId,
-              },
-            });
-
-            if (formResponse) {
-              hasAccess = await this.userHasAccess(actor, {
-                reviewerId: form.reviewerId || '',
-                nextStepType: form.nextStepType,
-                nextStaffId: form.nextStaffId || '',
-                nextStepRoles: form.nextStepRoles,
-                formId: form.formId,
-                applicantProcessId: form.applicantProcessId,
-              });
-            }
-
-            // If the user has access, check if the next form is completed
-            if (hasAccess) {
-              // Find the index of the current form in processForms
-              const currentFormIndex = process.forms.findIndex(
-                pf => pf.formId === form.formId
-              );
-
-              // Check if there is a next form (index + 1)
-              const nextFormIndex = currentFormIndex + 1;
-              let isNextFormCompleted = false;
-
-              if (nextFormIndex < process.forms.length) {
-                // Get the next form's formId from processForms
-                const nextForm = process.forms[nextFormIndex];
-                // Check if the next form is in APCompletedForms
-                const nextFormCompleted = ap.completedForms.find(cf => cf.formId === nextForm.formId);
-                isNextFormCompleted = !!nextFormCompleted;
-              } else {
-                // If there is no next form (last form), consider it completed
-                isNextFormCompleted = true;
-              }
-
-              // Only include the form if the next form is completed
-              if (isNextFormCompleted) {
-                visibleForms.push(form.formId);
-              }
-            }
-          }
-        } else {
-          // If staffViewForms is true (YES), include all forms where user has access
-          visibleForms = [];
-          for (const form of ap.completedForms) {
-            let hasAccess = false;
-
-            // Get the form response to check access
-            const formResponse = await this.prisma.formResponse.findFirst({
-              where: {
-                formId: form.formId,
-                applicantProcessId: form.applicantProcessId,
-              },
-            });
-
-            if (formResponse) {
-              hasAccess = await this.userHasAccess(actor, {
-                reviewerId: form.reviewerId || '',
-                nextStepType: form.nextStepType,
-                nextStaffId: form.nextStaffId || '',
-                nextStepRoles: form.nextStepRoles,
-                formId: form.formId,
-                applicantProcessId: form.applicantProcessId,
-              });
-            }
-
-            // If the user has access, check if the next form is completed
-            if (hasAccess) {
-              // Find the index of the current form in processForms
-              const currentFormIndex = process.forms.findIndex(
-                pf => pf.formId === form.formId
-              );
-
-              // Check if there is a next form (index + 1)
-              const nextFormIndex = currentFormIndex + 1;
-              let isNextFormCompleted = false;
-
-              if (nextFormIndex < process.forms.length) {
-                // Get the next form's formId from processForms
-                const nextForm = process.forms[nextFormIndex];
-                // Check if the next form is in APCompletedForms
-                const nextFormCompleted = ap.completedForms.find(cf => cf.formId === nextForm.formId);
-                isNextFormCompleted = !!nextFormCompleted;
-              } else {
-                // If there is no next form (last form), consider it completed
-                isNextFormCompleted = true;
-              }
-
-              // Only include the form if the next form is completed
-              if (isNextFormCompleted) {
-                visibleForms.push(form.formId);
-              }
-            }
-          }
-        }
-
-        if (visibleForms.length > 0) {
-          applicantProcessesForProcess.push({
-            applicantProcessId: ap.id,
-            applicantId: ap.applicantId,
-            status: 'COMPLETED',
-            completedForms: visibleForms,
-            processLevel: `${ap.completedForms.length}/${process.forms.length}`,
-          });
-        }
+      // Only add pendingForm for ENABLED applications
+      if (ap.status === ProcessStatus.ENABLED && nextForm) {
+        applicationData.pendingForm = {
+          formId: nextForm.formId,
+          nextStepType: lastCompletedForm?.nextStepType || 'NOT_APPLICABLE',
+          nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+          nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo,
+        };
       }
+
+      applicantProcessesForProcess.push(applicationData);
     }
 
     const response = {
@@ -773,7 +349,7 @@ export class IncomingApplicationService {
 
     await this.auditLogService.log({
       userId: actor.id,
-      action: 'GET_COMPLETED_FORMS_FOR_PROCESS',
+      action: `GET_${type.toUpperCase()}_APPLICATIONS_FOR_PROCESS`,
       resource: 'IncomingApplication',
       resourceId: processId,
       status: 'SUCCESS',
@@ -783,7 +359,8 @@ export class IncomingApplicationService {
     return response;
   }
 
-  async getCompletedSingleApplicantProcess(
+  // 3. Get single application details
+  async getSingleApplication(
     applicantProcessId: string,
     userId: string,
     actor: AuthenticatedUser,
@@ -792,15 +369,23 @@ export class IncomingApplicationService {
       where: { id: applicantProcessId },
       include: {
         applicant: true,
-        process: { include: { forms: { orderBy: { order: 'asc' } } } },
-        completedForms: { orderBy: { createdAt: 'asc' } },
+        process: { 
+          include: { 
+            forms: { 
+              orderBy: { order: 'asc' },
+              include: { form: true },
+            },
+          },
+        },
+        completedForms: { orderBy: { createdAt: 'desc' } },
+        responses: { include: { form: true } },
       },
     });
 
     if (!applicantProcess) {
       await this.auditLogService.log({
         userId: actor.id,
-        action: 'GET_COMPLETED_SINGLE_APPLICANT_PROCESS',
+        action: 'GET_SINGLE_APPLICATION',
         resource: 'IncomingApplication',
         resourceId: applicantProcessId,
         status: 'FAILURE',
@@ -809,285 +394,146 @@ export class IncomingApplicationService {
       throw new NotFoundException('Applicant process not found.');
     }
 
-    const totalFormsInProcess = applicantProcess.process.forms.length;
+    const lastCompletedForm = applicantProcess.completedForms[0];
+    const processForm = lastCompletedForm
+      ? await this.prisma.processForm.findFirst({
+          where: {
+            processId: applicantProcess.processId,
+            formId: lastCompletedForm.formId,
+          },
+        })
+      : null;
 
-    if (applicantProcess.completedForms.length !== totalFormsInProcess) {
+    const hasAccess = await this.userHasAccess(actor, {
+        reviewerId: lastCompletedForm?.reviewerId || '',
+        nextStepType: processForm?.nextStepType || NextStepType.NOT_APPLICABLE,
+        nextStaffId: processForm?.nextStaffId || '',
+        nextStepRoles: processForm?.nextStepRoles || [],
+        formId: lastCompletedForm?.formId,
+        applicantProcessId: lastCompletedForm?.applicantProcessId,
+    });
+
+    if (!hasAccess && applicantProcess.applicantId !== userId) {
       await this.auditLogService.log({
         userId: actor.id,
-        action: 'GET_COMPLETED_SINGLE_APPLICANT_PROCESS',
+        action: 'GET_SINGLE_APPLICATION',
         resource: 'IncomingApplication',
         resourceId: applicantProcessId,
         status: 'FAILURE',
-        errorMessage: 'Process not fully completed.',
+        errorMessage: 'Unauthorized access.',
       });
-      throw new NotFoundException('Process not fully completed');
+      throw new ForbiddenException(
+        'You are not authorized to access this application.',
+      );
     }
 
-    let visibleCompletedForms: string[] = [];
+    const currentLevel = applicantProcess.completedForms.length;
+    const nextForm = applicantProcess.process.forms[currentLevel];
 
-    // Check staff view permission
-    if (!applicantProcess.process.staffViewForms) { // staffViewForms === false means NO
-      visibleCompletedForms = [];
-      for (const form of applicantProcess.completedForms) {
-        let hasAccess = false;
+    const editApplicationStatus = applicantProcess.process.forms.find(
+      (form) => form.formId === nextForm?.formId,
+    )?.editApplicationStatus;
 
-        // Get the form response to check access
-        const formResponse = await this.prisma.formResponse.findFirst({
-          where: {
-            formId: form.formId,
-            applicantProcessId: form.applicantProcessId,
-          },
-        });
+    // Create completed forms array with reviewer information
+    const completedForms = await Promise.all(
+      applicantProcess.completedForms.map(async (completedForm) => {
+        const processForm = applicantProcess.process.forms.find(
+          (pf) => pf.formId === completedForm.formId,
+        );
 
-        if (formResponse) {
-          hasAccess = await this.userHasAccess(actor, {
-            reviewerId: form.reviewerId || '',
-            nextStepType: form.nextStepType,
-            nextStaffId: form.nextStaffId || '',
-            nextStepRoles: form.nextStepRoles,
-            formId: form.formId,
-            applicantProcessId: form.applicantProcessId,
+        let reviewer: any = null;
+        if (completedForm.reviewerId) {
+          reviewer = await this.prisma.user.findUnique({
+            where: { id: completedForm.reviewerId },
+            select: { id: true, firstName: true, lastName: true, email: true },
           });
         }
 
-        // If the user has access, check if the next form is completed
-        if (hasAccess) {
-          // Find the index of the current form in processForms
-          const currentFormIndex = applicantProcess.process.forms.findIndex(
-            pf => pf.formId === form.formId
-          );
+      return {
+          id: completedForm.formId,
+          formName: processForm?.form.name || 'Unknown Form',
+          order: processForm?.order || 0,
+          completedAt: completedForm.createdAt,
+          reviewerId: completedForm.reviewerId,
+          reviewer: reviewer,
+          nextStepType: processForm?.nextStepType || 'NOT_APPLICABLE',
+          nextStepRoles: processForm?.nextStepRoles || [],
+          nextStepSpecifiedTo: processForm?.nextStepSpecifiedTo,
+          notificationComment: processForm?.notificationComment,
+        };
+      }),
+    );
 
-          // Check if there is a next form (index + 1)
-          const nextFormIndex = currentFormIndex + 1;
-          let isNextFormCompleted = false;
-
-          if (nextFormIndex < applicantProcess.process.forms.length) {
-            // Get the next form's formId from processForms
-            const nextForm = applicantProcess.process.forms[nextFormIndex];
-            // Check if the next form is in APCompletedForms
-            const nextFormCompleted = applicantProcess.completedForms.find(cf => cf.formId === nextForm.formId);
-            isNextFormCompleted = !!nextFormCompleted;
-          } else {
-            // If there is no next form (last form), consider it completed
-            isNextFormCompleted = true;
+    // Create pending form only for ENABLED applications
+    const pendingForm =
+      nextForm && applicantProcess.status === ProcessStatus.ENABLED
+        ? {
+            id: nextForm.formId,
+            formName: nextForm.form.name,
+            order: nextForm.order,
+            config: {
+              nextStepType: lastCompletedForm?.nextStepType || 'NOT_APPLICABLE',
+              nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+              nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo,
+            },
           }
-
-          // Only include the form if the next form is completed
-          if (isNextFormCompleted) {
-            visibleCompletedForms.push(form.formId);
-          }
-        }
-      }
-    } else {
-      // If staffViewForms is true (YES), include all forms where user has access
-      visibleCompletedForms = [];
-      for (const form of applicantProcess.completedForms) {
-        let hasAccess = false;
-
-        // Get the form response to check access
-        const formResponse = await this.prisma.formResponse.findFirst({
-          where: {
-            formId: form.formId,
-            applicantProcessId: form.applicantProcessId,
-          },
-        });
-
-        if (formResponse) {
-          hasAccess = await this.userHasAccess(actor, {
-            reviewerId: form.reviewerId || '',
-            nextStepType: form.nextStepType,
-            nextStaffId: form.nextStaffId || '',
-            nextStepRoles: form.nextStepRoles,
-            formId: form.formId,
-            applicantProcessId: form.applicantProcessId,
-          });
-        }
-
-        // If the user has access, check if the next form is completed
-        if (hasAccess) {
-          // Find the index of the current form in processForms
-          const currentFormIndex = applicantProcess.process.forms.findIndex(
-            pf => pf.formId === form.formId
-          );
-
-          // Check if there is a next form (index + 1)
-          const nextFormIndex = currentFormIndex + 1;
-          let isNextFormCompleted = false;
-
-          if (nextFormIndex < applicantProcess.process.forms.length) {
-            // Get the next form's formId from processForms
-            const nextForm = applicantProcess.process.forms[nextFormIndex];
-            // Check if the next form is in APCompletedForms
-            const nextFormCompleted = applicantProcess.completedForms.find(cf => cf.formId === nextForm.formId);
-            isNextFormCompleted = !!nextFormCompleted;
-          } else {
-            // If there is no next form (last form), consider it completed
-            isNextFormCompleted = true;
-          }
-
-          // Only include the form if the next form is completed
-          if (isNextFormCompleted) {
-            visibleCompletedForms.push(form.formId);
-          }
-        }
-      }
-    }
+        : null;
 
     const response = {
       process: {
-        processId: applicantProcess.process.id,
+        id: applicantProcess.process.id,
         name: applicantProcess.process.name,
-        groupId: applicantProcess.process.groupId,
-        status: applicantProcess.process.status,
+        type: applicantProcess.process.type || 'DEFAULT',
+        group: applicantProcess.process.groupId,
       },
-      applicantProcess: {
-        applicantProcessId: applicantProcess.id,
-        applicantId: applicantProcess.applicantId,
-        status: 'COMPLETED',
-        completedForms: visibleCompletedForms,
-        processLevel: `${visibleCompletedForms.length}/${totalFormsInProcess}`,
-      }
+      application: {
+        id: applicantProcess.id,
+        applicant: {
+          id: applicantProcess.applicant.id,
+          firstName: applicantProcess.applicant.firstName,
+          lastName: applicantProcess.applicant.lastName,
+          email: applicantProcess.applicant.email,
+        },
+        status: applicantProcess.status,
+        currentLevel,
+        totalForms: applicantProcess.process.forms.length,
+        createdAt: applicantProcess.createdAt,
+        isCompleted: currentLevel >= applicantProcess.process.forms.length,
+        progress: (
+          (currentLevel / applicantProcess.process.forms.length) *
+          100
+        ).toFixed(1),
+        editApplicationStatus,
+      },
+      completedForms,
+      pendingForm,
+      access: {
+        canEdit: editApplicationStatus,
+        canView: true,
+        canApprove: hasAccess,
+        assignedTo: {
+          type:
+            lastCompletedForm?.nextStepType === 'STATIC'
+              ? 'user'
+              : lastCompletedForm?.nextStepType === 'DYNAMIC'
+                ? 'role'
+                : 'organization',
+          value:
+            lastCompletedForm?.nextStaffId ||
+            lastCompletedForm?.nextStepRoles?.[0] ||
+            '',
+        },
+      },
     };
 
     await this.auditLogService.log({
       userId: actor.id,
-      action: 'GET_COMPLETED_SINGLE_APPLICANT_PROCESS',
+      action: 'GET_SINGLE_APPLICATION',
       resource: 'IncomingApplication',
       resourceId: applicantProcessId,
       status: 'SUCCESS',
     });
 
     return response;
-  }
-
-  async getDisabledApplications(
-    userId: string,
-    actor: AuthenticatedUser,
-  ): Promise<any[]> {
-    const processes = await this.prisma.process.findMany({
-      where: { status: ProcessStatus.ENABLED },
-      include: {
-        forms: { orderBy: { order: 'asc' } },
-        group: true
-      },
-    });
-
-    const groupedDisabledApplications: any[] = [];
-
-    for (const process of processes) {
-      if (process.forms.length === 0) continue;
-
-      const applicantProcesses = await this.prisma.applicantProcess.findMany({
-        where: { processId: process.id, status: ProcessStatus.DISABLED },
-        include: {
-          completedForms: { orderBy: { createdAt: 'desc' } },
-          _count: { select: { completedForms: true } },
-        },
-      });
-
-      const applicantProcessesForProcess: any[] = [];
-
-      for (const ap of applicantProcesses) {
-        // Get completed forms for this applicant process in order
-        const completedForms = await this.prisma.aPCompletedForm.findMany({
-          where: { applicantProcessId: ap.id },
-          orderBy: { createdAt: 'asc' },
-        });
-
-        const currentLevel = completedForms.length;
-
-        if (currentLevel >= process.forms.length) continue;
-
-        const nextForm = process.forms[currentLevel];
-        if (!nextForm) continue;
-
-        const lastCompletedForm = completedForms[currentLevel - 1];
-
-        let shouldInclude = false;
-
-        if (currentLevel === 0) {
-          shouldInclude = true;
-        } else if (lastCompletedForm) {
-          shouldInclude = await this.userHasAccess(actor, {
-            reviewerId: lastCompletedForm.reviewerId || '',
-            nextStepType: lastCompletedForm.nextStepType,
-            nextStaffId: lastCompletedForm.nextStaffId || '',
-            nextStepRoles: lastCompletedForm.nextStepRoles,
-            formId: lastCompletedForm.formId,
-            applicantProcessId: lastCompletedForm.applicantProcessId,
-          });
-        }
-
-        if (!shouldInclude) continue;
-
-        applicantProcessesForProcess.push({
-          applicantProcessId: ap.id,
-          applicantId: ap.applicantId,
-          status: ap.status,
-          completedForms: completedForms.map(cf => cf.formId),
-          pendingForm: {
-            formId: nextForm.formId,
-            nextStepType: lastCompletedForm?.nextStepType || "NOT_APPLICABLE",
-            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo
-          },
-          processLevel: `${currentLevel}/${process.forms.length}`,
-        });
-      }
-
-      if (applicantProcessesForProcess.length > 0) {
-        // Grouping logic
-        const groupIndex = groupedDisabledApplications.findIndex(
-          group => group.groupId.toString() === process.groupId.toString()
-        );
-
-        if (groupIndex !== -1) {
-          groupedDisabledApplications[groupIndex].processes.push({
-            processId: process.id,
-            name: process.name,
-            applicantProcesses: applicantProcessesForProcess,
-          });
-        } else {
-          groupedDisabledApplications.push({
-            groupName: process.group.name,
-            groupId: process.group.id,
-            processes: [{
-              processId: process.id,
-              name: process.name,
-              applicantProcesses: applicantProcessesForProcess,
-            }],
-          });
-        }
-      }
-    }
-
-    await this.auditLogService.log({
-      userId: actor.id,
-      action: 'GET_DISABLED_APPLICATIONS',
-      resource: 'IncomingApplication',
-      status: 'SUCCESS',
-      details: { count: groupedDisabledApplications.length },
-    });
-
-    return groupedDisabledApplications;
-  }
-
-  /**
-   * Convert role names to role IDs for comparison
-   */
-  private async getUserRoleIds(roleNames: string[]): Promise<string[]> {
-    if (!roleNames || roleNames.length === 0) {
-      return [];
-    }
-
-    const roles = await this.prisma.role.findMany({
-      where: {
-        name: { in: roleNames },
-        status: 'ENABLED',
-      },
-      select: { id: true },
-    });
-
-    return roles.map(role => role.id);
   }
 }
