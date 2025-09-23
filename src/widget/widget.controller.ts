@@ -24,6 +24,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 import { ZodValidationPipe } from 'nestjs-zod';
+import { transformWidgetPayload, transformWidgetUpdatePayload } from './utils/widget-transform.utils';
 
 @ApiTags('Widgets')
 @Controller('widgets')
@@ -62,13 +63,10 @@ export class WidgetController {
         );
       }
 
-      const widget = await this.widgetService.create({
-        dashboardId: createWidgetDto.dashboardId,
-        title: createWidgetDto.title,
-        description: createWidgetDto.description,
-        visualizationType: createWidgetDto.visualizationType,
-        config: createWidgetDto.config,
-      });
+      // Transform the payload to internal format
+      const transformedData = transformWidgetPayload(createWidgetDto);
+
+      const widget = await this.widgetService.create(transformedData);
 
       return {
         success: true,
@@ -231,7 +229,10 @@ export class WidgetController {
         );
       }
 
-      const updatedWidget = await this.widgetService.update(id, updateWidgetDto);
+      // Transform the payload to internal format
+      const transformedData = transformWidgetUpdatePayload(updateWidgetDto);
+
+      const updatedWidget = await this.widgetService.update(id, transformedData);
 
       return {
         success: true,

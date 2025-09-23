@@ -39,25 +39,30 @@ export class DashboardController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.dashboardService.findOne(id);
+  findOne(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
+    return this.dashboardService.findOne(id, user);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateDashboardDto: UpdateDashboardDto,
+    @GetUser() user: AuthenticatedUser,
   ) {
-    return this.dashboardService.update(id, updateDashboardDto);
+    return this.dashboardService.update(id, updateDashboardDto, user);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dashboardService.remove(id);
+  remove(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
+    return this.dashboardService.remove(id, user);
   }
 
   @Put(':id/widget-order')
-  updateWidgetOrder(@Param('id') id: string, @Body() layout: any) {
-    return this.dashboardService.update(id, { layout });
+  updateWidgetOrder(
+    @Param('id') id: string,
+    @Body() layout: any,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    return this.dashboardService.updateWidgetOrder(id, layout, user);
   }
 }

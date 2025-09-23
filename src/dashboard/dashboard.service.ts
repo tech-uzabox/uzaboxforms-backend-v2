@@ -20,6 +20,17 @@ export class DashboardService {
       data: {
         ...data,
         ownerId: user.id,
+        layout: data.layout || { order: [], layouts: {} }, // Initialize layout
+      },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
       },
     });
     await this.auditLogService.log({
@@ -38,29 +49,102 @@ export class DashboardService {
   }
 
   async findAllForUser(userId: string, roles: string[]): Promise<Dashboard[]> {
+    const isAdmin = roles.includes('Admin') || roles.includes('SuperAdmin');
+    const whereCondition = isAdmin
+      ? {} // Admins see all dashboards
+      : {
+          OR: [
+            { ownerId: userId },
+            { allowedUsers: { has: userId } },
+            { allowedRoles: { hasSome: roles } },
+          ],
+        };
+
     const dashboards = await this.prisma.dashboard.findMany({
-      where: {
-        OR: [
-          { ownerId: userId },
-          { allowedUsers: { has: userId } },
-          { allowedRoles: { hasSome: roles } },
-        ],
+      where: whereCondition,
+      include: {
+        owner: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        updatedAt: 'desc',
       },
     });
     return dashboards;
   }
 
-  async findOne(id: string): Promise<Dashboard | null> {
-    return this.prisma.dashboard.findUnique({ where: { id } });
+  async findOne(id: string, user: AuthenticatedUser): Promise<Dashboard | null> {
+    // First check if dashboard exists and user has access
+    const dashboard = await this.prisma.dashboard.findUnique({
+      where: { id },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        widgets: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
+      },
+    });
+
+    if (!dashboard) {
+      return null;
+    }
+
+    // Check permissions
+    const isOwner = dashboard.ownerId === user.id;
+    const isAllowedUser = dashboard.allowedUsers.includes(user.id);
+    const isAllowedRole = dashboard.allowedRoles.some(role => user.roles.includes(role));
+    const isAdmin = user.roles.includes('Admin') || user.roles.includes('SuperAdmin');
+
+    if (!isOwner && !isAllowedUser && !isAllowedRole && !isAdmin) {
+      throw new Error('Access denied');
+    }
+
+    return dashboard;
   }
 
   async update(
     id: string,
     data: Prisma.DashboardUpdateInput,
+    user: AuthenticatedUser,
   ): Promise<Dashboard> {
+    // Check if user is owner
+    const dashboard = await this.prisma.dashboard.findUnique({ where: { id } });
+    if (!dashboard) {
+      throw new Error('Dashboard not found');
+    }
+
+    if (dashboard.ownerId !== user.id) {
+      throw new Error('Only dashboard owner can update properties');
+    }
+
     const updatedDashboard = await this.prisma.dashboard.update({
       where: { id },
       data,
+      include: {
+        owner: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
     });
     await this.auditLogService.log({
       userId: updatedDashboard.ownerId,
@@ -73,7 +157,17 @@ export class DashboardService {
     return updatedDashboard;
   }
 
-  async remove(id: string): Promise<Dashboard> {
+  async remove(id: string, user: AuthenticatedUser): Promise<Dashboard> {
+    // Check if user is owner
+    const dashboard = await this.prisma.dashboard.findUnique({ where: { id } });
+    if (!dashboard) {
+      throw new Error('Dashboard not found');
+    }
+
+    if (dashboard.ownerId !== user.id) {
+      throw new Error('Only dashboard owner can delete the dashboard');
+    }
+
     const deletedDashboard = await this.prisma.dashboard.delete({
       where: { id },
     });
@@ -86,5 +180,22 @@ export class DashboardService {
       details: { name: deletedDashboard.name },
     });
     return deletedDashboard;
+  }
+
+  async updateWidgetOrder(id: string, layout: any, user: AuthenticatedUser): Promise<Dashboard> {
+    // Check if user has access to modify the dashboard
+    const dashboard = await this.prisma.dashboard.findUnique({ where: { id } });
+    if (!dashboard) {
+      throw new Error('Dashboard not found');
+    }
+
+    const canModify = dashboard.ownerId === user.id ||
+      dashboard.allowedUsers.includes(user.id);
+
+    if (!canModify) {
+      throw new Error('Access denied to modify dashboard');
+    }
+
+    return this.update(id, { layout }, user);
   }
 }

@@ -3637,6 +3637,7 @@ export namespace Prisma {
     processedApplications: number
     qrCodeDocuments: number
     roles: number
+    ownedDashboards: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3650,6 +3651,7 @@ export namespace Prisma {
     processedApplications?: boolean | UserCountOutputTypeCountProcessedApplicationsArgs
     qrCodeDocuments?: boolean | UserCountOutputTypeCountQrCodeDocumentsArgs
     roles?: boolean | UserCountOutputTypeCountRolesArgs
+    ownedDashboards?: boolean | UserCountOutputTypeCountOwnedDashboardsArgs
   }
 
   // Custom InputTypes
@@ -3731,6 +3733,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: UserRoleWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOwnedDashboardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DashboardWhereInput
   }
 
 
@@ -4393,6 +4402,7 @@ export namespace Prisma {
     processedApplications?: boolean | User$processedApplicationsArgs<ExtArgs>
     qrCodeDocuments?: boolean | User$qrCodeDocumentsArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
+    ownedDashboards?: boolean | User$ownedDashboardsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4448,6 +4458,7 @@ export namespace Prisma {
     processedApplications?: boolean | User$processedApplicationsArgs<ExtArgs>
     qrCodeDocuments?: boolean | User$qrCodeDocumentsArgs<ExtArgs>
     roles?: boolean | User$rolesArgs<ExtArgs>
+    ownedDashboards?: boolean | User$ownedDashboardsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4467,6 +4478,7 @@ export namespace Prisma {
       processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
       qrCodeDocuments: Prisma.$QrCodeDocumentPayload<ExtArgs>[]
       roles: Prisma.$UserRolePayload<ExtArgs>[]
+      ownedDashboards: Prisma.$DashboardPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4884,6 +4896,7 @@ export namespace Prisma {
     processedApplications<T extends User$processedApplicationsArgs<ExtArgs> = {}>(args?: Subset<T, User$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     qrCodeDocuments<T extends User$qrCodeDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, User$qrCodeDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$QrCodeDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends User$rolesArgs<ExtArgs> = {}>(args?: Subset<T, User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    ownedDashboards<T extends User$ownedDashboardsArgs<ExtArgs> = {}>(args?: Subset<T, User$ownedDashboardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DashboardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5576,6 +5589,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserRoleScalarFieldEnum | UserRoleScalarFieldEnum[]
+  }
+
+  /**
+   * User.ownedDashboards
+   */
+  export type User$ownedDashboardsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Dashboard
+     */
+    select?: DashboardSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Dashboard
+     */
+    omit?: DashboardOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DashboardInclude<ExtArgs> | null
+    where?: DashboardWhereInput
+    orderBy?: DashboardOrderByWithRelationInput | DashboardOrderByWithRelationInput[]
+    cursor?: DashboardWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DashboardScalarFieldEnum | DashboardScalarFieldEnum[]
   }
 
   /**
@@ -25186,6 +25223,7 @@ export namespace Prisma {
     layout?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
     widgets?: boolean | Dashboard$widgetsArgs<ExtArgs>
     _count?: boolean | DashboardCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dashboard"]>
@@ -25199,6 +25237,7 @@ export namespace Prisma {
     layout?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dashboard"]>
 
   export type DashboardSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -25210,6 +25249,7 @@ export namespace Prisma {
     layout?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    owner?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["dashboard"]>
 
   export type DashboardSelectScalar = {
@@ -25225,15 +25265,21 @@ export namespace Prisma {
 
   export type DashboardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "ownerId" | "allowedUsers" | "allowedRoles" | "layout" | "createdAt" | "updatedAt", ExtArgs["result"]["dashboard"]>
   export type DashboardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
     widgets?: boolean | Dashboard$widgetsArgs<ExtArgs>
     _count?: boolean | DashboardCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type DashboardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type DashboardIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DashboardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type DashboardIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    owner?: boolean | UserDefaultArgs<ExtArgs>
+  }
 
   export type $DashboardPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Dashboard"
     objects: {
+      owner: Prisma.$UserPayload<ExtArgs>
       widgets: Prisma.$WidgetPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -25639,6 +25685,7 @@ export namespace Prisma {
    */
   export interface Prisma__DashboardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    owner<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     widgets<T extends Dashboard$widgetsArgs<ExtArgs> = {}>(args?: Subset<T, Dashboard$widgetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WidgetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -25932,6 +25979,10 @@ export namespace Prisma {
      */
     data: DashboardCreateManyInput | DashboardCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DashboardIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -26003,6 +26054,10 @@ export namespace Prisma {
      * Limit how many Dashboards to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DashboardIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -38852,6 +38907,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationListRelationFilter
     qrCodeDocuments?: QrCodeDocumentListRelationFilter
     roles?: UserRoleListRelationFilter
+    ownedDashboards?: DashboardListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -38876,6 +38932,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationOrderByRelationAggregateInput
     qrCodeDocuments?: QrCodeDocumentOrderByRelationAggregateInput
     roles?: UserRoleOrderByRelationAggregateInput
+    ownedDashboards?: DashboardOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -38904,6 +38961,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationListRelationFilter
     qrCodeDocuments?: QrCodeDocumentListRelationFilter
     roles?: UserRoleListRelationFilter
+    ownedDashboards?: DashboardListRelationFilter
   }, "id" | "email" | "googleId">
 
   export type UserOrderByWithAggregationInput = {
@@ -40222,6 +40280,7 @@ export namespace Prisma {
     layout?: JsonNullableFilter<"Dashboard">
     createdAt?: DateTimeFilter<"Dashboard"> | Date | string
     updatedAt?: DateTimeFilter<"Dashboard"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     widgets?: WidgetListRelationFilter
   }
 
@@ -40234,6 +40293,7 @@ export namespace Prisma {
     layout?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    owner?: UserOrderByWithRelationInput
     widgets?: WidgetOrderByRelationAggregateInput
     _relevance?: DashboardOrderByRelevanceInput
   }
@@ -40250,6 +40310,7 @@ export namespace Prisma {
     layout?: JsonNullableFilter<"Dashboard">
     createdAt?: DateTimeFilter<"Dashboard"> | Date | string
     updatedAt?: DateTimeFilter<"Dashboard"> | Date | string
+    owner?: XOR<UserScalarRelationFilter, UserWhereInput>
     widgets?: WidgetListRelationFilter
   }, "id">
 
@@ -40979,6 +41040,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -41003,6 +41065,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUpdateInput = {
@@ -41027,6 +41090,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -41051,6 +41115,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -42406,12 +42471,12 @@ export namespace Prisma {
   export type DashboardCreateInput = {
     id?: string
     name: string
-    ownerId: string
     allowedUsers?: DashboardCreateallowedUsersInput | string[]
     allowedRoles?: DashboardCreateallowedRolesInput | string[]
     layout?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedDashboardsInput
     widgets?: WidgetCreateNestedManyWithoutDashboardInput
   }
 
@@ -42430,12 +42495,12 @@ export namespace Prisma {
   export type DashboardUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
     allowedUsers?: DashboardUpdateallowedUsersInput | string[]
     allowedRoles?: DashboardUpdateallowedRolesInput | string[]
     layout?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedDashboardsNestedInput
     widgets?: WidgetUpdateManyWithoutDashboardNestedInput
   }
 
@@ -42465,7 +42530,6 @@ export namespace Prisma {
   export type DashboardUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
     allowedUsers?: DashboardUpdateallowedUsersInput | string[]
     allowedRoles?: DashboardUpdateallowedRolesInput | string[]
     layout?: NullableJsonNullValueInput | InputJsonValue
@@ -43323,6 +43387,12 @@ export namespace Prisma {
     none?: UserRoleWhereInput
   }
 
+  export type DashboardListRelationFilter = {
+    every?: DashboardWhereInput
+    some?: DashboardWhereInput
+    none?: DashboardWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -43365,6 +43435,10 @@ export namespace Prisma {
   }
 
   export type UserRoleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DashboardOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -45134,6 +45208,13 @@ export namespace Prisma {
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
   }
 
+  export type DashboardCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<DashboardCreateWithoutOwnerInput, DashboardUncheckedCreateWithoutOwnerInput> | DashboardCreateWithoutOwnerInput[] | DashboardUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DashboardCreateOrConnectWithoutOwnerInput | DashboardCreateOrConnectWithoutOwnerInput[]
+    createMany?: DashboardCreateManyOwnerInputEnvelope
+    connect?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+  }
+
   export type ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput = {
     create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
@@ -45208,6 +45289,13 @@ export namespace Prisma {
     connectOrCreate?: UserRoleCreateOrConnectWithoutUserInput | UserRoleCreateOrConnectWithoutUserInput[]
     createMany?: UserRoleCreateManyUserInputEnvelope
     connect?: UserRoleWhereUniqueInput | UserRoleWhereUniqueInput[]
+  }
+
+  export type DashboardUncheckedCreateNestedManyWithoutOwnerInput = {
+    create?: XOR<DashboardCreateWithoutOwnerInput, DashboardUncheckedCreateWithoutOwnerInput> | DashboardCreateWithoutOwnerInput[] | DashboardUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DashboardCreateOrConnectWithoutOwnerInput | DashboardCreateOrConnectWithoutOwnerInput[]
+    createMany?: DashboardCreateManyOwnerInputEnvelope
+    connect?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -45376,6 +45464,20 @@ export namespace Prisma {
     deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
   }
 
+  export type DashboardUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<DashboardCreateWithoutOwnerInput, DashboardUncheckedCreateWithoutOwnerInput> | DashboardCreateWithoutOwnerInput[] | DashboardUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DashboardCreateOrConnectWithoutOwnerInput | DashboardCreateOrConnectWithoutOwnerInput[]
+    upsert?: DashboardUpsertWithWhereUniqueWithoutOwnerInput | DashboardUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: DashboardCreateManyOwnerInputEnvelope
+    set?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    disconnect?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    delete?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    connect?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    update?: DashboardUpdateWithWhereUniqueWithoutOwnerInput | DashboardUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: DashboardUpdateManyWithWhereWithoutOwnerInput | DashboardUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: DashboardScalarWhereInput | DashboardScalarWhereInput[]
+  }
+
   export type ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput = {
     create?: XOR<ApplicantProcessCreateWithoutApplicantInput, ApplicantProcessUncheckedCreateWithoutApplicantInput> | ApplicantProcessCreateWithoutApplicantInput[] | ApplicantProcessUncheckedCreateWithoutApplicantInput[]
     connectOrCreate?: ApplicantProcessCreateOrConnectWithoutApplicantInput | ApplicantProcessCreateOrConnectWithoutApplicantInput[]
@@ -45524,6 +45626,20 @@ export namespace Prisma {
     update?: UserRoleUpdateWithWhereUniqueWithoutUserInput | UserRoleUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserRoleUpdateManyWithWhereWithoutUserInput | UserRoleUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserRoleScalarWhereInput | UserRoleScalarWhereInput[]
+  }
+
+  export type DashboardUncheckedUpdateManyWithoutOwnerNestedInput = {
+    create?: XOR<DashboardCreateWithoutOwnerInput, DashboardUncheckedCreateWithoutOwnerInput> | DashboardCreateWithoutOwnerInput[] | DashboardUncheckedCreateWithoutOwnerInput[]
+    connectOrCreate?: DashboardCreateOrConnectWithoutOwnerInput | DashboardCreateOrConnectWithoutOwnerInput[]
+    upsert?: DashboardUpsertWithWhereUniqueWithoutOwnerInput | DashboardUpsertWithWhereUniqueWithoutOwnerInput[]
+    createMany?: DashboardCreateManyOwnerInputEnvelope
+    set?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    disconnect?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    delete?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    connect?: DashboardWhereUniqueInput | DashboardWhereUniqueInput[]
+    update?: DashboardUpdateWithWhereUniqueWithoutOwnerInput | DashboardUpdateWithWhereUniqueWithoutOwnerInput[]
+    updateMany?: DashboardUpdateManyWithWhereWithoutOwnerInput | DashboardUpdateManyWithWhereWithoutOwnerInput[]
+    deleteMany?: DashboardScalarWhereInput | DashboardScalarWhereInput[]
   }
 
   export type GroupRoleCreateNestedManyWithoutRoleInput = {
@@ -46773,6 +46889,12 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type UserCreateNestedOneWithoutOwnedDashboardsInput = {
+    create?: XOR<UserCreateWithoutOwnedDashboardsInput, UserUncheckedCreateWithoutOwnedDashboardsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOwnedDashboardsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type WidgetCreateNestedManyWithoutDashboardInput = {
     create?: XOR<WidgetCreateWithoutDashboardInput, WidgetUncheckedCreateWithoutDashboardInput> | WidgetCreateWithoutDashboardInput[] | WidgetUncheckedCreateWithoutDashboardInput[]
     connectOrCreate?: WidgetCreateOrConnectWithoutDashboardInput | WidgetCreateOrConnectWithoutDashboardInput[]
@@ -46795,6 +46917,14 @@ export namespace Prisma {
   export type DashboardUpdateallowedRolesInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type UserUpdateOneRequiredWithoutOwnedDashboardsNestedInput = {
+    create?: XOR<UserCreateWithoutOwnedDashboardsInput, UserUncheckedCreateWithoutOwnedDashboardsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOwnedDashboardsInput
+    upsert?: UserUpsertWithoutOwnedDashboardsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOwnedDashboardsInput, UserUpdateWithoutOwnedDashboardsInput>, UserUncheckedUpdateWithoutOwnedDashboardsInput>
   }
 
   export type WidgetUpdateManyWithoutDashboardNestedInput = {
@@ -47789,6 +47919,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DashboardCreateWithoutOwnerInput = {
+    id?: string
+    name: string
+    allowedUsers?: DashboardCreateallowedUsersInput | string[]
+    allowedRoles?: DashboardCreateallowedRolesInput | string[]
+    layout?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    widgets?: WidgetCreateNestedManyWithoutDashboardInput
+  }
+
+  export type DashboardUncheckedCreateWithoutOwnerInput = {
+    id?: string
+    name: string
+    allowedUsers?: DashboardCreateallowedUsersInput | string[]
+    allowedRoles?: DashboardCreateallowedRolesInput | string[]
+    layout?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    widgets?: WidgetUncheckedCreateNestedManyWithoutDashboardInput
+  }
+
+  export type DashboardCreateOrConnectWithoutOwnerInput = {
+    where: DashboardWhereUniqueInput
+    create: XOR<DashboardCreateWithoutOwnerInput, DashboardUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type DashboardCreateManyOwnerInputEnvelope = {
+    data: DashboardCreateManyOwnerInput | DashboardCreateManyOwnerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ApplicantProcessUpsertWithWhereUniqueWithoutApplicantInput = {
     where: ApplicantProcessWhereUniqueInput
     update: XOR<ApplicantProcessUpdateWithoutApplicantInput, ApplicantProcessUncheckedUpdateWithoutApplicantInput>
@@ -48109,6 +48271,36 @@ export namespace Prisma {
     status?: EnumRoleStatusFilter<"UserRole"> | $Enums.RoleStatus
   }
 
+  export type DashboardUpsertWithWhereUniqueWithoutOwnerInput = {
+    where: DashboardWhereUniqueInput
+    update: XOR<DashboardUpdateWithoutOwnerInput, DashboardUncheckedUpdateWithoutOwnerInput>
+    create: XOR<DashboardCreateWithoutOwnerInput, DashboardUncheckedCreateWithoutOwnerInput>
+  }
+
+  export type DashboardUpdateWithWhereUniqueWithoutOwnerInput = {
+    where: DashboardWhereUniqueInput
+    data: XOR<DashboardUpdateWithoutOwnerInput, DashboardUncheckedUpdateWithoutOwnerInput>
+  }
+
+  export type DashboardUpdateManyWithWhereWithoutOwnerInput = {
+    where: DashboardScalarWhereInput
+    data: XOR<DashboardUpdateManyMutationInput, DashboardUncheckedUpdateManyWithoutOwnerInput>
+  }
+
+  export type DashboardScalarWhereInput = {
+    AND?: DashboardScalarWhereInput | DashboardScalarWhereInput[]
+    OR?: DashboardScalarWhereInput[]
+    NOT?: DashboardScalarWhereInput | DashboardScalarWhereInput[]
+    id?: UuidFilter<"Dashboard"> | string
+    name?: StringFilter<"Dashboard"> | string
+    ownerId?: UuidFilter<"Dashboard"> | string
+    allowedUsers?: StringNullableListFilter<"Dashboard">
+    allowedRoles?: StringNullableListFilter<"Dashboard">
+    layout?: JsonNullableFilter<"Dashboard">
+    createdAt?: DateTimeFilter<"Dashboard"> | Date | string
+    updatedAt?: DateTimeFilter<"Dashboard"> | Date | string
+  }
+
   export type GroupRoleCreateWithoutRoleInput = {
     status?: $Enums.RoleStatus
     group: GroupCreateNestedOneWithoutRolesInput
@@ -48283,6 +48475,7 @@ export namespace Prisma {
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutRolesInput = {
@@ -48306,6 +48499,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutRolesInput = {
@@ -48378,6 +48572,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRolesInput = {
@@ -48401,6 +48596,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutFilesInput = {
@@ -48424,6 +48620,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutFilesInput = {
@@ -48447,6 +48644,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutFilesInput = {
@@ -48486,6 +48684,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFilesInput = {
@@ -48509,6 +48708,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -48532,6 +48732,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -48555,6 +48756,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -48594,6 +48796,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -48617,6 +48820,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type GroupRoleCreateWithoutGroupInput = {
@@ -48660,6 +48864,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedGroupsInput = {
@@ -48683,6 +48888,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedGroupsInput = {
@@ -48784,6 +48990,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
@@ -48807,6 +49014,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProcessUpsertWithWhereUniqueWithoutGroupInput = {
@@ -49120,6 +49328,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedProcessesInput = {
@@ -49143,6 +49352,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedProcessesInput = {
@@ -49323,6 +49533,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
@@ -49346,6 +49557,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type GroupUpsertWithoutProcessesInput = {
@@ -49548,6 +49760,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedFoldersInput = {
@@ -49571,6 +49784,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedFoldersInput = {
@@ -49648,6 +49862,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedFoldersInput = {
@@ -49671,6 +49886,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type FormUpsertWithWhereUniqueWithoutFolderInput = {
@@ -49736,6 +49952,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutCreatedFormsInput = {
@@ -49759,6 +49976,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutCreatedFormsInput = {
@@ -49887,6 +50105,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCreatedFormsInput = {
@@ -49910,6 +50129,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type FolderUpsertWithoutFormsInput = {
@@ -50406,6 +50626,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutApplicantProcessesInput = {
@@ -50429,6 +50650,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutApplicantProcessesInput = {
@@ -50628,6 +50850,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
@@ -50651,6 +50874,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProcessUpsertWithoutApplicantProcessesInput = {
@@ -50780,6 +51004,7 @@ export namespace Prisma {
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
@@ -50803,6 +51028,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutProcessedApplicationsInput = {
@@ -50910,6 +51136,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
@@ -50933,6 +51160,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type ProcessUpsertWithoutProcessedApplicationsInput = {
@@ -51199,6 +51427,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -51222,6 +51451,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -51312,6 +51542,7 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -51335,6 +51566,60 @@ export namespace Prisma {
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserCreateWithoutOwnedDashboardsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    files?: FileCreateNestedManyWithoutUserInput
+    createdForms?: FormCreateNestedManyWithoutCreatorInput
+    createdFolders?: FolderCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
+    qrCodeDocuments?: QrCodeDocumentCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOwnedDashboardsInput = {
+    id?: string
+    email: string
+    password: string
+    firstName?: string | null
+    lastName?: string | null
+    photo?: string | null
+    googleId?: string | null
+    status?: $Enums.UserStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    applicantProcesses?: ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    files?: FileUncheckedCreateNestedManyWithoutUserInput
+    createdForms?: FormUncheckedCreateNestedManyWithoutCreatorInput
+    createdFolders?: FolderUncheckedCreateNestedManyWithoutCreatorInput
+    createdGroups?: GroupUncheckedCreateNestedManyWithoutCreatorInput
+    organization?: OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+    createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
+    processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+    roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOwnedDashboardsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOwnedDashboardsInput, UserUncheckedCreateWithoutOwnedDashboardsInput>
   }
 
   export type WidgetCreateWithoutDashboardInput = {
@@ -51365,6 +51650,65 @@ export namespace Prisma {
   export type WidgetCreateManyDashboardInputEnvelope = {
     data: WidgetCreateManyDashboardInput | WidgetCreateManyDashboardInput[]
     skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutOwnedDashboardsInput = {
+    update: XOR<UserUpdateWithoutOwnedDashboardsInput, UserUncheckedUpdateWithoutOwnedDashboardsInput>
+    create: XOR<UserCreateWithoutOwnedDashboardsInput, UserUncheckedCreateWithoutOwnedDashboardsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOwnedDashboardsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOwnedDashboardsInput, UserUncheckedUpdateWithoutOwnedDashboardsInput>
+  }
+
+  export type UserUpdateWithoutOwnedDashboardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    files?: FileUpdateManyWithoutUserNestedInput
+    createdForms?: FormUpdateManyWithoutCreatorNestedInput
+    createdFolders?: FolderUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
+    qrCodeDocuments?: QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOwnedDashboardsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    photo?: NullableStringFieldUpdateOperationsInput | string | null
+    googleId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    applicantProcesses?: ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    files?: FileUncheckedUpdateManyWithoutUserNestedInput
+    createdForms?: FormUncheckedUpdateManyWithoutCreatorNestedInput
+    createdFolders?: FolderUncheckedUpdateManyWithoutCreatorNestedInput
+    createdGroups?: GroupUncheckedUpdateManyWithoutCreatorNestedInput
+    organization?: OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+    createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+    processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+    qrCodeDocuments?: QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+    roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type WidgetUpsertWithWhereUniqueWithoutDashboardInput = {
@@ -51400,12 +51744,12 @@ export namespace Prisma {
   export type DashboardCreateWithoutWidgetsInput = {
     id?: string
     name: string
-    ownerId: string
     allowedUsers?: DashboardCreateallowedUsersInput | string[]
     allowedRoles?: DashboardCreateallowedRolesInput | string[]
     layout?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutOwnedDashboardsInput
   }
 
   export type DashboardUncheckedCreateWithoutWidgetsInput = {
@@ -51438,12 +51782,12 @@ export namespace Prisma {
   export type DashboardUpdateWithoutWidgetsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    ownerId?: StringFieldUpdateOperationsInput | string
     allowedUsers?: DashboardUpdateallowedUsersInput | string[]
     allowedRoles?: DashboardUpdateallowedRolesInput | string[]
     layout?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutOwnedDashboardsNestedInput
   }
 
   export type DashboardUncheckedUpdateWithoutWidgetsInput = {
@@ -51478,6 +51822,7 @@ export namespace Prisma {
     createdProcesses?: ProcessCreateNestedManyWithoutCreatorInput
     processedApplications?: ProcessedApplicationCreateNestedManyWithoutUserInput
     roles?: UserRoleCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardCreateNestedManyWithoutOwnerInput
   }
 
   export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
@@ -51501,6 +51846,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUncheckedCreateNestedManyWithoutCreatorInput
     processedApplications?: ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
     roles?: UserRoleUncheckedCreateNestedManyWithoutUserInput
+    ownedDashboards?: DashboardUncheckedCreateNestedManyWithoutOwnerInput
   }
 
   export type UserCreateOrConnectWithoutQrCodeDocumentsInput = {
@@ -51540,6 +51886,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUpdateManyWithoutCreatorNestedInput
     processedApplications?: ProcessedApplicationUpdateManyWithoutUserNestedInput
     roles?: UserRoleUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUpdateManyWithoutOwnerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
@@ -51563,6 +51910,7 @@ export namespace Prisma {
     createdProcesses?: ProcessUncheckedUpdateManyWithoutCreatorNestedInput
     processedApplications?: ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
     roles?: UserRoleUncheckedUpdateManyWithoutUserNestedInput
+    ownedDashboards?: DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type MessageCreateWithoutChatInput = {
@@ -51974,6 +52322,16 @@ export namespace Prisma {
     status?: $Enums.RoleStatus
   }
 
+  export type DashboardCreateManyOwnerInput = {
+    id?: string
+    name: string
+    allowedUsers?: DashboardCreateallowedUsersInput | string[]
+    allowedRoles?: DashboardCreateallowedRolesInput | string[]
+    layout?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ApplicantProcessUpdateWithoutApplicantInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
@@ -52285,6 +52643,38 @@ export namespace Prisma {
   export type UserRoleUncheckedUpdateManyWithoutUserInput = {
     roleId?: StringFieldUpdateOperationsInput | string
     status?: EnumRoleStatusFieldUpdateOperationsInput | $Enums.RoleStatus
+  }
+
+  export type DashboardUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    allowedUsers?: DashboardUpdateallowedUsersInput | string[]
+    allowedRoles?: DashboardUpdateallowedRolesInput | string[]
+    layout?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    widgets?: WidgetUpdateManyWithoutDashboardNestedInput
+  }
+
+  export type DashboardUncheckedUpdateWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    allowedUsers?: DashboardUpdateallowedUsersInput | string[]
+    allowedRoles?: DashboardUpdateallowedRolesInput | string[]
+    layout?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    widgets?: WidgetUncheckedUpdateManyWithoutDashboardNestedInput
+  }
+
+  export type DashboardUncheckedUpdateManyWithoutOwnerInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    allowedUsers?: DashboardUpdateallowedUsersInput | string[]
+    allowedRoles?: DashboardUpdateallowedRolesInput | string[]
+    layout?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GroupRoleCreateManyRoleInput = {
