@@ -45,7 +45,11 @@ async function bootstrap() {
       .addBearerAuth()
       .build(),
   );
-  SwaggerModule.setup('/api/v1/docs', app, cleanupOpenApiDoc(openApiDoc));
+  SwaggerModule.setup('/api/v1/docs', app, cleanupOpenApiDoc(openApiDoc), {
+    swaggerOptions: {
+      docExpansion: 'none'
+    },
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }
