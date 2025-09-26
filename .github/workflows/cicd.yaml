@@ -45,8 +45,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ghcr.io/tech-uzabox/backendv2:latest
+          tags: |
+            ghcr.io/${{ github.repository }}/backendv2:latest
+            ghcr.io/${{ github.repository }}/backendv2:${{ needs.commit-hash.outputs.commit_hash }}
