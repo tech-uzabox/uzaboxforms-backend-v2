@@ -151,6 +151,76 @@ export class ProcessService {
     };
   }
 
+  async findByFormId(formId: string): Promise<{ success: boolean; data: any[] }> {
+    const processes = await this.prisma.process.findMany({
+      where: {
+        forms: {
+          some: {
+            formId: formId,
+          },
+        },
+      },
+      include: {
+        group: true,
+        creator: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
+        forms: {
+          include: {
+            form: true,
+          },
+        },
+      },
+    });
+
+    // Format to match old API response
+    const formattedProcesses = await Promise.all(
+      processes.map(async (process) => {
+        const processForms = process.forms || [];
+
+        const forms = processForms.map((pf) => {
+          const form = pf.form;
+          if (!form) return null;
+
+          return {
+            name: form.name,
+            status: form.status,
+            createdAt: form.createdAt?.toISOString(),
+            updatedAt: form.updatedAt?.toISOString(),
+            nextStepType: pf.nextStepType,
+            nextStepRoles: pf.nextStepRoles,
+            nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
+            nextStaff: pf.nextStaffId, // Changed from nextStaff to nextStaffId
+            notificationType: pf.notificationType,
+            notificationTo: pf.notificationToId, // Changed from notificationTo to notificationToId
+            notificationToRoles: pf.notificationRoles, // Changed from notificationToRoles to notificationRoles
+            notificationComment: pf.notificationComment,
+            notifyApplicant: pf.notifyApplicant,
+            applicantNotificationContent: pf.applicantNotificationContent,
+            editApplicationStatus: pf.editApplicationStatus,
+            applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion
+          };
+        });
+
+        return {
+          ...process,
+          processName: process.name,
+          processStatus: process.status,
+          updatedAt: process.updatedAt?.toISOString(),
+          processForms: forms.filter((form) => form !== null),
+        };
+      })
+    );
+
+    return {
+      success: true,
+      data: formattedProcesses,
+    };
+  }
+
   async findOne(id: string): Promise<{ success: boolean; data: any } | null> {
     const process = await this.prisma.process.findUnique({
       where: { id },

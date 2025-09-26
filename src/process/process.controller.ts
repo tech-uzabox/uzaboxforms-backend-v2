@@ -4,7 +4,7 @@ import { CreateProcessDto } from './dto/create-process.dto';
 import { UpdateProcessDto } from './dto/update-process.dto';
 import { SubmitProcessFormDto } from './dto/submit-process-form.dto';
 import { DuplicateProcessDto } from './dto/duplicate-process.dto';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
@@ -29,6 +29,13 @@ export class ProcessController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.processService.findOne(id);
+  }
+
+  @Get('form/:formId')
+  @ApiOperation({ summary: 'Get processes by form ID' })
+  @ApiParam({ name: 'formId', description: 'The ID of the form' })
+  findByFormId(@Param('formId') formId: string) {
+    return this.processService.findByFormId(formId);
   }
 
   @Patch(':id')
