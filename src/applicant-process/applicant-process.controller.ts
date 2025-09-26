@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, UseGuards, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApplicantProcessService } from './applicant-process.service';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
@@ -33,7 +33,7 @@ export class ApplicantProcessController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string, 
+    @Param('id') id: string,
     @Body() updateApplicantProcessDto: UpdateApplicantProcessDto,
     @GetUser() user: AuthenticatedUser
   ) {
@@ -72,11 +72,16 @@ export class ApplicantProcessController {
     description: 'Bulk create applicant processes from Excel file',
     type: BulkCreateApplicantProcessDto,
   })
-  bulkCreate(
+  async bulkCreate(
     @Body() bulkCreateApplicantProcessDto: BulkCreateApplicantProcessDto,
     @UploadedFile() file: Express.Multer.File,
     @GetUser() user: any,
   ) {
-    return this.applicantProcessService.bulkCreate(bulkCreateApplicantProcessDto, file, user.id);
+    const result = await this.applicantProcessService.bulkCreate(bulkCreateApplicantProcessDto, file, user.id);
+    if (!result.success) {
+      throw new BadRequestException(result);
+    }
+    return result;
   }
 }
+

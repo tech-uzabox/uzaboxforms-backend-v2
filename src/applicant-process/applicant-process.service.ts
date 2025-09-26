@@ -545,6 +545,15 @@ export class ApplicantProcessService {
         }
         return stringValue;
 
+      case 'Countries':
+        // Basic validation - can be enhanced with country list
+        return stringValue;
+
+      case 'From Database':
+      case 'Add To Database':
+        // Would need database lookup - for now accept as string
+        return stringValue;
+
       default:
         return stringValue;
     }
