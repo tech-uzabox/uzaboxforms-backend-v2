@@ -14,14 +14,19 @@ export function normalizeResponses(responses: any[]): ProcessedResponse[] {
 
 export function getUniqueFormIds(config: any): string[] {
   const formIds = new Set<string>();
-  if (config.metrics && Array.isArray(config.metrics)) {
+  if (config?.metrics && Array.isArray(config?.metrics)) {
     config.metrics.forEach((metric: any) => {
       if (metric.formId) formIds.add(metric.formId);
     });
   }
-  if (config.sources && Array.isArray(config.sources)) {
+  if (config?.sources && Array.isArray(config?.sources)) {
     config.sources.forEach((source: any) => {
       if (source.formId) formIds.add(source.formId);
+    });
+  }
+  if (config?.options?.map?.metrics && Array.isArray(config?.options?.map?.metrics)) {
+    config.options.map.metrics.forEach((metric: any) => {
+      if (metric.formId) formIds.add(metric.formId);
     });
   }
   return Array.from(formIds);

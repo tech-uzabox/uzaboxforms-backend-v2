@@ -1,7 +1,7 @@
 import { Form, Prisma } from 'db';
 import { PrismaService } from '../db/prisma.service';
 import { CreateFormDto } from './dto/create-form.dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { AuditLogService } from '../audit-log/audit-log.service';
 
 @Injectable()
@@ -140,66 +140,72 @@ export class FormService {
     });
   }
 
-  async getFormsWithCountries(): Promise<any[]> {
-    const forms = await this.prisma.form.findMany({
-      where: {
-        design: {
-          not: Prisma.JsonNull,
+  async getFormsWithCountries(): Promise<any> {
+    try {
+      const forms = await this.prisma.form.findMany({
+        where: {
+          design: {
+            not: Prisma.JsonNull,
+          },
         },
-      },
-    });
+      });
 
-    const resultMap = new Map<string, { formId: string; countryFields: { id: string; label: string }[] }>();
+      const resultMap = new Map<string, { formId: string; countryFields: { id: string; label: string }[] }>();
 
-    for (const form of forms) {
-      const formId = form.id;
-      const countryFields: { id: string; label: string }[] = [];
+      for (const form of forms) {
+        const formId = form.id;
+        const countryFields: { id: string; label: string }[] = [];
 
-      if (form.design && typeof form.design === 'object') {
-        const design = form.design as any;
-        if (Array.isArray(design)) {
-          for (const section of design) {
-            if (Array.isArray(section?.questions)) {
-              for (const question of section.questions) {
-                if (question?.type === "Countries") {
-                  countryFields.push({ id: question.id, label: question.label || question.id });
+        if (form.design && typeof form.design === 'object') {
+          const design = form.design as any;
+          if (Array.isArray(design)) {
+            for (const section of design) {
+              if (Array.isArray(section?.questions)) {
+                for (const question of section.questions) {
+                  if (question?.type === "Countries") {
+                    countryFields.push({ id: question.id, label: question.label || question.id });
+                  }
                 }
               }
             }
           }
         }
-      }
 
-      if (countryFields.length > 0) {
-        const existing = resultMap.get(formId);
-        if (existing) {
-          const merged = [...existing.countryFields, ...countryFields];
-          const unique = Array.from(new Map(merged.map(cf => [cf.id, cf])).values());
-          resultMap.set(formId, { formId, countryFields: unique });
-        } else {
-          resultMap.set(formId, { formId, countryFields });
+        if (countryFields.length > 0) {
+          const existing = resultMap.get(formId);
+          if (existing) {
+            const merged = [...existing.countryFields, ...countryFields];
+            const unique = Array.from(new Map(merged.map(cf => [cf.id, cf])).values());
+            resultMap.set(formId, { formId, countryFields: unique });
+          } else {
+            resultMap.set(formId, { formId, countryFields });
+          }
         }
       }
+
+      const formIds = Array.from(resultMap.keys());
+      const formsWithNames = await this.prisma.form.findMany({
+        where: {
+          id: { in: formIds },
+        },
+        select: {
+          id: true,
+          name: true,
+        },
+      });
+
+      const nameMap = new Map(formsWithNames.map(f => [f.id, f.name]));
+
+      const data = Array.from(resultMap.values()).map(item => ({
+        id: item.formId,
+        name: nameMap.get(item.formId) || "",
+        countryFields: item.countryFields,
+      }));
+
+      return { success: true, data };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to fetch forms with countries');
     }
-
-    const formIds = Array.from(resultMap.keys());
-    const formsWithNames = await this.prisma.form.findMany({
-      where: {
-        id: { in: formIds },
-      },
-      select: {
-        id: true,
-        name: true,
-      },
-    });
-
-    const nameMap = new Map(formsWithNames.map(f => [f.id, f.name]));
-
-    return Array.from(resultMap.values()).map(item => ({
-      id: item.formId,
-      name: nameMap.get(item.formId) || "",
-      countryFields: item.countryFields,
-    }));
   }
 
   async getFormFields(formId: string) {

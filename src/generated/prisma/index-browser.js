@@ -333,6 +333,7 @@ exports.Prisma.DashboardScalarFieldEnum = {
 exports.Prisma.WidgetScalarFieldEnum = {
   id: 'id',
   dashboardId: 'dashboardId',
+  description: 'description',
   title: 'title',
   visualizationType: 'visualizationType',
   config: 'config',
@@ -612,6 +613,7 @@ exports.Prisma.DashboardOrderByRelevanceFieldEnum = {
 exports.Prisma.WidgetOrderByRelevanceFieldEnum = {
   id: 'id',
   dashboardId: 'dashboardId',
+  description: 'description',
   title: 'title',
   visualizationType: 'visualizationType'
 };

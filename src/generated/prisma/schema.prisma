@@ -340,6 +340,7 @@ model Dashboard {
 model Widget {
   id                String    @id @default(uuid()) @db.Uuid
   dashboardId       String    @db.Uuid
+  description       String?
   title             String
   visualizationType String
   config            Json

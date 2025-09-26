@@ -12,13 +12,14 @@ export class WidgetService {
     private auditLogService: AuditLogService,
   ) {}
 
-  async create(data: any): Promise<Widget> {
+  async create(data: CreateWidgetDto): Promise<Widget> {
     const count = await this.prisma.widget.count();
     const newWidget = await this.prisma.widget.create({ data: {
       title: data.title,
       visualizationType: data.visualizationType,
+      description: data.description,
       config: data.config,
-      order: data.order !== undefined ? data.order : count + 1,
+      order: count + 1,
       dashboardId: data.dashboardId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -41,7 +42,7 @@ export class WidgetService {
     return this.prisma.widget.findUnique({ where: { id } });
   }
 
-  async update(id: string, data: any): Promise<Widget> {
+  async update(id: string, data: UpdateWidgetDto): Promise<Widget> {
     const updatedWidget = await this.prisma.widget.update({
       where: { id },
       data,

@@ -26194,6 +26194,7 @@ export namespace Prisma {
   export type WidgetMinAggregateOutputType = {
     id: string | null
     dashboardId: string | null
+    description: string | null
     title: string | null
     visualizationType: string | null
     order: number | null
@@ -26204,6 +26205,7 @@ export namespace Prisma {
   export type WidgetMaxAggregateOutputType = {
     id: string | null
     dashboardId: string | null
+    description: string | null
     title: string | null
     visualizationType: string | null
     order: number | null
@@ -26214,6 +26216,7 @@ export namespace Prisma {
   export type WidgetCountAggregateOutputType = {
     id: number
     dashboardId: number
+    description: number
     title: number
     visualizationType: number
     config: number
@@ -26235,6 +26238,7 @@ export namespace Prisma {
   export type WidgetMinAggregateInputType = {
     id?: true
     dashboardId?: true
+    description?: true
     title?: true
     visualizationType?: true
     order?: true
@@ -26245,6 +26249,7 @@ export namespace Prisma {
   export type WidgetMaxAggregateInputType = {
     id?: true
     dashboardId?: true
+    description?: true
     title?: true
     visualizationType?: true
     order?: true
@@ -26255,6 +26260,7 @@ export namespace Prisma {
   export type WidgetCountAggregateInputType = {
     id?: true
     dashboardId?: true
+    description?: true
     title?: true
     visualizationType?: true
     config?: true
@@ -26353,6 +26359,7 @@ export namespace Prisma {
   export type WidgetGroupByOutputType = {
     id: string
     dashboardId: string
+    description: string | null
     title: string
     visualizationType: string
     config: JsonValue
@@ -26383,6 +26390,7 @@ export namespace Prisma {
   export type WidgetSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     dashboardId?: boolean
+    description?: boolean
     title?: boolean
     visualizationType?: boolean
     config?: boolean
@@ -26395,6 +26403,7 @@ export namespace Prisma {
   export type WidgetSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     dashboardId?: boolean
+    description?: boolean
     title?: boolean
     visualizationType?: boolean
     config?: boolean
@@ -26407,6 +26416,7 @@ export namespace Prisma {
   export type WidgetSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     dashboardId?: boolean
+    description?: boolean
     title?: boolean
     visualizationType?: boolean
     config?: boolean
@@ -26419,6 +26429,7 @@ export namespace Prisma {
   export type WidgetSelectScalar = {
     id?: boolean
     dashboardId?: boolean
+    description?: boolean
     title?: boolean
     visualizationType?: boolean
     config?: boolean
@@ -26427,7 +26438,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type WidgetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dashboardId" | "title" | "visualizationType" | "config" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["widget"]>
+  export type WidgetOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "dashboardId" | "description" | "title" | "visualizationType" | "config" | "order" | "createdAt" | "updatedAt", ExtArgs["result"]["widget"]>
   export type WidgetInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     dashboard?: boolean | DashboardDefaultArgs<ExtArgs>
   }
@@ -26446,6 +26457,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       dashboardId: string
+      description: string | null
       title: string
       visualizationType: string
       config: Prisma.JsonValue
@@ -26878,6 +26890,7 @@ export namespace Prisma {
   interface WidgetFieldRefs {
     readonly id: FieldRef<"Widget", 'String'>
     readonly dashboardId: FieldRef<"Widget", 'String'>
+    readonly description: FieldRef<"Widget", 'String'>
     readonly title: FieldRef<"Widget", 'String'>
     readonly visualizationType: FieldRef<"Widget", 'String'>
     readonly config: FieldRef<"Widget", 'Json'>
@@ -38168,6 +38181,7 @@ export namespace Prisma {
   export const WidgetScalarFieldEnum: {
     id: 'id',
     dashboardId: 'dashboardId',
+    description: 'description',
     title: 'title',
     visualizationType: 'visualizationType',
     config: 'config',
@@ -38555,6 +38569,7 @@ export namespace Prisma {
   export const WidgetOrderByRelevanceFieldEnum: {
     id: 'id',
     dashboardId: 'dashboardId',
+    description: 'description',
     title: 'title',
     visualizationType: 'visualizationType'
   };
@@ -40348,6 +40363,7 @@ export namespace Prisma {
     NOT?: WidgetWhereInput | WidgetWhereInput[]
     id?: UuidFilter<"Widget"> | string
     dashboardId?: UuidFilter<"Widget"> | string
+    description?: StringNullableFilter<"Widget"> | string | null
     title?: StringFilter<"Widget"> | string
     visualizationType?: StringFilter<"Widget"> | string
     config?: JsonFilter<"Widget">
@@ -40360,6 +40376,7 @@ export namespace Prisma {
   export type WidgetOrderByWithRelationInput = {
     id?: SortOrder
     dashboardId?: SortOrder
+    description?: SortOrderInput | SortOrder
     title?: SortOrder
     visualizationType?: SortOrder
     config?: SortOrder
@@ -40376,6 +40393,7 @@ export namespace Prisma {
     OR?: WidgetWhereInput[]
     NOT?: WidgetWhereInput | WidgetWhereInput[]
     dashboardId?: UuidFilter<"Widget"> | string
+    description?: StringNullableFilter<"Widget"> | string | null
     title?: StringFilter<"Widget"> | string
     visualizationType?: StringFilter<"Widget"> | string
     config?: JsonFilter<"Widget">
@@ -40388,6 +40406,7 @@ export namespace Prisma {
   export type WidgetOrderByWithAggregationInput = {
     id?: SortOrder
     dashboardId?: SortOrder
+    description?: SortOrderInput | SortOrder
     title?: SortOrder
     visualizationType?: SortOrder
     config?: SortOrder
@@ -40407,6 +40426,7 @@ export namespace Prisma {
     NOT?: WidgetScalarWhereWithAggregatesInput | WidgetScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Widget"> | string
     dashboardId?: UuidWithAggregatesFilter<"Widget"> | string
+    description?: StringNullableWithAggregatesFilter<"Widget"> | string | null
     title?: StringWithAggregatesFilter<"Widget"> | string
     visualizationType?: StringWithAggregatesFilter<"Widget"> | string
     config?: JsonWithAggregatesFilter<"Widget">
@@ -42550,6 +42570,7 @@ export namespace Prisma {
 
   export type WidgetCreateInput = {
     id?: string
+    description?: string | null
     title: string
     visualizationType: string
     config: JsonNullValueInput | InputJsonValue
@@ -42562,6 +42583,7 @@ export namespace Prisma {
   export type WidgetUncheckedCreateInput = {
     id?: string
     dashboardId: string
+    description?: string | null
     title: string
     visualizationType: string
     config: JsonNullValueInput | InputJsonValue
@@ -42572,6 +42594,7 @@ export namespace Prisma {
 
   export type WidgetUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue
@@ -42584,6 +42607,7 @@ export namespace Prisma {
   export type WidgetUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     dashboardId?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue
@@ -42595,6 +42619,7 @@ export namespace Prisma {
   export type WidgetCreateManyInput = {
     id?: string
     dashboardId: string
+    description?: string | null
     title: string
     visualizationType: string
     config: JsonNullValueInput | InputJsonValue
@@ -42605,6 +42630,7 @@ export namespace Prisma {
 
   export type WidgetUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue
@@ -42616,6 +42642,7 @@ export namespace Prisma {
   export type WidgetUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     dashboardId?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue
@@ -44691,6 +44718,7 @@ export namespace Prisma {
   export type WidgetCountOrderByAggregateInput = {
     id?: SortOrder
     dashboardId?: SortOrder
+    description?: SortOrder
     title?: SortOrder
     visualizationType?: SortOrder
     config?: SortOrder
@@ -44706,6 +44734,7 @@ export namespace Prisma {
   export type WidgetMaxOrderByAggregateInput = {
     id?: SortOrder
     dashboardId?: SortOrder
+    description?: SortOrder
     title?: SortOrder
     visualizationType?: SortOrder
     order?: SortOrder
@@ -44716,6 +44745,7 @@ export namespace Prisma {
   export type WidgetMinOrderByAggregateInput = {
     id?: SortOrder
     dashboardId?: SortOrder
+    description?: SortOrder
     title?: SortOrder
     visualizationType?: SortOrder
     order?: SortOrder
@@ -51624,6 +51654,7 @@ export namespace Prisma {
 
   export type WidgetCreateWithoutDashboardInput = {
     id?: string
+    description?: string | null
     title: string
     visualizationType: string
     config: JsonNullValueInput | InputJsonValue
@@ -51634,6 +51665,7 @@ export namespace Prisma {
 
   export type WidgetUncheckedCreateWithoutDashboardInput = {
     id?: string
+    description?: string | null
     title: string
     visualizationType: string
     config: JsonNullValueInput | InputJsonValue
@@ -51733,6 +51765,7 @@ export namespace Prisma {
     NOT?: WidgetScalarWhereInput | WidgetScalarWhereInput[]
     id?: UuidFilter<"Widget"> | string
     dashboardId?: UuidFilter<"Widget"> | string
+    description?: StringNullableFilter<"Widget"> | string | null
     title?: StringFilter<"Widget"> | string
     visualizationType?: StringFilter<"Widget"> | string
     config?: JsonFilter<"Widget">
@@ -53395,6 +53428,7 @@ export namespace Prisma {
 
   export type WidgetCreateManyDashboardInput = {
     id?: string
+    description?: string | null
     title: string
     visualizationType: string
     config: JsonNullValueInput | InputJsonValue
@@ -53405,6 +53439,7 @@ export namespace Prisma {
 
   export type WidgetUpdateWithoutDashboardInput = {
     id?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue
@@ -53415,6 +53450,7 @@ export namespace Prisma {
 
   export type WidgetUncheckedUpdateWithoutDashboardInput = {
     id?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue
@@ -53425,6 +53461,7 @@ export namespace Prisma {
 
   export type WidgetUncheckedUpdateManyWithoutDashboardInput = {
     id?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
     visualizationType?: StringFieldUpdateOperationsInput | string
     config?: JsonNullValueInput | InputJsonValue

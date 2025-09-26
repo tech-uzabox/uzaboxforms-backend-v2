@@ -657,7 +657,9 @@ export async function processMapWidget(
     const values: Record<string, unknown> = {};
     metrics.forEach((metric, idx) => {
       const entry = latestPerMetric[idx][country];
-      const label = metric.label || metric.valueFieldId;
+      const formDesign = formDesignsMap.get(String(metric.formId));
+      const question = getQuestion(formDesign, metric.valueFieldId);
+      const label = metric.label || question?.label || metric.valueFieldId;
       values[label] = entry ? entry.value : null;
     });
 
@@ -710,11 +712,29 @@ export async function processMapWidget(
 
   console.log(`Map widget processing complete. Countries processed: ${Object.keys(countries).length}`);
 
+  // Determine region from country question's countryLevel
+  let region: string | undefined;
+  for (const metric of metrics) {
+    const formDesign = formDesignsMap.get(String(metric.formId));
+    const countryQuestion = getQuestion(formDesign, metric.countryFieldId);
+    if (countryQuestion?.countryLevel) {
+      region = countryQuestion.countryLevel;
+      break;
+    }
+  }
+
+  const meta = { ...widget.config };
+  if (region) {
+    meta.options = meta.options || {};
+    meta.options.map = meta.options.map || {};
+    meta.options.map.region = region;
+  }
+
   return {
     type: 'map',
     title: widget.title,
     countries,
-    meta: widget.config || {},
+    meta,
     empty: Object.keys(countries).length === 0,
   };
 }
@@ -839,4 +859,15 @@ function normalizeScalarForCompare(x: any): string {
   if (typeof x === "boolean") return x ? "true" : "false";
   if (typeof x === "number") return x.toString();
   return String(x).trim().toLowerCase();
+}
+
+function getQuestion(formDesign: any, fieldId: string): any {
+  if (!formDesign) return null;
+  for (const section of formDesign) {
+    if (section.questions && Array.isArray(section.questions)) {
+      const question = section.questions.find((q: any) => q.id === fieldId);
+      if (question) return question;
+    }
+  }
+  return null;
 }

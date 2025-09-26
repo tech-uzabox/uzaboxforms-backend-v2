@@ -3,7 +3,7 @@ import { FormService } from './form.service';
 import { CreateFormDto } from './dto/create-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
 import { DuplicateFormDto } from './dto/duplicate-form.dto';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Forms')
@@ -17,10 +17,57 @@ export class FormController {
   create(@Body() createFormDto: CreateFormDto) {
     return this.formService.create(createFormDto);
   }
+   @Get('with-countries')
+  @ApiOperation({ summary: 'Get forms with countries fields' })
+  @ApiResponse({
+    status: 200,
+    description: 'Forms with countries retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              _id: { type: 'string' },
+              formName: { type: 'string' },
+              countryFields: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'string' },
+                    label: { type: 'string' }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 500, description: 'Failed to fetch forms with countries' })
+  getFormsWithCountries() {
+    return this.formService.getFormsWithCountries();
+  }
 
   @Get()
   findAll(@Query('folderId') folderId?: string) {
     return this.formService.findAll(folderId);
+  }
+
+  @Get(':id/fields')
+  getFormFields(@Param('id') id: string) {
+    return this.formService.getFormFields(id);
+  }
+
+  @Get('fields/multiple')
+  getMultipleFormFields(@Query('formIds') formIds: string[]) {
+    return this.formService.getMultipleFormFields(formIds);
   }
 
   @Get(':id')
@@ -43,23 +90,11 @@ export class FormController {
     return this.formService.duplicate(duplicateFormDto.formId, duplicateFormDto.creatorId);
   }
 
-  @Get('with-countries')
-  getFormsWithCountries() {
-    return this.formService.getFormsWithCountries();
-  }
+
 
   @Get('public')
   getPublicForms() {
     return this.formService.getPublicForms();
   }
 
-  @Get(':id/fields')
-  getFormFields(@Param('id') id: string) {
-    return this.formService.getFormFields(id);
-  }
-
-  @Get('fields/multiple')
-  getMultipleFormFields(@Query('formIds') formIds: string[]) {
-    return this.formService.getMultipleFormFields(formIds);
-  }
 }

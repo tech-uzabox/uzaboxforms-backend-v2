@@ -66,7 +66,7 @@ export class WidgetController {
       // Transform the payload to internal format
       const transformedData = transformWidgetPayload(createWidgetDto);
 
-      const widget = await this.widgetService.create(transformedData);
+      const widget = await this.widgetService.create(transformedData as CreateWidgetDto);
 
       return {
         success: true,
@@ -191,7 +191,7 @@ export class WidgetController {
     }
   }
 
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Update a widget' })
   @ApiResponse({ status: 200, description: 'Widget updated successfully' })
   @ApiResponse({ status: 404, description: 'Widget not found' })
@@ -240,6 +240,7 @@ export class WidgetController {
         data: updatedWidget,
       };
     } catch (error) {
+      console.error(error);
       if (error instanceof HttpException) throw error;
       throw new HttpException(
         {

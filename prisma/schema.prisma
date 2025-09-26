@@ -10,28 +10,28 @@ datasource db {
 }
 
 model User {
-  id                 String             @id @default(uuid()) @db.Uuid
-  email              String             @unique @db.VarChar(255)
-  password           String             @db.VarChar(255)
-  firstName          String?
-  lastName           String?
-  photo              String?
-  googleId           String?            @unique
-  status             UserStatus         @default(ENABLED)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime           @updatedAt
-  applicantProcesses ApplicantProcess[]
-  auditLogs          AuditLog[]
-  files              File[]
-  createdForms       Form[]             @relation("FormCreator")
-  createdFolders     Folder[]           @relation("FolderCreator")
-  createdGroups      Group[]            @relation("GroupCreator")
-  organization       OrganizationUser?
-  createdProcesses   Process[]          @relation("ProcessCreator")
+  id                    String                 @id @default(uuid()) @db.Uuid
+  email                 String                 @unique @db.VarChar(255)
+  password              String                 @db.VarChar(255)
+  firstName             String?
+  lastName              String?
+  photo                 String?
+  googleId              String?                @unique
+  status                UserStatus             @default(ENABLED)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  applicantProcesses    ApplicantProcess[]
+  auditLogs             AuditLog[]
+  files                 File[]
+  createdForms          Form[]                 @relation("FormCreator")
+  createdFolders        Folder[]               @relation("FolderCreator")
+  createdGroups         Group[]                @relation("GroupCreator")
+  organization          OrganizationUser?
+  createdProcesses      Process[]              @relation("ProcessCreator")
   processedApplications ProcessedApplication[]
-  qrCodeDocuments    QrCodeDocument[]
-  roles              UserRole[]
-  ownedDashboards    Dashboard[]
+  qrCodeDocuments       QrCodeDocument[]
+  roles                 UserRole[]
+  ownedDashboards       Dashboard[]
 
   @@index([email])
   @@map("users")
@@ -121,24 +121,24 @@ model GroupRole {
 }
 
 model Process {
-  id                        String             @id @default(uuid()) @db.Uuid
+  id                        String                 @id @default(uuid()) @db.Uuid
   name                      String
-  type                      ProcessType        @default(PRIVATE)
-  groupId                   String             @db.Uuid
-  creatorId                 String             @db.Uuid
-  status                    ProcessStatus      @default(ENABLED)
-  archived                  Boolean            @default(false)
-  staffViewForms            Boolean            @default(false)
-  applicantViewProcessLevel Boolean            @default(false)
-  createdAt                 DateTime           @default(now())
-  updatedAt                 DateTime           @updatedAt
+  type                      ProcessType            @default(PRIVATE)
+  groupId                   String                 @db.Uuid
+  creatorId                 String                 @db.Uuid
+  status                    ProcessStatus          @default(ENABLED)
+  archived                  Boolean                @default(false)
+  staffViewForms            Boolean                @default(false)
+  applicantViewProcessLevel Boolean                @default(false)
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
   applicantProcesses        ApplicantProcess[]
   formResponses             FormResponse[]
   forms                     ProcessForm[]
   processedApplications     ProcessedApplication[]
   roles                     ProcessRole[]
-  creator                   User               @relation("ProcessCreator", fields: [creatorId], references: [id])
-  group                     Group              @relation(fields: [groupId], references: [id])
+  creator                   User                   @relation("ProcessCreator", fields: [creatorId], references: [id])
+  group                     Group                  @relation(fields: [groupId], references: [id])
 
   @@index([groupId])
   @@index([creatorId])
@@ -236,17 +236,17 @@ model ProcessForm {
 }
 
 model ApplicantProcess {
-  id             String            @id @default(uuid()) @db.Uuid
-  applicantId    String            @db.Uuid
-  processId      String            @db.Uuid
-  status         ProcessStatus     @default(ENABLED)
-  createdAt      DateTime          @default(now())
-  completedForms APCompletedForm[]
-  applicant      User              @relation(fields: [applicantId], references: [id])
-  process        Process           @relation(fields: [processId], references: [id])
+  id                    String                 @id @default(uuid()) @db.Uuid
+  applicantId           String                 @db.Uuid
+  processId             String                 @db.Uuid
+  status                ProcessStatus          @default(ENABLED)
+  createdAt             DateTime               @default(now())
+  completedForms        APCompletedForm[]
+  applicant             User                   @relation(fields: [applicantId], references: [id])
+  process               Process                @relation(fields: [processId], references: [id])
   processedApplications ProcessedApplication[]
-  responses      FormResponse[]
-  comments       ProcessComment[]
+  responses             FormResponse[]
+  comments              ProcessComment[]
 
   @@index([applicantId])
   @@index([processId])
@@ -340,6 +340,7 @@ model Dashboard {
 model Widget {
   id                String    @id @default(uuid()) @db.Uuid
   dashboardId       String    @db.Uuid
+  description       String?
   title             String
   visualizationType String
   config            Json
@@ -452,25 +453,25 @@ enum AddToDatabaseStatus {
 }
 
 model Chat {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now())
-  title     String
-  userId    String   @db.Uuid
-  visibility String  @default("private")
-  messages  Message[]
+  id         String    @id @default(uuid()) @db.Uuid
+  createdAt  DateTime  @default(now())
+  title      String
+  userId     String    @db.Uuid
+  visibility String    @default("private")
+  messages   Message[]
 
   @@map("chats")
 }
 
 model Message {
-  id            String   @id @default(uuid()) @db.Uuid
-  chatId        String   @db.Uuid
-  role          String
-  parts         Json
-  attachments   Json
-  createdAt     DateTime @default(now())
-  chat          Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  votes         Vote[]
+  id          String   @id @default(uuid()) @db.Uuid
+  chatId      String   @db.Uuid
+  role        String
+  parts       Json
+  attachments Json
+  createdAt   DateTime @default(now())
+  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  votes       Vote[]
 
   @@index([chatId])
   @@map("messages")
@@ -487,12 +488,12 @@ model Vote {
 }
 
 model Document {
-  id         String   @id @default(uuid()) @db.Uuid
-  createdAt  DateTime @default(now())
-  title      String
-  content    String?
-  kind       String  @default("text")
-  userId     String   @db.Uuid
+  id          String       @id @default(uuid()) @db.Uuid
+  createdAt   DateTime     @default(now())
+  title       String
+  content     String?
+  kind        String       @default("text")
+  userId      String       @db.Uuid
   suggestions Suggestion[]
 
   @@unique([id, createdAt])
@@ -501,30 +502,30 @@ model Document {
 }
 
 model Suggestion {
-  id             String   @id @default(uuid()) @db.Uuid
-  documentId     String   @db.Uuid
+  id                String   @id @default(uuid()) @db.Uuid
+  documentId        String   @db.Uuid
   documentCreatedAt DateTime
-  originalText   String
-  suggestedText  String
-  description    String?
-  isResolved     Boolean  @default(false)
-  userId         String   @db.Uuid
-  createdAt      DateTime @default(now())
-  document       Document @relation(fields: [documentId, documentCreatedAt], references: [id, createdAt], onDelete: Cascade)
+  originalText      String
+  suggestedText     String
+  description       String?
+  isResolved        Boolean  @default(false)
+  userId            String   @db.Uuid
+  createdAt         DateTime @default(now())
+  document          Document @relation(fields: [documentId, documentCreatedAt], references: [id, createdAt], onDelete: Cascade)
 
   @@index([documentId, documentCreatedAt])
   @@map("suggestions")
 }
 
 model ProcessSave {
-  id         String   @id @default(uuid()) @db.Uuid
-  chatId     String   @unique @db.Uuid
-  rolesData  Json?
+  id          String   @id @default(uuid()) @db.Uuid
+  chatId      String   @unique @db.Uuid
+  rolesData   Json?
   processData Json?
-  stepsData  Json?
-  formsData  Json?
-  isComplete Boolean  @default(false)
-  createdAt  DateTime @default(now())
+  stepsData   Json?
+  formsData   Json?
+  isComplete  Boolean  @default(false)
+  createdAt   DateTime @default(now())
 
   @@map("process_saves")
 }
