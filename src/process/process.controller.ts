@@ -20,6 +20,12 @@ export class ProcessController {
   create(@Body() createProcessDto: CreateProcessDto) {
     return this.processService.create(createProcessDto);
   }
+  @Get('form/:formId')
+  @ApiOperation({ summary: 'Get processes by form ID' })
+  @ApiParam({ name: 'formId', description: 'The ID of the form' })
+  findByFormId(@Param('formId') formId: string) {
+    return this.processService.findByFormId(formId);
+  }
 
   @Get()
   findAll() {
@@ -31,12 +37,6 @@ export class ProcessController {
     return this.processService.findOne(id);
   }
 
-  @Get('form/:formId')
-  @ApiOperation({ summary: 'Get processes by form ID' })
-  @ApiParam({ name: 'formId', description: 'The ID of the form' })
-  findByFormId(@Param('formId') formId: string) {
-    return this.processService.findByFormId(formId);
-  }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProcessDto: UpdateProcessDto) {
