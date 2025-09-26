@@ -1,6 +1,6 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { IncomingApplicationService } from './incoming-application.service';
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
@@ -12,23 +12,43 @@ import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 export class IncomingApplicationController {
   constructor(private readonly incomingApplicationService: IncomingApplicationService) {}
 
-  @Get('pending')
-  @ApiOperation({ summary: 'Get all pending applications for the current user' })
-  @ApiResponse({ status: 200, description: 'List of pending applications.' })
-  async getPendingApplications(@GetUser() user: AuthenticatedUser) {
-    const data = await this.incomingApplicationService.getPendingApplications(user.id, user);
+  @Get()
+  @ApiOperation({ summary: 'Get all applications (pending, completed, disabled, processed)' })
+  @ApiQuery({ name: 'type', required: true, enum: ['pending', 'completed', 'disabled', 'processed'], description: 'Type of applications to retrieve' })
+  @ApiQuery({ name: 'admin', required: false, type: 'string', description: 'Set to "true" for admin view' })
+  @ApiResponse({ status: 200, description: 'List of applications.' })
+  async getAllApplications(
+    @Query('type') type: 'pending' | 'completed' | 'disabled' | 'processed',
+    @GetUser() user: AuthenticatedUser,
+    @Query('admin') admin?: string
+  ) {
+    // Check if user has admin roles
+    const isAdmin = user.roles?.includes('Admin') || user.roles?.includes('SuperAdmin');
+    const isAdminView = admin === 'true' && isAdmin;
+    
+    const data = await this.incomingApplicationService.getAllApplications(type, user.id, user, isAdminView);
     return { success: true, data };
   }
 
-  @Get('pending/process/:processId')
-  @ApiOperation({ summary: 'Get pending applications for a specific process' })
+  @Get('process/:processId')
+  @ApiOperation({ summary: 'Get applications for a specific process' })
   @ApiParam({ name: 'processId', description: 'ID of the process' })
-  @ApiResponse({ status: 200, description: 'List of pending applications for the process.' })
-  async getPendingApplicationForProcess(
+  @ApiQuery({ name: 'type', required: true, enum: ['pending', 'completed', 'disabled', 'processed'], description: 'Type of applications to retrieve' })
+  @ApiQuery({ name: 'admin', required: false, type: 'string', description: 'Set to "true" for admin view' })
+  @ApiQuery({ name: 'status', required: false, type: 'string', description: 'Filter by status (for process-specific queries)' })
+  @ApiResponse({ status: 200, description: 'List of applications for the process.' })
+  async getApplicationsForProcess(
     @Param('processId') processId: string,
+    @Query('type') type: 'pending' | 'completed' | 'disabled' | 'processed',
     @GetUser() user: AuthenticatedUser,
+    @Query('admin') admin?: string,
+    @Query('status') status?: string
   ) {
-    const data = await this.incomingApplicationService.getPendingApplicationForProcess(processId, user.id, user);
+    // Check if user has admin roles
+    const isAdmin = user.roles?.includes('Admin') || user.roles?.includes('SuperAdmin');
+    const isAdminView = admin === 'true' && isAdmin;
+    
+    const data = await this.incomingApplicationService.getApplicationsForProcess(processId, type, user.id, user, isAdminView, status);
     return { success: true, data };
   }
 
@@ -41,48 +61,7 @@ export class IncomingApplicationController {
     @Param('applicantProcessId') applicantProcessId: string,
     @GetUser() user: AuthenticatedUser,
   ) {
-    const data = await this.incomingApplicationService.getSingleApplicantProcess(applicantProcessId, user.id, user);
-    return { success: true, data };
-  }
-
-  @Get('completed')
-  @ApiOperation({ summary: 'Get all completed applications for the current user' })
-  @ApiResponse({ status: 200, description: 'List of completed applications.' })
-  async getCompletedApplications(@GetUser() user: AuthenticatedUser) {
-    const data = await this.incomingApplicationService.getCompletedApplications(user.id, user);
-    return { success: true, data };
-  }
-
-  @Get('completed/process/:processId')
-  @ApiOperation({ summary: 'Get completed forms for a specific process' })
-  @ApiParam({ name: 'processId', description: 'ID of the process' })
-  @ApiResponse({ status: 200, description: 'List of completed forms for the process.' })
-  async getCompletedFormsForProcess(
-    @Param('processId') processId: string,
-    @GetUser() user: AuthenticatedUser,
-  ) {
-    const data = await this.incomingApplicationService.getCompletedFormsForProcess(processId, user.id, user);
-    return { success: true, data };
-  }
-
-  @Get('completed/single/:applicantProcessId')
-  @ApiOperation({ summary: 'Get a single completed applicant process by ID' })
-  @ApiParam({ name: 'applicantProcessId', description: 'ID of the applicant process' })
-  @ApiResponse({ status: 200, description: 'Single completed applicant process details.' })
-  @ApiResponse({ status: 404, description: 'Applicant process not found.' })
-  async getCompletedSingleApplicantProcess(
-    @Param('applicantProcessId') applicantProcessId: string,
-    @GetUser() user: AuthenticatedUser,
-  ) {
-    const data = await this.incomingApplicationService.getCompletedSingleApplicantProcess(applicantProcessId, user.id, user);
-    return { success: true, data };
-  }
-
-  @Get('disabled')
-  @ApiOperation({ summary: 'Get all disabled applications for the current user' })
-  @ApiResponse({ status: 200, description: 'List of disabled applications.' })
-  async getDisabledApplications(@GetUser() user: AuthenticatedUser) {
-    const data = await this.incomingApplicationService.getDisabledApplications(user.id, user);
+        const data = await this.incomingApplicationService.getSingleApplication(applicantProcessId, user.id, user);
     return { success: true, data };
   }
 }

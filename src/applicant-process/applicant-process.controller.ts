@@ -4,13 +4,15 @@ import { ApplicantProcessService } from './applicant-process.service';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { UpdateApplicantProcessDto } from './dto/update-applicant-process.dto';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
-import { ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetUser } from '../auth/decorators/get-user.decorator';
+import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 
 @ApiTags('Applicant Processes')
 @Controller('applicant-processes')
 @UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class ApplicantProcessController {
   constructor(private readonly applicantProcessService: ApplicantProcessService) {}
 
@@ -30,8 +32,12 @@ export class ApplicantProcessController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApplicantProcessDto: UpdateApplicantProcessDto) {
-    return this.applicantProcessService.update(id, updateApplicantProcessDto);
+  update(
+    @Param('id') id: string, 
+    @Body() updateApplicantProcessDto: UpdateApplicantProcessDto,
+    @GetUser() user: AuthenticatedUser
+  ) {
+    return this.applicantProcessService.update(id, updateApplicantProcessDto, user.id);
   }
 
   @Delete(':id')

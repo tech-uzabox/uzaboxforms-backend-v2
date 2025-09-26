@@ -42,7 +42,7 @@ export class FormResponseController {
     return this.formResponseService.remove(id);
   }
 
-  @Post()
+  @Post('submit')
   @UseGuards(JwtAuthGuard)
   submitResponse(@Body() submitFormResponseDto: SubmitFormResponseDto) {
     return this.formResponseService.submitResponse(
