@@ -12,7 +12,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
-      origin: ['http://localhost:5173'],
+      origin: process.env.CORS_ALLOWED_URLS?.split(',') || '*',
       credentials: true,
     },
     rawBody: true,
