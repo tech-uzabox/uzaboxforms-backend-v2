@@ -13,15 +13,18 @@ export class FormService {
 
   async create(data: CreateFormDto): Promise<Form> {
     const { name, type, status, creatorId, folderId, design } = data;
+    const createData: any = {
+      name,
+      type,
+      status,
+      creator: { connect: { id: creatorId } },
+      design,
+    };
+    if (folderId !== undefined) {
+      createData.folder = { connect: { id: folderId } };
+    }
     const newForm = await this.prisma.form.create({
-      data: {
-        name,
-        type,
-        status,
-        creator: { connect: { id: creatorId } },
-        folderId: folderId || null,
-        design,
-      } as any,
+      data: createData,
     });
     await this.auditLogService.log({
       userId: newForm.creatorId,

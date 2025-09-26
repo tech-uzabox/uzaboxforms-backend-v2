@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import {
   appendResponseMessages,
   generateText,
@@ -12,7 +12,7 @@ import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { generateUUID } from 'src/utils/generate-uuid';
 import { PrismaService } from '../db/prisma.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
-import { systemPrompt } from './prompts';
+import { systemPrompt, uzaAskAIPrompt } from './prompts';
 import { openrouter } from './providers';
 import {
   createDeleteFormTool,
@@ -102,19 +102,38 @@ export class AiService {
       }),
     ]);
 
-    const systemPromptText = systemPrompt({
-      selectedChatModel: selectedChatModel || 'chat-model',
-      roles: roles.map((r) => ({ _id: r.id, name: r.name })),
-      groups: groups.map((g) => ({ _id: g.id, name: g.name })),
-      users: users.map((u) => ({
-        _id: u.id,
-        firstName: u.firstName,
-        lastName: u.lastName,
-        email: u.email,
-      })),
-    });
+    const isAdmin = currentUser.roles.includes('Admin');
+    const isUzaAskAI = currentUser.roles.includes('Uza Ask AI');
 
-    const tools = {
+    if (!isAdmin && !isUzaAskAI) {
+      throw new ForbiddenException('Access denied. You do not have the required role to use this feature.');
+    }
+
+    const systemPromptText = isAdmin
+      ? systemPrompt({
+          selectedChatModel: selectedChatModel || 'chat-model',
+          roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+          groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+          users: users.map((u) => ({
+            _id: u.id,
+            firstName: u.firstName,
+            lastName: u.lastName,
+            email: u.email,
+          })),
+        })
+      : uzaAskAIPrompt({
+          selectedChatModel: selectedChatModel || 'chat-model',
+          roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+          groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+          users: users.map((u) => ({
+            _id: u.id,
+            firstName: u.firstName,
+            lastName: u.lastName,
+            email: u.email,
+          })),
+        });
+
+    const baseTools = {
       get_forms: createGetFormsTool(this.prisma),
       get_form_responses: createGetFormResponsesTool(this.prisma),
       get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
@@ -122,9 +141,11 @@ export class AiService {
       get_processes_with_formid: createGetProcessesWithFormIdTool(this.prisma),
       get_process_by_id: createGetProcessByIdTool(this.prisma),
       get_user_by_id: createGetUserByIdTool(this.prisma),
-
       create_chart_visualization: createChartVisualization,
+    };
 
+    const adminTools = {
+      ...baseTools,
       generate_form: createGenerateFormTool,
       save_form: createSaveFormTool(this.prisma, id),
       preview_form: createPreviewFormTool,
@@ -135,6 +156,8 @@ export class AiService {
       delete_step: createDeleteStepTool(this.prisma, id),
       create_process: createProcessTool(this.prisma, id, currentUser.id),
     };
+
+    const tools = isAdmin ? adminTools : baseTools;
 
     pipeDataStreamToResponse(response, {
       execute: async (dataStreamWriter) => {

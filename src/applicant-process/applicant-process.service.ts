@@ -252,7 +252,7 @@ export class ApplicantProcessService {
     }
 
     const formDesign = form.design as any;
-    if (!formDesign?.sections) {
+    if (!formDesign) {
       throw new BadRequestException('Form design not found or invalid');
     }
 
@@ -295,7 +295,7 @@ export class ApplicantProcessService {
       const rowNumber = i + 2; // Excel row number (1-based, plus header)
 
       try {
-        const submissionData = await this.validateAndParseRow(headers, row, formDesign.sections, rowNumber);
+        const submissionData = await this.validateAndParseRow(headers, row, formDesign, rowNumber);
         if (submissionData.errors.length > 0) {
           errors.push(...submissionData.errors);
         } else {

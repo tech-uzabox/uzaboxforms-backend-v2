@@ -41,14 +41,19 @@ export async function seedRoles() {
         description: 'Authorizes verification of all QR code-generated documents across the system.',
         status: 'ENABLED' as const,
       },
+      {
+        name: 'Uza Ask AI',
+        description: 'Allows access to the Uza Ask AI to get analytics and insights on the platform.',
+        status: 'ENABLED' as const,
+      },
     ];
 
     // Check and seed roles
     for (const role of roles) {
-      const existingRole = await prisma.role.findFirst({ 
-        where: { name: role.name } 
+      const existingRole = await prisma.role.findFirst({
+        where: { name: role.name }
       });
-      
+
       if (!existingRole) {
         await prisma.role.create({
           data: role,
