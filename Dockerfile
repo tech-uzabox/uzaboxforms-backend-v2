@@ -21,7 +21,9 @@ RUN pnpm run build
 RUN pnpm prune --prod
 
 # ---- Production Stage (Distroless) ----
-FROM cgr.dev/chainguard/node:latest
+# FROM cgr.dev/chainguard/node:latest
+FROM node:lts-slim
+
 
 WORKDIR /app
 
