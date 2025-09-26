@@ -75,7 +75,7 @@ export class FileService {
   ): Promise<Readable> {
     try {
       const command = new GetObjectCommand({
-        Bucket: this.bucketName,
+        Bucket: folder,
         Key: key,
       });
 
@@ -183,7 +183,7 @@ export class FileService {
       // Upload original file
       await this.s3Client.send(
         new PutObjectCommand({
-          Bucket: this.bucketName,
+          Bucket: bucket,
           Key: fileKey,
           Body: Buffer.from(file.buffer),
           ContentType: file.mimetype,
@@ -233,7 +233,7 @@ export class FileService {
 
     await this.s3Client.send(
       new PutObjectCommand({
-        Bucket: this.bucketName,
+        Bucket: bucket,
         Key: key,
         Body: Buffer.from(file.buffer),
         ContentType: file.mimetype,
@@ -243,7 +243,7 @@ export class FileService {
     return key;
   }
   async uploadImagePublic(file: Express.Multer.File): Promise<string> {
-    const { fileKey } = await this.uploadFile(file, this.bucketName);
+    const { fileKey } = await this.uploadFile(file, 'public');
     return `${this.publicUrlBase}/${fileKey}`;
   }
 
