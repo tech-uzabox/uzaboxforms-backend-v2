@@ -49,4 +49,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/tech-uzabox/backend:latest
+          tags: ghcr.io/tech-uzabox/backendv2:latest
