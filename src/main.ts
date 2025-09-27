@@ -1,4 +1,5 @@
-import 'dotenv/config';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import morgan from 'morgan';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
