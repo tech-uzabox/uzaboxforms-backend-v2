@@ -25,7 +25,7 @@ RUN pnpm prune --prod
 # FROM cgr.dev/chainguard/node:latest
 FROM node:lts-slim
 
-
+RUN apt-get update -y && apt-get install -y openssl
 WORKDIR /app
 
 # Copy built JS and production-only node_modules
