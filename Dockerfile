@@ -37,8 +37,9 @@ ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# COPY entrypoint.sh .
+# RUN chmod +x entrypoint.sh
 
-CMD ["./entrypoint.sh"]
+CMD npx prisma migrate deploy && node -r tsconfig-paths/register dist/src/main.js
+
 
