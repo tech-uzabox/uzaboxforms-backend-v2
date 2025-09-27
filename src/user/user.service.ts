@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Prisma, User } from 'db';
+import { User } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 
@@ -87,9 +87,9 @@ export class UserService {
     });
 
     // Hoist roles to return just Role[] instead of {role: Role}[]
-    return users.map(user => ({
+    return users.map((user) => ({
       ...user,
-      roles: user.roles.map(roleRelation => roleRelation.role),
+      roles: user.roles.map((roleRelation) => roleRelation.role),
     })) as any;
   }
 
@@ -106,10 +106,12 @@ export class UserService {
     });
 
     // Hoist roles to return just Role[] instead of {role: Role}[]
-    return user ? ({
-      ...user,
-      roles: user.roles.map(roleRelation => roleRelation.role),
-    } as any) : null;
+    return user
+      ? ({
+          ...user,
+          roles: user.roles.map((roleRelation) => roleRelation.role),
+        } as any)
+      : null;
   }
 
   async findByEmail(email: string): Promise<User | null> {

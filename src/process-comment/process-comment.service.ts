@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, ProcessComment } from 'db';
+import { Prisma, ProcessComment } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateProcessCommentDto } from './dto/create-process-comment.dto';
@@ -130,15 +130,17 @@ export class ProcessCommentService {
           userId: comment.userId,
           comment: comment.comment,
           createdAt: comment.createdAt,
-          user: user ? {
-            firstName: user.firstName,
-            lastName: user.lastName,
-          } : {
-            firstName: 'Unknown',
-            lastName: 'User',
-          },
+          user: user
+            ? {
+                firstName: user.firstName,
+                lastName: user.lastName,
+              }
+            : {
+                firstName: 'Unknown',
+                lastName: 'User',
+              },
         };
-      })
+      }),
     );
 
     return commentsWithUsers;

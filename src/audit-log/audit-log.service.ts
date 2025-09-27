@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
-import { AuditLog, Prisma } from 'db';
+import { AuditLog, Prisma } from 'db/client';
 
 import { PrismaService } from '../db/prisma.service';
 import { AuditLogQueryDto } from './dto/audit-log-query.dto';

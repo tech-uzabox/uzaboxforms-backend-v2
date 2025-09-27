@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FormResponse, Prisma } from 'db';
+import { FormResponse, Prisma } from 'db/client';
 import { PrismaService } from '../db/prisma.service';
 import { CreateFormResponseDto } from './dto/create-form-response.dto';
 

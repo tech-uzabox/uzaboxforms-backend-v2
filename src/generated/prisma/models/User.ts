@@ -7,7 +7,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums.js"
 import type * as Prisma from "../internal/prismaNamespace.js"
 
@@ -27,18 +27,39 @@ export type UserMinAggregateOutputType = {
   id: string | null
   email: string | null
   password: string | null
+  firstName: string | null
+  lastName: string | null
+  photo: string | null
+  googleId: string | null
+  status: $Enums.UserStatus | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
   email: string | null
   password: string | null
+  firstName: string | null
+  lastName: string | null
+  photo: string | null
+  googleId: string | null
+  status: $Enums.UserStatus | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
   email: number
   password: number
+  firstName: number
+  lastName: number
+  photo: number
+  googleId: number
+  status: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -47,18 +68,39 @@ export type UserMinAggregateInputType = {
   id?: true
   email?: true
   password?: true
+  firstName?: true
+  lastName?: true
+  photo?: true
+  googleId?: true
+  status?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
   email?: true
   password?: true
+  firstName?: true
+  lastName?: true
+  photo?: true
+  googleId?: true
+  status?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
   email?: true
   password?: true
+  firstName?: true
+  lastName?: true
+  photo?: true
+  googleId?: true
+  status?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -138,6 +180,13 @@ export type UserGroupByOutputType = {
   id: string
   email: string
   password: string
+  firstName: string | null
+  lastName: string | null
+  photo: string | null
+  googleId: string | null
+  status: $Enums.UserStatus
+  createdAt: Date
+  updatedAt: Date
   _count: UserCountAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
@@ -165,34 +214,92 @@ export type UserWhereInput = {
   id?: Prisma.UuidFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
-  files?: Prisma.FileListRelationFilter
+  firstName?: Prisma.StringNullableFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableFilter<"User"> | string | null
+  photo?: Prisma.StringNullableFilter<"User"> | string | null
+  googleId?: Prisma.StringNullableFilter<"User"> | string | null
+  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  files?: Prisma.FileListRelationFilter
+  createdForms?: Prisma.FormListRelationFilter
+  createdFolders?: Prisma.FolderListRelationFilter
+  createdGroups?: Prisma.GroupListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationUserNullableScalarRelationFilter, Prisma.OrganizationUserWhereInput> | null
+  createdProcesses?: Prisma.ProcessListRelationFilter
+  processedApplications?: Prisma.ProcessedApplicationListRelationFilter
+  qrCodeDocuments?: Prisma.QrCodeDocumentListRelationFilter
+  roles?: Prisma.UserRoleListRelationFilter
+  ownedDashboards?: Prisma.DashboardListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
-  files?: Prisma.FileOrderByRelationAggregateInput
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  photo?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  applicantProcesses?: Prisma.ApplicantProcessOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  files?: Prisma.FileOrderByRelationAggregateInput
+  createdForms?: Prisma.FormOrderByRelationAggregateInput
+  createdFolders?: Prisma.FolderOrderByRelationAggregateInput
+  createdGroups?: Prisma.GroupOrderByRelationAggregateInput
+  organization?: Prisma.OrganizationUserOrderByWithRelationInput
+  createdProcesses?: Prisma.ProcessOrderByRelationAggregateInput
+  processedApplications?: Prisma.ProcessedApplicationOrderByRelationAggregateInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentOrderByRelationAggregateInput
+  roles?: Prisma.UserRoleOrderByRelationAggregateInput
+  ownedDashboards?: Prisma.DashboardOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  googleId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   password?: Prisma.StringFilter<"User"> | string
-  files?: Prisma.FileListRelationFilter
+  firstName?: Prisma.StringNullableFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableFilter<"User"> | string | null
+  photo?: Prisma.StringNullableFilter<"User"> | string | null
+  status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "email">
+  files?: Prisma.FileListRelationFilter
+  createdForms?: Prisma.FormListRelationFilter
+  createdFolders?: Prisma.FolderListRelationFilter
+  createdGroups?: Prisma.GroupListRelationFilter
+  organization?: Prisma.XOR<Prisma.OrganizationUserNullableScalarRelationFilter, Prisma.OrganizationUserWhereInput> | null
+  createdProcesses?: Prisma.ProcessListRelationFilter
+  processedApplications?: Prisma.ProcessedApplicationListRelationFilter
+  qrCodeDocuments?: Prisma.QrCodeDocumentListRelationFilter
+  roles?: Prisma.UserRoleListRelationFilter
+  ownedDashboards?: Prisma.DashboardListRelationFilter
+}, "id" | "email" | "googleId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  firstName?: Prisma.SortOrderInput | Prisma.SortOrder
+  lastName?: Prisma.SortOrderInput | Prisma.SortOrder
+  photo?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
@@ -205,56 +312,152 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
+  firstName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  lastName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  photo?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
   id?: string
   email: string
   password: string
-  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
   email: string
   password: string
-  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
-  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
   email: string
   password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserOrderByRelevanceInput = {
@@ -267,18 +470,39 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  photo?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  photo?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
+  firstName?: Prisma.SortOrder
+  lastName?: Prisma.SortOrder
+  photo?: Prisma.SortOrder
+  googleId?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -293,6 +517,32 @@ export type UserNullableScalarRelationFilter = {
 
 export type StringFieldUpdateOperationsInput = {
   set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type EnumUserStatusFieldUpdateOperationsInput = {
+  set?: $Enums.UserStatus
+}
+
+export type DateTimeFieldUpdateOperationsInput = {
+  set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutRolesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRolesInput, Prisma.UserUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRolesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRolesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRolesInput, Prisma.UserUncheckedCreateWithoutRolesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRolesInput
+  upsert?: Prisma.UserUpsertWithoutRolesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRolesInput, Prisma.UserUpdateWithoutRolesInput>, Prisma.UserUncheckedUpdateWithoutRolesInput>
 }
 
 export type UserCreateNestedOneWithoutFilesInput = {
@@ -325,18 +575,290 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.UserUpdateWithoutAuditLogsInput>, Prisma.UserUncheckedUpdateWithoutAuditLogsInput>
 }
 
+export type UserCreateNestedOneWithoutCreatedGroupsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedGroupsInput, Prisma.UserUncheckedCreateWithoutCreatedGroupsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedGroupsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedGroupsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedGroupsInput, Prisma.UserUncheckedCreateWithoutCreatedGroupsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedGroupsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedGroupsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedGroupsInput, Prisma.UserUpdateWithoutCreatedGroupsInput>, Prisma.UserUncheckedUpdateWithoutCreatedGroupsInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedProcessesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessesInput, Prisma.UserUncheckedCreateWithoutCreatedProcessesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedProcessesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedProcessesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessesInput, Prisma.UserUncheckedCreateWithoutCreatedProcessesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedProcessesInput
+  upsert?: Prisma.UserUpsertWithoutCreatedProcessesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedProcessesInput, Prisma.UserUpdateWithoutCreatedProcessesInput>, Prisma.UserUncheckedUpdateWithoutCreatedProcessesInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedFoldersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedFoldersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedFoldersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedFoldersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedFoldersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedFoldersInput
+  upsert?: Prisma.UserUpsertWithoutCreatedFoldersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedFoldersInput, Prisma.UserUpdateWithoutCreatedFoldersInput>, Prisma.UserUncheckedUpdateWithoutCreatedFoldersInput>
+}
+
+export type UserCreateNestedOneWithoutCreatedFormsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedFormsInput, Prisma.UserUncheckedCreateWithoutCreatedFormsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedFormsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedFormsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedFormsInput, Prisma.UserUncheckedCreateWithoutCreatedFormsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedFormsInput
+  upsert?: Prisma.UserUpsertWithoutCreatedFormsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedFormsInput, Prisma.UserUpdateWithoutCreatedFormsInput>, Prisma.UserUncheckedUpdateWithoutCreatedFormsInput>
+}
+
+export type UserCreateNestedOneWithoutApplicantProcessesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApplicantProcessesInput, Prisma.UserUncheckedCreateWithoutApplicantProcessesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApplicantProcessesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutApplicantProcessesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutApplicantProcessesInput, Prisma.UserUncheckedCreateWithoutApplicantProcessesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutApplicantProcessesInput
+  upsert?: Prisma.UserUpsertWithoutApplicantProcessesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutApplicantProcessesInput, Prisma.UserUpdateWithoutApplicantProcessesInput>, Prisma.UserUncheckedUpdateWithoutApplicantProcessesInput>
+}
+
+export type UserCreateNestedOneWithoutProcessedApplicationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProcessedApplicationsInput, Prisma.UserUncheckedCreateWithoutProcessedApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProcessedApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProcessedApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProcessedApplicationsInput, Prisma.UserUncheckedCreateWithoutProcessedApplicationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProcessedApplicationsInput
+  upsert?: Prisma.UserUpsertWithoutProcessedApplicationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProcessedApplicationsInput, Prisma.UserUpdateWithoutProcessedApplicationsInput>, Prisma.UserUncheckedUpdateWithoutProcessedApplicationsInput>
+}
+
+export type UserCreateNestedOneWithoutOrganizationInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOrganizationInput, Prisma.UserUncheckedCreateWithoutOrganizationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrganizationInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOrganizationNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOrganizationInput, Prisma.UserUncheckedCreateWithoutOrganizationInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOrganizationInput
+  upsert?: Prisma.UserUpsertWithoutOrganizationInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrganizationInput, Prisma.UserUpdateWithoutOrganizationInput>, Prisma.UserUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type UserCreateNestedOneWithoutOwnedDashboardsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedDashboardsInput, Prisma.UserUncheckedCreateWithoutOwnedDashboardsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedDashboardsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutOwnedDashboardsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutOwnedDashboardsInput, Prisma.UserUncheckedCreateWithoutOwnedDashboardsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutOwnedDashboardsInput
+  upsert?: Prisma.UserUpsertWithoutOwnedDashboardsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOwnedDashboardsInput, Prisma.UserUpdateWithoutOwnedDashboardsInput>, Prisma.UserUncheckedUpdateWithoutOwnedDashboardsInput>
+}
+
+export type UserCreateNestedOneWithoutQrCodeDocumentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQrCodeDocumentsInput, Prisma.UserUncheckedCreateWithoutQrCodeDocumentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQrCodeDocumentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutQrCodeDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutQrCodeDocumentsInput, Prisma.UserUncheckedCreateWithoutQrCodeDocumentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutQrCodeDocumentsInput
+  upsert?: Prisma.UserUpsertWithoutQrCodeDocumentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutQrCodeDocumentsInput, Prisma.UserUpdateWithoutQrCodeDocumentsInput>, Prisma.UserUncheckedUpdateWithoutQrCodeDocumentsInput>
+}
+
+export type UserCreateWithoutRolesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutRolesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutRolesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRolesInput, Prisma.UserUncheckedCreateWithoutRolesInput>
+}
+
+export type UserUpsertWithoutRolesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRolesInput, Prisma.UserUncheckedUpdateWithoutRolesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRolesInput, Prisma.UserUncheckedCreateWithoutRolesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRolesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRolesInput, Prisma.UserUncheckedUpdateWithoutRolesInput>
+}
+
+export type UserUpdateWithoutRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRolesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
 export type UserCreateWithoutFilesInput = {
   id?: string
   email: string
   password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutFilesInput = {
   id?: string
   email: string
   password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutFilesInput = {
@@ -359,28 +881,96 @@ export type UserUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFilesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
   id?: string
   email: string
   password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
   id?: string
   email: string
   password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -403,14 +993,1056 @@ export type UserUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutCreatedGroupsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutCreatedGroupsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutCreatedGroupsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedGroupsInput, Prisma.UserUncheckedCreateWithoutCreatedGroupsInput>
+}
+
+export type UserUpsertWithoutCreatedGroupsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedGroupsInput, Prisma.UserUncheckedUpdateWithoutCreatedGroupsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedGroupsInput, Prisma.UserUncheckedCreateWithoutCreatedGroupsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedGroupsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedGroupsInput, Prisma.UserUncheckedUpdateWithoutCreatedGroupsInput>
+}
+
+export type UserUpdateWithoutCreatedGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutCreatedProcessesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutCreatedProcessesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutCreatedProcessesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessesInput, Prisma.UserUncheckedCreateWithoutCreatedProcessesInput>
+}
+
+export type UserUpsertWithoutCreatedProcessesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedProcessesInput, Prisma.UserUncheckedUpdateWithoutCreatedProcessesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessesInput, Prisma.UserUncheckedCreateWithoutCreatedProcessesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedProcessesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedProcessesInput, Prisma.UserUncheckedUpdateWithoutCreatedProcessesInput>
+}
+
+export type UserUpdateWithoutCreatedProcessesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutCreatedFoldersInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutCreatedFoldersInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutCreatedFoldersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedFoldersInput>
+}
+
+export type UserUpsertWithoutCreatedFoldersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedFoldersInput, Prisma.UserUncheckedUpdateWithoutCreatedFoldersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedFoldersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedFoldersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedFoldersInput, Prisma.UserUncheckedUpdateWithoutCreatedFoldersInput>
+}
+
+export type UserUpdateWithoutCreatedFoldersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedFoldersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutCreatedFormsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutCreatedFormsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutCreatedFormsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedFormsInput, Prisma.UserUncheckedCreateWithoutCreatedFormsInput>
+}
+
+export type UserUpsertWithoutCreatedFormsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedFormsInput, Prisma.UserUncheckedUpdateWithoutCreatedFormsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedFormsInput, Prisma.UserUncheckedCreateWithoutCreatedFormsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedFormsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedFormsInput, Prisma.UserUncheckedUpdateWithoutCreatedFormsInput>
+}
+
+export type UserUpdateWithoutCreatedFormsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedFormsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutApplicantProcessesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutApplicantProcessesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutApplicantProcessesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutApplicantProcessesInput, Prisma.UserUncheckedCreateWithoutApplicantProcessesInput>
+}
+
+export type UserUpsertWithoutApplicantProcessesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutApplicantProcessesInput, Prisma.UserUncheckedUpdateWithoutApplicantProcessesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutApplicantProcessesInput, Prisma.UserUncheckedCreateWithoutApplicantProcessesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutApplicantProcessesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutApplicantProcessesInput, Prisma.UserUncheckedUpdateWithoutApplicantProcessesInput>
+}
+
+export type UserUpdateWithoutApplicantProcessesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutProcessedApplicationsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutProcessedApplicationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProcessedApplicationsInput, Prisma.UserUncheckedCreateWithoutProcessedApplicationsInput>
+}
+
+export type UserUpsertWithoutProcessedApplicationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProcessedApplicationsInput, Prisma.UserUncheckedUpdateWithoutProcessedApplicationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProcessedApplicationsInput, Prisma.UserUncheckedCreateWithoutProcessedApplicationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProcessedApplicationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProcessedApplicationsInput, Prisma.UserUncheckedUpdateWithoutProcessedApplicationsInput>
+}
+
+export type UserUpdateWithoutProcessedApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutOrganizationInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutOrganizationInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutOrganizationInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOrganizationInput, Prisma.UserUncheckedCreateWithoutOrganizationInput>
+}
+
+export type UserUpsertWithoutOrganizationInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOrganizationInput, Prisma.UserUncheckedUpdateWithoutOrganizationInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOrganizationInput, Prisma.UserUncheckedCreateWithoutOrganizationInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOrganizationInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOrganizationInput, Prisma.UserUncheckedUpdateWithoutOrganizationInput>
+}
+
+export type UserUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOrganizationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserCreateWithoutOwnedDashboardsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutOwnedDashboardsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutOwnedDashboardsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedDashboardsInput, Prisma.UserUncheckedCreateWithoutOwnedDashboardsInput>
+}
+
+export type UserUpsertWithoutOwnedDashboardsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutOwnedDashboardsInput, Prisma.UserUncheckedUpdateWithoutOwnedDashboardsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutOwnedDashboardsInput, Prisma.UserUncheckedCreateWithoutOwnedDashboardsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutOwnedDashboardsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutOwnedDashboardsInput, Prisma.UserUncheckedUpdateWithoutOwnedDashboardsInput>
+}
+
+export type UserUpdateWithoutOwnedDashboardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutOwnedDashboardsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutQrCodeDocumentsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+}
+
+export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutQrCodeDocumentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutQrCodeDocumentsInput, Prisma.UserUncheckedCreateWithoutQrCodeDocumentsInput>
+}
+
+export type UserUpsertWithoutQrCodeDocumentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutQrCodeDocumentsInput, Prisma.UserUncheckedUpdateWithoutQrCodeDocumentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutQrCodeDocumentsInput, Prisma.UserUncheckedCreateWithoutQrCodeDocumentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutQrCodeDocumentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutQrCodeDocumentsInput, Prisma.UserUncheckedUpdateWithoutQrCodeDocumentsInput>
+}
+
+export type UserUpdateWithoutQrCodeDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 
@@ -419,13 +2051,31 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
  */
 
 export type UserCountOutputType = {
-  files: number
+  applicantProcesses: number
   auditLogs: number
+  files: number
+  createdForms: number
+  createdFolders: number
+  createdGroups: number
+  createdProcesses: number
+  processedApplications: number
+  qrCodeDocuments: number
+  roles: number
+  ownedDashboards: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  files?: boolean | UserCountOutputTypeCountFilesArgs
+  applicantProcesses?: boolean | UserCountOutputTypeCountApplicantProcessesArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  files?: boolean | UserCountOutputTypeCountFilesArgs
+  createdForms?: boolean | UserCountOutputTypeCountCreatedFormsArgs
+  createdFolders?: boolean | UserCountOutputTypeCountCreatedFoldersArgs
+  createdGroups?: boolean | UserCountOutputTypeCountCreatedGroupsArgs
+  createdProcesses?: boolean | UserCountOutputTypeCountCreatedProcessesArgs
+  processedApplications?: boolean | UserCountOutputTypeCountProcessedApplicationsArgs
+  qrCodeDocuments?: boolean | UserCountOutputTypeCountQrCodeDocumentsArgs
+  roles?: boolean | UserCountOutputTypeCountRolesArgs
+  ownedDashboards?: boolean | UserCountOutputTypeCountOwnedDashboardsArgs
 }
 
 /**
@@ -441,8 +2091,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.FileWhereInput
+export type UserCountOutputTypeCountApplicantProcessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ApplicantProcessWhereInput
 }
 
 /**
@@ -452,13 +2102,93 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FileWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedFormsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FormWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedFoldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FolderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GroupWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedProcessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProcessWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProcessedApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProcessedApplicationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountQrCodeDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.QrCodeDocumentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserRoleWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountOwnedDashboardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DashboardWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
   password?: boolean
-  files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  firstName?: boolean
+  lastName?: boolean
+  photo?: boolean
+  googleId?: boolean
+  status?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
+  applicantProcesses?: boolean | Prisma.User$applicantProcessesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  createdForms?: boolean | Prisma.User$createdFormsArgs<ExtArgs>
+  createdFolders?: boolean | Prisma.User$createdFoldersArgs<ExtArgs>
+  createdGroups?: boolean | Prisma.User$createdGroupsArgs<ExtArgs>
+  organization?: boolean | Prisma.User$organizationArgs<ExtArgs>
+  createdProcesses?: boolean | Prisma.User$createdProcessesArgs<ExtArgs>
+  processedApplications?: boolean | Prisma.User$processedApplicationsArgs<ExtArgs>
+  qrCodeDocuments?: boolean | Prisma.User$qrCodeDocumentsArgs<ExtArgs>
+  roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
+  ownedDashboards?: boolean | Prisma.User$ownedDashboardsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -466,24 +2196,55 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   email?: boolean
   password?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  photo?: boolean
+  googleId?: boolean
+  status?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
   password?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  photo?: boolean
+  googleId?: boolean
+  status?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
   email?: boolean
   password?: boolean
+  firstName?: boolean
+  lastName?: boolean
+  photo?: boolean
+  googleId?: boolean
+  status?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "photo" | "googleId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  applicantProcesses?: boolean | Prisma.User$applicantProcessesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  files?: boolean | Prisma.User$filesArgs<ExtArgs>
+  createdForms?: boolean | Prisma.User$createdFormsArgs<ExtArgs>
+  createdFolders?: boolean | Prisma.User$createdFoldersArgs<ExtArgs>
+  createdGroups?: boolean | Prisma.User$createdGroupsArgs<ExtArgs>
+  organization?: boolean | Prisma.User$organizationArgs<ExtArgs>
+  createdProcesses?: boolean | Prisma.User$createdProcessesArgs<ExtArgs>
+  processedApplications?: boolean | Prisma.User$processedApplicationsArgs<ExtArgs>
+  qrCodeDocuments?: boolean | Prisma.User$qrCodeDocumentsArgs<ExtArgs>
+  roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
+  ownedDashboards?: boolean | Prisma.User$ownedDashboardsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -492,13 +2253,30 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    files: Prisma.$FilePayload<ExtArgs>[]
+    applicantProcesses: Prisma.$ApplicantProcessPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    files: Prisma.$FilePayload<ExtArgs>[]
+    createdForms: Prisma.$FormPayload<ExtArgs>[]
+    createdFolders: Prisma.$FolderPayload<ExtArgs>[]
+    createdGroups: Prisma.$GroupPayload<ExtArgs>[]
+    organization: Prisma.$OrganizationUserPayload<ExtArgs> | null
+    createdProcesses: Prisma.$ProcessPayload<ExtArgs>[]
+    processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
+    qrCodeDocuments: Prisma.$QrCodeDocumentPayload<ExtArgs>[]
+    roles: Prisma.$UserRolePayload<ExtArgs>[]
+    ownedDashboards: Prisma.$DashboardPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
     password: string
+    firstName: string | null
+    lastName: string | null
+    photo: string | null
+    googleId: string | null
+    status: $Enums.UserStatus
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -893,8 +2671,18 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  files<T extends Prisma.User$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  applicantProcesses<T extends Prisma.User$applicantProcessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$applicantProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicantProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  files<T extends Prisma.User$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdForms<T extends Prisma.User$createdFormsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdFormsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdFolders<T extends Prisma.User$createdFoldersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdFoldersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdGroups<T extends Prisma.User$createdGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  organization<T extends Prisma.User$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationUserClient<runtime.Types.Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  createdProcesses<T extends Prisma.User$createdProcessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  processedApplications<T extends Prisma.User$processedApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  qrCodeDocuments<T extends Prisma.User$qrCodeDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$qrCodeDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QrCodeDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  roles<T extends Prisma.User$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  ownedDashboards<T extends Prisma.User$ownedDashboardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedDashboardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DashboardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -927,6 +2715,13 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly password: Prisma.FieldRef<"User", 'String'>
+  readonly firstName: Prisma.FieldRef<"User", 'String'>
+  readonly lastName: Prisma.FieldRef<"User", 'String'>
+  readonly photo: Prisma.FieldRef<"User", 'String'>
+  readonly googleId: Prisma.FieldRef<"User", 'String'>
+  readonly status: Prisma.FieldRef<"User", 'UserStatus'>
+  readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
@@ -1324,27 +3119,27 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.files
+ * User.applicantProcesses
  */
-export type User$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$applicantProcessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the File
+   * Select specific fields to fetch from the ApplicantProcess
    */
-  select?: Prisma.FileSelect<ExtArgs> | null
+  select?: Prisma.ApplicantProcessSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the File
+   * Omit specific fields from the ApplicantProcess
    */
-  omit?: Prisma.FileOmit<ExtArgs> | null
+  omit?: Prisma.ApplicantProcessOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.FileInclude<ExtArgs> | null
-  where?: Prisma.FileWhereInput
-  orderBy?: Prisma.FileOrderByWithRelationInput | Prisma.FileOrderByWithRelationInput[]
-  cursor?: Prisma.FileWhereUniqueInput
+  include?: Prisma.ApplicantProcessInclude<ExtArgs> | null
+  where?: Prisma.ApplicantProcessWhereInput
+  orderBy?: Prisma.ApplicantProcessOrderByWithRelationInput | Prisma.ApplicantProcessOrderByWithRelationInput[]
+  cursor?: Prisma.ApplicantProcessWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.FileScalarFieldEnum | Prisma.FileScalarFieldEnum[]
+  distinct?: Prisma.ApplicantProcessScalarFieldEnum | Prisma.ApplicantProcessScalarFieldEnum[]
 }
 
 /**
@@ -1369,6 +3164,241 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.files
+ */
+export type User$filesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the File
+   */
+  select?: Prisma.FileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the File
+   */
+  omit?: Prisma.FileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FileInclude<ExtArgs> | null
+  where?: Prisma.FileWhereInput
+  orderBy?: Prisma.FileOrderByWithRelationInput | Prisma.FileOrderByWithRelationInput[]
+  cursor?: Prisma.FileWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FileScalarFieldEnum | Prisma.FileScalarFieldEnum[]
+}
+
+/**
+ * User.createdForms
+ */
+export type User$createdFormsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Form
+   */
+  select?: Prisma.FormSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Form
+   */
+  omit?: Prisma.FormOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FormInclude<ExtArgs> | null
+  where?: Prisma.FormWhereInput
+  orderBy?: Prisma.FormOrderByWithRelationInput | Prisma.FormOrderByWithRelationInput[]
+  cursor?: Prisma.FormWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FormScalarFieldEnum | Prisma.FormScalarFieldEnum[]
+}
+
+/**
+ * User.createdFolders
+ */
+export type User$createdFoldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Folder
+   */
+  select?: Prisma.FolderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Folder
+   */
+  omit?: Prisma.FolderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FolderInclude<ExtArgs> | null
+  where?: Prisma.FolderWhereInput
+  orderBy?: Prisma.FolderOrderByWithRelationInput | Prisma.FolderOrderByWithRelationInput[]
+  cursor?: Prisma.FolderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FolderScalarFieldEnum | Prisma.FolderScalarFieldEnum[]
+}
+
+/**
+ * User.createdGroups
+ */
+export type User$createdGroupsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Group
+   */
+  select?: Prisma.GroupSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Group
+   */
+  omit?: Prisma.GroupOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GroupInclude<ExtArgs> | null
+  where?: Prisma.GroupWhereInput
+  orderBy?: Prisma.GroupOrderByWithRelationInput | Prisma.GroupOrderByWithRelationInput[]
+  cursor?: Prisma.GroupWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GroupScalarFieldEnum | Prisma.GroupScalarFieldEnum[]
+}
+
+/**
+ * User.organization
+ */
+export type User$organizationArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrganizationUser
+   */
+  select?: Prisma.OrganizationUserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrganizationUser
+   */
+  omit?: Prisma.OrganizationUserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrganizationUserInclude<ExtArgs> | null
+  where?: Prisma.OrganizationUserWhereInput
+}
+
+/**
+ * User.createdProcesses
+ */
+export type User$createdProcessesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Process
+   */
+  select?: Prisma.ProcessSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Process
+   */
+  omit?: Prisma.ProcessOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProcessInclude<ExtArgs> | null
+  where?: Prisma.ProcessWhereInput
+  orderBy?: Prisma.ProcessOrderByWithRelationInput | Prisma.ProcessOrderByWithRelationInput[]
+  cursor?: Prisma.ProcessWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProcessScalarFieldEnum | Prisma.ProcessScalarFieldEnum[]
+}
+
+/**
+ * User.processedApplications
+ */
+export type User$processedApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProcessedApplication
+   */
+  select?: Prisma.ProcessedApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProcessedApplication
+   */
+  omit?: Prisma.ProcessedApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProcessedApplicationInclude<ExtArgs> | null
+  where?: Prisma.ProcessedApplicationWhereInput
+  orderBy?: Prisma.ProcessedApplicationOrderByWithRelationInput | Prisma.ProcessedApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.ProcessedApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProcessedApplicationScalarFieldEnum | Prisma.ProcessedApplicationScalarFieldEnum[]
+}
+
+/**
+ * User.qrCodeDocuments
+ */
+export type User$qrCodeDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the QrCodeDocument
+   */
+  select?: Prisma.QrCodeDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the QrCodeDocument
+   */
+  omit?: Prisma.QrCodeDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.QrCodeDocumentInclude<ExtArgs> | null
+  where?: Prisma.QrCodeDocumentWhereInput
+  orderBy?: Prisma.QrCodeDocumentOrderByWithRelationInput | Prisma.QrCodeDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.QrCodeDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.QrCodeDocumentScalarFieldEnum | Prisma.QrCodeDocumentScalarFieldEnum[]
+}
+
+/**
+ * User.roles
+ */
+export type User$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserRole
+   */
+  select?: Prisma.UserRoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserRole
+   */
+  omit?: Prisma.UserRoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserRoleInclude<ExtArgs> | null
+  where?: Prisma.UserRoleWhereInput
+  orderBy?: Prisma.UserRoleOrderByWithRelationInput | Prisma.UserRoleOrderByWithRelationInput[]
+  cursor?: Prisma.UserRoleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserRoleScalarFieldEnum | Prisma.UserRoleScalarFieldEnum[]
+}
+
+/**
+ * User.ownedDashboards
+ */
+export type User$ownedDashboardsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Dashboard
+   */
+  select?: Prisma.DashboardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Dashboard
+   */
+  omit?: Prisma.DashboardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DashboardInclude<ExtArgs> | null
+  where?: Prisma.DashboardWhereInput
+  orderBy?: Prisma.DashboardOrderByWithRelationInput | Prisma.DashboardOrderByWithRelationInput[]
+  cursor?: Prisma.DashboardWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DashboardScalarFieldEnum | Prisma.DashboardScalarFieldEnum[]
 }
 
 /**

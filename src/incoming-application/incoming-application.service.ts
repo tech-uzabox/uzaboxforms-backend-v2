@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { NextStepType, ProcessStatus } from 'db';
+import { NextStepType, ProcessStatus } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 import { PrismaService } from '../db/prisma.service';
@@ -110,7 +110,8 @@ export class IncomingApplicationService {
     for (const process of processes) {
       if (process.forms.length === 0) continue;
 
-      const statusFilter = type === 'disabled' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
+      const statusFilter =
+        type === 'disabled' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
 
       const applicantProcesses = await this.prisma.applicantProcess.findMany({
         where: { processId: process.id, status: statusFilter },
@@ -132,12 +133,18 @@ export class IncomingApplicationService {
         const currentLevel = completedForms.length;
 
         // For completed/processed: only include if all forms are completed
-        if ((type === 'completed' || type === 'processed') && currentLevel < process.forms.length) {
+        if (
+          (type === 'completed' || type === 'processed') &&
+          currentLevel < process.forms.length
+        ) {
           continue;
         }
 
         // For pending/disabled: only include if not all forms are completed
-        if ((type === 'pending' || type === 'disabled') && currentLevel >= process.forms.length) {
+        if (
+          (type === 'pending' || type === 'disabled') &&
+          currentLevel >= process.forms.length
+        ) {
           continue;
         }
 
@@ -206,9 +213,9 @@ export class IncomingApplicationService {
             groupId: process.group.id,
             processes: [
               {
-              processId: process.id,
-              name: process.name,
-              applicantProcesses: applicantProcessesForProcess,
+                processId: process.id,
+                name: process.name,
+                applicantProcesses: applicantProcessesForProcess,
               },
             ],
           });
@@ -253,8 +260,11 @@ export class IncomingApplicationService {
       };
     }
 
-    const statusFilter = type === 'disabled' || status === 'DISABLED' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
-    
+    const statusFilter =
+      type === 'disabled' || status === 'DISABLED'
+        ? ProcessStatus.DISABLED
+        : ProcessStatus.ENABLED;
+
     const applicantProcesses = await this.prisma.applicantProcess.findMany({
       where: { processId: process.id, status: statusFilter },
       include: {
@@ -275,12 +285,18 @@ export class IncomingApplicationService {
       const currentLevel = completedForms.length;
 
       // For completed/processed: only include if all forms are completed
-      if ((type === 'completed' || type === 'processed') && currentLevel < process.forms.length) {
+      if (
+        (type === 'completed' || type === 'processed') &&
+        currentLevel < process.forms.length
+      ) {
         continue;
       }
 
       // For pending/disabled: only include if not all forms are completed
-      if ((type === 'pending' || type === 'disabled') && currentLevel >= process.forms.length) {
+      if (
+        (type === 'pending' || type === 'disabled') &&
+        currentLevel >= process.forms.length
+      ) {
         continue;
       }
 
@@ -369,9 +385,9 @@ export class IncomingApplicationService {
       where: { id: applicantProcessId },
       include: {
         applicant: true,
-        process: { 
-          include: { 
-            forms: { 
+        process: {
+          include: {
+            forms: {
               orderBy: { order: 'asc' },
               include: { form: true },
             },
@@ -405,12 +421,12 @@ export class IncomingApplicationService {
       : null;
 
     const hasAccess = await this.userHasAccess(actor, {
-        reviewerId: lastCompletedForm?.reviewerId || '',
-        nextStepType: processForm?.nextStepType || NextStepType.NOT_APPLICABLE,
-        nextStaffId: processForm?.nextStaffId || '',
-        nextStepRoles: processForm?.nextStepRoles || [],
-        formId: lastCompletedForm?.formId,
-        applicantProcessId: lastCompletedForm?.applicantProcessId,
+      reviewerId: lastCompletedForm?.reviewerId || '',
+      nextStepType: processForm?.nextStepType || NextStepType.NOT_APPLICABLE,
+      nextStaffId: processForm?.nextStaffId || '',
+      nextStepRoles: processForm?.nextStepRoles || [],
+      formId: lastCompletedForm?.formId,
+      applicantProcessId: lastCompletedForm?.applicantProcessId,
     });
 
     if (!hasAccess && applicantProcess.applicantId !== userId) {
@@ -449,7 +465,7 @@ export class IncomingApplicationService {
           });
         }
 
-      return {
+        return {
           id: completedForm.formId,
           formName: processForm?.form.name || 'Unknown Form',
           order: processForm?.order || 0,

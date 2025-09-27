@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Group, Prisma } from 'db';
+import { Group } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateGroupDto } from './dto/create-group.dto';

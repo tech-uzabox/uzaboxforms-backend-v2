@@ -1,4 +1,4 @@
-import { FormStatus, FormType } from 'db';
+import { FormStatus, FormType } from 'db/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 

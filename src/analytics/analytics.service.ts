@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { FormResponse } from 'db';
+import { FormResponse } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 
@@ -39,9 +39,12 @@ export class AnalyticsService {
     `;
 
     // Format the analytics to group by year
-    const formattedAnalytics: Record<number, { month: number, count: number }[]> = {};
+    const formattedAnalytics: Record<
+      number,
+      { month: number; count: number }[]
+    > = {};
 
-    (analytics as any[]).forEach(item => {
+    (analytics as any[]).forEach((item) => {
       const year = parseInt(item.year);
       const month = parseInt(item.month);
       const count = parseInt(item.count);
@@ -132,7 +135,8 @@ export class AnalyticsService {
 
       // Find the count for this month from the aggregated data
       const monthData = (monthlyCounts as any[]).find(
-        item => parseInt(item.year) === year && parseInt(item.month) === month
+        (item) =>
+          parseInt(item.year) === year && parseInt(item.month) === month,
       );
 
       results.push({

@@ -1,8 +1,12 @@
-import { Form, Prisma } from 'db';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import { Form, Prisma } from 'db/client';
+import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateFormDto } from './dto/create-form.dto';
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import { AuditLogService } from '../audit-log/audit-log.service';
 
 @Injectable()
 export class FormService {
@@ -43,7 +47,7 @@ export class FormService {
       include: { creator: true },
     });
 
-    return forms
+    return forms;
   }
 
   async findOne(id: string): Promise<Form | null> {
@@ -123,16 +127,18 @@ export class FormService {
       include: { creator: true },
     });
 
-    return publicForms.map(form => {
+    return publicForms.map((form) => {
       const formDesign = form.design ? true : false;
       return {
         id: form.id,
         name: form.name,
         status: form.status,
-        createdBy: form.creator ? {
-          firstName: form.creator.firstName,
-          lastName: form.creator.lastName,
-        } : null,
+        createdBy: form.creator
+          ? {
+              firstName: form.creator.firstName,
+              lastName: form.creator.lastName,
+            }
+          : null,
         formCreated: formDesign,
         createdAt: form.createdAt,
         updatedAt: form.updatedAt,
@@ -150,7 +156,10 @@ export class FormService {
         },
       });
 
-      const resultMap = new Map<string, { formId: string; countryFields: { id: string; label: string }[] }>();
+      const resultMap = new Map<
+        string,
+        { formId: string; countryFields: { id: string; label: string }[] }
+      >();
 
       for (const form of forms) {
         const formId = form.id;
@@ -162,8 +171,11 @@ export class FormService {
             for (const section of design) {
               if (Array.isArray(section?.questions)) {
                 for (const question of section.questions) {
-                  if (question?.type === "Countries") {
-                    countryFields.push({ id: question.id, label: question.label || question.id });
+                  if (question?.type === 'Countries') {
+                    countryFields.push({
+                      id: question.id,
+                      label: question.label || question.id,
+                    });
                   }
                 }
               }
@@ -175,7 +187,9 @@ export class FormService {
           const existing = resultMap.get(formId);
           if (existing) {
             const merged = [...existing.countryFields, ...countryFields];
-            const unique = Array.from(new Map(merged.map(cf => [cf.id, cf])).values());
+            const unique = Array.from(
+              new Map(merged.map((cf) => [cf.id, cf])).values(),
+            );
             resultMap.set(formId, { formId, countryFields: unique });
           } else {
             resultMap.set(formId, { formId, countryFields });
@@ -194,17 +208,19 @@ export class FormService {
         },
       });
 
-      const nameMap = new Map(formsWithNames.map(f => [f.id, f.name]));
+      const nameMap = new Map(formsWithNames.map((f) => [f.id, f.name]));
 
-      const data = Array.from(resultMap.values()).map(item => ({
+      const data = Array.from(resultMap.values()).map((item) => ({
         id: item.formId,
-        name: nameMap.get(item.formId) || "",
+        name: nameMap.get(item.formId) || '',
         countryFields: item.countryFields,
       }));
 
       return { success: true, data };
     } catch (error) {
-      throw new InternalServerErrorException('Failed to fetch forms with countries');
+      throw new InternalServerErrorException(
+        'Failed to fetch forms with countries',
+      );
     }
   }
 
@@ -253,9 +269,11 @@ export class FormService {
       result[id] = data;
       allFields.push(...data.fields);
     }
-    const uniqueFields = Array.from(new Map(allFields.map(f => [f.id as string, f])).values());
+    const uniqueFields = Array.from(
+      new Map(allFields.map((f) => [f.id as string, f])).values(),
+    );
     const systemFields = result[Object.keys(result)[0]]?.systemFields || [];
-    const formFields = allFields.filter(f => !f.id.startsWith('$'));
+    const formFields = allFields.filter((f) => !f.id.startsWith('$'));
     return {
       allFields: uniqueFields,
       byForm: result,
@@ -265,47 +283,47 @@ export class FormService {
   }
 
   mapQuestionTypeToFieldType(questionType: string): string {
-  const typeMapping: { [key: string]: string } = {
-    // Text types
-    'textfield': 'text',
-    'textarea': 'text',
-    'email': 'text',
-    'url': 'text',
-    'phone': 'text',
-    'paragraph': "text",
+    const typeMapping: { [key: string]: string } = {
+      // Text types
+      textfield: 'text',
+      textarea: 'text',
+      email: 'text',
+      url: 'text',
+      phone: 'text',
+      paragraph: 'text',
 
-    // Numeric types
-    'number': 'number',
-    'currency': 'number',
-    'calculation': 'number',
+      // Numeric types
+      number: 'number',
+      currency: 'number',
+      calculation: 'number',
 
-    // Date/time types
-    'datetime': 'datetime',
-    'date': 'date',
-    'time': 'time',
+      // Date/time types
+      datetime: 'datetime',
+      date: 'date',
+      time: 'time',
 
-    // Selection types
-    'dropdown': 'select',
-    'radio': 'select',
-    'checkbox': 'multiselect',
-    'select': 'select',
-    'multiselect': 'multiselect',
+      // Selection types
+      dropdown: 'select',
+      radio: 'select',
+      checkbox: 'multiselect',
+      select: 'select',
+      multiselect: 'multiselect',
 
-    // Boolean types
-    'yesno': 'boolean',
-    'boolean': 'boolean',
+      // Boolean types
+      yesno: 'boolean',
+      boolean: 'boolean',
 
-    // File types
-    'file': 'file',
-    'image': 'file',
-    'document': 'file',
+      // File types
+      file: 'file',
+      image: 'file',
+      document: 'file',
 
-    // Other types
-    'signature': 'file',
-    'location': 'text',
-    'rating': 'number'
-  };
+      // Other types
+      signature: 'file',
+      location: 'text',
+      rating: 'number',
+    };
 
-  return typeMapping[questionType.toLowerCase()] || 'text';
-}
+    return typeMapping[questionType.toLowerCase()] || 'text';
+  }
 }

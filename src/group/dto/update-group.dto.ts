@@ -1,4 +1,4 @@
-import { GroupStatus } from 'db';
+import { GroupStatus } from 'db/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 

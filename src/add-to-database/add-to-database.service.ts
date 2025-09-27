@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AddToDatabase } from 'db';
+import { AddToDatabase } from 'db/client';
 import { PrismaService } from '../db/prisma.service';
 import { CreateAddToDatabaseDto } from './dto/create-add-to-database.dto';
 import { UpdateAddToDatabaseDto } from './dto/update-add-to-database.dto';
@@ -27,7 +27,10 @@ export class AddToDatabaseService {
     return this.prisma.addToDatabase.findUnique({ where: { id } });
   }
 
-  async update(id: string, data: UpdateAddToDatabaseDto): Promise<AddToDatabase> {
+  async update(
+    id: string,
+    data: UpdateAddToDatabaseDto,
+  ): Promise<AddToDatabase> {
     const existing = await this.findOne(id);
     if (!existing) {
       throw new NotFoundException(`AddToDatabase with ID ${id} not found`);

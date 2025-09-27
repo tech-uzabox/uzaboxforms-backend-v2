@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NextStepType, Process, Role } from 'db';
+import { NextStepType, Process, Role } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateProcessDto } from './dto/create-process.dto';
@@ -131,7 +131,8 @@ export class ProcessService {
             notifyApplicant: pf.notifyApplicant,
             applicantNotificationContent: pf.applicantNotificationContent,
             editApplicationStatus: pf.editApplicationStatus,
-            applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion
+            applicantViewFormAfterCompletion:
+              pf.applicantViewFormAfterCompletion,
           };
         });
 
@@ -142,7 +143,7 @@ export class ProcessService {
           updatedAt: process.updatedAt?.toISOString(),
           processForms: forms.filter((form) => form !== null),
         };
-      })
+      }),
     );
 
     return {
@@ -151,7 +152,9 @@ export class ProcessService {
     };
   }
 
-  async findByFormId(formId: string): Promise<{ success: boolean; data: any[] }> {
+  async findByFormId(
+    formId: string,
+  ): Promise<{ success: boolean; data: any[] }> {
     const processes = await this.prisma.process.findMany({
       where: {
         forms: {
@@ -201,7 +204,8 @@ export class ProcessService {
             notifyApplicant: pf.notifyApplicant,
             applicantNotificationContent: pf.applicantNotificationContent,
             editApplicationStatus: pf.editApplicationStatus,
-            applicantViewFormAfterCompletion: pf.applicantViewFormAfterCompletion
+            applicantViewFormAfterCompletion:
+              pf.applicantViewFormAfterCompletion,
           };
         });
 
@@ -212,7 +216,7 @@ export class ProcessService {
           updatedAt: process.updatedAt?.toISOString(),
           processForms: forms.filter((form) => form !== null),
         };
-      })
+      }),
     );
 
     return {
@@ -286,7 +290,12 @@ export class ProcessService {
 
     const updatedProcess = await this.prisma.process.update({
       where: { id },
-      data: { name, groupId, status, archived: archived !== undefined ? archived : false },
+      data: {
+        name,
+        groupId,
+        status,
+        archived: archived !== undefined ? archived : false,
+      },
     });
 
     await this.auditLogService.log({
@@ -400,7 +409,8 @@ export class ProcessService {
             notifyApplicant: form.notifyApplicant,
             applicantNotificationContent: form.applicantNotificationContent,
             editApplicationStatus: form.editApplicationStatus,
-            applicantViewFormAfterCompletion: form.applicantViewFormAfterCompletion,
+            applicantViewFormAfterCompletion:
+              form.applicantViewFormAfterCompletion,
           })),
         },
         roles: {
@@ -424,5 +434,4 @@ export class ProcessService {
     });
     return duplicatedProcess;
   }
-
 }

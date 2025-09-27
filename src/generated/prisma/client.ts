@@ -4,21 +4,21 @@
 // @ts-nocheck 
 /*
  * This file should be your main import to use Prisma. Through it you get access to all the models, enums, and input types.
- *
+ * If you're looking for something you can import in the client-side of your application, please refer to the `browser.ts` file instead.
+ * 
  * 🟢 You can import this file directly.
  */
 
 import * as process from 'node:process'
 import * as path from 'node:path'
-import { fileURLToPath } from 'node:url'
-globalThis['__dirname'] = path.dirname(fileURLToPath(import.meta.url))
 
-import * as runtime from "@prisma/client/runtime/client"
+import * as runtime from "@prisma/client/runtime/library"
 import * as $Enums from "./enums.js"
 import * as $Class from "./internal/class.js"
 import * as Prisma from "./internal/prismaNamespace.js"
 
 export * as $Enums from './enums.js'
+export * from "./enums.js"
 /**
  * ## Prisma Client
  * 
@@ -37,12 +37,25 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 
+// file annotations for bundling tools to include these files
+path.join(__dirname, "query_engine-windows.dll.node")
+path.join(process.cwd(), "src/generated/prisma/query_engine-windows.dll.node")
 
 /**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model Role
+ * 
+ */
+export type Role = Prisma.RoleModel
+/**
+ * Model UserRole
+ * 
+ */
+export type UserRole = Prisma.UserRoleModel
 /**
  * Model File
  * 
@@ -53,5 +66,128 @@ export type File = Prisma.FileModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
-
-
+/**
+ * Model Group
+ * 
+ */
+export type Group = Prisma.GroupModel
+/**
+ * Model GroupRole
+ * 
+ */
+export type GroupRole = Prisma.GroupRoleModel
+/**
+ * Model Process
+ * 
+ */
+export type Process = Prisma.ProcessModel
+/**
+ * Model ProcessRole
+ * 
+ */
+export type ProcessRole = Prisma.ProcessRoleModel
+/**
+ * Model Folder
+ * 
+ */
+export type Folder = Prisma.FolderModel
+/**
+ * Model Form
+ * 
+ */
+export type Form = Prisma.FormModel
+/**
+ * Model FormResponse
+ * 
+ */
+export type FormResponse = Prisma.FormResponseModel
+/**
+ * Model ProcessForm
+ * 
+ */
+export type ProcessForm = Prisma.ProcessFormModel
+/**
+ * Model ApplicantProcess
+ * 
+ */
+export type ApplicantProcess = Prisma.ApplicantProcessModel
+/**
+ * Model ProcessedApplication
+ * 
+ */
+export type ProcessedApplication = Prisma.ProcessedApplicationModel
+/**
+ * Model APCompletedForm
+ * 
+ */
+export type APCompletedForm = Prisma.APCompletedFormModel
+/**
+ * Model ProcessComment
+ * 
+ */
+export type ProcessComment = Prisma.ProcessCommentModel
+/**
+ * Model OrganizationUser
+ * 
+ */
+export type OrganizationUser = Prisma.OrganizationUserModel
+/**
+ * Model Dashboard
+ * 
+ */
+export type Dashboard = Prisma.DashboardModel
+/**
+ * Model Widget
+ * 
+ */
+export type Widget = Prisma.WidgetModel
+/**
+ * Model QrCodeDocument
+ * 
+ */
+export type QrCodeDocument = Prisma.QrCodeDocumentModel
+/**
+ * Model Otp
+ * 
+ */
+export type Otp = Prisma.OtpModel
+/**
+ * Model Management
+ * 
+ */
+export type Management = Prisma.ManagementModel
+/**
+ * Model AddToDatabase
+ * 
+ */
+export type AddToDatabase = Prisma.AddToDatabaseModel
+/**
+ * Model Chat
+ * 
+ */
+export type Chat = Prisma.ChatModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
+/**
+ * Model Vote
+ * 
+ */
+export type Vote = Prisma.VoteModel
+/**
+ * Model Document
+ * 
+ */
+export type Document = Prisma.DocumentModel
+/**
+ * Model Suggestion
+ * 
+ */
+export type Suggestion = Prisma.SuggestionModel
+/**
+ * Model ProcessSave
+ * 
+ */
+export type ProcessSave = Prisma.ProcessSaveModel

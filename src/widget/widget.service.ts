@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, Widget } from 'db';
+import { Prisma, Widget } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateWidgetDto } from './dto/create-widget.dto';
@@ -14,16 +14,18 @@ export class WidgetService {
 
   async create(data: CreateWidgetDto): Promise<Widget> {
     const count = await this.prisma.widget.count();
-    const newWidget = await this.prisma.widget.create({ data: {
-      title: data.title,
-      visualizationType: data.visualizationType,
-      description: data.description,
-      config: data.config,
-      order: count + 1,
-      dashboardId: data.dashboardId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    } });
+    const newWidget = await this.prisma.widget.create({
+      data: {
+        title: data.title,
+        visualizationType: data.visualizationType,
+        description: data.description,
+        config: data.config,
+        order: count + 1,
+        dashboardId: data.dashboardId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
     await this.auditLogService.log({
       action: 'WIDGET_CREATED',
       resource: 'Widget',
@@ -113,7 +115,11 @@ export class WidgetService {
     return duplicatedWidget;
   }
 
-  async checkDashboardAccess(dashboardId: string, userId: string, userRoles: string[]): Promise<boolean> {
+  async checkDashboardAccess(
+    dashboardId: string,
+    userId: string,
+    userRoles: string[],
+  ): Promise<boolean> {
     const dashboard = await this.prisma.dashboard.findUnique({
       where: { id: dashboardId },
     });
@@ -133,7 +139,7 @@ export class WidgetService {
     }
 
     // Check if user has any of the allowed roles
-    return dashboard.allowedRoles.some(role => userRoles.includes(role));
+    return dashboard.allowedRoles.some((role) => userRoles.includes(role));
   }
 
   async findAllForUser(userId: string, userRoles: string[]): Promise<Widget[]> {
@@ -149,7 +155,7 @@ export class WidgetService {
       select: { id: true },
     });
 
-    const dashboardIds = accessibleDashboards.map(d => d.id);
+    const dashboardIds = accessibleDashboards.map((d) => d.id);
 
     // Get all widgets from accessible dashboards
     return this.prisma.widget.findMany({

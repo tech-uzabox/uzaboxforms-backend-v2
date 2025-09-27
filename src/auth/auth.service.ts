@@ -8,8 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { RoleStatus } from 'db';
-import { User } from 'db/client';
+import { RoleStatus, User } from 'db/client';
 import { Request } from 'express';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { EmailService } from '../email/email.service';

@@ -1,5 +1,4 @@
-
-import { NextStepType } from 'db';
+import { NextStepType } from 'db/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
@@ -18,4 +17,6 @@ const CreateApplicantProcessSchema = z.object({
   notificationComment: z.string().optional(),
 });
 
-export class CreateApplicantProcessDto extends createZodDto(CreateApplicantProcessSchema) {}
+export class CreateApplicantProcessDto extends createZodDto(
+  CreateApplicantProcessSchema,
+) {}

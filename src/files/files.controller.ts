@@ -22,7 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { File } from 'db';
+import { File } from 'db/client';
 import type { Response } from 'express';
 import type { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';

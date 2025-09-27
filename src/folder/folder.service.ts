@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Folder, Prisma } from 'db';
-import { PrismaService } from '../db/prisma.service';
+import { Folder } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
+import { PrismaService } from '../db/prisma.service';
 import { CreateFolderDto } from './dto/create-folder.dto';
 import { UpdateFolderDto } from './dto/update-folder.dto';
 

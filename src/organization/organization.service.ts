@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { OrganizationUser, Prisma } from 'db';
+import { OrganizationUser, Prisma } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateOrganizationUserDto } from './dto/create-organization-user.dto';

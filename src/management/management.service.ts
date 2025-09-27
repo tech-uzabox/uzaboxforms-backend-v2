@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Management, Prisma } from 'db';
+import { Management } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { FileService } from '../file/file.service';
@@ -12,7 +12,11 @@ export class ManagementService {
     private fileService: FileService,
   ) {}
 
-  async uploadImage(file: Express.Multer.File, type: 'HEADER' | 'FOOTER', userId?: string): Promise<Management> {
+  async uploadImage(
+    file: Express.Multer.File,
+    type: 'HEADER' | 'FOOTER',
+    userId?: string,
+  ): Promise<Management> {
     // Upload file to S3 and get public URL
     const fileUrl = await this.fileService.uploadImagePublic(file);
 
@@ -41,13 +45,19 @@ export class ManagementService {
     return newImage;
   }
 
-  async deleteImage(fileName: string, type: 'HEADER' | 'FOOTER', userId?: string): Promise<void> {
+  async deleteImage(
+    fileName: string,
+    type: 'HEADER' | 'FOOTER',
+    userId?: string,
+  ): Promise<void> {
     const deletedImage = await this.prisma.management.deleteMany({
       where: { fileName, type },
     });
 
     if (deletedImage.count === 0) {
-      throw new NotFoundException(`Image with fileName ${fileName} and type ${type} not found`);
+      throw new NotFoundException(
+        `Image with fileName ${fileName} and type ${type} not found`,
+      );
     }
 
     await this.auditLogService.log({

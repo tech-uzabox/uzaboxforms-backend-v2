@@ -1,12 +1,16 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { ApplicantProcess, Prisma } from 'db';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { ApplicantProcess, Prisma } from 'db/client';
+import * as ExcelJS from 'exceljs';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
-import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
-import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { EmailService } from '../email/email.service';
 import { NotificationService } from '../notification/notification.service';
-import * as ExcelJS from 'exceljs';
+import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
+import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 
 @Injectable()
 export class ApplicantProcessService {
@@ -30,12 +34,14 @@ export class ApplicantProcessService {
       notificationType,
       notificationToId,
       notificationToRoles,
-      notificationComment
+      notificationComment,
     } = data;
 
-    const applicant = await this.prisma.user.findUnique({ where: { id: applicantId } });
+    const applicant = await this.prisma.user.findUnique({
+      where: { id: applicantId },
+    });
     if (!applicant) {
-        throw new NotFoundException('Applicant not found.');
+      throw new NotFoundException('Applicant not found.');
     }
 
     const newApplicantProcess = await this.prisma.applicantProcess.create({
@@ -55,11 +61,11 @@ export class ApplicantProcessService {
     });
 
     const processForm = await this.prisma.processForm.findFirst({
-        where: { processId, formId }
+      where: { processId, formId },
     });
 
     if (!processForm) {
-        throw new NotFoundException('Process form configuration not found.');
+      throw new NotFoundException('Process form configuration not found.');
     }
 
     // Use provided fields or fallback to processForm defaults
@@ -67,24 +73,34 @@ export class ApplicantProcessService {
       applicantProcessId: newApplicantProcess.id,
       formId: formId,
       reviewerId: applicantId, // The applicant is the first reviewer
-      nextStaffId: nextStaffId || (processForm.nextStepType === 'STATIC' ? processForm.nextStaffId : undefined),
+      nextStaffId:
+        nextStaffId ||
+        (processForm.nextStepType === 'STATIC'
+          ? processForm.nextStaffId
+          : undefined),
       nextStepType: nextStepType || processForm.nextStepType,
       nextStepRoles: nextStepRoles || processForm.nextStepRoles,
-      nextStepSpecifiedTo: nextStepSpecifiedTo || processForm.nextStepSpecifiedTo,
+      nextStepSpecifiedTo:
+        nextStepSpecifiedTo || processForm.nextStepSpecifiedTo,
       notificationType: notificationType || processForm.notificationType,
       notificationToId: notificationToId || processForm.notificationToId,
       notificationToRoles: notificationToRoles || processForm.notificationRoles,
-      notificationComment: notificationComment || processForm.notificationComment,
+      notificationComment:
+        notificationComment || processForm.notificationComment,
     };
 
     await this.prisma.aPCompletedForm.create({
-        data: completedFormData
+      data: completedFormData,
     });
 
     // Send notifications asynchronously
     setImmediate(async () => {
       try {
-        await this.notificationService.sendNotification(processForm, applicant, applicant);
+        await this.notificationService.sendNotification(
+          processForm,
+          applicant,
+          applicant,
+        );
       } catch (error) {
         console.error('Failed to send notification:', error);
       }
@@ -116,7 +132,7 @@ export class ApplicantProcessService {
   ): Promise<ApplicantProcess> {
     const existingProcess = await this.prisma.applicantProcess.findUnique({
       where: { id },
-      include: { applicant: true }
+      include: { applicant: true },
     });
 
     if (!existingProcess) {
@@ -135,10 +151,12 @@ export class ApplicantProcessService {
     if (statusChanged && existingProcess.applicant) {
       setImmediate(async () => {
         try {
-          const comment = (data as any).comment || `Your application status has been updated to ${data.status}`;
+          const comment =
+            (data as any).comment ||
+            `Your application status has been updated to ${data.status}`;
           await this.emailService.sendEmail(
             existingProcess.applicant.email,
-            comment
+            comment,
           );
         } catch (error) {
           console.error('Failed to send status update email:', error);
@@ -181,29 +199,36 @@ export class ApplicantProcessService {
         completedForms: true,
         responses: {
           include: {
-            form: true
-          }
-        }
+            form: true,
+          },
+        },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' },
     });
 
     // Get all process forms to calculate levels
-    const processIds = [...new Set(applicantProcesses.map(ap => ap.processId))];
+    const processIds = [
+      ...new Set(applicantProcesses.map((ap) => ap.processId)),
+    ];
     const processForms = await this.prisma.processForm.findMany({
       where: { processId: { in: processIds } },
-      include: { form: true }
+      include: { form: true },
     });
 
     // Map the applications with all necessary data
     const applications = applicantProcesses.map((applicantProcess) => {
-      const relatedProcessForms = processForms.filter(pf => pf.processId === applicantProcess.processId);
+      const relatedProcessForms = processForms.filter(
+        (pf) => pf.processId === applicantProcess.processId,
+      );
       const relatedCompletedForms = applicantProcess.completedForms;
 
       // Get first form ID from completed forms or process forms
-      const firstFormId = relatedCompletedForms.length > 0
-        ? relatedCompletedForms[0].formId
-        : (relatedProcessForms.length > 0 ? relatedProcessForms[0].formId : null);
+      const firstFormId =
+        relatedCompletedForms.length > 0
+          ? relatedCompletedForms[0].formId
+          : relatedProcessForms.length > 0
+            ? relatedProcessForms[0].formId
+            : null;
 
       const totalForms = relatedProcessForms.length;
       const completedFormsCount = relatedCompletedForms.length;
@@ -214,12 +239,16 @@ export class ApplicantProcessService {
         processId: applicantProcess.processId,
         processName: applicantProcess.process?.name || 'Unknown Process',
         status: applicantProcess.status,
-        processStatus: completedFormsCount === totalForms && totalForms > 0
-          ? 'Completed'
-          : 'Submitted',
-        level: applicantProcess.process?.applicantViewProcessLevel === true ? level : 'N/A',
+        processStatus:
+          completedFormsCount === totalForms && totalForms > 0
+            ? 'Completed'
+            : 'Submitted',
+        level:
+          applicantProcess.process?.applicantViewProcessLevel === true
+            ? level
+            : 'N/A',
         createdAt: applicantProcess.createdAt,
-        firstFormId: firstFormId
+        firstFormId: firstFormId,
       };
     });
 
@@ -229,7 +258,7 @@ export class ApplicantProcessService {
   async bulkCreate(
     data: BulkCreateApplicantProcessDto,
     file: Express.Multer.File,
-    userId: string
+    userId: string,
   ): Promise<any> {
     const { processId, formId, nextStaffId } = data;
 
@@ -244,7 +273,7 @@ export class ApplicantProcessService {
 
     // Get form design to understand question structure
     const form = await this.prisma.form.findUnique({
-      where: { id: formId }
+      where: { id: formId },
     });
 
     if (!form) {
@@ -262,12 +291,15 @@ export class ApplicantProcessService {
     const worksheet = workbook.worksheets[0];
 
     if (!worksheet) {
-      throw new BadRequestException('Excel file must contain at least one worksheet');
+      throw new BadRequestException(
+        'Excel file must contain at least one worksheet',
+      );
     }
 
     const jsonData: any[][] = [];
     worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber > 1) { // Skip header
+      if (rowNumber > 1) {
+        // Skip header
         const rowData: any[] = [];
         row.eachCell((cell) => {
           rowData.push(cell.value);
@@ -277,7 +309,9 @@ export class ApplicantProcessService {
     });
 
     if (jsonData.length === 0) {
-      throw new BadRequestException('Excel file must contain at least a header row and one data row');
+      throw new BadRequestException(
+        'Excel file must contain at least a header row and one data row',
+      );
     }
 
     // Get headers
@@ -287,7 +321,12 @@ export class ApplicantProcessService {
     });
 
     // Validate and process each row
-    const errors: Array<{ row: number; column: string; error: string; suggestion?: string }> = [];
+    const errors: Array<{
+      row: number;
+      column: string;
+      error: string;
+      suggestion?: string;
+    }> = [];
     const validSubmissions: any[] = [];
 
     for (let i = 0; i < jsonData.length; i++) {
@@ -295,13 +334,18 @@ export class ApplicantProcessService {
       const rowNumber = i + 2; // Excel row number (1-based, plus header)
 
       try {
-        const submissionData = await this.validateAndParseRow(headers, row, formDesign, rowNumber);
+        const submissionData = await this.validateAndParseRow(
+          headers,
+          row,
+          formDesign,
+          rowNumber,
+        );
         if (submissionData.errors.length > 0) {
           errors.push(...submissionData.errors);
         } else {
           validSubmissions.push({
             rowNumber,
-            responses: submissionData.responses
+            responses: submissionData.responses,
           });
         }
       } catch (error) {
@@ -309,7 +353,7 @@ export class ApplicantProcessService {
           row: rowNumber,
           column: 'General',
           error: error instanceof Error ? error.message : 'Unknown error',
-          suggestion: 'Check the row data format'
+          suggestion: 'Check the row data format',
         });
       }
     }
@@ -322,12 +366,17 @@ export class ApplicantProcessService {
         errors,
         totalRows: jsonData.length,
         validRows: validSubmissions.length,
-        errorRows: errors.length
+        errorRows: errors.length,
       };
     }
 
     // Process valid submissions
-    const results: Array<{ rowNumber: number; success: boolean; applicantProcessId?: string; error?: string }> = [];
+    const results: Array<{
+      rowNumber: number;
+      success: boolean;
+      applicantProcessId?: string;
+      error?: string;
+    }> = [];
     for (const submission of validSubmissions) {
       try {
         const result = await this.createSingleApplicantProcess({
@@ -335,24 +384,24 @@ export class ApplicantProcessService {
           processId,
           formId,
           nextStaffId,
-          responses: submission.responses
+          responses: submission.responses,
         });
         results.push({
           rowNumber: submission.rowNumber,
           success: true,
-          applicantProcessId: result.applicantProcessId
+          applicantProcessId: result.applicantProcessId,
         });
       } catch (error) {
         results.push({
           rowNumber: submission.rowNumber,
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : 'Unknown error',
         });
       }
     }
 
-    const successful = results.filter(r => r.success);
-    const failed = results.filter(r => !r.success);
+    const successful = results.filter((r) => r.success);
+    const failed = results.filter((r) => !r.success);
 
     return {
       success: true,
@@ -361,8 +410,8 @@ export class ApplicantProcessService {
         total: validSubmissions.length,
         successful: successful.length,
         failed: failed.length,
-        details: results
-      }
+        details: results,
+      },
     };
   }
 
@@ -370,9 +419,22 @@ export class ApplicantProcessService {
     headers: string[],
     row: any[],
     sections: any[],
-    rowNumber: number
-  ): Promise<{ responses: any[]; errors: Array<{ row: number; column: string; error: string; suggestion?: string }> }> {
-    const errors: Array<{ row: number; column: string; error: string; suggestion?: string }> = [];
+    rowNumber: number,
+  ): Promise<{
+    responses: any[];
+    errors: Array<{
+      row: number;
+      column: string;
+      error: string;
+      suggestion?: string;
+    }>;
+  }> {
+    const errors: Array<{
+      row: number;
+      column: string;
+      error: string;
+      suggestion?: string;
+    }> = [];
     const responses: any[] = [];
 
     // Create a map of column names to their indices (case-insensitive)
@@ -388,16 +450,22 @@ export class ApplicantProcessService {
       const sectionResponses: any[] = [];
 
       for (const question of section.questions) {
-        const questionLabel = question.label || question.titleName || question.descriptionName || '';
+        const questionLabel =
+          question.label ||
+          question.titleName ||
+          question.descriptionName ||
+          '';
 
         // Find matching column (flexible matching)
         let columnIndex = -1;
         let matchedColumn = '';
 
         for (const [colName, index] of columnMap.entries()) {
-          if (colName.includes(questionLabel.toLowerCase()) ||
-              questionLabel.toLowerCase().includes(colName) ||
-              colName.includes(question.id.toLowerCase())) {
+          if (
+            colName.includes(questionLabel.toLowerCase()) ||
+            questionLabel.toLowerCase().includes(colName) ||
+            colName.includes(question.id.toLowerCase())
+          ) {
             columnIndex = index;
             matchedColumn = headers[index];
             break;
@@ -408,19 +476,23 @@ export class ApplicantProcessService {
 
         // Validate based on question type
         try {
-          const parsedValue = await this.validateQuestionValue(question, cellValue, matchedColumn);
+          const parsedValue = await this.validateQuestionValue(
+            question,
+            cellValue,
+            matchedColumn,
+          );
           sectionResponses.push({
             questionId: question.id,
             questionType: question.type,
             label: questionLabel,
-            response: parsedValue
+            response: parsedValue,
           });
         } catch (error) {
           errors.push({
             row: rowNumber,
             column: matchedColumn || questionLabel,
             error: error instanceof Error ? error.message : 'Validation error',
-            suggestion: this.getSuggestionForQuestionType(question.type)
+            suggestion: this.getSuggestionForQuestionType(question.type),
           });
         }
       }
@@ -428,8 +500,9 @@ export class ApplicantProcessService {
       if (sectionResponses.length > 0) {
         responses.push({
           sectionId: section.id,
-          sectionName: section.name || `Section ${sections.indexOf(section) + 1}`,
-          responses: sectionResponses
+          sectionName:
+            section.name || `Section ${sections.indexOf(section) + 1}`,
+          responses: sectionResponses,
         });
       }
     }
@@ -437,7 +510,11 @@ export class ApplicantProcessService {
     return { responses, errors };
   }
 
-  private async validateQuestionValue(question: any, value: any, columnName: string): Promise<any> {
+  private async validateQuestionValue(
+    question: any,
+    value: any,
+    columnName: string,
+  ): Promise<any> {
     if (value === null || value === undefined || value === '') {
       if (question.required === 'yes') {
         throw new Error(`Required field is empty`);
@@ -450,11 +527,21 @@ export class ApplicantProcessService {
     switch (question.type) {
       case 'Short Text':
       case 'Paragraph':
-        if (question.minCharacters && stringValue.length < question.minCharacters) {
-          throw new Error(`Text too short. Minimum ${question.minCharacters} characters required`);
+        if (
+          question.minCharacters &&
+          stringValue.length < question.minCharacters
+        ) {
+          throw new Error(
+            `Text too short. Minimum ${question.minCharacters} characters required`,
+          );
         }
-        if (question.maxCharacters && stringValue.length > question.maxCharacters) {
-          throw new Error(`Text too long. Maximum ${question.maxCharacters} characters allowed`);
+        if (
+          question.maxCharacters &&
+          stringValue.length > question.maxCharacters
+        ) {
+          throw new Error(
+            `Text too long. Maximum ${question.maxCharacters} characters allowed`,
+          );
         }
         return stringValue;
 
@@ -500,25 +587,34 @@ export class ApplicantProcessService {
 
       case 'Date Range':
         try {
-          const [startDate, endDate] = stringValue.split('-').map((d: string) => d.trim());
+          const [startDate, endDate] = stringValue
+            .split('-')
+            .map((d: string) => d.trim());
           const start = new Date(startDate);
           const end = new Date(endDate);
           if (isNaN(start.getTime()) || isNaN(end.getTime())) {
             throw new Error(`Invalid date range format`);
           }
-          return { startDate: start.toISOString().split('T')[0], endDate: end.toISOString().split('T')[0] };
+          return {
+            startDate: start.toISOString().split('T')[0],
+            endDate: end.toISOString().split('T')[0],
+          };
         } catch {
-          throw new Error(`Invalid date range format. Use 'MM/DD/YYYY - MM/DD/YYYY'`);
+          throw new Error(
+            `Invalid date range format. Use 'MM/DD/YYYY - MM/DD/YYYY'`,
+          );
         }
 
       case 'Dropdown':
         if (question.options && Array.isArray(question.options)) {
           const normalizedValue = stringValue.toLowerCase();
-          const match = question.options.find((opt: string) =>
-            opt.toLowerCase() === normalizedValue
+          const match = question.options.find(
+            (opt: string) => opt.toLowerCase() === normalizedValue,
           );
           if (!match) {
-            throw new Error(`Invalid option. Available options: ${question.options.join(', ')}`);
+            throw new Error(
+              `Invalid option. Available options: ${question.options.join(', ')}`,
+            );
           }
           return match;
         }
@@ -526,14 +622,20 @@ export class ApplicantProcessService {
 
       case 'Checkbox':
         if (question.options && Array.isArray(question.options)) {
-          const selectedOptions = stringValue.split(',').map((opt: string) => opt.trim());
-          const invalidOptions = selectedOptions.filter(opt =>
-            !question.options.some((availableOpt: string) =>
-              availableOpt.toLowerCase() === opt.toLowerCase()
-            )
+          const selectedOptions = stringValue
+            .split(',')
+            .map((opt: string) => opt.trim());
+          const invalidOptions = selectedOptions.filter(
+            (opt) =>
+              !question.options.some(
+                (availableOpt: string) =>
+                  availableOpt.toLowerCase() === opt.toLowerCase(),
+              ),
           );
           if (invalidOptions.length > 0) {
-            throw new Error(`Invalid options: ${invalidOptions.join(', ')}. Available: ${question.options.join(', ')}`);
+            throw new Error(
+              `Invalid options: ${invalidOptions.join(', ')}. Available: ${question.options.join(', ')}`,
+            );
           }
           return selectedOptions;
         }
@@ -603,7 +705,7 @@ export class ApplicantProcessService {
 
     // Fetch process form details
     const processForm = await this.prisma.processForm.findFirst({
-      where: { processId, formId }
+      where: { processId, formId },
     });
 
     if (!processForm) {
@@ -615,7 +717,10 @@ export class ApplicantProcessService {
         applicantProcessId: newApplicantProcess.id,
         formId: formId,
         reviewerId: applicantId,
-        nextStaffId: processForm.nextStepType === 'STATIC' ? processForm.nextStaffId : nextStaffId,
+        nextStaffId:
+          processForm.nextStepType === 'STATIC'
+            ? processForm.nextStaffId
+            : nextStaffId,
         nextStepType: processForm.nextStepType,
         nextStepRoles: processForm.nextStepRoles,
         nextStepSpecifiedTo: processForm.nextStepSpecifiedTo,
@@ -623,7 +728,7 @@ export class ApplicantProcessService {
         notificationToId: processForm.notificationToId,
         notificationToRoles: processForm.notificationRoles,
         notificationComment: processForm.notificationComment,
-      }
+      },
     });
 
     // Save form responses
@@ -639,7 +744,7 @@ export class ApplicantProcessService {
     return {
       applicantProcessId: newApplicantProcess.id,
       completedFormId: completedForms.id,
-      responseId: submitResponse.id
+      responseId: submitResponse.id,
     };
   }
 }

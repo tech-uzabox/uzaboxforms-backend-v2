@@ -8,7 +8,84 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED',
+  PENDING: 'PENDING'
+} as const
+
+export type UserStatus = (typeof UserStatus)[keyof typeof UserStatus]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const RoleStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED'
+} as const
+
+export type RoleStatus = (typeof RoleStatus)[keyof typeof RoleStatus]
+
+
+export const GroupStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED'
+} as const
+
+export type GroupStatus = (typeof GroupStatus)[keyof typeof GroupStatus]
+
+
+export const ProcessType = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE'
+} as const
+
+export type ProcessType = (typeof ProcessType)[keyof typeof ProcessType]
+
+
+export const ProcessStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED'
+} as const
+
+export type ProcessStatus = (typeof ProcessStatus)[keyof typeof ProcessStatus]
+
+
+export const FormType = {
+  PUBLIC: 'PUBLIC',
+  INTERNAL: 'INTERNAL'
+} as const
+
+export type FormType = (typeof FormType)[keyof typeof FormType]
+
+
+export const FormStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED'
+} as const
+
+export type FormStatus = (typeof FormStatus)[keyof typeof FormStatus]
+
+
+export const NextStepType = {
+  STATIC: 'STATIC',
+  DYNAMIC: 'DYNAMIC',
+  FOLLOW_ORGANIZATION_CHART: 'FOLLOW_ORGANIZATION_CHART',
+  NOT_APPLICABLE: 'NOT_APPLICABLE'
+} as const
+
+export type NextStepType = (typeof NextStepType)[keyof typeof NextStepType]
+
+
+export const ManagementType = {
+  HEADER: 'HEADER',
+  FOOTER: 'FOOTER'
+} as const
+
+export type ManagementType = (typeof ManagementType)[keyof typeof ManagementType]
+
+
+export const AddToDatabaseStatus = {
+  ENABLED: 'ENABLED',
+  DISABLED: 'DISABLED'
+} as const
+
+export type AddToDatabaseStatus = (typeof AddToDatabaseStatus)[keyof typeof AddToDatabaseStatus]

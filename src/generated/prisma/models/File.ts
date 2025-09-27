@@ -7,7 +7,7 @@
  *
  * 🟢 You can import this file directly.
  */
-import * as runtime from "@prisma/client/runtime/client"
+import type * as runtime from "@prisma/client/runtime/library"
 import type * as $Enums from "../enums.js"
 import type * as Prisma from "../internal/prismaNamespace.js"
 
@@ -35,7 +35,6 @@ export type FileSumAggregateOutputType = {
 
 export type FileMinAggregateOutputType = {
   id: string | null
-  refId: string | null
   fileUrl: string | null
   thumbnailUrl: string | null
   size: number | null
@@ -49,7 +48,6 @@ export type FileMinAggregateOutputType = {
 
 export type FileMaxAggregateOutputType = {
   id: string | null
-  refId: string | null
   fileUrl: string | null
   thumbnailUrl: string | null
   size: number | null
@@ -63,7 +61,6 @@ export type FileMaxAggregateOutputType = {
 
 export type FileCountAggregateOutputType = {
   id: number
-  refId: number
   fileUrl: number
   thumbnailUrl: number
   size: number
@@ -87,7 +84,6 @@ export type FileSumAggregateInputType = {
 
 export type FileMinAggregateInputType = {
   id?: true
-  refId?: true
   fileUrl?: true
   thumbnailUrl?: true
   size?: true
@@ -101,7 +97,6 @@ export type FileMinAggregateInputType = {
 
 export type FileMaxAggregateInputType = {
   id?: true
-  refId?: true
   fileUrl?: true
   thumbnailUrl?: true
   size?: true
@@ -115,7 +110,6 @@ export type FileMaxAggregateInputType = {
 
 export type FileCountAggregateInputType = {
   id?: true
-  refId?: true
   fileUrl?: true
   thumbnailUrl?: true
   size?: true
@@ -216,7 +210,6 @@ export type FileGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type FileGroupByOutputType = {
   id: string
-  refId: string | null
   fileUrl: string
   thumbnailUrl: string | null
   size: number
@@ -253,7 +246,6 @@ export type FileWhereInput = {
   OR?: Prisma.FileWhereInput[]
   NOT?: Prisma.FileWhereInput | Prisma.FileWhereInput[]
   id?: Prisma.UuidFilter<"File"> | string
-  refId?: Prisma.StringNullableFilter<"File"> | string | null
   fileUrl?: Prisma.StringFilter<"File"> | string
   thumbnailUrl?: Prisma.StringNullableFilter<"File"> | string | null
   size?: Prisma.IntFilter<"File"> | number
@@ -268,7 +260,6 @@ export type FileWhereInput = {
 
 export type FileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  refId?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   size?: Prisma.SortOrder
@@ -284,7 +275,6 @@ export type FileOrderByWithRelationInput = {
 
 export type FileWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  refId?: string
   AND?: Prisma.FileWhereInput | Prisma.FileWhereInput[]
   OR?: Prisma.FileWhereInput[]
   NOT?: Prisma.FileWhereInput | Prisma.FileWhereInput[]
@@ -298,11 +288,10 @@ export type FileWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"File"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"File"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "refId">
+}, "id">
 
 export type FileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  refId?: Prisma.SortOrderInput | Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   size?: Prisma.SortOrder
@@ -324,7 +313,6 @@ export type FileScalarWhereWithAggregatesInput = {
   OR?: Prisma.FileScalarWhereWithAggregatesInput[]
   NOT?: Prisma.FileScalarWhereWithAggregatesInput | Prisma.FileScalarWhereWithAggregatesInput[]
   id?: Prisma.UuidWithAggregatesFilter<"File"> | string
-  refId?: Prisma.StringNullableWithAggregatesFilter<"File"> | string | null
   fileUrl?: Prisma.StringWithAggregatesFilter<"File"> | string
   thumbnailUrl?: Prisma.StringNullableWithAggregatesFilter<"File"> | string | null
   size?: Prisma.IntWithAggregatesFilter<"File"> | number
@@ -338,7 +326,6 @@ export type FileScalarWhereWithAggregatesInput = {
 
 export type FileCreateInput = {
   id?: string
-  refId?: string | null
   fileUrl: string
   thumbnailUrl?: string | null
   size: number
@@ -352,7 +339,6 @@ export type FileCreateInput = {
 
 export type FileUncheckedCreateInput = {
   id?: string
-  refId?: string | null
   fileUrl: string
   thumbnailUrl?: string | null
   size: number
@@ -366,7 +352,6 @@ export type FileUncheckedCreateInput = {
 
 export type FileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -380,7 +365,6 @@ export type FileUpdateInput = {
 
 export type FileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -394,7 +378,6 @@ export type FileUncheckedUpdateInput = {
 
 export type FileCreateManyInput = {
   id?: string
-  refId?: string | null
   fileUrl: string
   thumbnailUrl?: string | null
   size: number
@@ -408,7 +391,6 @@ export type FileCreateManyInput = {
 
 export type FileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -421,7 +403,6 @@ export type FileUpdateManyMutationInput = {
 
 export type FileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -451,7 +432,6 @@ export type FileOrderByRelevanceInput = {
 
 export type FileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  refId?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
   size?: Prisma.SortOrder
@@ -469,7 +449,6 @@ export type FileAvgOrderByAggregateInput = {
 
 export type FileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  refId?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
   size?: Prisma.SortOrder
@@ -483,7 +462,6 @@ export type FileMaxOrderByAggregateInput = {
 
 export type FileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  refId?: Prisma.SortOrder
   fileUrl?: Prisma.SortOrder
   thumbnailUrl?: Prisma.SortOrder
   size?: Prisma.SortOrder
@@ -541,10 +519,6 @@ export type FileUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.FileScalarWhereInput | Prisma.FileScalarWhereInput[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -557,13 +531,8 @@ export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
-}
-
 export type FileCreateWithoutUserInput = {
   id?: string
-  refId?: string | null
   fileUrl: string
   thumbnailUrl?: string | null
   size: number
@@ -576,7 +545,6 @@ export type FileCreateWithoutUserInput = {
 
 export type FileUncheckedCreateWithoutUserInput = {
   id?: string
-  refId?: string | null
   fileUrl: string
   thumbnailUrl?: string | null
   size: number
@@ -618,7 +586,6 @@ export type FileScalarWhereInput = {
   OR?: Prisma.FileScalarWhereInput[]
   NOT?: Prisma.FileScalarWhereInput | Prisma.FileScalarWhereInput[]
   id?: Prisma.UuidFilter<"File"> | string
-  refId?: Prisma.StringNullableFilter<"File"> | string | null
   fileUrl?: Prisma.StringFilter<"File"> | string
   thumbnailUrl?: Prisma.StringNullableFilter<"File"> | string | null
   size?: Prisma.IntFilter<"File"> | number
@@ -632,7 +599,6 @@ export type FileScalarWhereInput = {
 
 export type FileCreateManyUserInput = {
   id?: string
-  refId?: string | null
   fileUrl: string
   thumbnailUrl?: string | null
   size: number
@@ -645,7 +611,6 @@ export type FileCreateManyUserInput = {
 
 export type FileUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -658,7 +623,6 @@ export type FileUpdateWithoutUserInput = {
 
 export type FileUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -671,7 +635,6 @@ export type FileUncheckedUpdateWithoutUserInput = {
 
 export type FileUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  refId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fileUrl?: Prisma.StringFieldUpdateOperationsInput | string
   thumbnailUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   size?: Prisma.IntFieldUpdateOperationsInput | number
@@ -686,7 +649,6 @@ export type FileUncheckedUpdateManyWithoutUserInput = {
 
 export type FileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  refId?: boolean
   fileUrl?: boolean
   thumbnailUrl?: boolean
   size?: boolean
@@ -701,7 +663,6 @@ export type FileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type FileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  refId?: boolean
   fileUrl?: boolean
   thumbnailUrl?: boolean
   size?: boolean
@@ -716,7 +677,6 @@ export type FileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type FileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  refId?: boolean
   fileUrl?: boolean
   thumbnailUrl?: boolean
   size?: boolean
@@ -731,7 +691,6 @@ export type FileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type FileSelectScalar = {
   id?: boolean
-  refId?: boolean
   fileUrl?: boolean
   thumbnailUrl?: boolean
   size?: boolean
@@ -743,7 +702,7 @@ export type FileSelectScalar = {
   updatedAt?: boolean
 }
 
-export type FileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "refId" | "fileUrl" | "thumbnailUrl" | "size" | "isPrivate" | "title" | "userId" | "fileType" | "createdAt" | "updatedAt", ExtArgs["result"]["file"]>
+export type FileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fileUrl" | "thumbnailUrl" | "size" | "isPrivate" | "title" | "userId" | "fileType" | "createdAt" | "updatedAt", ExtArgs["result"]["file"]>
 export type FileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -761,7 +720,6 @@ export type $FilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    refId: string | null
     fileUrl: string
     thumbnailUrl: string | null
     size: number
@@ -1196,7 +1154,6 @@ export interface Prisma__FileClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface FileFieldRefs {
   readonly id: Prisma.FieldRef<"File", 'String'>
-  readonly refId: Prisma.FieldRef<"File", 'String'>
   readonly fileUrl: Prisma.FieldRef<"File", 'String'>
   readonly thumbnailUrl: Prisma.FieldRef<"File", 'String'>
   readonly size: Prisma.FieldRef<"File", 'Int'>

@@ -1,4 +1,4 @@
-import { ProcessStatus, ProcessType } from 'db';
+import { ProcessStatus, ProcessType } from 'db/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 

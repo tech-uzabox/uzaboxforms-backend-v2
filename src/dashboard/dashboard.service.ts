@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Dashboard, Prisma } from 'db';
+import { Dashboard, Prisma } from 'db/client';
 import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
@@ -79,7 +79,10 @@ export class DashboardService {
     return dashboards;
   }
 
-  async findOne(id: string, user: AuthenticatedUser): Promise<Dashboard | null> {
+  async findOne(
+    id: string,
+    user: AuthenticatedUser,
+  ): Promise<Dashboard | null> {
     // First check if dashboard exists and user has access
     const dashboard = await this.prisma.dashboard.findUnique({
       where: { id },
@@ -107,8 +110,11 @@ export class DashboardService {
     // Check permissions
     const isOwner = dashboard.ownerId === user.id;
     const isAllowedUser = dashboard.allowedUsers.includes(user.id);
-    const isAllowedRole = dashboard.allowedRoles.some(role => user.roles.includes(role));
-    const isAdmin = user.roles.includes('Admin') || user.roles.includes('SuperAdmin');
+    const isAllowedRole = dashboard.allowedRoles.some((role) =>
+      user.roles.includes(role),
+    );
+    const isAdmin =
+      user.roles.includes('Admin') || user.roles.includes('SuperAdmin');
 
     if (!isOwner && !isAllowedUser && !isAllowedRole && !isAdmin) {
       throw new Error('Access denied');
@@ -182,15 +188,19 @@ export class DashboardService {
     return deletedDashboard;
   }
 
-  async updateWidgetOrder(id: string, layout: any, user: AuthenticatedUser): Promise<Dashboard> {
+  async updateWidgetOrder(
+    id: string,
+    layout: any,
+    user: AuthenticatedUser,
+  ): Promise<Dashboard> {
     // Check if user has access to modify the dashboard
     const dashboard = await this.prisma.dashboard.findUnique({ where: { id } });
     if (!dashboard) {
       throw new Error('Dashboard not found');
     }
 
-    const canModify = dashboard.ownerId === user.id ||
-      dashboard.allowedUsers.includes(user.id);
+    const canModify =
+      dashboard.ownerId === user.id || dashboard.allowedUsers.includes(user.id);
 
     if (!canModify) {
       throw new Error('Access denied to modify dashboard');

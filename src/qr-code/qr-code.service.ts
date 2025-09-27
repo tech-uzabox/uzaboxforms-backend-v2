@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, QrCodeDocument } from 'db';
-import { AuditLogService } from '../audit-log/audit-log.service';
-import { PrismaService } from '../db/prisma.service';
+import { Prisma, QrCodeDocument } from 'db/client';
 import QRCode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
+import { AuditLogService } from '../audit-log/audit-log.service';
+import { PrismaService } from '../db/prisma.service';
 import { CreateQrCodeDto } from './dto/create-qr-code.dto';
 
 @Injectable()

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHmac } from 'crypto';
-import { File } from 'db';
+import { File } from 'db/client';
 import { AuditLogService } from 'src/audit-log/audit-log.service';
 import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { PrismaService } from 'src/db/prisma.service';
