@@ -55,6 +55,7 @@ import { OrganizationModule } from './organization/organization.module';
 import { QrCodeModule } from './qr-code/qr-code.module';
 import { ReportingModule } from './reporting/reporting.module';
 import { WidgetModule } from './widget/widget.module';
+import { SeedingModule } from './seeds/seeding.module';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -112,6 +113,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
     ManagementModule,
     AddToDatabaseModule,
     ReportingModule,
+    SeedingModule,
   ],
   providers: [
     {
