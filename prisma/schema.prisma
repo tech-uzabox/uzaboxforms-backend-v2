@@ -1,8 +1,9 @@
 generator client {
   provider        = "prisma-client"
   output          = "../src/generated/prisma"
-  previewFeatures = ["driverAdapters", "queryCompiler", "relationJoins", "fullTextSearchPostgres"]
+  previewFeatures = ["relationJoins", "fullTextSearchPostgres"]
   moduleFormat    = "cjs"
+  engineType      = "client"
 }
 
 datasource db {
