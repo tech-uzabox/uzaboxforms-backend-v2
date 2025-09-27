@@ -21,7 +21,10 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "jsx": "react"
+    "jsx": "react",
+    "paths": {
+      "db/*": ["src/generated/prisma/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["old_code"]
