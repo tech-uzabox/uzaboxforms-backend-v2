@@ -7,6 +7,7 @@ import { Form, Prisma } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateFormDto } from './dto/create-form.dto';
+import { MoveFormDto } from './dto/move-form.dto';
 
 @Injectable()
 export class FormService {
@@ -81,6 +82,54 @@ export class FormService {
       details: { name: deletedForm.name },
     });
     return deletedForm;
+  }
+
+  async moveForm(data: MoveFormDto): Promise<Form> {
+    const { formId, targetFolderId } = data;
+
+    // Check if form exists
+    const existingForm = await this.prisma.form.findUnique({
+      where: { id: formId },
+      include: { folder: true },
+    });
+
+    if (!existingForm) {
+      throw new NotFoundException(`Form with ID ${formId} not found.`);
+    }
+
+    // Check if target folder exists
+    const targetFolder = await this.prisma.folder.findUnique({
+      where: { id: targetFolderId },
+    });
+
+    if (!targetFolder) {
+      throw new NotFoundException(`Target folder with ID ${targetFolderId} not found.`);
+    }
+
+    // Update the form's folder
+    const updatedForm = await this.prisma.form.update({
+      where: { id: formId },
+      data: {
+        folderId: targetFolderId,
+      },
+      include: { folder: true },
+    });
+
+    // Log the move action
+    await this.auditLogService.log({
+      userId: updatedForm.creatorId,
+      action: 'FORM_MOVED',
+      resource: 'Form',
+      resourceId: updatedForm.id,
+      status: 'SUCCESS',
+      details: {
+        formName: updatedForm.name,
+        fromFolder: existingForm.folder?.name || 'No folder',
+        toFolder: updatedForm.folder?.name || 'No folder',
+      },
+    });
+
+    return updatedForm;
   }
 
   async duplicate(formId: string, creatorId: string): Promise<Form> {

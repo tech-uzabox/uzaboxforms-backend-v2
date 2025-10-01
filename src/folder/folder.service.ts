@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Folder } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
@@ -76,11 +76,22 @@ export class FolderService {
   }
 
   async remove(id: string): Promise<Folder> {
-    // First, set folderId to null on all associated forms
-    await this.prisma.form.updateMany({
-      where: { folderId: id },
-      data: { folderId: null },
+    // Check if folder exists
+    const folder = await this.prisma.folder.findUnique({
+      where: { id },
+      include: { forms: true },
     });
+
+    if (!folder) {
+      throw new BadRequestException('Folder not found');
+    }
+
+    // Check if folder has any forms
+    if (folder.forms && folder.forms.length > 0) {
+      throw new BadRequestException(
+        `Cannot delete folder "${folder.name}" because it contains ${folder.forms.length} form(s). Please move or delete all forms in this folder before deleting it.`
+      );
+    }
 
     const deletedFolder = await this.prisma.folder.delete({ where: { id } });
     await this.auditLogService.log({

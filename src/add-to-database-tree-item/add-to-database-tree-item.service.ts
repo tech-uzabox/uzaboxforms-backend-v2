@@ -1,39 +1,38 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { AddToDatabase } from 'db/client';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../db/prisma.service';
-import { CreateAddToDatabaseDto } from './dto/create-add-to-database.dto';
-import { UpdateAddToDatabaseDto } from './dto/update-add-to-database.dto';
+import { CreateAddToDatabaseTreeItemDto } from './dto/create-add-to-database-tree-item.dto';
+import { UpdateAddToDatabaseTreeItemDto } from './dto/update-add-to-database-tree-item.dto';
 
 @Injectable()
-export class AddToDatabaseService {
+export class AddToDatabaseTreeItemService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateAddToDatabaseDto): Promise<{ success: boolean; message: string; data: any }> {
-    const { name, status, parentId } = data;
-    
+  async create(data: CreateAddToDatabaseTreeItemDto): Promise<{ success: boolean; message: string; data: any }> {
+    const { name, status, parentId, addToDatabaseId } = data;
     try {
-      const result = await this.prisma.addToDatabase.create({
+      const result = await this.prisma.addToDatabaseTreeItem.create({
         data: {
           name,
           status,
           parentId: parentId || null,
+          addToDatabaseId,
         },
         include: {
           children: true,
           parent: true,
+          addToDatabase: true,
         },
       });
-      
       return {
         success: true,
-        message: 'Add-to-database item created successfully',
+        message: 'Tree item created successfully',
         data: result
       };
     } catch (error) {
-      console.error('Error creating add-to-database item:', error);
+      console.error('Error creating tree item:', error);
       return {
         success: false,
-        message: 'Failed to create add-to-database item',
+        message: 'Failed to create tree item',
         data: null
       };
     }
@@ -41,33 +40,63 @@ export class AddToDatabaseService {
 
   async findAll(): Promise<{ success: boolean; message: string; data: any }> {
     try {
-      const result = await this.prisma.addToDatabase.findMany({
+      const result = await this.prisma.addToDatabaseTreeItem.findMany({
         include: {
           children: true,
           parent: true,
+          addToDatabase: true,
         },
       });
       return {
         success: true,
-        message: 'Add-to-database items retrieved successfully',
+        message: 'Tree items retrieved successfully',
         data: result
       };
     } catch (error) {
-      console.error('Error fetching add-to-database items:', error);
+      console.error('Error fetching tree items:', error);
       return {
         success: false,
-        message: 'Failed to fetch add-to-database items',
+        message: 'Failed to fetch tree items',
         data: null
       };
     }
   }
 
-  async findRootNodes(): Promise<{ success: boolean; message: string; data: any }> {
+  async findByAddToDatabaseId(addToDatabaseId: string): Promise<{ success: boolean; message: string; data: any }> {
     try {
-      const result = await this.prisma.addToDatabase.findMany({
-        where: { parentId: null },
+      const result = await this.prisma.addToDatabaseTreeItem.findMany({
+        where: { addToDatabaseId },
         include: {
           children: true,
+          parent: true,
+          addToDatabase: true,
+        },
+      });
+      return {
+        success: true,
+        message: 'Tree items retrieved successfully',
+        data: result
+      };
+    } catch (error) {
+      console.error('Error fetching tree items:', error);
+      return {
+        success: false,
+        message: 'Failed to fetch tree items',
+        data: null
+      };
+    }
+  }
+
+  async findRootNodes(addToDatabaseId: string): Promise<{ success: boolean; message: string; data: any }> {
+    try {
+      const result = await this.prisma.addToDatabaseTreeItem.findMany({
+        where: { 
+          parentId: null,
+          addToDatabaseId 
+        },
+        include: {
+          children: true,
+          addToDatabase: true,
         },
       });
       return {
@@ -85,13 +114,12 @@ export class AddToDatabaseService {
     }
   }
 
-  async getFullHierarchy(): Promise<{ success: boolean; message: string; data: any }> {
+  async getFullHierarchy(addToDatabaseId: string): Promise<{ success: boolean; message: string; data: any }> {
     try {
-      const rootNodesResult = await this.findRootNodes();
+      const rootNodesResult = await this.findRootNodes(addToDatabaseId);
       if (!rootNodesResult.success) {
         return rootNodesResult;
       }
-      
       const hierarchy = await Promise.all(rootNodesResult.data.map(node => this.buildTree(node)));
       return {
         success: true,
@@ -108,18 +136,16 @@ export class AddToDatabaseService {
     }
   }
 
-  private async buildTree(node: AddToDatabase): Promise<any> {
-    const children = await this.prisma.addToDatabase.findMany({
+  private async buildTree(node: any): Promise<any> {
+    const children = await this.prisma.addToDatabaseTreeItem.findMany({
       where: { parentId: node.id },
       include: {
         children: true,
       },
     });
-
     const childrenWithSubTrees = await Promise.all(
       children.map(child => this.buildTree(child))
     );
-
     return {
       ...node,
       children: childrenWithSubTrees,
@@ -128,32 +154,31 @@ export class AddToDatabaseService {
 
   async findOne(id: string): Promise<{ success: boolean; message: string; data: any }> {
     try {
-      const result = await this.prisma.addToDatabase.findUnique({ 
+      const result = await this.prisma.addToDatabaseTreeItem.findUnique({
         where: { id },
         include: {
           children: true,
           parent: true,
+          addToDatabase: true,
         },
       });
-      
       if (!result) {
         return {
           success: false,
-          message: 'Add-to-database item not found',
+          message: 'Tree item not found',
           data: null
         };
       }
-      
       return {
         success: true,
-        message: 'Add-to-database item retrieved successfully',
+        message: 'Tree item retrieved successfully',
         data: result
       };
     } catch (error) {
-      console.error('Error fetching add-to-database item:', error);
+      console.error('Error fetching tree item:', error);
       return {
         success: false,
-        message: 'Failed to fetch add-to-database item',
+        message: 'Failed to fetch tree item',
         data: null
       };
     }
@@ -161,33 +186,32 @@ export class AddToDatabaseService {
 
   async update(
     id: string,
-    data: UpdateAddToDatabaseDto,
+    data: UpdateAddToDatabaseTreeItemDto,
   ): Promise<{ success: boolean; message: string; data: any }> {
     try {
       const existing = await this.findOne(id);
       if (!existing.success) {
         return existing;
       }
-
-      const result = await this.prisma.addToDatabase.update({
+      const result = await this.prisma.addToDatabaseTreeItem.update({
         where: { id },
         data,
         include: {
           children: true,
           parent: true,
+          addToDatabase: true,
         },
       });
-      
       return {
         success: true,
-        message: 'Add-to-database item updated successfully',
+        message: 'Tree item updated successfully',
         data: result
       };
     } catch (error) {
-      console.error('Error updating add-to-database item:', error);
+      console.error('Error updating tree item:', error);
       return {
         success: false,
-        message: 'Failed to update add-to-database item',
+        message: 'Failed to update tree item',
         data: null
       };
     }
@@ -199,12 +223,9 @@ export class AddToDatabaseService {
       if (!existing.success) {
         return existing;
       }
-
-      // Check if node has children
-      const children = await this.prisma.addToDatabase.findMany({
+      const children = await this.prisma.addToDatabaseTreeItem.findMany({
         where: { parentId: id },
       });
-
       if (children.length > 0) {
         return {
           success: false,
@@ -212,19 +233,17 @@ export class AddToDatabaseService {
           data: null
         };
       }
-
-      const result = await this.prisma.addToDatabase.delete({ where: { id } });
-      
+      const result = await this.prisma.addToDatabaseTreeItem.delete({ where: { id } });
       return {
         success: true,
-        message: 'Add-to-database item deleted successfully',
+        message: 'Tree item deleted successfully',
         data: result
       };
     } catch (error) {
-      console.error('Error deleting add-to-database item:', error);
+      console.error('Error deleting tree item:', error);
       return {
         success: false,
-        message: 'Failed to delete add-to-database item',
+        message: 'Failed to delete tree item',
         data: null
       };
     }
@@ -232,14 +251,14 @@ export class AddToDatabaseService {
 
   async getChildren(parentId: string): Promise<{ success: boolean; message: string; data: any }> {
     try {
-      const result = await this.prisma.addToDatabase.findMany({
+      const result = await this.prisma.addToDatabaseTreeItem.findMany({
         where: { parentId },
         include: {
           children: true,
           parent: true,
+          addToDatabase: true,
         },
       });
-      
       return {
         success: true,
         message: 'Children retrieved successfully',

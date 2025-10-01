@@ -42,6 +42,7 @@ import { UserRoleModule } from './user-role/user-role.module';
 import { UserModule } from './user/user.module';
 
 import { AddToDatabaseModule } from './add-to-database/add-to-database.module';
+import { AddToDatabaseTreeItemModule } from './add-to-database-tree-item/add-to-database-tree-item.module';
 import { AiModule } from './ai/ai.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import emailConfig from './config/email.config';
@@ -112,6 +113,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
     QrCodeModule,
     ManagementModule,
     AddToDatabaseModule,
+    AddToDatabaseTreeItemModule,
     ReportingModule,
     SeedingModule,
   ],

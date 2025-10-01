@@ -3,6 +3,7 @@ import { FormService } from './form.service';
 import { CreateFormDto } from './dto/create-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
 import { DuplicateFormDto } from './dto/duplicate-form.dto';
+import { MoveFormDto } from './dto/move-form.dto';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -90,7 +91,13 @@ export class FormController {
     return this.formService.duplicate(duplicateFormDto.formId, duplicateFormDto.creatorId);
   }
 
-
+  @Post('move')
+  @ApiOperation({ summary: 'Move form to another folder' })
+  @ApiResponse({ status: 200, description: 'Form moved successfully' })
+  @ApiResponse({ status: 404, description: 'Form or target folder not found' })
+  moveForm(@Body() moveFormDto: MoveFormDto) {
+    return this.formService.moveForm(moveFormDto);
+  }
 
   @Get('public')
   getPublicForms() {

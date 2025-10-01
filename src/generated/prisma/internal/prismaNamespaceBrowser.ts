@@ -43,6 +43,7 @@ export const ModelName = {
   Otp: 'Otp',
   Management: 'Management',
   AddToDatabase: 'AddToDatabase',
+  AddToDatabaseTreeItem: 'AddToDatabaseTreeItem',
   Chat: 'Chat',
   Message: 'Message',
   Vote: 'Vote',
@@ -390,12 +391,25 @@ export const AddToDatabaseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   status: 'status',
-  levels: 'levels',
+  parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type AddToDatabaseScalarFieldEnum = (typeof AddToDatabaseScalarFieldEnum)[keyof typeof AddToDatabaseScalarFieldEnum]
+
+
+export const AddToDatabaseTreeItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  parentId: 'parentId',
+  addToDatabaseId: 'addToDatabaseId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AddToDatabaseTreeItemScalarFieldEnum = (typeof AddToDatabaseTreeItemScalarFieldEnum)[keyof typeof AddToDatabaseTreeItemScalarFieldEnum]
 
 
 export const ChatScalarFieldEnum = {
@@ -766,10 +780,21 @@ export type ManagementOrderByRelevanceFieldEnum = (typeof ManagementOrderByRelev
 
 export const AddToDatabaseOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  parentId: 'parentId'
 } as const
 
 export type AddToDatabaseOrderByRelevanceFieldEnum = (typeof AddToDatabaseOrderByRelevanceFieldEnum)[keyof typeof AddToDatabaseOrderByRelevanceFieldEnum]
+
+
+export const AddToDatabaseTreeItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  parentId: 'parentId',
+  addToDatabaseId: 'addToDatabaseId'
+} as const
+
+export type AddToDatabaseTreeItemOrderByRelevanceFieldEnum = (typeof AddToDatabaseTreeItemOrderByRelevanceFieldEnum)[keyof typeof AddToDatabaseTreeItemOrderByRelevanceFieldEnum]
 
 
 export const ChatOrderByRelevanceFieldEnum = {

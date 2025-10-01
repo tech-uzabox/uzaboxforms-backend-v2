@@ -413,6 +413,7 @@ export const ModelName = {
   Otp: 'Otp',
   Management: 'Management',
   AddToDatabase: 'AddToDatabase',
+  AddToDatabaseTreeItem: 'AddToDatabaseTreeItem',
   Chat: 'Chat',
   Message: 'Message',
   Vote: 'Vote',
@@ -434,7 +435,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave"
+    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2214,6 +2215,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AddToDatabaseTreeItem: {
+      payload: Prisma.$AddToDatabaseTreeItemPayload<ExtArgs>
+      fields: Prisma.AddToDatabaseTreeItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AddToDatabaseTreeItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AddToDatabaseTreeItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>
+        }
+        findFirst: {
+          args: Prisma.AddToDatabaseTreeItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AddToDatabaseTreeItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>
+        }
+        findMany: {
+          args: Prisma.AddToDatabaseTreeItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>[]
+        }
+        create: {
+          args: Prisma.AddToDatabaseTreeItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>
+        }
+        createMany: {
+          args: Prisma.AddToDatabaseTreeItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AddToDatabaseTreeItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>[]
+        }
+        delete: {
+          args: Prisma.AddToDatabaseTreeItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>
+        }
+        update: {
+          args: Prisma.AddToDatabaseTreeItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.AddToDatabaseTreeItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AddToDatabaseTreeItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AddToDatabaseTreeItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.AddToDatabaseTreeItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AddToDatabaseTreeItemPayload>
+        }
+        aggregate: {
+          args: Prisma.AddToDatabaseTreeItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAddToDatabaseTreeItem>
+        }
+        groupBy: {
+          args: Prisma.AddToDatabaseTreeItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AddToDatabaseTreeItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AddToDatabaseTreeItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AddToDatabaseTreeItemCountAggregateOutputType> | number
+        }
+      }
+    }
     Chat: {
       payload: Prisma.$ChatPayload<ExtArgs>
       fields: Prisma.ChatFieldRefs
@@ -3021,12 +3096,25 @@ export const AddToDatabaseScalarFieldEnum = {
   id: 'id',
   name: 'name',
   status: 'status',
-  levels: 'levels',
+  parentId: 'parentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type AddToDatabaseScalarFieldEnum = (typeof AddToDatabaseScalarFieldEnum)[keyof typeof AddToDatabaseScalarFieldEnum]
+
+
+export const AddToDatabaseTreeItemScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  status: 'status',
+  parentId: 'parentId',
+  addToDatabaseId: 'addToDatabaseId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AddToDatabaseTreeItemScalarFieldEnum = (typeof AddToDatabaseTreeItemScalarFieldEnum)[keyof typeof AddToDatabaseTreeItemScalarFieldEnum]
 
 
 export const ChatScalarFieldEnum = {
@@ -3397,10 +3485,21 @@ export type ManagementOrderByRelevanceFieldEnum = (typeof ManagementOrderByRelev
 
 export const AddToDatabaseOrderByRelevanceFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  parentId: 'parentId'
 } as const
 
 export type AddToDatabaseOrderByRelevanceFieldEnum = (typeof AddToDatabaseOrderByRelevanceFieldEnum)[keyof typeof AddToDatabaseOrderByRelevanceFieldEnum]
+
+
+export const AddToDatabaseTreeItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  parentId: 'parentId',
+  addToDatabaseId: 'addToDatabaseId'
+} as const
+
+export type AddToDatabaseTreeItemOrderByRelevanceFieldEnum = (typeof AddToDatabaseTreeItemOrderByRelevanceFieldEnum)[keyof typeof AddToDatabaseTreeItemOrderByRelevanceFieldEnum]
 
 
 export const ChatOrderByRelevanceFieldEnum = {
@@ -3794,6 +3893,7 @@ export type GlobalOmitConfig = {
   otp?: Prisma.OtpOmit
   management?: Prisma.ManagementOmit
   addToDatabase?: Prisma.AddToDatabaseOmit
+  addToDatabaseTreeItem?: Prisma.AddToDatabaseTreeItemOmit
   chat?: Prisma.ChatOmit
   message?: Prisma.MessageOmit
   vote?: Prisma.VoteOmit

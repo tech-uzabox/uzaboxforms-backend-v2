@@ -394,11 +394,36 @@ model AddToDatabase {
   id        String              @id @default(uuid()) @db.Uuid
   name      String
   status    AddToDatabaseStatus @default(ENABLED)
-  levels    Json
+  parentId  String?             @db.Uuid
+  parent    AddToDatabase?     @relation("Hierarchy", fields: [parentId], references: [id])
+  children  AddToDatabase[]    @relation("Hierarchy")
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
-
+  
+  // This will hold the tree data for this group (new relationship)
+  treeItems AddToDatabaseTreeItem[]
+  
   @@map("add_to_databases")
+}
+
+model AddToDatabaseTreeItem {
+  id        String              @id @default(uuid()) @db.Uuid
+  name      String
+  status    AddToDatabaseStatus @default(ENABLED)
+  parentId  String?             @db.Uuid
+  addToDatabaseId String        @db.Uuid
+  
+  // Tree relationships
+  parent    AddToDatabaseTreeItem? @relation("TreeHierarchy", fields: [parentId], references: [id])
+  children  AddToDatabaseTreeItem[] @relation("TreeHierarchy")
+  
+  // Belongs to an AddToDatabase group
+  addToDatabase AddToDatabase @relation(fields: [addToDatabaseId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  
+  @@map("add_to_database_tree_items")
 }
 
 enum UserStatus {

@@ -137,6 +137,11 @@ export type Management = Prisma.ManagementModel
  */
 export type AddToDatabase = Prisma.AddToDatabaseModel
 /**
+ * Model AddToDatabaseTreeItem
+ * 
+ */
+export type AddToDatabaseTreeItem = Prisma.AddToDatabaseTreeItemModel
+/**
  * Model Chat
  * 
  */
