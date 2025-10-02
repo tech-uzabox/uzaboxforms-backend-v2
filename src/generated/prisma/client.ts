@@ -188,3 +188,8 @@ export type Suggestion = Prisma.SuggestionModel
  * 
  */
 export type ProcessSave = Prisma.ProcessSaveModel
+/**
+ * Model FormGenerationProgress
+ * 
+ */
+export type FormGenerationProgress = Prisma.FormGenerationProgressModel

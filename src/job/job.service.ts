@@ -17,6 +17,7 @@ export interface FileProcessingJobPayload {
     originalname: string;
   };
   userId: string;
+  folderId?: string;
 }
 
 @Injectable()

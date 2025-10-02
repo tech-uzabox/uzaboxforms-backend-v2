@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import * as fs from 'fs';
 import * as path from 'path';
 import pgBoss from 'pg-boss';
+import { PrismaService } from '../db/prisma.service';
 
 const formInputTypes: {
   type: string;
@@ -372,7 +373,7 @@ const FormSchema = z.object({
 export class FormGenerationService {
   private openai: OpenAI;
 
-  constructor() {
+  constructor(private prisma: PrismaService) {
     this.openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
@@ -381,7 +382,18 @@ export class FormGenerationService {
   async generateFormSchema(job: pgBoss.Job, file: {
     buffer: Buffer;
     originalname: string;
-  }) {
+  }, userId: string) {
+    // Create progress record
+    const progressRecord = await this.prisma.formGenerationProgress.create({
+      data: {
+        jobId: job.id,
+        status: 'PENDING',
+        progress: 0,
+        message: 'Initializing form generation',
+        userId,
+      },
+    });
+
     const tempDir = path.join(process.cwd(), 'temp');
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -391,6 +403,15 @@ export class FormGenerationService {
     fs.writeFileSync(tempFilePath, file.buffer);
 
     try {
+      // Update progress: File uploaded
+      await this.prisma.formGenerationProgress.update({
+        where: { id: progressRecord.id },
+        data: {
+          status: 'PROCESSING',
+          progress: 10,
+          message: 'File uploaded to OpenAI',
+        },
+      });
       const fileData = await this.openai.files.create({
         file: fs.createReadStream(tempFilePath),
         purpose: "assistants",
@@ -398,7 +419,15 @@ export class FormGenerationService {
       if (!fileData) {
         throw new Error("Upload failed to openai failed");
       }
-      // Progress tracking not available in pg-boss, skip for now
+
+      // Update progress: File uploaded to OpenAI
+      await this.prisma.formGenerationProgress.update({
+        where: { id: progressRecord.id },
+        data: {
+          progress: 25,
+          message: 'File uploaded to OpenAI, extracting questions',
+        },
+      });
 
       const questionExtraction = await this.openai.chat.completions.create({
         messages: [
@@ -438,7 +467,15 @@ export class FormGenerationService {
       if (!questionExtraction.choices[0]) {
         throw new Error("Question extraction failed");
       }
-      // Progress tracking not available in pg-boss, skip for now
+
+      // Update progress: Questions extracted
+      await this.prisma.formGenerationProgress.update({
+        where: { id: progressRecord.id },
+        data: {
+          progress: 50,
+          message: 'Questions extracted, generating form schema',
+        },
+      });
 
       const formCreation = await this.openai.chat.completions.create({
         model: "gpt-4.1-mini-2025-04-14",
@@ -497,12 +534,30 @@ export class FormGenerationService {
 
       const formSchema = JSON.parse(responseContent);
 
+      // Update progress: Form schema generated
+      await this.prisma.formGenerationProgress.update({
+        where: { id: progressRecord.id },
+        data: {
+          progress: 100,
+          status: 'COMPLETED',
+          message: 'Form schema generated successfully',
+        },
+      });
+
       return {
         schema: formSchema?.sections,
         name: formSchema?.formName,
       };
     } catch (error: any) {
       console.error(error);
+      // Update progress on failure
+      await this.prisma.formGenerationProgress.update({
+        where: { id: progressRecord.id },
+        data: {
+          status: 'FAILED',
+          message: error.message || 'Form generation failed',
+        },
+      });
       throw error;
     } finally {
       fs.unlinkSync(tempFilePath);

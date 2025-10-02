@@ -1,23 +1,91 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
-import { FormService } from './form.service';
-import { CreateFormDto } from './dto/create-form.dto';
-import { UpdateFormDto } from './dto/update-form.dto';
-import { DuplicateFormDto } from './dto/duplicate-form.dto';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileService } from '../file/file.service';
+import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
+import { GetUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CreateFormDto } from './dto/create-form.dto';
+import { DuplicateFormDto } from './dto/duplicate-form.dto';
+import { UpdateFormDto } from './dto/update-form.dto';
+import { FormService } from './form.service';
 
 @ApiTags('Forms')
 @Controller('forms')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class FormController {
-  constructor(private readonly formService: FormService) {}
+  constructor(
+    private readonly formService: FormService,
+    private readonly fileService: FileService,
+  ) {}
 
   @Post()
   create(@Body() createFormDto: CreateFormDto) {
     return this.formService.create(createFormDto);
   }
-   @Get('with-countries')
+
+   @Get('generation-progress/:jobId')
+  @ApiOperation({ summary: 'Get form generation progress by job ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Progress retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            jobId: { type: 'string' },
+            status: {
+              type: 'string',
+              enum: ['PENDING', 'PROCESSING', 'COMPLETED', 'FAILED'],
+            },
+            progress: { type: 'number' },
+            message: { type: 'string' },
+            userId: { type: 'string' },
+            formId: { type: 'string' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 404, description: 'Progress record not found' })
+  async getGenerationProgress(
+    @Param('jobId') jobId: string,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    const progress = await this.formService.getGenerationProgress(
+      jobId,
+      user.id,
+    );
+    return progress;
+  }
+  
+  @Get('with-countries')
   @ApiOperation({ summary: 'Get forms with countries fields' })
   @ApiResponse({
     status: 200,
@@ -39,18 +107,21 @@ export class FormController {
                   type: 'object',
                   properties: {
                     id: { type: 'string' },
-                    label: { type: 'string' }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                    label: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 500, description: 'Failed to fetch forms with countries' })
+  @ApiResponse({
+    status: 500,
+    description: 'Failed to fetch forms with countries',
+  })
   getFormsWithCountries() {
     return this.formService.getFormsWithCountries();
   }
@@ -87,14 +158,45 @@ export class FormController {
 
   @Post('duplicate')
   duplicate(@Body() duplicateFormDto: DuplicateFormDto) {
-    return this.formService.duplicate(duplicateFormDto.formId, duplicateFormDto.creatorId);
+    return this.formService.duplicate(
+      duplicateFormDto.formId,
+      duplicateFormDto.creatorId,
+    );
   }
-
-
 
   @Get('public')
   getPublicForms() {
     return this.formService.getPublicForms();
   }
+
+  @Post('generate-from-file')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Generate form from uploaded file' })
+  @ApiResponse({
+    status: 201,
+    description: 'Form generation started successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        jobId: { type: 'string' },
+        message: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 400, description: 'Bad request - invalid file' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async generateFormFromFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: { folderId?: string },
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    const jobId = await this.fileService.processFileForFormGeneration(file, user.id, body.folderId);
+    return {
+      jobId,
+      message: 'Form generation started. Use the jobId to track progress.',
+    };
+  }
+
 
 }

@@ -282,6 +282,24 @@ export class FormService {
     };
   }
 
+  async getGenerationProgress(jobId: string, userId: string) {
+    const progress = await this.prisma.formGenerationProgress.findFirst({
+      where: {
+        jobId,
+        userId,
+      },
+    });
+
+    if (!progress) {
+      throw new NotFoundException('Progress record not found');
+    }
+
+    return {
+      success: true,
+      data: progress,
+    };
+  }
+
   mapQuestionTypeToFieldType(questionType: string): string {
     const typeMapping: { [key: string]: string } = {
       // Text types

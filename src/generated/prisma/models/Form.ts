@@ -221,6 +221,7 @@ export type FormWhereInput = {
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
   processForms?: Prisma.ProcessFormListRelationFilter
+  formGenerationProgress?: Prisma.FormGenerationProgressListRelationFilter
 }
 
 export type FormOrderByWithRelationInput = {
@@ -238,6 +239,7 @@ export type FormOrderByWithRelationInput = {
   creator?: Prisma.UserOrderByWithRelationInput
   folder?: Prisma.FolderOrderByWithRelationInput
   processForms?: Prisma.ProcessFormOrderByRelationAggregateInput
+  formGenerationProgress?: Prisma.FormGenerationProgressOrderByRelationAggregateInput
   _relevance?: Prisma.FormOrderByRelevanceInput
 }
 
@@ -259,6 +261,7 @@ export type FormWhereUniqueInput = Prisma.AtLeast<{
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
   processForms?: Prisma.ProcessFormListRelationFilter
+  formGenerationProgress?: Prisma.FormGenerationProgressListRelationFilter
 }, "id">
 
 export type FormOrderByWithAggregationInput = {
@@ -306,6 +309,7 @@ export type FormCreateInput = {
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
 }
 
 export type FormUncheckedCreateInput = {
@@ -321,6 +325,7 @@ export type FormUncheckedCreateInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
 }
 
 export type FormUpdateInput = {
@@ -336,6 +341,7 @@ export type FormUpdateInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateInput = {
@@ -351,6 +357,7 @@ export type FormUncheckedUpdateInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
 }
 
 export type FormCreateManyInput = {
@@ -446,6 +453,11 @@ export type FormMinOrderByAggregateInput = {
 export type FormScalarRelationFilter = {
   is?: Prisma.FormWhereInput
   isNot?: Prisma.FormWhereInput
+}
+
+export type FormNullableScalarRelationFilter = {
+  is?: Prisma.FormWhereInput | null
+  isNot?: Prisma.FormWhereInput | null
 }
 
 export type FormCreateNestedManyWithoutCreatorInput = {
@@ -568,6 +580,22 @@ export type FormUpdateOneRequiredWithoutProcessFormsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FormUpdateToOneWithWhereWithoutProcessFormsInput, Prisma.FormUpdateWithoutProcessFormsInput>, Prisma.FormUncheckedUpdateWithoutProcessFormsInput>
 }
 
+export type FormCreateNestedOneWithoutFormGenerationProgressInput = {
+  create?: Prisma.XOR<Prisma.FormCreateWithoutFormGenerationProgressInput, Prisma.FormUncheckedCreateWithoutFormGenerationProgressInput>
+  connectOrCreate?: Prisma.FormCreateOrConnectWithoutFormGenerationProgressInput
+  connect?: Prisma.FormWhereUniqueInput
+}
+
+export type FormUpdateOneWithoutFormGenerationProgressNestedInput = {
+  create?: Prisma.XOR<Prisma.FormCreateWithoutFormGenerationProgressInput, Prisma.FormUncheckedCreateWithoutFormGenerationProgressInput>
+  connectOrCreate?: Prisma.FormCreateOrConnectWithoutFormGenerationProgressInput
+  upsert?: Prisma.FormUpsertWithoutFormGenerationProgressInput
+  disconnect?: Prisma.FormWhereInput | boolean
+  delete?: Prisma.FormWhereInput | boolean
+  connect?: Prisma.FormWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FormUpdateToOneWithWhereWithoutFormGenerationProgressInput, Prisma.FormUpdateWithoutFormGenerationProgressInput>, Prisma.FormUncheckedUpdateWithoutFormGenerationProgressInput>
+}
+
 export type FormCreateWithoutCreatorInput = {
   id?: string
   name: string
@@ -580,6 +608,7 @@ export type FormCreateWithoutCreatorInput = {
   responses?: Prisma.FormResponseCreateNestedManyWithoutFormInput
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
 }
 
 export type FormUncheckedCreateWithoutCreatorInput = {
@@ -594,6 +623,7 @@ export type FormUncheckedCreateWithoutCreatorInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
 }
 
 export type FormCreateOrConnectWithoutCreatorInput = {
@@ -650,6 +680,7 @@ export type FormCreateWithoutFolderInput = {
   responses?: Prisma.FormResponseCreateNestedManyWithoutFormInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
 }
 
 export type FormUncheckedCreateWithoutFolderInput = {
@@ -664,6 +695,7 @@ export type FormUncheckedCreateWithoutFolderInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
 }
 
 export type FormCreateOrConnectWithoutFolderInput = {
@@ -704,6 +736,7 @@ export type FormCreateWithoutResponsesInput = {
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
 }
 
 export type FormUncheckedCreateWithoutResponsesInput = {
@@ -718,6 +751,7 @@ export type FormUncheckedCreateWithoutResponsesInput = {
   updatedAt?: Date | string
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
 }
 
 export type FormCreateOrConnectWithoutResponsesInput = {
@@ -748,6 +782,7 @@ export type FormUpdateWithoutResponsesInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutResponsesInput = {
@@ -762,6 +797,7 @@ export type FormUncheckedUpdateWithoutResponsesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
 }
 
 export type FormCreateWithoutProcessFormsInput = {
@@ -776,6 +812,7 @@ export type FormCreateWithoutProcessFormsInput = {
   responses?: Prisma.FormResponseCreateNestedManyWithoutFormInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
 }
 
 export type FormUncheckedCreateWithoutProcessFormsInput = {
@@ -790,6 +827,7 @@ export type FormUncheckedCreateWithoutProcessFormsInput = {
   updatedAt?: Date | string
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
 }
 
 export type FormCreateOrConnectWithoutProcessFormsInput = {
@@ -820,6 +858,7 @@ export type FormUpdateWithoutProcessFormsInput = {
   responses?: Prisma.FormResponseUpdateManyWithoutFormNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutProcessFormsInput = {
@@ -834,6 +873,83 @@ export type FormUncheckedUpdateWithoutProcessFormsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
+}
+
+export type FormCreateWithoutFormGenerationProgressInput = {
+  id?: string
+  name: string
+  type?: $Enums.FormType
+  status?: $Enums.FormStatus
+  archived?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseCreateNestedManyWithoutFormInput
+  creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
+  processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+}
+
+export type FormUncheckedCreateWithoutFormGenerationProgressInput = {
+  id?: string
+  name: string
+  type?: $Enums.FormType
+  status?: $Enums.FormStatus
+  archived?: boolean
+  creatorId: string
+  folderId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
+  processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+}
+
+export type FormCreateOrConnectWithoutFormGenerationProgressInput = {
+  where: Prisma.FormWhereUniqueInput
+  create: Prisma.XOR<Prisma.FormCreateWithoutFormGenerationProgressInput, Prisma.FormUncheckedCreateWithoutFormGenerationProgressInput>
+}
+
+export type FormUpsertWithoutFormGenerationProgressInput = {
+  update: Prisma.XOR<Prisma.FormUpdateWithoutFormGenerationProgressInput, Prisma.FormUncheckedUpdateWithoutFormGenerationProgressInput>
+  create: Prisma.XOR<Prisma.FormCreateWithoutFormGenerationProgressInput, Prisma.FormUncheckedCreateWithoutFormGenerationProgressInput>
+  where?: Prisma.FormWhereInput
+}
+
+export type FormUpdateToOneWithWhereWithoutFormGenerationProgressInput = {
+  where?: Prisma.FormWhereInput
+  data: Prisma.XOR<Prisma.FormUpdateWithoutFormGenerationProgressInput, Prisma.FormUncheckedUpdateWithoutFormGenerationProgressInput>
+}
+
+export type FormUpdateWithoutFormGenerationProgressInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
+  status?: Prisma.EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseUpdateManyWithoutFormNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
+  processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+}
+
+export type FormUncheckedUpdateWithoutFormGenerationProgressInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
+  status?: Prisma.EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
+  processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
 }
 
 export type FormCreateManyCreatorInput = {
@@ -860,6 +976,7 @@ export type FormUpdateWithoutCreatorInput = {
   responses?: Prisma.FormResponseUpdateManyWithoutFormNestedInput
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutCreatorInput = {
@@ -874,6 +991,7 @@ export type FormUncheckedUpdateWithoutCreatorInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateManyWithoutCreatorInput = {
@@ -912,6 +1030,7 @@ export type FormUpdateWithoutFolderInput = {
   responses?: Prisma.FormResponseUpdateManyWithoutFormNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutFolderInput = {
@@ -926,6 +1045,7 @@ export type FormUncheckedUpdateWithoutFolderInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
 }
 
 export type FormUncheckedUpdateManyWithoutFolderInput = {
@@ -948,11 +1068,13 @@ export type FormUncheckedUpdateManyWithoutFolderInput = {
 export type FormCountOutputType = {
   responses: number
   processForms: number
+  formGenerationProgress: number
 }
 
 export type FormCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   responses?: boolean | FormCountOutputTypeCountResponsesArgs
   processForms?: boolean | FormCountOutputTypeCountProcessFormsArgs
+  formGenerationProgress?: boolean | FormCountOutputTypeCountFormGenerationProgressArgs
 }
 
 /**
@@ -979,6 +1101,13 @@ export type FormCountOutputTypeCountProcessFormsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.ProcessFormWhereInput
 }
 
+/**
+ * FormCountOutputType without action
+ */
+export type FormCountOutputTypeCountFormGenerationProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FormGenerationProgressWhereInput
+}
+
 
 export type FormSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -995,6 +1124,7 @@ export type FormSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Form$folderArgs<ExtArgs>
   processForms?: boolean | Prisma.Form$processFormsArgs<ExtArgs>
+  formGenerationProgress?: boolean | Prisma.Form$formGenerationProgressArgs<ExtArgs>
   _count?: boolean | Prisma.FormCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["form"]>
 
@@ -1047,6 +1177,7 @@ export type FormInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   folder?: boolean | Prisma.Form$folderArgs<ExtArgs>
   processForms?: boolean | Prisma.Form$processFormsArgs<ExtArgs>
+  formGenerationProgress?: boolean | Prisma.Form$formGenerationProgressArgs<ExtArgs>
   _count?: boolean | Prisma.FormCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FormIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1065,6 +1196,7 @@ export type $FormPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     creator: Prisma.$UserPayload<ExtArgs>
     folder: Prisma.$FolderPayload<ExtArgs> | null
     processForms: Prisma.$ProcessFormPayload<ExtArgs>[]
+    formGenerationProgress: Prisma.$FormGenerationProgressPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1475,6 +1607,7 @@ export interface Prisma__FormClient<T, Null = never, ExtArgs extends runtime.Typ
   creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   folder<T extends Prisma.Form$folderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$folderArgs<ExtArgs>>): Prisma.Prisma__FolderClient<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   processForms<T extends Prisma.Form$processFormsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$processFormsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  formGenerationProgress<T extends Prisma.Form$formGenerationProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$formGenerationProgressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormGenerationProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1983,6 +2116,30 @@ export type Form$processFormsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.ProcessFormScalarFieldEnum | Prisma.ProcessFormScalarFieldEnum[]
+}
+
+/**
+ * Form.formGenerationProgress
+ */
+export type Form$formGenerationProgressArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FormGenerationProgress
+   */
+  select?: Prisma.FormGenerationProgressSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FormGenerationProgress
+   */
+  omit?: Prisma.FormGenerationProgressOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FormGenerationProgressInclude<ExtArgs> | null
+  where?: Prisma.FormGenerationProgressWhereInput
+  orderBy?: Prisma.FormGenerationProgressOrderByWithRelationInput | Prisma.FormGenerationProgressOrderByWithRelationInput[]
+  cursor?: Prisma.FormGenerationProgressWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FormGenerationProgressScalarFieldEnum | Prisma.FormGenerationProgressScalarFieldEnum[]
 }
 
 /**

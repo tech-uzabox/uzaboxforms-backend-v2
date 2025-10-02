@@ -333,6 +333,7 @@ export class FileService {
   async processFileForFormGeneration(
     file: Express.Multer.File,
     userId: string,
+    folderId?: string,
   ): Promise<string> {
     try {
       this.logger.log(
@@ -345,9 +346,13 @@ export class FileService {
           originalname: file.originalname,
         },
         userId,
+        folderId,
       });
 
-      const jobId = 'file-processing-' + Date.now();
+      const jobId = jobResult;
+      if (!jobId) {
+        throw new Error('Failed to create job for file processing.');
+      }
 
       await this.auditLogService.log({
         action: 'FILE_PROCESSING_QUEUED',

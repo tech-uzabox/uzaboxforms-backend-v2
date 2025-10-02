@@ -30,13 +30,14 @@ export class JobWorker {
   @ProcessQueue(FILE_PROCESSING_JOB)
   async processFile(job: pgBoss.Job<FileProcessingJobPayload>) {
     try {
-      const { file, userId } = job.data;
+      const { file, userId, folderId } = job.data;
+
       this.logger.log(`Processing file: ${file.originalname} for user: ${userId}`);
 
       const formSchema = await this.formGenerationService.generateFormSchema(job, {
         buffer: Buffer.from(file.buffer),
         originalname: file.originalname,
-      });
+      }, userId);
 
       // Create form name
       const formName = file.originalname?.replace(/\.[^/.]+$/, "") || formSchema.name;
@@ -54,8 +55,15 @@ export class JobWorker {
           name: formName,
           status: 'ENABLED',
           creatorId: userId,
+          folderId: folderId || null,
           design: formSchema.schema,
         }
+      });
+
+      // Update progress with formId
+      await this.prisma.formGenerationProgress.updateMany({
+        where: { jobId: job.id },
+        data: { formId: newForm.id },
       });
 
       this.logger.log(`Form created successfully: ${newForm.id}`);

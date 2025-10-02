@@ -48,7 +48,8 @@ export const ModelName = {
   Vote: 'Vote',
   Document: 'Document',
   Suggestion: 'Suggestion',
-  ProcessSave: 'ProcessSave'
+  ProcessSave: 'ProcessSave',
+  FormGenerationProgress: 'FormGenerationProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -471,6 +472,21 @@ export const ProcessSaveScalarFieldEnum = {
 export type ProcessSaveScalarFieldEnum = (typeof ProcessSaveScalarFieldEnum)[keyof typeof ProcessSaveScalarFieldEnum]
 
 
+export const FormGenerationProgressScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  status: 'status',
+  progress: 'progress',
+  message: 'message',
+  userId: 'userId',
+  formId: 'formId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FormGenerationProgressScalarFieldEnum = (typeof FormGenerationProgressScalarFieldEnum)[keyof typeof FormGenerationProgressScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -828,4 +844,15 @@ export const ProcessSaveOrderByRelevanceFieldEnum = {
 } as const
 
 export type ProcessSaveOrderByRelevanceFieldEnum = (typeof ProcessSaveOrderByRelevanceFieldEnum)[keyof typeof ProcessSaveOrderByRelevanceFieldEnum]
+
+
+export const FormGenerationProgressOrderByRelevanceFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  message: 'message',
+  userId: 'userId',
+  formId: 'formId'
+} as const
+
+export type FormGenerationProgressOrderByRelevanceFieldEnum = (typeof FormGenerationProgressOrderByRelevanceFieldEnum)[keyof typeof FormGenerationProgressOrderByRelevanceFieldEnum]
 

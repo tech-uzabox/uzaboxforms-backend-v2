@@ -89,3 +89,13 @@ export const AddToDatabaseStatus = {
 } as const
 
 export type AddToDatabaseStatus = (typeof AddToDatabaseStatus)[keyof typeof AddToDatabaseStatus]
+
+
+export const FormGenerationStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type FormGenerationStatus = (typeof FormGenerationStatus)[keyof typeof FormGenerationStatus]
