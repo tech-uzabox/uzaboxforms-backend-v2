@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { FolderService } from './folder.service';
@@ -73,9 +75,20 @@ export class FolderController {
     status: 200,
     description: 'Folder deleted successfully',
   })
+  @ApiResponse({ status: 400, description: 'Cannot delete folder with forms' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Folder not found' })
-  remove(@Param('id') id: string) {
-    return this.folderService.remove(id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.folderService.remove(id);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

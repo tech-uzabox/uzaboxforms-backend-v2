@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio
+    container_name: minio-local
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+      MINIO_SERVER_URL: http://localhost:9000
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+    restart: unless-stopped
+
+  minio-init:
+    image: minio/mc
+    container_name: minio-init-local
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+        sleep 5 &&
+        mc alias set local http://minio:9000 minio minio123 &&
+        mc mb -p local/private &&
+        mc mb -p local/public &&
+        mc mb -p local/qttest &&
+        mc anonymous set download local/public &&
+        echo 'Local MinIO initialized: public, private, qttest buckets created'
+      "
+
+volumes:
+  minio_data:

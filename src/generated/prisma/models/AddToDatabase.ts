@@ -27,6 +27,7 @@ export type AddToDatabaseMinAggregateOutputType = {
   id: string | null
   name: string | null
   status: $Enums.AddToDatabaseStatus | null
+  parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -35,6 +36,7 @@ export type AddToDatabaseMaxAggregateOutputType = {
   id: string | null
   name: string | null
   status: $Enums.AddToDatabaseStatus | null
+  parentId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -43,7 +45,7 @@ export type AddToDatabaseCountAggregateOutputType = {
   id: number
   name: number
   status: number
-  levels: number
+  parentId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -54,6 +56,7 @@ export type AddToDatabaseMinAggregateInputType = {
   id?: true
   name?: true
   status?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -62,6 +65,7 @@ export type AddToDatabaseMaxAggregateInputType = {
   id?: true
   name?: true
   status?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -70,7 +74,7 @@ export type AddToDatabaseCountAggregateInputType = {
   id?: true
   name?: true
   status?: true
-  levels?: true
+  parentId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -152,7 +156,7 @@ export type AddToDatabaseGroupByOutputType = {
   id: string
   name: string
   status: $Enums.AddToDatabaseStatus
-  levels: runtime.JsonValue
+  parentId: string | null
   createdAt: Date
   updatedAt: Date
   _count: AddToDatabaseCountAggregateOutputType | null
@@ -182,18 +186,24 @@ export type AddToDatabaseWhereInput = {
   id?: Prisma.UuidFilter<"AddToDatabase"> | string
   name?: Prisma.StringFilter<"AddToDatabase"> | string
   status?: Prisma.EnumAddToDatabaseStatusFilter<"AddToDatabase"> | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonFilter<"AddToDatabase">
+  parentId?: Prisma.UuidNullableFilter<"AddToDatabase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AddToDatabase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AddToDatabase"> | Date | string
+  parent?: Prisma.XOR<Prisma.AddToDatabaseNullableScalarRelationFilter, Prisma.AddToDatabaseWhereInput> | null
+  children?: Prisma.AddToDatabaseListRelationFilter
+  treeItems?: Prisma.AddToDatabaseTreeItemListRelationFilter
 }
 
 export type AddToDatabaseOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  levels?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  parent?: Prisma.AddToDatabaseOrderByWithRelationInput
+  children?: Prisma.AddToDatabaseOrderByRelationAggregateInput
+  treeItems?: Prisma.AddToDatabaseTreeItemOrderByRelationAggregateInput
   _relevance?: Prisma.AddToDatabaseOrderByRelevanceInput
 }
 
@@ -204,16 +214,19 @@ export type AddToDatabaseWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.AddToDatabaseWhereInput | Prisma.AddToDatabaseWhereInput[]
   name?: Prisma.StringFilter<"AddToDatabase"> | string
   status?: Prisma.EnumAddToDatabaseStatusFilter<"AddToDatabase"> | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonFilter<"AddToDatabase">
+  parentId?: Prisma.UuidNullableFilter<"AddToDatabase"> | string | null
   createdAt?: Prisma.DateTimeFilter<"AddToDatabase"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"AddToDatabase"> | Date | string
+  parent?: Prisma.XOR<Prisma.AddToDatabaseNullableScalarRelationFilter, Prisma.AddToDatabaseWhereInput> | null
+  children?: Prisma.AddToDatabaseListRelationFilter
+  treeItems?: Prisma.AddToDatabaseTreeItemListRelationFilter
 }, "id">
 
 export type AddToDatabaseOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  levels?: Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AddToDatabaseCountOrderByAggregateInput
@@ -228,7 +241,7 @@ export type AddToDatabaseScalarWhereWithAggregatesInput = {
   id?: Prisma.UuidWithAggregatesFilter<"AddToDatabase"> | string
   name?: Prisma.StringWithAggregatesFilter<"AddToDatabase"> | string
   status?: Prisma.EnumAddToDatabaseStatusWithAggregatesFilter<"AddToDatabase"> | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonWithAggregatesFilter<"AddToDatabase">
+  parentId?: Prisma.UuidNullableWithAggregatesFilter<"AddToDatabase"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"AddToDatabase"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"AddToDatabase"> | Date | string
 }
@@ -237,43 +250,51 @@ export type AddToDatabaseCreateInput = {
   id?: string
   name: string
   status?: $Enums.AddToDatabaseStatus
-  levels: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
+  parent?: Prisma.AddToDatabaseCreateNestedOneWithoutChildrenInput
+  children?: Prisma.AddToDatabaseCreateNestedManyWithoutParentInput
+  treeItems?: Prisma.AddToDatabaseTreeItemCreateNestedManyWithoutAddToDatabaseInput
 }
 
 export type AddToDatabaseUncheckedCreateInput = {
   id?: string
   name: string
   status?: $Enums.AddToDatabaseStatus
-  levels: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  children?: Prisma.AddToDatabaseUncheckedCreateNestedManyWithoutParentInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUncheckedCreateNestedManyWithoutAddToDatabaseInput
 }
 
 export type AddToDatabaseUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.AddToDatabaseUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.AddToDatabaseUpdateManyWithoutParentNestedInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUpdateManyWithoutAddToDatabaseNestedInput
 }
 
 export type AddToDatabaseUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.AddToDatabaseUncheckedUpdateManyWithoutParentNestedInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUncheckedUpdateManyWithoutAddToDatabaseNestedInput
 }
 
 export type AddToDatabaseCreateManyInput = {
   id?: string
   name: string
   status?: $Enums.AddToDatabaseStatus
-  levels: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  parentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -282,7 +303,6 @@ export type AddToDatabaseUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -291,9 +311,24 @@ export type AddToDatabaseUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
-  levels?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type AddToDatabaseNullableScalarRelationFilter = {
+  is?: Prisma.AddToDatabaseWhereInput | null
+  isNot?: Prisma.AddToDatabaseWhereInput | null
+}
+
+export type AddToDatabaseListRelationFilter = {
+  every?: Prisma.AddToDatabaseWhereInput
+  some?: Prisma.AddToDatabaseWhereInput
+  none?: Prisma.AddToDatabaseWhereInput
+}
+
+export type AddToDatabaseOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type AddToDatabaseOrderByRelevanceInput = {
@@ -306,7 +341,7 @@ export type AddToDatabaseCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
-  levels?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -315,6 +350,7 @@ export type AddToDatabaseMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -323,62 +359,406 @@ export type AddToDatabaseMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type AddToDatabaseScalarRelationFilter = {
+  is?: Prisma.AddToDatabaseWhereInput
+  isNot?: Prisma.AddToDatabaseWhereInput
+}
+
+export type AddToDatabaseCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutChildrenInput, Prisma.AddToDatabaseUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutChildrenInput
+  connect?: Prisma.AddToDatabaseWhereUniqueInput
+}
+
+export type AddToDatabaseCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutParentInput, Prisma.AddToDatabaseUncheckedCreateWithoutParentInput> | Prisma.AddToDatabaseCreateWithoutParentInput[] | Prisma.AddToDatabaseUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutParentInput | Prisma.AddToDatabaseCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.AddToDatabaseCreateManyParentInputEnvelope
+  connect?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+}
+
+export type AddToDatabaseUncheckedCreateNestedManyWithoutParentInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutParentInput, Prisma.AddToDatabaseUncheckedCreateWithoutParentInput> | Prisma.AddToDatabaseCreateWithoutParentInput[] | Prisma.AddToDatabaseUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutParentInput | Prisma.AddToDatabaseCreateOrConnectWithoutParentInput[]
+  createMany?: Prisma.AddToDatabaseCreateManyParentInputEnvelope
+  connect?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
 }
 
 export type EnumAddToDatabaseStatusFieldUpdateOperationsInput = {
   set?: $Enums.AddToDatabaseStatus
 }
 
+export type AddToDatabaseUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutChildrenInput, Prisma.AddToDatabaseUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.AddToDatabaseUpsertWithoutChildrenInput
+  disconnect?: Prisma.AddToDatabaseWhereInput | boolean
+  delete?: Prisma.AddToDatabaseWhereInput | boolean
+  connect?: Prisma.AddToDatabaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AddToDatabaseUpdateToOneWithWhereWithoutChildrenInput, Prisma.AddToDatabaseUpdateWithoutChildrenInput>, Prisma.AddToDatabaseUncheckedUpdateWithoutChildrenInput>
+}
+
+export type AddToDatabaseUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutParentInput, Prisma.AddToDatabaseUncheckedCreateWithoutParentInput> | Prisma.AddToDatabaseCreateWithoutParentInput[] | Prisma.AddToDatabaseUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutParentInput | Prisma.AddToDatabaseCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.AddToDatabaseUpsertWithWhereUniqueWithoutParentInput | Prisma.AddToDatabaseUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.AddToDatabaseCreateManyParentInputEnvelope
+  set?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  disconnect?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  delete?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  connect?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  update?: Prisma.AddToDatabaseUpdateWithWhereUniqueWithoutParentInput | Prisma.AddToDatabaseUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.AddToDatabaseUpdateManyWithWhereWithoutParentInput | Prisma.AddToDatabaseUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.AddToDatabaseScalarWhereInput | Prisma.AddToDatabaseScalarWhereInput[]
+}
+
+export type AddToDatabaseUncheckedUpdateManyWithoutParentNestedInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutParentInput, Prisma.AddToDatabaseUncheckedCreateWithoutParentInput> | Prisma.AddToDatabaseCreateWithoutParentInput[] | Prisma.AddToDatabaseUncheckedCreateWithoutParentInput[]
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutParentInput | Prisma.AddToDatabaseCreateOrConnectWithoutParentInput[]
+  upsert?: Prisma.AddToDatabaseUpsertWithWhereUniqueWithoutParentInput | Prisma.AddToDatabaseUpsertWithWhereUniqueWithoutParentInput[]
+  createMany?: Prisma.AddToDatabaseCreateManyParentInputEnvelope
+  set?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  disconnect?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  delete?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  connect?: Prisma.AddToDatabaseWhereUniqueInput | Prisma.AddToDatabaseWhereUniqueInput[]
+  update?: Prisma.AddToDatabaseUpdateWithWhereUniqueWithoutParentInput | Prisma.AddToDatabaseUpdateWithWhereUniqueWithoutParentInput[]
+  updateMany?: Prisma.AddToDatabaseUpdateManyWithWhereWithoutParentInput | Prisma.AddToDatabaseUpdateManyWithWhereWithoutParentInput[]
+  deleteMany?: Prisma.AddToDatabaseScalarWhereInput | Prisma.AddToDatabaseScalarWhereInput[]
+}
+
+export type AddToDatabaseCreateNestedOneWithoutTreeItemsInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutTreeItemsInput, Prisma.AddToDatabaseUncheckedCreateWithoutTreeItemsInput>
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutTreeItemsInput
+  connect?: Prisma.AddToDatabaseWhereUniqueInput
+}
+
+export type AddToDatabaseUpdateOneRequiredWithoutTreeItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutTreeItemsInput, Prisma.AddToDatabaseUncheckedCreateWithoutTreeItemsInput>
+  connectOrCreate?: Prisma.AddToDatabaseCreateOrConnectWithoutTreeItemsInput
+  upsert?: Prisma.AddToDatabaseUpsertWithoutTreeItemsInput
+  connect?: Prisma.AddToDatabaseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AddToDatabaseUpdateToOneWithWhereWithoutTreeItemsInput, Prisma.AddToDatabaseUpdateWithoutTreeItemsInput>, Prisma.AddToDatabaseUncheckedUpdateWithoutTreeItemsInput>
+}
+
+export type AddToDatabaseCreateWithoutChildrenInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.AddToDatabaseCreateNestedOneWithoutChildrenInput
+  treeItems?: Prisma.AddToDatabaseTreeItemCreateNestedManyWithoutAddToDatabaseInput
+}
+
+export type AddToDatabaseUncheckedCreateWithoutChildrenInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  treeItems?: Prisma.AddToDatabaseTreeItemUncheckedCreateNestedManyWithoutAddToDatabaseInput
+}
+
+export type AddToDatabaseCreateOrConnectWithoutChildrenInput = {
+  where: Prisma.AddToDatabaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutChildrenInput, Prisma.AddToDatabaseUncheckedCreateWithoutChildrenInput>
+}
+
+export type AddToDatabaseCreateWithoutParentInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.AddToDatabaseCreateNestedManyWithoutParentInput
+  treeItems?: Prisma.AddToDatabaseTreeItemCreateNestedManyWithoutAddToDatabaseInput
+}
+
+export type AddToDatabaseUncheckedCreateWithoutParentInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.AddToDatabaseUncheckedCreateNestedManyWithoutParentInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUncheckedCreateNestedManyWithoutAddToDatabaseInput
+}
+
+export type AddToDatabaseCreateOrConnectWithoutParentInput = {
+  where: Prisma.AddToDatabaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutParentInput, Prisma.AddToDatabaseUncheckedCreateWithoutParentInput>
+}
+
+export type AddToDatabaseCreateManyParentInputEnvelope = {
+  data: Prisma.AddToDatabaseCreateManyParentInput | Prisma.AddToDatabaseCreateManyParentInput[]
+  skipDuplicates?: boolean
+}
+
+export type AddToDatabaseUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.AddToDatabaseUpdateWithoutChildrenInput, Prisma.AddToDatabaseUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutChildrenInput, Prisma.AddToDatabaseUncheckedCreateWithoutChildrenInput>
+  where?: Prisma.AddToDatabaseWhereInput
+}
+
+export type AddToDatabaseUpdateToOneWithWhereWithoutChildrenInput = {
+  where?: Prisma.AddToDatabaseWhereInput
+  data: Prisma.XOR<Prisma.AddToDatabaseUpdateWithoutChildrenInput, Prisma.AddToDatabaseUncheckedUpdateWithoutChildrenInput>
+}
+
+export type AddToDatabaseUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.AddToDatabaseUpdateOneWithoutChildrenNestedInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUpdateManyWithoutAddToDatabaseNestedInput
+}
+
+export type AddToDatabaseUncheckedUpdateWithoutChildrenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  treeItems?: Prisma.AddToDatabaseTreeItemUncheckedUpdateManyWithoutAddToDatabaseNestedInput
+}
+
+export type AddToDatabaseUpsertWithWhereUniqueWithoutParentInput = {
+  where: Prisma.AddToDatabaseWhereUniqueInput
+  update: Prisma.XOR<Prisma.AddToDatabaseUpdateWithoutParentInput, Prisma.AddToDatabaseUncheckedUpdateWithoutParentInput>
+  create: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutParentInput, Prisma.AddToDatabaseUncheckedCreateWithoutParentInput>
+}
+
+export type AddToDatabaseUpdateWithWhereUniqueWithoutParentInput = {
+  where: Prisma.AddToDatabaseWhereUniqueInput
+  data: Prisma.XOR<Prisma.AddToDatabaseUpdateWithoutParentInput, Prisma.AddToDatabaseUncheckedUpdateWithoutParentInput>
+}
+
+export type AddToDatabaseUpdateManyWithWhereWithoutParentInput = {
+  where: Prisma.AddToDatabaseScalarWhereInput
+  data: Prisma.XOR<Prisma.AddToDatabaseUpdateManyMutationInput, Prisma.AddToDatabaseUncheckedUpdateManyWithoutParentInput>
+}
+
+export type AddToDatabaseScalarWhereInput = {
+  AND?: Prisma.AddToDatabaseScalarWhereInput | Prisma.AddToDatabaseScalarWhereInput[]
+  OR?: Prisma.AddToDatabaseScalarWhereInput[]
+  NOT?: Prisma.AddToDatabaseScalarWhereInput | Prisma.AddToDatabaseScalarWhereInput[]
+  id?: Prisma.UuidFilter<"AddToDatabase"> | string
+  name?: Prisma.StringFilter<"AddToDatabase"> | string
+  status?: Prisma.EnumAddToDatabaseStatusFilter<"AddToDatabase"> | $Enums.AddToDatabaseStatus
+  parentId?: Prisma.UuidNullableFilter<"AddToDatabase"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"AddToDatabase"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"AddToDatabase"> | Date | string
+}
+
+export type AddToDatabaseCreateWithoutTreeItemsInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  parent?: Prisma.AddToDatabaseCreateNestedOneWithoutChildrenInput
+  children?: Prisma.AddToDatabaseCreateNestedManyWithoutParentInput
+}
+
+export type AddToDatabaseUncheckedCreateWithoutTreeItemsInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  parentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  children?: Prisma.AddToDatabaseUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type AddToDatabaseCreateOrConnectWithoutTreeItemsInput = {
+  where: Prisma.AddToDatabaseWhereUniqueInput
+  create: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutTreeItemsInput, Prisma.AddToDatabaseUncheckedCreateWithoutTreeItemsInput>
+}
+
+export type AddToDatabaseUpsertWithoutTreeItemsInput = {
+  update: Prisma.XOR<Prisma.AddToDatabaseUpdateWithoutTreeItemsInput, Prisma.AddToDatabaseUncheckedUpdateWithoutTreeItemsInput>
+  create: Prisma.XOR<Prisma.AddToDatabaseCreateWithoutTreeItemsInput, Prisma.AddToDatabaseUncheckedCreateWithoutTreeItemsInput>
+  where?: Prisma.AddToDatabaseWhereInput
+}
+
+export type AddToDatabaseUpdateToOneWithWhereWithoutTreeItemsInput = {
+  where?: Prisma.AddToDatabaseWhereInput
+  data: Prisma.XOR<Prisma.AddToDatabaseUpdateWithoutTreeItemsInput, Prisma.AddToDatabaseUncheckedUpdateWithoutTreeItemsInput>
+}
+
+export type AddToDatabaseUpdateWithoutTreeItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  parent?: Prisma.AddToDatabaseUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.AddToDatabaseUpdateManyWithoutParentNestedInput
+}
+
+export type AddToDatabaseUncheckedUpdateWithoutTreeItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.AddToDatabaseUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type AddToDatabaseCreateManyParentInput = {
+  id?: string
+  name: string
+  status?: $Enums.AddToDatabaseStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type AddToDatabaseUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.AddToDatabaseUpdateManyWithoutParentNestedInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUpdateManyWithoutAddToDatabaseNestedInput
+}
+
+export type AddToDatabaseUncheckedUpdateWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  children?: Prisma.AddToDatabaseUncheckedUpdateManyWithoutParentNestedInput
+  treeItems?: Prisma.AddToDatabaseTreeItemUncheckedUpdateManyWithoutAddToDatabaseNestedInput
+}
+
+export type AddToDatabaseUncheckedUpdateManyWithoutParentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumAddToDatabaseStatusFieldUpdateOperationsInput | $Enums.AddToDatabaseStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type AddToDatabaseCountOutputType
+ */
+
+export type AddToDatabaseCountOutputType = {
+  children: number
+  treeItems: number
+}
+
+export type AddToDatabaseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  children?: boolean | AddToDatabaseCountOutputTypeCountChildrenArgs
+  treeItems?: boolean | AddToDatabaseCountOutputTypeCountTreeItemsArgs
+}
+
+/**
+ * AddToDatabaseCountOutputType without action
+ */
+export type AddToDatabaseCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AddToDatabaseCountOutputType
+   */
+  select?: Prisma.AddToDatabaseCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AddToDatabaseCountOutputType without action
+ */
+export type AddToDatabaseCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AddToDatabaseWhereInput
+}
+
+/**
+ * AddToDatabaseCountOutputType without action
+ */
+export type AddToDatabaseCountOutputTypeCountTreeItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AddToDatabaseTreeItemWhereInput
+}
 
 
 export type AddToDatabaseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   status?: boolean
-  levels?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.AddToDatabase$parentArgs<ExtArgs>
+  children?: boolean | Prisma.AddToDatabase$childrenArgs<ExtArgs>
+  treeItems?: boolean | Prisma.AddToDatabase$treeItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.AddToDatabaseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["addToDatabase"]>
 
 export type AddToDatabaseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   status?: boolean
-  levels?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.AddToDatabase$parentArgs<ExtArgs>
 }, ExtArgs["result"]["addToDatabase"]>
 
 export type AddToDatabaseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   status?: boolean
-  levels?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  parent?: boolean | Prisma.AddToDatabase$parentArgs<ExtArgs>
 }, ExtArgs["result"]["addToDatabase"]>
 
 export type AddToDatabaseSelectScalar = {
   id?: boolean
   name?: boolean
   status?: boolean
-  levels?: boolean
+  parentId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type AddToDatabaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "status" | "levels" | "createdAt" | "updatedAt", ExtArgs["result"]["addToDatabase"]>
+export type AddToDatabaseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "status" | "parentId" | "createdAt" | "updatedAt", ExtArgs["result"]["addToDatabase"]>
+export type AddToDatabaseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.AddToDatabase$parentArgs<ExtArgs>
+  children?: boolean | Prisma.AddToDatabase$childrenArgs<ExtArgs>
+  treeItems?: boolean | Prisma.AddToDatabase$treeItemsArgs<ExtArgs>
+  _count?: boolean | Prisma.AddToDatabaseCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type AddToDatabaseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.AddToDatabase$parentArgs<ExtArgs>
+}
+export type AddToDatabaseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  parent?: boolean | Prisma.AddToDatabase$parentArgs<ExtArgs>
+}
 
 export type $AddToDatabasePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "AddToDatabase"
-  objects: {}
+  objects: {
+    parent: Prisma.$AddToDatabasePayload<ExtArgs> | null
+    children: Prisma.$AddToDatabasePayload<ExtArgs>[]
+    treeItems: Prisma.$AddToDatabaseTreeItemPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     status: $Enums.AddToDatabaseStatus
-    levels: runtime.JsonValue
+    parentId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["addToDatabase"]>
@@ -775,6 +1155,9 @@ readonly fields: AddToDatabaseFieldRefs;
  */
 export interface Prisma__AddToDatabaseClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  parent<T extends Prisma.AddToDatabase$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AddToDatabase$parentArgs<ExtArgs>>): Prisma.Prisma__AddToDatabaseClient<runtime.Types.Result.GetResult<Prisma.$AddToDatabasePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  children<T extends Prisma.AddToDatabase$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AddToDatabase$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AddToDatabasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  treeItems<T extends Prisma.AddToDatabase$treeItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AddToDatabase$treeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AddToDatabaseTreeItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -807,7 +1190,7 @@ export interface AddToDatabaseFieldRefs {
   readonly id: Prisma.FieldRef<"AddToDatabase", 'String'>
   readonly name: Prisma.FieldRef<"AddToDatabase", 'String'>
   readonly status: Prisma.FieldRef<"AddToDatabase", 'AddToDatabaseStatus'>
-  readonly levels: Prisma.FieldRef<"AddToDatabase", 'Json'>
+  readonly parentId: Prisma.FieldRef<"AddToDatabase", 'String'>
   readonly createdAt: Prisma.FieldRef<"AddToDatabase", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"AddToDatabase", 'DateTime'>
 }
@@ -826,6 +1209,10 @@ export type AddToDatabaseFindUniqueArgs<ExtArgs extends runtime.Types.Extensions
    * Omit specific fields from the AddToDatabase
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
   /**
    * Filter, which AddToDatabase to fetch.
    */
@@ -846,6 +1233,10 @@ export type AddToDatabaseFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Ext
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  /**
    * Filter, which AddToDatabase to fetch.
    */
   where: Prisma.AddToDatabaseWhereUniqueInput
@@ -864,6 +1255,10 @@ export type AddToDatabaseFindFirstArgs<ExtArgs extends runtime.Types.Extensions.
    * Omit specific fields from the AddToDatabase
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
   /**
    * Filter, which AddToDatabase to fetch.
    */
@@ -914,6 +1309,10 @@ export type AddToDatabaseFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  /**
    * Filter, which AddToDatabase to fetch.
    */
   where?: Prisma.AddToDatabaseWhereInput
@@ -963,6 +1362,10 @@ export type AddToDatabaseFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  /**
    * Filter, which AddToDatabases to fetch.
    */
   where?: Prisma.AddToDatabaseWhereInput
@@ -1007,6 +1410,10 @@ export type AddToDatabaseCreateArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  /**
    * The data needed to create a AddToDatabase.
    */
   data: Prisma.XOR<Prisma.AddToDatabaseCreateInput, Prisma.AddToDatabaseUncheckedCreateInput>
@@ -1041,6 +1448,10 @@ export type AddToDatabaseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    */
   data: Prisma.AddToDatabaseCreateManyInput | Prisma.AddToDatabaseCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1055,6 +1466,10 @@ export type AddToDatabaseUpdateArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the AddToDatabase
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
   /**
    * The data needed to update a AddToDatabase.
    */
@@ -1108,6 +1523,10 @@ export type AddToDatabaseUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.E
    * Limit how many AddToDatabases to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1122,6 +1541,10 @@ export type AddToDatabaseUpsertArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the AddToDatabase
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
   /**
    * The filter to search for the AddToDatabase to update in case it exists.
    */
@@ -1150,6 +1573,10 @@ export type AddToDatabaseDeleteArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  /**
    * Filter which AddToDatabase to delete.
    */
   where: Prisma.AddToDatabaseWhereUniqueInput
@@ -1171,6 +1598,73 @@ export type AddToDatabaseDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
+ * AddToDatabase.parent
+ */
+export type AddToDatabase$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AddToDatabase
+   */
+  select?: Prisma.AddToDatabaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AddToDatabase
+   */
+  omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  where?: Prisma.AddToDatabaseWhereInput
+}
+
+/**
+ * AddToDatabase.children
+ */
+export type AddToDatabase$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AddToDatabase
+   */
+  select?: Prisma.AddToDatabaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AddToDatabase
+   */
+  omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
+  where?: Prisma.AddToDatabaseWhereInput
+  orderBy?: Prisma.AddToDatabaseOrderByWithRelationInput | Prisma.AddToDatabaseOrderByWithRelationInput[]
+  cursor?: Prisma.AddToDatabaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AddToDatabaseScalarFieldEnum | Prisma.AddToDatabaseScalarFieldEnum[]
+}
+
+/**
+ * AddToDatabase.treeItems
+ */
+export type AddToDatabase$treeItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AddToDatabaseTreeItem
+   */
+  select?: Prisma.AddToDatabaseTreeItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AddToDatabaseTreeItem
+   */
+  omit?: Prisma.AddToDatabaseTreeItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseTreeItemInclude<ExtArgs> | null
+  where?: Prisma.AddToDatabaseTreeItemWhereInput
+  orderBy?: Prisma.AddToDatabaseTreeItemOrderByWithRelationInput | Prisma.AddToDatabaseTreeItemOrderByWithRelationInput[]
+  cursor?: Prisma.AddToDatabaseTreeItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AddToDatabaseTreeItemScalarFieldEnum | Prisma.AddToDatabaseTreeItemScalarFieldEnum[]
+}
+
+/**
  * AddToDatabase without action
  */
 export type AddToDatabaseDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1182,4 +1676,8 @@ export type AddToDatabaseDefaultArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the AddToDatabase
    */
   omit?: Prisma.AddToDatabaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AddToDatabaseInclude<ExtArgs> | null
 }

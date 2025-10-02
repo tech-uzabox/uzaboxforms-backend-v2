@@ -1,9 +1,12 @@
 import { z } from 'zod';
 
-export const UpdateAddToDatabaseDtoSchema = z.object({
+export const UpdateAddToDatabaseTreeItemDtoSchema = z.object({
   name: z.string().min(1).optional(),
   status: z.enum(['ENABLED', 'DISABLED']).optional(),
   parentId: z.string().uuid().optional().nullable(),
 }).partial();
 
-export type UpdateAddToDatabaseDto = z.infer<typeof UpdateAddToDatabaseDtoSchema>;
+export type UpdateAddToDatabaseTreeItemDto = z.infer<typeof UpdateAddToDatabaseTreeItemDtoSchema>;
+
+
+

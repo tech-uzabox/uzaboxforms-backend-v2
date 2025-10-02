@@ -25,6 +25,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateFormDto } from './dto/create-form.dto';
 import { DuplicateFormDto } from './dto/duplicate-form.dto';
+import { MoveFormDto } from './dto/move-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
 import { FormService } from './form.service';
 
@@ -84,7 +85,7 @@ export class FormController {
     );
     return progress;
   }
-  
+
   @Get('with-countries')
   @ApiOperation({ summary: 'Get forms with countries fields' })
   @ApiResponse({
@@ -162,6 +163,14 @@ export class FormController {
       duplicateFormDto.formId,
       duplicateFormDto.creatorId,
     );
+  }
+
+  @Post('move')
+  @ApiOperation({ summary: 'Move form to another folder' })
+  @ApiResponse({ status: 200, description: 'Form moved successfully' })
+  @ApiResponse({ status: 404, description: 'Form or target folder not found' })
+  moveForm(@Body() moveFormDto: MoveFormDto) {
+    return this.formService.moveForm(moveFormDto);
   }
 
   @Get('public')
