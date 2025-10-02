@@ -419,7 +419,8 @@ export const ModelName = {
   Vote: 'Vote',
   Document: 'Document',
   Suggestion: 'Suggestion',
-  ProcessSave: 'ProcessSave'
+  ProcessSave: 'ProcessSave',
+  FormGenerationProgress: 'FormGenerationProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave"
+    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2733,6 +2734,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FormGenerationProgress: {
+      payload: Prisma.$FormGenerationProgressPayload<ExtArgs>
+      fields: Prisma.FormGenerationProgressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FormGenerationProgressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FormGenerationProgressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>
+        }
+        findFirst: {
+          args: Prisma.FormGenerationProgressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FormGenerationProgressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>
+        }
+        findMany: {
+          args: Prisma.FormGenerationProgressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>[]
+        }
+        create: {
+          args: Prisma.FormGenerationProgressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>
+        }
+        createMany: {
+          args: Prisma.FormGenerationProgressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FormGenerationProgressCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>[]
+        }
+        delete: {
+          args: Prisma.FormGenerationProgressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>
+        }
+        update: {
+          args: Prisma.FormGenerationProgressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>
+        }
+        deleteMany: {
+          args: Prisma.FormGenerationProgressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FormGenerationProgressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FormGenerationProgressUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>[]
+        }
+        upsert: {
+          args: Prisma.FormGenerationProgressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FormGenerationProgressPayload>
+        }
+        aggregate: {
+          args: Prisma.FormGenerationProgressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFormGenerationProgress>
+        }
+        groupBy: {
+          args: Prisma.FormGenerationProgressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FormGenerationProgressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FormGenerationProgressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FormGenerationProgressCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3190,6 +3265,21 @@ export const ProcessSaveScalarFieldEnum = {
 export type ProcessSaveScalarFieldEnum = (typeof ProcessSaveScalarFieldEnum)[keyof typeof ProcessSaveScalarFieldEnum]
 
 
+export const FormGenerationProgressScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  status: 'status',
+  progress: 'progress',
+  message: 'message',
+  userId: 'userId',
+  formId: 'formId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FormGenerationProgressScalarFieldEnum = (typeof FormGenerationProgressScalarFieldEnum)[keyof typeof FormGenerationProgressScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3560,6 +3650,17 @@ export const ProcessSaveOrderByRelevanceFieldEnum = {
 export type ProcessSaveOrderByRelevanceFieldEnum = (typeof ProcessSaveOrderByRelevanceFieldEnum)[keyof typeof ProcessSaveOrderByRelevanceFieldEnum]
 
 
+export const FormGenerationProgressOrderByRelevanceFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  message: 'message',
+  userId: 'userId',
+  formId: 'formId'
+} as const
+
+export type FormGenerationProgressOrderByRelevanceFieldEnum = (typeof FormGenerationProgressOrderByRelevanceFieldEnum)[keyof typeof FormGenerationProgressOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -3770,6 +3871,20 @@ export type ListEnumAddToDatabaseStatusFieldRefInput<$PrismaModel> = FieldRefInp
 
 
 /**
+ * Reference to a field of type 'FormGenerationStatus'
+ */
+export type EnumFormGenerationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FormGenerationStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'FormGenerationStatus[]'
+ */
+export type ListEnumFormGenerationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FormGenerationStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -3900,6 +4015,7 @@ export type GlobalOmitConfig = {
   document?: Prisma.DocumentOmit
   suggestion?: Prisma.SuggestionOmit
   processSave?: Prisma.ProcessSaveOmit
+  formGenerationProgress?: Prisma.FormGenerationProgressOmit
 }
 
 /* Types for Logging */
