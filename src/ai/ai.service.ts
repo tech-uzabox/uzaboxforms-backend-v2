@@ -298,7 +298,7 @@ export class AiService {
   message: Message;
 }) {
   const { text: title } = await generateText({
-    model: openrouter('x-ai/grok-4-fast:free'),
+    model: openrouter('x-ai/grok-4-fast'),
     system: `\n
     - you will generate a short title based on the first message a user begins a conversation with
     - ensure it is not more than 80 characters long
