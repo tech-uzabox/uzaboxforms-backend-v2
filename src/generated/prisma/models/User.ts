@@ -19,8 +19,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  failedLoginAttempts: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  failedLoginAttempts: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -32,6 +42,9 @@ export type UserMinAggregateOutputType = {
   photo: string | null
   googleId: string | null
   status: $Enums.UserStatus | null
+  failedLoginAttempts: number | null
+  lockedUntil: Date | null
+  isLocked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -45,6 +58,9 @@ export type UserMaxAggregateOutputType = {
   photo: string | null
   googleId: string | null
   status: $Enums.UserStatus | null
+  failedLoginAttempts: number | null
+  lockedUntil: Date | null
+  isLocked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,11 +74,22 @@ export type UserCountAggregateOutputType = {
   photo: number
   googleId: number
   status: number
+  failedLoginAttempts: number
+  lockedUntil: number
+  isLocked: number
   createdAt: number
   updatedAt: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  failedLoginAttempts?: true
+}
+
+export type UserSumAggregateInputType = {
+  failedLoginAttempts?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -73,6 +100,9 @@ export type UserMinAggregateInputType = {
   photo?: true
   googleId?: true
   status?: true
+  failedLoginAttempts?: true
+  lockedUntil?: true
+  isLocked?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -86,6 +116,9 @@ export type UserMaxAggregateInputType = {
   photo?: true
   googleId?: true
   status?: true
+  failedLoginAttempts?: true
+  lockedUntil?: true
+  isLocked?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -99,6 +132,9 @@ export type UserCountAggregateInputType = {
   photo?: true
   googleId?: true
   status?: true
+  failedLoginAttempts?: true
+  lockedUntil?: true
+  isLocked?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -142,6 +178,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -172,6 +220,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -185,9 +235,14 @@ export type UserGroupByOutputType = {
   photo: string | null
   googleId: string | null
   status: $Enums.UserStatus
+  failedLoginAttempts: number
+  lockedUntil: Date | null
+  isLocked: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -219,6 +274,9 @@ export type UserWhereInput = {
   photo?: Prisma.StringNullableFilter<"User"> | string | null
   googleId?: Prisma.StringNullableFilter<"User"> | string | null
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFilter<"User"> | number
+  lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  isLocked?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   applicantProcesses?: Prisma.ApplicantProcessListRelationFilter
@@ -245,6 +303,9 @@ export type UserOrderByWithRelationInput = {
   photo?: Prisma.SortOrderInput | Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  failedLoginAttempts?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   applicantProcesses?: Prisma.ApplicantProcessOrderByRelationAggregateInput
@@ -275,6 +336,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastName?: Prisma.StringNullableFilter<"User"> | string | null
   photo?: Prisma.StringNullableFilter<"User"> | string | null
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFilter<"User"> | number
+  lockedUntil?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  isLocked?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   applicantProcesses?: Prisma.ApplicantProcessListRelationFilter
@@ -301,11 +365,16 @@ export type UserOrderByWithAggregationInput = {
   photo?: Prisma.SortOrderInput | Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  failedLoginAttempts?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -320,6 +389,9 @@ export type UserScalarWhereWithAggregatesInput = {
   photo?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntWithAggregatesFilter<"User"> | number
+  lockedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  isLocked?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -333,6 +405,9 @@ export type UserCreateInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -359,6 +434,9 @@ export type UserUncheckedCreateInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -385,6 +463,9 @@ export type UserUpdateInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -411,6 +492,9 @@ export type UserUncheckedUpdateInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -437,6 +521,9 @@ export type UserCreateManyInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -450,6 +537,9 @@ export type UserUpdateManyMutationInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -463,6 +553,9 @@ export type UserUncheckedUpdateManyInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -482,8 +575,15 @@ export type UserCountOrderByAggregateInput = {
   photo?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  failedLoginAttempts?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  failedLoginAttempts?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -495,6 +595,9 @@ export type UserMaxOrderByAggregateInput = {
   photo?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  failedLoginAttempts?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -508,8 +611,15 @@ export type UserMinOrderByAggregateInput = {
   photo?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  failedLoginAttempts?: Prisma.SortOrder
+  lockedUntil?: Prisma.SortOrder
+  isLocked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  failedLoginAttempts?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -532,6 +642,22 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type EnumUserStatusFieldUpdateOperationsInput = {
   set?: $Enums.UserStatus
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -731,6 +857,9 @@ export type UserCreateWithoutRolesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -756,6 +885,9 @@ export type UserUncheckedCreateWithoutRolesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -797,6 +929,9 @@ export type UserUpdateWithoutRolesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -822,6 +957,9 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -847,6 +985,9 @@ export type UserCreateWithoutFilesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -872,6 +1013,9 @@ export type UserUncheckedCreateWithoutFilesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -913,6 +1057,9 @@ export type UserUpdateWithoutFilesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -938,6 +1085,9 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -963,6 +1113,9 @@ export type UserCreateWithoutAuditLogsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -988,6 +1141,9 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1029,6 +1185,9 @@ export type UserUpdateWithoutAuditLogsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1054,6 +1213,9 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1079,6 +1241,9 @@ export type UserCreateWithoutCreatedGroupsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1104,6 +1269,9 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1145,6 +1313,9 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1170,6 +1341,9 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1195,6 +1369,9 @@ export type UserCreateWithoutCreatedProcessesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1220,6 +1397,9 @@ export type UserUncheckedCreateWithoutCreatedProcessesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1261,6 +1441,9 @@ export type UserUpdateWithoutCreatedProcessesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1286,6 +1469,9 @@ export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1311,6 +1497,9 @@ export type UserCreateWithoutCreatedFoldersInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1336,6 +1525,9 @@ export type UserUncheckedCreateWithoutCreatedFoldersInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1377,6 +1569,9 @@ export type UserUpdateWithoutCreatedFoldersInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1402,6 +1597,9 @@ export type UserUncheckedUpdateWithoutCreatedFoldersInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1427,6 +1625,9 @@ export type UserCreateWithoutCreatedFormsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1452,6 +1653,9 @@ export type UserUncheckedCreateWithoutCreatedFormsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1493,6 +1697,9 @@ export type UserUpdateWithoutCreatedFormsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1518,6 +1725,9 @@ export type UserUncheckedUpdateWithoutCreatedFormsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1543,6 +1753,9 @@ export type UserCreateWithoutApplicantProcessesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
@@ -1568,6 +1781,9 @@ export type UserUncheckedCreateWithoutApplicantProcessesInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
@@ -1609,6 +1825,9 @@ export type UserUpdateWithoutApplicantProcessesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
@@ -1634,6 +1853,9 @@ export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
@@ -1659,6 +1881,9 @@ export type UserCreateWithoutProcessedApplicationsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1684,6 +1909,9 @@ export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1725,6 +1953,9 @@ export type UserUpdateWithoutProcessedApplicationsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1750,6 +1981,9 @@ export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1775,6 +2009,9 @@ export type UserCreateWithoutOrganizationInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1800,6 +2037,9 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1841,6 +2081,9 @@ export type UserUpdateWithoutOrganizationInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1866,6 +2109,9 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -1891,6 +2137,9 @@ export type UserCreateWithoutOwnedDashboardsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -1916,6 +2165,9 @@ export type UserUncheckedCreateWithoutOwnedDashboardsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -1957,6 +2209,9 @@ export type UserUpdateWithoutOwnedDashboardsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -1982,6 +2237,9 @@ export type UserUncheckedUpdateWithoutOwnedDashboardsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -2007,6 +2265,9 @@ export type UserCreateWithoutQrCodeDocumentsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -2032,6 +2293,9 @@ export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -2073,6 +2337,9 @@ export type UserUpdateWithoutQrCodeDocumentsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -2098,6 +2365,9 @@ export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -2123,6 +2393,9 @@ export type UserCreateWithoutFormGenerationProgressInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
@@ -2148,6 +2421,9 @@ export type UserUncheckedCreateWithoutFormGenerationProgressInput = {
   photo?: string | null
   googleId?: string | null
   status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
@@ -2189,6 +2465,9 @@ export type UserUpdateWithoutFormGenerationProgressInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
@@ -2214,6 +2493,9 @@ export type UserUncheckedUpdateWithoutFormGenerationProgressInput = {
   photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
@@ -2369,6 +2651,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   photo?: boolean
   googleId?: boolean
   status?: boolean
+  failedLoginAttempts?: boolean
+  lockedUntil?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   applicantProcesses?: boolean | Prisma.User$applicantProcessesArgs<ExtArgs>
@@ -2396,6 +2681,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   photo?: boolean
   googleId?: boolean
   status?: boolean
+  failedLoginAttempts?: boolean
+  lockedUntil?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2409,6 +2697,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   photo?: boolean
   googleId?: boolean
   status?: boolean
+  failedLoginAttempts?: boolean
+  lockedUntil?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -2422,11 +2713,14 @@ export type UserSelectScalar = {
   photo?: boolean
   googleId?: boolean
   status?: boolean
+  failedLoginAttempts?: boolean
+  lockedUntil?: boolean
+  isLocked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "photo" | "googleId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "firstName" | "lastName" | "photo" | "googleId" | "status" | "failedLoginAttempts" | "lockedUntil" | "isLocked" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applicantProcesses?: boolean | Prisma.User$applicantProcessesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
@@ -2472,6 +2766,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     photo: string | null
     googleId: string | null
     status: $Enums.UserStatus
+    failedLoginAttempts: number
+    lockedUntil: Date | null
+    isLocked: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2918,6 +3215,9 @@ export interface UserFieldRefs {
   readonly photo: Prisma.FieldRef<"User", 'String'>
   readonly googleId: Prisma.FieldRef<"User", 'String'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
+  readonly failedLoginAttempts: Prisma.FieldRef<"User", 'Int'>
+  readonly lockedUntil: Prisma.FieldRef<"User", 'DateTime'>
+  readonly isLocked: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

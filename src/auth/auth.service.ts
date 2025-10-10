@@ -60,10 +60,106 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<User | null> {
     const user = await this.userService.findByEmail(email);
-    if (user && (await bcrypt.compare(pass, user.password))) {
-      return user;
+    
+    if (!user) {
+      return null;
     }
-    return null;
+
+    // Check if account is locked
+    if (user.isLocked && user.lockedUntil && new Date() < user.lockedUntil) {
+      await this.auditLogService.log({
+        userId: user.id,
+        action: 'LOGIN_ATTEMPT_LOCKED_ACCOUNT',
+        resource: 'Auth',
+        status: 'FAILURE',
+        details: {
+          email: user.email,
+          lockedUntil: user.lockedUntil,
+        },
+      });
+      throw new UnauthorizedException('Account is locked due to multiple failed login attempts. Please try again later.');
+    }
+
+    // If lockout period has expired, reset the lockout
+    if (user.isLocked && user.lockedUntil && new Date() >= user.lockedUntil) {
+      await this.userService.update(user.id, {
+        isLocked: false,
+        lockedUntil: null,
+        failedLoginAttempts: 0,
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(pass, user.password);
+    
+    if (isPasswordValid) {
+      // Reset failed attempts on successful login
+      if (user.failedLoginAttempts > 0) {
+        await this.userService.update(user.id, {
+          failedLoginAttempts: 0,
+          isLocked: false,
+          lockedUntil: null,
+        });
+      }
+      
+      await this.auditLogService.log({
+        userId: user.id,
+        action: 'LOGIN_ATTEMPT_SUCCESS',
+        resource: 'Auth',
+        status: 'SUCCESS',
+        details: {
+          email: user.email,
+        },
+      });
+      
+      return user;
+    } else {
+      // Increment failed attempts
+      const newFailedAttempts = user.failedLoginAttempts + 1;
+      const maxAttempts = 5;
+      const lockoutDuration = 1 * 60 * 1000; // 1 minute
+      
+      let updateData: any = {
+        failedLoginAttempts: newFailedAttempts,
+      };
+      
+      // Lock account if max attempts reached
+      if (newFailedAttempts >= maxAttempts) {
+        const lockedUntil = new Date(Date.now() + lockoutDuration);
+        updateData = {
+          ...updateData,
+          isLocked: true,
+          lockedUntil: lockedUntil,
+        };
+        
+        await this.auditLogService.log({
+          userId: user.id,
+          action: 'ACCOUNT_LOCKED',
+          resource: 'Auth',
+          status: 'FAILURE',
+          details: {
+            email: user.email,
+            failedAttempts: newFailedAttempts,
+            lockedUntil: lockedUntil,
+          },
+        });
+      }
+      
+      await this.userService.update(user.id, updateData);
+      
+      await this.auditLogService.log({
+        userId: user.id,
+        action: 'LOGIN_ATTEMPT_FAILED',
+        resource: 'Auth',
+        status: 'FAILURE',
+        details: {
+          email: user.email,
+          failedAttempts: newFailedAttempts,
+          remainingAttempts: maxAttempts - newFailedAttempts,
+        },
+      });
+      
+      return null;
+    }
   }
 
   async login(user: User, req: Request) {
@@ -314,5 +410,36 @@ export class AuthService {
     if (!updated) throw new BadRequestException('User not found after update');
     const { password, ...result } = updated;
     return result;
+  }
+
+  async unlockAccount(userId: string, adminUserId: string): Promise<{ message: string }> {
+    const user = await this.userService.findOne(userId);
+    if (!user) {
+      throw new BadRequestException('User not found.');
+    }
+
+    if (!user.isLocked) {
+      throw new BadRequestException('Account is not locked.');
+    }
+
+    await this.userService.update(userId, {
+      isLocked: false,
+      lockedUntil: null,
+      failedLoginAttempts: 0,
+    });
+
+    await this.auditLogService.log({
+      userId: adminUserId,
+      action: 'ACCOUNT_UNLOCKED',
+      resource: 'User',
+      resourceId: userId,
+      status: 'SUCCESS',
+      details: {
+        unlockedUserEmail: user.email,
+        unlockedUserId: userId,
+      },
+    });
+
+    return { message: 'Account unlocked successfully.' };
   }
 }

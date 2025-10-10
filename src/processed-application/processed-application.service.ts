@@ -211,6 +211,9 @@ export class ProcessedApplicationService {
         photo: string | null;
         googleId: string | null;
         status: UserStatus;
+        failedLoginAttempts: number;
+        lockedUntil: Date | null;
+        isLocked: boolean;
         createdAt: Date;
         updatedAt: Date;
       };
@@ -224,6 +227,9 @@ export class ProcessedApplicationService {
       photo: string | null;
       googleId: string | null;
       status: UserStatus;
+      failedLoginAttempts: number;
+      lockedUntil: Date | null;
+      isLocked: boolean;
       createdAt: Date;
       updatedAt: Date;
     },
@@ -255,6 +261,9 @@ export class ProcessedApplicationService {
         photo: string | null;
         googleId: string | null;
         status: UserStatus;
+        failedLoginAttempts: number;
+        lockedUntil: Date | null;
+        isLocked: boolean;
         createdAt: Date;
         updatedAt: Date;
       };
@@ -268,6 +277,9 @@ export class ProcessedApplicationService {
       photo: string | null;
       googleId: string | null;
       status: UserStatus;
+      failedLoginAttempts: number;
+      lockedUntil: Date | null;
+      isLocked: boolean;
       createdAt: Date;
       updatedAt: Date;
     },

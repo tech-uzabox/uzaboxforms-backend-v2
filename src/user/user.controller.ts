@@ -16,11 +16,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ChangeUserPasswordDto } from './dto/change-password.dto';
+import { AuthService } from '../auth/auth.service';
 
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -65,5 +69,12 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
+  }
+
+  @Patch(':id/unlock')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  unlockAccount(@Param('id') id: string, @Request() req) {
+    return this.authService.unlockAccount(id, req.user.sub);
   }
 }

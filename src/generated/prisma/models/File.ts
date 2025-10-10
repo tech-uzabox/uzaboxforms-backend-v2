@@ -519,18 +519,6 @@ export type FileUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.FileScalarWhereInput | Prisma.FileScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type FileCreateWithoutUserInput = {
   id?: string
   fileUrl: string
