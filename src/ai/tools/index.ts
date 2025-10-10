@@ -8,6 +8,7 @@ export {
   createDeleteStepTool
 } from './process-management';
 export { createProcessTool } from './commit-process';
+export { createDashboardTool } from './dashboard-tools';
 export { getAvailableRoles, getAvailableGroups, getAvailableUsers } from './context-helpers';
 
 // Export types

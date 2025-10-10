@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import {
   appendResponseMessages,
   generateText,
@@ -12,9 +17,10 @@ import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { generateUUID } from 'src/utils/generate-uuid';
 import { PrismaService } from '../db/prisma.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
-import { systemPrompt, uzaAskAIPrompt } from './prompts';
+import { dashboardAIPrompt } from './prompts';
 import { openrouter } from './providers';
 import {
+  createDashboardTool,
   createDeleteFormTool,
   createDeleteStepTool,
   createGenerateFormTool,
@@ -35,6 +41,7 @@ import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-for
 import { createGetUserByIdTool } from './tools/get-user-by-id';
 import { DBMessageInput } from './types/ai.types';
 import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
+import { createWidgetTool, previewWidgetTool } from './tools/widget-tools';
 
 @Injectable()
 export class AiService {
@@ -101,37 +108,53 @@ export class AiService {
         select: { id: true, firstName: true, lastName: true, email: true },
       }),
     ]);
+    const forms = await this.prisma.form.findMany({
+      select: { id: true, name: true },
+      where: { status: 'ENABLED' },
+      orderBy: { updatedAt: 'desc' },
+      // take: 50,
+    });
+    const dashboards = await this.prisma.dashboard.findMany({
+      select: { id: true, name: true },
+      orderBy: { updatedAt: 'desc' },
+    });
 
     const isAdmin = currentUser.roles.includes('Admin');
     const isUzaAskAI = currentUser.roles.includes('Uza Ask AI');
 
     if (!isAdmin && !isUzaAskAI) {
-      throw new ForbiddenException('Access denied. You do not have the required role to use this feature.');
+      throw new ForbiddenException(
+        'Access denied. You do not have the required role to use this feature.',
+      );
     }
 
-    const systemPromptText = isAdmin
-      ? systemPrompt({
-          selectedChatModel: selectedChatModel || 'chat-model',
-          roles: roles.map((r) => ({ _id: r.id, name: r.name })),
-          groups: groups.map((g) => ({ _id: g.id, name: g.name })),
-          users: users.map((u) => ({
-            _id: u.id,
-            firstName: u.firstName,
-            lastName: u.lastName,
-            email: u.email,
-          })),
-        })
-      : uzaAskAIPrompt({
-          selectedChatModel: selectedChatModel || 'chat-model',
-          roles: roles.map((r) => ({ _id: r.id, name: r.name })),
-          groups: groups.map((g) => ({ _id: g.id, name: g.name })),
-          users: users.map((u) => ({
-            _id: u.id,
-            firstName: u.firstName,
-            lastName: u.lastName,
-            email: u.email,
-          })),
-        });
+    // const systemPromptText = isAdmin
+    //   ? systemPrompt({
+    //       selectedChatModel: selectedChatModel || 'chat-model',
+    //       roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+    //       groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+    //       users: users.map((u) => ({
+    //         _id: u.id,
+    //         firstName: u.firstName,
+    //         lastName: u.lastName,
+    //         email: u.email,
+    //       })),
+    //     })
+    //   : uzaAskAIPrompt({
+    //       selectedChatModel: selectedChatModel || 'chat-model',
+    //       roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+    //       groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+    //       users: users.map((u) => ({
+    //         _id: u.id,
+    //         firstName: u.firstName,
+    //         lastName: u.lastName,
+    //         email: u.email,
+    //       })),
+    //     });
+    const systemPromptText = dashboardAIPrompt({
+      forms: forms.map((f) => ({ formId: f.id, formName: f.name })),
+      dashboards: dashboards.map((d) => ({ dashboardId: d.id, dashboardName: d.name }))
+    });
 
     const baseTools = {
       get_forms: createGetFormsTool(this.prisma),
@@ -145,17 +168,23 @@ export class AiService {
     };
 
     const adminTools = {
-      ...baseTools,
-      generate_form: createGenerateFormTool,
-      save_form: createSaveFormTool(this.prisma, id),
-      preview_form: createPreviewFormTool,
-      delete_form: createDeleteFormTool(this.prisma, id),
-      save_process: createSaveProcessTool(this.prisma, id),
-      save_roles: createSaveRolesTool(this.prisma, id),
-      save_step: createSaveStepTool(this.prisma, id),
-      delete_step: createDeleteStepTool(this.prisma, id),
-      create_process: createProcessTool(this.prisma, id, currentUser.id),
+      get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
+      create_dashboard: createDashboardTool(this.prisma, currentUser.id),
+      create_widget: createWidgetTool(this.prisma),
+      preview_widget: previewWidgetTool
     };
+    // const adminTools = {
+    //   ...baseTools,
+    //   generate_form: createGenerateFormTool,
+    //   save_form: createSaveFormTool(this.prisma, id),
+    //   preview_form: createPreviewFormTool,
+    //   delete_form: createDeleteFormTool(this.prisma, id),
+    //   save_process: createSaveProcessTool(this.prisma, id),
+    //   save_roles: createSaveRolesTool(this.prisma, id),
+    //   save_step: createSaveStepTool(this.prisma, id),
+    //   delete_step: createDeleteStepTool(this.prisma, id),
+    //   create_process: createProcessTool(this.prisma, id, currentUser.id),
+    // };
 
     const tools = isAdmin ? adminTools : baseTools;
 
@@ -163,7 +192,9 @@ export class AiService {
       execute: async (dataStreamWriter) => {
         dataStreamWriter.writeData('initialized call');
         const result = streamText({
-          model: openrouter('x-ai/grok-4-fast'),
+          // model: openrouter('openai/gpt-5'),
+          model: openrouter('anthropic/claude-sonnet-4.5'),
+          // model: openrouter('x-ai/grok-4-fast'),
           system: systemPromptText,
           messages,
           experimental_generateMessageId: generateUUID,
@@ -209,13 +240,16 @@ export class AiService {
           },
         });
 
-        result.consumeStream()
+        result.consumeStream();
 
         result.mergeIntoDataStream(dataStreamWriter);
       },
       onError: (error) => {
-        console.log('error generation:', error instanceof Error ? error.message : String(error));
-        console.error(error)
+        console.log(
+          'error generation:',
+          error instanceof Error ? error.message : String(error),
+        );
+        console.error(error);
         // Error messages are masked by default for security reasons.
         // If you want to expose the error message to the client, you can do so here:
         return error instanceof Error ? error.message : String(error);
@@ -293,22 +327,22 @@ export class AiService {
   }
 
   private async generateTitleFromUserMessage({
-  message,
-}: {
-  message: Message;
-}) {
-  const { text: title } = await generateText({
-    model: openrouter('x-ai/grok-4-fast'),
-    system: `\n
+    message,
+  }: {
+    message: Message;
+  }) {
+    const { text: title } = await generateText({
+      model: openrouter('x-ai/grok-4-fast'),
+      system: `\n
     - you will generate a short title based on the first message a user begins a conversation with
     - ensure it is not more than 80 characters long
     - the title should be a summary of the user's message
     - do not use quotes or colons`,
-    prompt: JSON.stringify(message),
-  });
+      prompt: JSON.stringify(message),
+    });
 
-  return title;
-}
+    return title;
+  }
 
   private async saveMessages(chatId: string, messages: DBMessageInput[]) {
     const messageIds = messages.map((m) => m.id);
