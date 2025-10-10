@@ -11,6 +11,23 @@ import { EmailService } from '../email/email.service';
 import { NotificationService } from '../notification/notification.service';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
+function excelSerialToJSDate(serial: number): Date {
+  // Excel epoch starts 1900-01-00 (due to Excel bug compatibility)
+  const millisecondsPerDay = 86400 * 1000;
+  const utcDays = serial - 25569; // 25569 days between Excel epoch and Unix epoch
+  const utcValue = utcDays * millisecondsPerDay;
+  const dateInfo = new Date(utcValue);
+
+  // Return corrected local date/time (avoid timezone shift)
+  return new Date(
+    dateInfo.getUTCFullYear(),
+    dateInfo.getUTCMonth(),
+    dateInfo.getUTCDate(),
+    dateInfo.getUTCHours(),
+    dateInfo.getUTCMinutes(),
+    dateInfo.getUTCSeconds(),
+  );
+}
 
 @Injectable()
 export class ApplicantProcessService {
@@ -462,9 +479,9 @@ export class ApplicantProcessService {
 
         for (const [colName, index] of columnMap.entries()) {
           if (
-            colName.includes(questionLabel.toLowerCase()) ||
-            questionLabel.toLowerCase().includes(colName) ||
-            colName.includes(question.id.toLowerCase())
+            colName?.includes(questionLabel?.toLowerCase()) ||
+            questionLabel?.toLowerCase()?.includes(colName) ||
+            colName?.includes(question?.id?.toLowerCase())
           ) {
             columnIndex = index;
             matchedColumn = headers[index];
@@ -521,7 +538,7 @@ export class ApplicantProcessService {
       }
       return null;
     }
-
+    console.log('value', value);
     const stringValue = String(value).trim();
 
     switch (question.type) {
@@ -569,17 +586,37 @@ export class ApplicantProcessService {
         return numValue;
 
       case 'Date':
-        const dateValue = new Date(stringValue);
-        if (isNaN(dateValue.getTime())) {
-          throw new Error(`Invalid date format. Use MM/DD/YYYY or DD-MM-YYYY`);
+        let dateOnlyValue: Date | null = null;
+
+        if (typeof value === 'number') {
+          dateOnlyValue = excelSerialToJSDate(value);
+        } else {
+          const stringValue = String(value).trim();
+          dateOnlyValue = new Date(stringValue);
+          if (isNaN(dateOnlyValue.getTime())) {
+            throw new Error(
+              `Invalid date format. Use MM/DD/YYYY or DD-MM-YYYY`,
+            );
+          }
         }
-        return dateValue.toISOString().split('T')[0];
+
+        // Return YYYY-MM-DD only
+        return dateOnlyValue.toISOString().split('T')[0];
 
       case 'DateTime':
-        const dateTimeValue = new Date(stringValue);
-        if (isNaN(dateTimeValue.getTime())) {
-          throw new Error(`Invalid date/time format`);
+        let dateTimeValue: Date | null = null;
+
+        if (typeof value === 'number') {
+          dateTimeValue = excelSerialToJSDate(value);
+        } else {
+          const stringValue = String(value).trim();
+          dateTimeValue = new Date(stringValue);
+          if (isNaN(dateTimeValue.getTime())) {
+            throw new Error(`Invalid date/time format. Use MM/DD/YYYY HH:mm`);
+          }
         }
+
+        // Return full ISO string (UTC normalized)
         return dateTimeValue.toISOString();
 
       case 'Time':
@@ -637,7 +674,14 @@ export class ApplicantProcessService {
               `Invalid options: ${invalidOptions.join(', ')}. Available: ${question.options.join(', ')}`,
             );
           }
-          return selectedOptions;
+          const response = question.options.map((option: string) => ({
+            url: '',
+            option,
+            checked: selectedOptions.some(
+              (sel) => sel.toLowerCase() === option.toLowerCase(),
+            ),
+          }));
+          return response;
         }
         return stringValue;
 
