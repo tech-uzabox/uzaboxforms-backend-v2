@@ -17,7 +17,7 @@ import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { generateUUID } from 'src/utils/generate-uuid';
 import { PrismaService } from '../db/prisma.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
-import { dashboardAIPrompt } from './prompts';
+import { dashboardAIPrompt, systemPrompt, uzaAskAIPrompt } from './prompts';
 import { openrouter } from './providers';
 import {
   createDashboardTool,
@@ -39,9 +39,9 @@ import { createGetProcessByIdTool } from './tools/get-process-by-id';
 import { createGetProcessesTool } from './tools/get-processes';
 import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
 import { createGetUserByIdTool } from './tools/get-user-by-id';
+import { createWidgetTool, previewWidgetTool } from './tools/widget-tools';
 import { DBMessageInput } from './types/ai.types';
 import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
-import { createWidgetTool, previewWidgetTool } from './tools/widget-tools';
 
 @Injectable()
 export class AiService {
@@ -108,17 +108,7 @@ export class AiService {
         select: { id: true, firstName: true, lastName: true, email: true },
       }),
     ]);
-    const forms = await this.prisma.form.findMany({
-      select: { id: true, name: true },
-      where: { status: 'ENABLED' },
-      orderBy: { updatedAt: 'desc' },
-      // take: 50,
-    });
-    const dashboards = await this.prisma.dashboard.findMany({
-      select: { id: true, name: true },
-      orderBy: { updatedAt: 'desc' },
-    });
-
+   
     const isAdmin = currentUser.roles.includes('Admin');
     const isUzaAskAI = currentUser.roles.includes('Uza Ask AI');
 
@@ -128,33 +118,30 @@ export class AiService {
       );
     }
 
-    // const systemPromptText = isAdmin
-    //   ? systemPrompt({
-    //       selectedChatModel: selectedChatModel || 'chat-model',
-    //       roles: roles.map((r) => ({ _id: r.id, name: r.name })),
-    //       groups: groups.map((g) => ({ _id: g.id, name: g.name })),
-    //       users: users.map((u) => ({
-    //         _id: u.id,
-    //         firstName: u.firstName,
-    //         lastName: u.lastName,
-    //         email: u.email,
-    //       })),
-    //     })
-    //   : uzaAskAIPrompt({
-    //       selectedChatModel: selectedChatModel || 'chat-model',
-    //       roles: roles.map((r) => ({ _id: r.id, name: r.name })),
-    //       groups: groups.map((g) => ({ _id: g.id, name: g.name })),
-    //       users: users.map((u) => ({
-    //         _id: u.id,
-    //         firstName: u.firstName,
-    //         lastName: u.lastName,
-    //         email: u.email,
-    //       })),
-    //     });
-    const systemPromptText = dashboardAIPrompt({
-      forms: forms.map((f) => ({ formId: f.id, formName: f.name })),
-      dashboards: dashboards.map((d) => ({ dashboardId: d.id, dashboardName: d.name }))
-    });
+    const systemPromptText = isAdmin
+      ? systemPrompt({
+          selectedChatModel: selectedChatModel || 'chat-model',
+          roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+          groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+          users: users.map((u) => ({
+            _id: u.id,
+            firstName: u.firstName,
+            lastName: u.lastName,
+            email: u.email,
+          })),
+        })
+      : uzaAskAIPrompt({
+          selectedChatModel: selectedChatModel || 'chat-model',
+          roles: roles.map((r) => ({ _id: r.id, name: r.name })),
+          groups: groups.map((g) => ({ _id: g.id, name: g.name })),
+          users: users.map((u) => ({
+            _id: u.id,
+            firstName: u.firstName,
+            lastName: u.lastName,
+            email: u.email,
+          })),
+        });
+
 
     const baseTools = {
       get_forms: createGetFormsTool(this.prisma),
@@ -168,25 +155,174 @@ export class AiService {
     };
 
     const adminTools = {
+      ...baseTools,
+      generate_form: createGenerateFormTool,
+      save_form: createSaveFormTool(this.prisma, id),
+      preview_form: createPreviewFormTool,
+      delete_form: createDeleteFormTool(this.prisma, id),
+      save_process: createSaveProcessTool(this.prisma, id),
+      save_roles: createSaveRolesTool(this.prisma, id),
+      save_step: createSaveStepTool(this.prisma, id),
+      delete_step: createDeleteStepTool(this.prisma, id),
+      create_process: createProcessTool(this.prisma, id, currentUser.id),
+    };
+
+    const tools = isAdmin ? adminTools : baseTools;
+
+    pipeDataStreamToResponse(response, {
+      execute: async (dataStreamWriter) => {
+        dataStreamWriter.writeData('initialized call');
+        const result = streamText({
+          // model: openrouter('openai/gpt-5'),
+          model: openrouter('anthropic/claude-sonnet-4.5'),
+          // model: openrouter('x-ai/grok-4-fast'),
+          system: systemPromptText,
+          messages,
+          experimental_generateMessageId: generateUUID,
+          maxSteps: 100,
+          experimental_transform: smoothStream({ chunking: 'word' }),
+          providerOptions: {
+            openrouter: {
+              reasoning: {
+                max_tokens: 4000,
+              },
+            },
+          },
+          tools,
+          onFinish: async ({ response }) => {
+            try {
+              const assistantId = getTrailingMessageId({
+                messages: response.messages.filter(
+                  (message) => message.role === 'assistant',
+                ),
+              });
+
+              if (!assistantId) {
+                throw new Error('No assistant message found!');
+              }
+
+              const [, assistantMessage] = appendResponseMessages({
+                messages: [userMessage],
+                responseMessages: response.messages,
+              });
+              await this.saveMessages(id, [
+                {
+                  id: assistantId,
+                  chatId: id,
+                  role: assistantMessage.role,
+                  parts: assistantMessage.parts as any[],
+                  attachments: assistantMessage.experimental_attachments ?? [],
+                  createdAt: new Date(),
+                },
+              ]);
+            } catch (error) {
+              this.logger.error('Failed to save assistant message:', error);
+            }
+          },
+        });
+
+        result.consumeStream();
+
+        result.mergeIntoDataStream(dataStreamWriter);
+      },
+      onError: (error) => {
+        console.log(
+          'error generation:',
+          error instanceof Error ? error.message : String(error),
+        );
+        console.error(error);
+        // Error messages are masked by default for security reasons.
+        // If you want to expose the error message to the client, you can do so here:
+        return error instanceof Error ? error.message : String(error);
+      },
+    });
+  }
+
+  async processChatDashboard(
+    dto: ChatProcessDto,
+    currentUser: AuthenticatedUser,
+    response: Response,
+  ) {
+    const { id, messages, selectedChatModel } = dto;
+
+    let chat = await this.prisma.chat.findUnique({ where: { id } });
+    if (!chat) {
+      const firstUserMessage = messages.find((m) => m.role === 'user');
+      const title = firstUserMessage
+        ? await this.generateTitleFromUserMessage({
+            message: firstUserMessage,
+          })
+        : 'New Chat';
+
+      chat = await this.prisma.chat.create({
+        data: {
+          id,
+          userId: currentUser.id,
+          title,
+        },
+      });
+    } else if (chat.userId !== currentUser.id) {
+      throw new Error('Unauthorized access to chat');
+    }
+
+    const userMessages = messages.filter((m) => m.role === 'user');
+    if (userMessages.length > 0) {
+      await this.saveMessages(
+        id,
+        userMessages.map((m) => ({
+          id: m.id,
+          chatId: id,
+          role: m.role,
+          parts: m.parts,
+          attachments: m.experimental_attachments || [],
+          createdAt: new Date(),
+        })),
+      );
+    }
+
+    const userMessage = getMostRecentUserMessage(messages);
+
+    if (!userMessage) {
+      throw new BadRequestException('No user message found');
+    }
+
+    const [forms, dashboards] = await Promise.all([
+      this.prisma.form.findMany({
+        select: { id: true, name: true },
+        where: { status: 'ENABLED' },
+        orderBy: { updatedAt: 'desc' },
+        // take: 50,
+      }),
+      this.prisma.dashboard.findMany({
+        select: { id: true, name: true },
+        orderBy: { updatedAt: 'desc' },
+      }),
+    ]);
+
+    const isAdmin = currentUser.roles.includes('Admin');
+
+    if (!isAdmin) {
+      throw new ForbiddenException(
+        'Access denied. You do not have the required role to use this feature.',
+      );
+    }
+
+    const systemPromptText = dashboardAIPrompt({
+      forms: forms.map((f) => ({ formId: f.id, formName: f.name })),
+      dashboards: dashboards.map((d) => ({
+        dashboardId: d.id,
+        dashboardName: d.name,
+      })),
+    });
+
+    const baseTools = {
       get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
       create_dashboard: createDashboardTool(this.prisma, currentUser.id),
       create_widget: createWidgetTool(this.prisma),
-      preview_widget: previewWidgetTool
+      preview_widget: previewWidgetTool,
     };
-    // const adminTools = {
-    //   ...baseTools,
-    //   generate_form: createGenerateFormTool,
-    //   save_form: createSaveFormTool(this.prisma, id),
-    //   preview_form: createPreviewFormTool,
-    //   delete_form: createDeleteFormTool(this.prisma, id),
-    //   save_process: createSaveProcessTool(this.prisma, id),
-    //   save_roles: createSaveRolesTool(this.prisma, id),
-    //   save_step: createSaveStepTool(this.prisma, id),
-    //   delete_step: createDeleteStepTool(this.prisma, id),
-    //   create_process: createProcessTool(this.prisma, id, currentUser.id),
-    // };
 
-    const tools = isAdmin ? adminTools : baseTools;
+    const tools = baseTools;
 
     pipeDataStreamToResponse(response, {
       execute: async (dataStreamWriter) => {

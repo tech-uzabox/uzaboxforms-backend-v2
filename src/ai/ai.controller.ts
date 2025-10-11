@@ -32,6 +32,14 @@ export class AiController {
   ) {
     return this.aiService.processChat(dto, user, response);
   }
+  @Post('chat-dashboard')
+  async processChatDashboard(
+    @Body() dto: ChatProcessDto,
+    @GetUser() user: AuthenticatedUser,
+    @Res() response: Response,
+  ) {
+    return this.aiService.processChatDashboard(dto, user, response);
+  }
 
   @Delete('chat/:id')
   async deleteChat(
