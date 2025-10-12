@@ -73,6 +73,14 @@ export class JobWorker {
         formName: newForm.name,
       };
     } catch (error) {
+      await this.prisma.formGenerationProgress.update({
+        where: { jobId: job.id },
+        data: {
+          status: 'FAILED',
+          message: error.message
+          || 'File processing failed',
+        },
+      });
       this.logger.error('Error processing file', error);
       throw error;
     }

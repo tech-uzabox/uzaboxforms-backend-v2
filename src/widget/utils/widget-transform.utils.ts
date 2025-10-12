@@ -1,5 +1,8 @@
 export function transformWidgetPayload(payload: any) {
   // Validate required fields
+  // console.dir(payload, { depth: null })
+  // console.log(!payload.dashboardId || !payload.title || !payload.visualizationType || !payload.dateRange)
+  // console.log(payload.dashboardId, payload.title, payload.visualizationType, payload.dateRange)
   if (!payload.dashboardId || !payload.title || !payload.visualizationType || !payload.dateRange) {
     throw new Error("Required fields: dashboardId, title, visualizationType, dateRange");
   }
@@ -118,6 +121,123 @@ export function transformWidgetPayload(payload: any) {
     title: payload.title.trim(),
     description: payload.description,
     visualizationType: payload.visualizationType,
+    config,
+    ...(payload.order !== undefined && { order: payload.order }),
+  };
+}
+export function transformWidgetPayloadSpecial(payload: any) {
+  // Validate required fields
+  // console.dir(payload, { depth: null })
+  // console.log(!payload.dashboardId || !payload.title || !payload.visualizationType || !payload.dateRange)
+  // console.log(payload.dashboardId, payload.title, payload.visualizationType, payload.dateRange)
+  if (!payload.dateRange) {
+    throw new Error("Required fields: dashboardId, title, visualizationType, dateRange");
+  }
+
+  // Transform groupBy
+  const transformedGroupBy = payload.groupBy
+    ? {
+        kind: payload.groupBy.kind || (payload.groupBy.field && payload.groupBy.field.startsWith("$") ? "categorical" : "categorical"),
+        ...(payload.groupBy.systemField
+          ? { systemField: payload.groupBy.systemField }
+          : payload.groupBy.fieldId
+          ? { fieldId: payload.groupBy.fieldId }
+          : payload.groupBy.field && payload.groupBy.field.startsWith("$")
+          ? { systemField: payload.groupBy.field }
+          : payload.groupBy.field
+          ? { fieldId: payload.groupBy.field }
+          : {}),
+        ...(payload.groupBy.timeBucket && { timeBucket: payload.groupBy.timeBucket }),
+        ...(payload.groupBy.dateGranularity && { dateGranularity: payload.groupBy.dateGranularity }),
+        includeMissing: payload.groupBy.includeMissing || false,
+      }
+    : undefined;
+
+  // Transform dateRange
+  const transformedDateRange = {
+    preset: payload.dateRange.preset || "all",
+    ...(payload.dateRange.from && { from: new Date(payload.dateRange.from) }),
+    ...(payload.dateRange.to && { to: new Date(payload.dateRange.to) }),
+    ...(payload.dateRange.startDate && { startDate: new Date(payload.dateRange.startDate) }),
+    ...(payload.dateRange.endDate && { endDate: new Date(payload.dateRange.endDate) }),
+  };
+
+  // Transform filters
+  const transformedFilters = (payload.filters || payload.configuration?.filters || []).map((filter: any) => ({
+    id: filter.id || `filter_${Date.now()}_${Math.random()}`,
+    formId: filter.formId || (payload.metrics && payload.metrics.length > 0 ? payload.metrics[0].formId : payload.formId),
+    ...(filter.systemField
+      ? { systemField: filter.systemField }
+      : filter.fieldId
+      ? { fieldId: filter.fieldId }
+      : filter.field && filter.field.startsWith("$")
+      ? { systemField: filter.field }
+      : filter.field
+      ? { fieldId: filter.field }
+      : {}),
+    operator: filter.operator,
+    value: filter.value,
+  }));
+
+  // Transform sources (legacy support)
+  const transformedSources = payload.sources ||
+    (payload.formId ? [{
+      formId: payload.formId,
+      ...(payload.configuration?.xField && payload.configuration.xField.startsWith("$")
+        ? { systemField: payload.configuration.xField }
+        : { fieldId: payload.configuration.xField }),
+    }] : []);
+
+  // Transform metrics
+  const transformedMetrics = payload.metrics
+    ? payload.metrics.map((metric: any) => ({
+        id: metric.id,
+        label: metric.label,
+        formId: metric.formId,
+        ...(metric.systemField
+          ? { systemField: metric.systemField }
+          : metric.fieldId
+          ? { fieldId: metric.fieldId }
+          : {}),
+        ...(payload.metricMode !== "value" && metric.aggregation && { aggregation: metric.aggregation }),
+        ...(metric.appearance && { appearance: metric.appearance }),
+      }))
+    : payload.configuration
+    ? [{
+        id: "primary_metric",
+        label: payload.configuration.yField || "Count",
+        formId: payload.formId,
+        ...(payload.configuration.yField && payload.configuration.yField !== "__count__"
+          ? payload.configuration.yField.startsWith("$")
+            ? { systemField: payload.configuration.yField }
+            : { fieldId: payload.configuration.yField }
+          : {}),
+        ...(payload.metricMode !== "value" && { aggregation: payload.configuration.aggregationType || "count" }),
+      }]
+    : [];
+
+  // Build the config object
+  const config: any = {
+    ...(transformedGroupBy && { groupBy: transformedGroupBy }),
+    dateRange: transformedDateRange,
+    filters: transformedFilters,
+    ...(payload.topN && { topN: payload.topN }),
+    ...(payload.sort && { sort: payload.sort }),
+    ...(payload.combinationMode && { combinationMode: payload.combinationMode }),
+    ...(payload.appearance && { appearance: payload.appearance }),
+    ...(payload.options && { options: payload.options }),
+    ...(payload.realTime && { realTime: payload.realTime }),
+    ...(payload.valueModeFieldId && { valueModeFieldId: payload.valueModeFieldId }),
+    ...(payload.metricMode && { metricMode: payload.metricMode }),
+    ...(transformedMetrics.length > 0 && { metrics: transformedMetrics }),
+    ...(transformedSources.length > 0 && { sources: transformedSources }),
+    ...(payload.metricMode !== "value" && (payload.aggregation || payload.configuration?.aggregationType) && {
+      aggregation: payload.aggregation || payload.configuration.aggregationType
+    }),
+    ...(payload.configuration && { configuration: payload.configuration }),
+  };
+
+  return {
     config,
     ...(payload.order !== undefined && { order: payload.order }),
   };

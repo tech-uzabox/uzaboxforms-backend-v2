@@ -21,7 +21,8 @@ export const createGenerateFormTool = tool({
 
     try {
       const formCreation = await openai.responses.parse({
-        model: 'gpt-5-mini',
+        model: 'gpt-4.1-2025-04-14',
+        // model: 'gpt-5-mini',
         input: [
           {
             role: 'system',

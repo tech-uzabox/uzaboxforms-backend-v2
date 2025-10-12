@@ -1,30 +1,30 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
   Put,
   Query,
-  UseGuards,
-  HttpException,
-  HttpStatus
+  UseGuards
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
-import { WidgetService } from './widget.service';
-import { WidgetDataService } from './widget-data.service';
-import { CreateWidgetDto } from './dto/create-widget.dto';
-import { UpdateWidgetDto } from './dto/update-widget.dto';
-import { DuplicateWidgetDto } from './dto/duplicate-widget.dto';
-import { BulkRefreshWidgetsDto } from './dto/bulk-refresh-widgets.dto';
-import { UpdateWidgetAccessDto } from './dto/update-widget-access.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { GetUser } from '../auth/decorators/get-user.decorator';
-import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
+import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
+import { GetUser } from '../auth/decorators/get-user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PrismaService } from '../db/prisma.service';
+import { BulkRefreshWidgetsDto } from './dto/bulk-refresh-widgets.dto';
+import { CreateWidgetDto } from './dto/create-widget.dto';
+import { DuplicateWidgetDto } from './dto/duplicate-widget.dto';
+import { UpdateWidgetAccessDto } from './dto/update-widget-access.dto';
+import { UpdateWidgetDto } from './dto/update-widget.dto';
 import { transformWidgetPayload, transformWidgetUpdatePayload } from './utils/widget-transform.utils';
+import { WidgetDataService } from './widget-data.service';
+import { WidgetService } from './widget.service';
 
 @ApiTags('Widgets')
 @Controller('widgets')
@@ -34,7 +34,81 @@ export class WidgetController {
   constructor(
     private readonly widgetService: WidgetService,
     private readonly widgetDataService: WidgetDataService,
+    private readonly prisma: PrismaService,
   ) {}
+
+
+  @Get('sandbox/:id/data')
+  @ApiOperation({ summary: 'Get sandbox widget data for visualization' })
+  @ApiResponse({ status: 200, description: 'Sandbox widget data retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Sandbox widget not found' })
+  async getSandboxWidgetData(
+    @Param('id') id: string,
+    @GetUser() user: AuthenticatedUser
+  ) {
+    try {
+      const widgetData = await this.widgetService.getSandboxWidgetData(id, user.id);
+
+      return {
+        success: true,
+        data: widgetData,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+
+      // Return error in widget data format for frontend compatibility
+      return {
+        success: false,
+        data: {
+          type: 'card',
+          title: 'Error',
+          value: null,
+          statLabel: 'Failed to load data',
+          meta: {},
+          errors: [error instanceof Error ? error.message : 'Internal server error'],
+          empty: true,
+        },
+      };
+    }
+  }
+
+  @Get('sandbox/:id')
+  @ApiOperation({ summary: 'Get a single sandbox widget by ID' })
+  @ApiResponse({ status: 200, description: 'Sandbox widget retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'Sandbox widget not found' })
+  async findOneSandbox(
+    @Param('id') id: string,
+    @GetUser() user: AuthenticatedUser
+  ) {
+    try {
+
+      const widget = await this.widgetService.findOneSandbox(id);
+      if (!widget) {
+        throw new HttpException(
+          {
+            success: false,
+            message: 'Sandbox widget not found',
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      return {
+        success: true,
+        data: widget,
+      };
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Failed to fetch sandbox widget',
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
 
   @Post()
   @ApiOperation({ summary: 'Create a new widget' })
@@ -190,6 +264,7 @@ export class WidgetController {
       );
     }
   }
+
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a widget' })
@@ -566,4 +641,5 @@ export class WidgetController {
       };
     }
   }
+
 }

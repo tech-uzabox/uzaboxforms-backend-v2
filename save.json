@@ -1,0 +1,231 @@
+[
+    {
+        "success": true,
+        "data": {
+            "id": "e42f55a2-9e7c-4aee-bc45-42dc3ac32c69",
+            "dashboardId": "721a74e9-0db7-49f7-bf27-311a5ecb657f",
+            "description": null,
+            "title": "test",
+            "visualizationType": "card",
+            "config": {
+                "filters": [],
+                "groupBy": {
+                    "kind": "none",
+                    "includeMissing": false
+                },
+                "metrics": [
+                    {
+                        "id": "h1uz5xnc2",
+                        "formId": "db66b1a9-260e-4601-9d20-f6c762b9697e",
+                        "appearance": {},
+                        "aggregation": "count",
+                        "systemField": "$responseId$"
+                    }
+                ],
+                "options": {},
+                "dateRange": {
+                    "preset": "last-30-days"
+                },
+                "appearance": {
+                    "legend": true,
+                    "showGrid": true,
+                    "gridColor": "#e5e7eb",
+                    "gridStyle": "solid",
+                    "lineStyle": "solid",
+                    "pointSize": 3,
+                    "showPoints": true,
+                    "paletteMode": "preset",
+                    "barOrientation": "vertical",
+                    "backgroundColor": "transparent",
+                    "showXAxisLabels": true,
+                    "showYAxisLabels": true,
+                    "barCombinationMode": "grouped",
+                    "xAxisLabelRotation": 0,
+                    "presetCategoricalPaletteId": "default"
+                },
+                "metricMode": "aggregation"
+            },
+            "order": 1,
+            "createdAt": "2025-09-22T09:10:40.331Z",
+            "updatedAt": "2025-09-22T09:10:40.331Z"
+        }
+    },
+    {
+        "success": true,
+        "data": {
+            "id": "2a38c9ea-aeda-4b08-96ce-a2ecedd3fd2e",
+            "dashboardId": "721a74e9-0db7-49f7-bf27-311a5ecb657f",
+            "description": null,
+            "title": "age",
+            "visualizationType": "bar",
+            "config": {
+                "filters": [],
+                "groupBy": {
+                    "kind": "categorical",
+                    "systemField": "$responseId$",
+                    "includeMissing": false
+                },
+                "metrics": [
+                    {
+                        "id": "bjj5rh6zr",
+                        "formId": "db66b1a9-260e-4601-9d20-f6c762b9697e",
+                        "fieldId": "question-1758889073799-1",
+                        "appearance": {}
+                    }
+                ],
+                "options": {},
+                "dateRange": {
+                    "preset": "last-30-days"
+                },
+                "appearance": {
+                    "legend": true,
+                    "showGrid": true,
+                    "gridColor": "#e5e7eb",
+                    "gridStyle": "solid",
+                    "lineStyle": "solid",
+                    "pointSize": 3,
+                    "showPoints": true,
+                    "paletteMode": "preset",
+                    "barOrientation": "vertical",
+                    "backgroundColor": "transparent",
+                    "showXAxisLabels": true,
+                    "showYAxisLabels": true,
+                    "barCombinationMode": "grouped",
+                    "xAxisLabelRotation": 0,
+                    "presetCategoricalPaletteId": "default"
+                },
+                "metricMode": "value",
+                "valueModeFieldId": "question-1758889057880-0"
+            },
+            "order": 3,
+            "createdAt": "2025-09-26T12:43:03.776Z",
+            "updatedAt": "2025-09-26T12:43:03.776Z"
+        }
+    },
+    {
+        "success": true,
+        "data": {
+            "id": "435ee123-7357-4ccf-8957-7d74147ca3f0",
+            "dashboardId": "721a74e9-0db7-49f7-bf27-311a5ecb657f",
+            "description": null,
+            "title": "mean incone by age",
+            "visualizationType": "bar",
+            "config": {
+                "filters": [],
+                "groupBy": {
+                    "kind": "categorical",
+                    "fieldId": "question-1758889103320-3",
+                    "includeMissing": false
+                },
+                "metrics": [
+                    {
+                        "id": "ue3ntuhom",
+                        "formId": "db66b1a9-260e-4601-9d20-f6c762b9697e",
+                        "fieldId": "question-1758889086264-2",
+                        "appearance": {},
+                        "aggregation": "mean"
+                    }
+                ],
+                "options": {},
+                "dateRange": {
+                    "preset": "last-30-days"
+                },
+                "appearance": {
+                    "legend": true,
+                    "showGrid": true,
+                    "gridColor": "#e5e7eb",
+                    "gridStyle": "solid",
+                    "lineStyle": "solid",
+                    "pointSize": 3,
+                    "showPoints": true,
+                    "paletteMode": "preset",
+                    "barOrientation": "vertical",
+                    "backgroundColor": "transparent",
+                    "showXAxisLabels": true,
+                    "showYAxisLabels": true,
+                    "barCombinationMode": "grouped",
+                    "xAxisLabelRotation": 0,
+                    "presetCategoricalPaletteId": "default"
+                },
+                "metricMode": "aggregation"
+            },
+            "order": 4,
+            "createdAt": "2025-09-26T12:44:20.533Z",
+            "updatedAt": "2025-09-26T12:44:20.533Z"
+        }
+    },
+    {
+        "success": true,
+        "data": {
+            "id": "938ad403-92bf-4e64-bf06-f50d90166b9b",
+            "dashboardId": "721a74e9-0db7-49f7-bf27-311a5ecb657f",
+            "description": "",
+            "title": "test",
+            "visualizationType": "map",
+            "config": {
+                "filters": [],
+                "groupBy": {
+                    "kind": "none"
+                },
+                "metrics": [],
+                "options": {
+                    "map": {
+                        "filters": [],
+                        "metrics": [
+                            {
+                                "label": "",
+                                "formId": "db66b1a9-260e-4601-9d20-f6c762b9697e",
+                                "valueFieldId": "question-1758889057880-0",
+                                "countryFieldId": "question-1758889377531-0"
+                            }
+                        ],
+                        "appearance": {
+                            "border": {
+                                "color": "#ffffff",
+                                "enabled": false
+                            },
+                            "solidColor": "#012473",
+                            "coloringMode": "options",
+                            "optionColors": {
+                                "Male": "#027ced",
+                                "Female": "#f90606"
+                            },
+                            "optionsSource": {
+                                "formId": "db66b1a9-260e-4601-9d20-f6c762b9697e",
+                                "fieldId": "question-1758889103320-3",
+                                "countryFieldId": "question-1758889377531-0"
+                            },
+                            "showCountryFlag": true,
+                            "showCountryName": true
+                        }
+                    }
+                },
+                "dateRange": {
+                    "preset": "last-30-days"
+                },
+                "appearance": {
+                    "legend": true,
+                    "showGrid": true,
+                    "gridColor": "#e5e7eb",
+                    "gridStyle": "solid",
+                    "lineStyle": "solid",
+                    "pointSize": 3,
+                    "showPoints": true,
+                    "paletteMode": "preset",
+                    "barOrientation": "vertical",
+                    "backgroundColor": "transparent",
+                    "showXAxisLabels": true,
+                    "showYAxisLabels": true,
+                    "barCombinationMode": "grouped",
+                    "xAxisLabelRotation": 0,
+                    "presetCategoricalPaletteId": "default"
+                },
+                "metricMode": "aggregation",
+                "valueModeFieldId": ""
+            },
+            "order": 5,
+            "createdAt": "2025-09-26T13:24:07.505Z",
+            "updatedAt": "2025-09-26T14:24:34.442Z"
+        }
+    }
+]
