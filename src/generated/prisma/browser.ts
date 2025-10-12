@@ -117,6 +117,11 @@ export type Dashboard = Prisma.DashboardModel
  */
 export type Widget = Prisma.WidgetModel
 /**
+ * Model WidgetSandbox
+ * 
+ */
+export type WidgetSandbox = Prisma.WidgetSandboxModel
+/**
  * Model QrCodeDocument
  * 
  */

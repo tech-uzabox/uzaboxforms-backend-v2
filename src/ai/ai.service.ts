@@ -39,7 +39,13 @@ import { createGetProcessByIdTool } from './tools/get-process-by-id';
 import { createGetProcessesTool } from './tools/get-processes';
 import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
 import { createGetUserByIdTool } from './tools/get-user-by-id';
-import { createWidgetTool, previewWidgetTool } from './tools/widget-tools';
+import {
+  createWidgetSandboxTool,
+  updateWidgetSandboxTool,
+  deleteWidgetSandboxTool,
+  commitWidgetSandboxTool,
+  previewWidgetTool
+} from './tools/widget-tools';
 import { DBMessageInput } from './types/ai.types';
 import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
 
@@ -108,7 +114,7 @@ export class AiService {
         select: { id: true, firstName: true, lastName: true, email: true },
       }),
     ]);
-   
+
     const isAdmin = currentUser.roles.includes('Admin');
     const isUzaAskAI = currentUser.roles.includes('Uza Ask AI');
 
@@ -259,6 +265,7 @@ export class AiService {
           id,
           userId: currentUser.id,
           title,
+          type: "DASHBOARD"
         },
       });
     } else if (chat.userId !== currentUser.id) {
@@ -318,7 +325,10 @@ export class AiService {
     const baseTools = {
       get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
       create_dashboard: createDashboardTool(this.prisma, currentUser.id),
-      create_widget: createWidgetTool(this.prisma),
+      create_widget: createWidgetSandboxTool(this.prisma, id),
+      update_widget: updateWidgetSandboxTool(this.prisma, id),
+      delete_widget: deleteWidgetSandboxTool(this.prisma, id),
+      commit_widget: commitWidgetSandboxTool(this.prisma, id),
       preview_widget: previewWidgetTool,
     };
 

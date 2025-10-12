@@ -64,6 +64,7 @@ export class HistoryService {
           createdAt: true,
           userId: true,
           visibility: true,
+          type: true,
         },
       });
 

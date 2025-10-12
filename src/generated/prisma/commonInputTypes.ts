@@ -483,6 +483,23 @@ export type EnumAddToDatabaseStatusWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumAddToDatabaseStatusFilter<$PrismaModel>
 }
 
+export type EnumChatAITypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ChatAIType | Prisma.EnumChatAITypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumChatAITypeFilter<$PrismaModel> | $Enums.ChatAIType
+}
+
+export type EnumChatAITypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ChatAIType | Prisma.EnumChatAITypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumChatAITypeWithAggregatesFilter<$PrismaModel> | $Enums.ChatAIType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumChatAITypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumChatAITypeFilter<$PrismaModel>
+}
+
 export type EnumFormGenerationStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.FormGenerationStatus | Prisma.EnumFormGenerationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.FormGenerationStatus[] | Prisma.ListEnumFormGenerationStatusFieldRefInput<$PrismaModel>
@@ -923,6 +940,23 @@ export type NestedEnumAddToDatabaseStatusWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAddToDatabaseStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAddToDatabaseStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumChatAITypeFilter<$PrismaModel = never> = {
+  equals?: $Enums.ChatAIType | Prisma.EnumChatAITypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumChatAITypeFilter<$PrismaModel> | $Enums.ChatAIType
+}
+
+export type NestedEnumChatAITypeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ChatAIType | Prisma.EnumChatAITypeFieldRefInput<$PrismaModel>
+  in?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ChatAIType[] | Prisma.ListEnumChatAITypeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumChatAITypeWithAggregatesFilter<$PrismaModel> | $Enums.ChatAIType
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumChatAITypeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumChatAITypeFilter<$PrismaModel>
 }
 
 export type NestedEnumFormGenerationStatusFilter<$PrismaModel = never> = {

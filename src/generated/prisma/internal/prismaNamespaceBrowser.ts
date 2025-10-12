@@ -39,6 +39,7 @@ export const ModelName = {
   OrganizationUser: 'OrganizationUser',
   Dashboard: 'Dashboard',
   Widget: 'Widget',
+  WidgetSandbox: 'WidgetSandbox',
   QrCodeDocument: 'QrCodeDocument',
   Otp: 'Otp',
   Management: 'Management',
@@ -353,6 +354,22 @@ export const WidgetScalarFieldEnum = {
 export type WidgetScalarFieldEnum = (typeof WidgetScalarFieldEnum)[keyof typeof WidgetScalarFieldEnum]
 
 
+export const WidgetSandboxScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  description: 'description',
+  title: 'title',
+  visualizationType: 'visualizationType',
+  config: 'config',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isCommited: 'isCommited'
+} as const
+
+export type WidgetSandboxScalarFieldEnum = (typeof WidgetSandboxScalarFieldEnum)[keyof typeof WidgetSandboxScalarFieldEnum]
+
+
 export const QrCodeDocumentScalarFieldEnum = {
   id: 'id',
   documentName: 'documentName',
@@ -418,7 +435,8 @@ export const ChatScalarFieldEnum = {
   createdAt: 'createdAt',
   title: 'title',
   userId: 'userId',
-  visibility: 'visibility'
+  visibility: 'visibility',
+  type: 'type'
 } as const
 
 export type ChatScalarFieldEnum = (typeof ChatScalarFieldEnum)[keyof typeof ChatScalarFieldEnum]
@@ -763,6 +781,17 @@ export const WidgetOrderByRelevanceFieldEnum = {
 } as const
 
 export type WidgetOrderByRelevanceFieldEnum = (typeof WidgetOrderByRelevanceFieldEnum)[keyof typeof WidgetOrderByRelevanceFieldEnum]
+
+
+export const WidgetSandboxOrderByRelevanceFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  description: 'description',
+  title: 'title',
+  visualizationType: 'visualizationType'
+} as const
+
+export type WidgetSandboxOrderByRelevanceFieldEnum = (typeof WidgetSandboxOrderByRelevanceFieldEnum)[keyof typeof WidgetSandboxOrderByRelevanceFieldEnum]
 
 
 export const QrCodeDocumentOrderByRelevanceFieldEnum = {

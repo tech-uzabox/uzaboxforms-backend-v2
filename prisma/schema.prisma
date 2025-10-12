@@ -357,6 +357,24 @@ model Widget {
   @@map("widgets")
 }
 
+model WidgetSandbox {
+  id                String    @id @default(uuid()) @db.Uuid
+  chatId            String    @db.Uuid
+  description       String?
+  title             String
+  visualizationType String
+  config            Json
+  order             Int
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  chat              Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  isCommited        Boolean   @default(false)
+
+
+  @@index([chatId])
+  @@map("widget_sandboxes")
+}
+
 model QrCodeDocument {
   id           String   @id @default(uuid()) @db.Uuid
   documentName String
@@ -401,10 +419,10 @@ model AddToDatabase {
   children  AddToDatabase[]    @relation("Hierarchy")
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
-  
+
   // This will hold the tree data for this group (new relationship)
   treeItems AddToDatabaseTreeItem[]
-  
+
   @@map("add_to_databases")
 }
 
@@ -414,17 +432,17 @@ model AddToDatabaseTreeItem {
   status    AddToDatabaseStatus @default(ENABLED)
   parentId  String?             @db.Uuid
   addToDatabaseId String        @db.Uuid
-  
+
   // Tree relationships
   parent    AddToDatabaseTreeItem? @relation("TreeHierarchy", fields: [parentId], references: [id])
   children  AddToDatabaseTreeItem[] @relation("TreeHierarchy")
-  
+
   // Belongs to an AddToDatabase group
   addToDatabase AddToDatabase @relation(fields: [addToDatabaseId], references: [id], onDelete: Cascade)
-  
+
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
-  
+
   @@map("add_to_database_tree_items")
 }
 
@@ -487,14 +505,19 @@ enum FormGenerationStatus {
   COMPLETED
   FAILED
 }
-
+enum ChatAIType {
+  DASHBOARD
+  FORM
+}
 model Chat {
   id         String    @id @default(uuid()) @db.Uuid
   createdAt  DateTime  @default(now())
   title      String
   userId     String    @db.Uuid
   visibility String    @default("private")
+  type       ChatAIType @default(FORM)
   messages   Message[]
+  widgetSandboxes WidgetSandbox[]
 
   @@map("chats")
 }
