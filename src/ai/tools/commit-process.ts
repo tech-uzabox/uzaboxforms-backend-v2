@@ -35,7 +35,7 @@ export const StepDataSchema = z.object({
     'NOT_APPLICABLE',
   ]),
   notificationTo: z.string().optional(),
-  notificationToRoles: z.array(z.string()).optional(),  // Fixed: was notificationRoles
+  notificationToRoles: z.array(z.string()).optional(), // Fixed: was notificationRoles
   notificationComment: z.string().optional(),
   editApplicationStatus: z.boolean(),
   applicantViewFormAfterCompletion: z.boolean(),
@@ -120,7 +120,6 @@ export const createProcessTool = (
           console.log(
             'DEBUG: Forms validation success:',
             formsValidation.success,
-
           );
           if (!formsValidation.success) {
             return {
@@ -250,6 +249,14 @@ export const createProcessTool = (
           // Create forms first
           console.log('DEBUG: Starting forms creation');
           const formMappings: { tempId: string; realId: string }[] = [];
+          const folder = await tx.folder.create({
+            data: {
+              name: processData.name,
+              creatorId: currentUserId,
+            },
+          });
+          console.log('DEBUG: Folder created with ID:', folder.id);
+
           for (const form of formsData) {
             console.log(
               'DEBUG: Creating form:',
@@ -264,6 +271,7 @@ export const createProcessTool = (
                 creatorId: currentUserId,
                 type: 'INTERNAL',
                 status: 'ENABLED',
+                folderId: folder.id,
               },
             });
             console.log('DEBUG: Form created with real ID:', formName.id);
@@ -344,24 +352,24 @@ export const createProcessTool = (
             );
 
             await tx.processForm.create({
-               data: {
-                 processId: process.id,
-                 formId: realFormId,
-                 order: i,
-                 nextStepType: step.nextStepType,
-                 nextStepRoles: nextStepRoleIds,
-                 nextStaffId: step.nextStaff,
-                 notificationType: step.notificationType,
-                 notificationRoles: notificationRoleIds,
-                 notificationToId: step.notificationTo,
-                 notificationComment: step.notificationComment,
-                 notifyApplicant: step.notifyApplicant,
-                 applicantNotificationContent: step.applicantNotificationContent,
-                 editApplicationStatus: step.editApplicationStatus,
-                 applicantViewFormAfterCompletion:
-                   step.applicantViewFormAfterCompletion,
-               },
-             });
+              data: {
+                processId: process.id,
+                formId: realFormId,
+                order: i,
+                nextStepType: step.nextStepType,
+                nextStepRoles: nextStepRoleIds,
+                nextStaffId: step.nextStaff,
+                notificationType: step.notificationType,
+                notificationRoles: notificationRoleIds,
+                notificationToId: step.notificationTo,
+                notificationComment: step.notificationComment,
+                notifyApplicant: step.notifyApplicant,
+                applicantNotificationContent: step.applicantNotificationContent,
+                editApplicationStatus: step.editApplicationStatus,
+                applicantViewFormAfterCompletion:
+                  step.applicantViewFormAfterCompletion,
+              },
+            });
             console.log('DEBUG: Step created successfully');
           }
           console.log('DEBUG: All steps created');
