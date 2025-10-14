@@ -1,5 +1,8 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Response } from 'express';
 import { PrismaService } from '../db/prisma.service';
+import { ExportService } from '../export/export.service';
+import { ExportColumn } from '../export/interfaces/export.interface';
 
 export interface FormField {
   id: string;
@@ -37,7 +40,10 @@ const SYSTEM_FIELDS: SystemField[] = [
 
 @Injectable()
 export class FormFieldsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private exportService: ExportService
+  ) {}
 
   async getFormFields(formId: string, userId: string) {
     // Validate form ID
@@ -195,5 +201,58 @@ export class FormFieldsService {
     };
 
     return typeMapping[questionType.toLowerCase()] || 'text';
+  }
+
+  async generateTemplate(formId: string, userId: string, res: Response): Promise<void> {
+    // Get form fields (ignoring sections as per requirement)
+    const result = await this.getFormFields(formId, userId);
+
+    if (!result.success) {
+      throw new NotFoundException('Form not found or no fields available');
+    }
+
+    // Extract form fields (ignore system fields and sections)
+    const formFields = result.data.formFields;
+
+    if (formFields.length === 0) {
+      throw new BadRequestException('No form fields found to generate template');
+    }
+
+    // Create export columns from form fields
+    const columns: ExportColumn[] = formFields.map(field => ({
+      header: field.label,
+      key: field.id,
+      width: Math.max(15, field.label.length + 5), // Dynamic width based on label length
+      type: this.mapFieldTypeToExportType(field.type)
+    }));
+
+    // Create a single empty row for the template
+    const rows = [{}];
+
+    // Generate Excel template
+    await this.exportService.exportData(
+      columns,
+      rows,
+      {
+        filename: `form_${formId}_template`,
+        type: 'excel'
+      },
+      res
+    );
+  }
+
+  private mapFieldTypeToExportType(fieldType: string): 'string' | 'number' | 'date' | 'boolean' {
+    const typeMapping: { [key: string]: 'string' | 'number' | 'date' | 'boolean' } = {
+      'text': 'string',
+      'number': 'number',
+      'date': 'date',
+      'datetime': 'date',
+      'boolean': 'boolean',
+      'select': 'string',
+      'multiselect': 'string',
+      'file': 'string'
+    };
+
+    return typeMapping[fieldType] || 'string';
   }
 }
