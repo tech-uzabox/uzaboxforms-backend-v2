@@ -4,7 +4,7 @@ import { z } from 'zod';
 const UpdateWidgetSchema = z.object({
   title: z.string().min(1).optional(),
   description: z.string().optional(),
-  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map']).optional(),
+  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'group']).optional(),
 
   // Enhanced multi-metric structure
   metrics: z.array(z.any()).optional(),
