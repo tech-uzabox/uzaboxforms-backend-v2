@@ -9,8 +9,13 @@ import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { EmailService } from '../email/email.service';
 import { NotificationService } from '../notification/notification.service';
+import { ExportService } from '../export/export.service';
+import { ExportColumn } from '../export/interfaces/export.interface';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
+import { DownloadApplicantProcessDto } from './dto/download-applicant-process.dto';
+import { Response } from 'express';
+
 function excelSerialToJSDate(serial: number): Date {
   // Excel epoch starts 1900-01-00 (due to Excel bug compatibility)
   const millisecondsPerDay = 86400 * 1000;
@@ -36,6 +41,7 @@ export class ApplicantProcessService {
     private auditLogService: AuditLogService,
     private emailService: EmailService,
     private notificationService: NotificationService,
+    private exportService: ExportService,
   ) {}
 
   async create(data: CreateApplicantProcessDto): Promise<ApplicantProcess> {
@@ -793,5 +799,148 @@ export class ApplicantProcessService {
       completedFormId: completedForms.id,
       responseId: submitResponse.id,
     };
+  }
+
+  async downloadApplicantProcessData(
+    data: DownloadApplicantProcessDto,
+    res: Response,
+    userId: string,
+  ): Promise<void> {
+    const { processId, formId } = data;
+
+    // Get form design to understand question structure
+    const form = await this.prisma.form.findUnique({
+      where: { id: formId },
+    });
+
+    if (!form) {
+      throw new NotFoundException('Form not found');
+    }
+
+    const formDesign = form.design as any;
+    if (!formDesign) {
+      throw new BadRequestException('Form design not found or invalid');
+    }
+
+    // Get all applicant processes for this process and form
+    const applicantProcesses = await this.prisma.applicantProcess.findMany({
+      where: { processId },
+      include: {
+        applicant: true,
+        responses: {
+          where: { formId },
+        },
+      },
+    });
+
+    // Build export columns from form design
+    const columns: ExportColumn[] = [];
+
+    // Process each section and question to create columns
+    for (const section of formDesign.sections || []) {
+      for (const question of section.questions || []) {
+        const questionLabel =
+          question.label ||
+          question.titleName ||
+          question.descriptionName ||
+          '';
+
+        // Skip file upload and signature questions as per requirements
+        if (question.type === 'Upload' || question.type === 'Signature') {
+          columns.push({
+            header: questionLabel,
+            key: question.id,
+            type: 'string',
+          });
+        } else {
+          columns.push({
+            header: questionLabel,
+            key: question.id,
+            type: this.getColumnTypeForQuestionType(question.type),
+          });
+        }
+      }
+    }
+
+    // Build export rows from applicant process responses
+    const rows: Record<string, any>[] = [];
+
+    for (const applicantProcess of applicantProcesses) {
+      const row: Record<string, any> = {};
+
+      // Process responses for this applicant
+      for (const response of applicantProcess.responses) {
+        const responseData = response.responses as any;
+
+        // Process each section
+        for (const section of responseData) {
+          for (const sectionResponse of section.responses) {
+            const questionId = sectionResponse.questionId;
+            let value = sectionResponse.response;
+
+            // Handle different response formats
+            if (questionId in row) {
+              // If multiple responses for same question, keep the latest
+              row[questionId] = value;
+            } else {
+              row[questionId] = value;
+            }
+          }
+        }
+      }
+
+      // Ensure all columns have values (empty for missing responses)
+      for (const column of columns) {
+        if (!(column.key in row)) {
+          row[column.key] = '';
+        }
+      }
+
+      rows.push(row);
+    }
+
+    // Generate filename with timestamp
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+    const filename = `applicant-process-data-${timestamp}`;
+
+    // Export to Excel
+    const exportResult = await this.exportService.exportData(
+      columns,
+      rows,
+      {
+        type: 'excel',
+        filename,
+      },
+      res,
+    );
+
+    if (!exportResult.success) {
+      throw new BadRequestException(exportResult.error);
+    }
+
+    // Log the download action
+    await this.auditLogService.log({
+      userId,
+      action: 'APPLICANT_PROCESS_DATA_DOWNLOADED',
+      resource: 'ApplicantProcess',
+      resourceId: processId,
+      status: 'SUCCESS',
+      details: { processId, formId, recordCount: rows.length },
+    });
+  }
+
+  private getColumnTypeForQuestionType(questionType: string): 'string' | 'number' | 'date' | 'boolean' {
+    switch (questionType) {
+      case 'Number':
+        return 'number';
+      case 'Date':
+      case 'DateTime':
+      case 'Date Range':
+        return 'date';
+      case 'Checkbox':
+        return 'boolean';
+      default:
+        return 'string';
+    }
   }
 }

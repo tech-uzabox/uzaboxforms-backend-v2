@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, UseGuards, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, UseGuards, BadRequestException, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApplicantProcessService } from './applicant-process.service';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { UpdateApplicantProcessDto } from './dto/update-applicant-process.dto';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
-import { ApiTags, ApiConsumes, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { DownloadApplicantProcessDto } from './dto/download-applicant-process.dto';
+import { ApiTags, ApiConsumes, ApiBody, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { Response } from 'express';
 import { GetUser } from '../auth/decorators/get-user.decorator';
 import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 
@@ -75,13 +77,36 @@ export class ApplicantProcessController {
   async bulkCreate(
     @Body() bulkCreateApplicantProcessDto: BulkCreateApplicantProcessDto,
     @UploadedFile() file: Express.Multer.File,
-    @GetUser() user: any,
+    @GetUser() user: AuthenticatedUser,
   ) {
     const result = await this.applicantProcessService.bulkCreate(bulkCreateApplicantProcessDto, file, user.id);
     if (!result.success) {
       throw new BadRequestException(result);
     }
     return result;
+  }
+
+  @Post('download')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Download applicant process data in Excel format',
+    description: 'Downloads all applicant process responses for a specific process and form in Excel format. File upload and signature columns will be included but remain empty.',
+  })
+  @ApiBody({
+    description: 'Download parameters',
+    type: DownloadApplicantProcessDto,
+  })
+  async download(
+    @Body() downloadApplicantProcessDto: DownloadApplicantProcessDto,
+    @Res() res: Response,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    return this.applicantProcessService.downloadApplicantProcessData(
+      downloadApplicantProcessDto,
+      res,
+      user.id,
+    );
   }
 }
 
