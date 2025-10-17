@@ -5,25 +5,23 @@ import {
 } from '@nestjs/common';
 import { ApplicantProcess, Prisma } from 'db/client';
 import * as ExcelJS from 'exceljs';
+import { Response } from 'express';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { EmailService } from '../email/email.service';
-import { NotificationService } from '../notification/notification.service';
 import { ExportService } from '../export/export.service';
 import { ExportColumn } from '../export/interfaces/export.interface';
+import { NotificationService } from '../notification/notification.service';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { DownloadApplicantProcessDto } from './dto/download-applicant-process.dto';
-import { Response } from 'express';
 
 function excelSerialToJSDate(serial: number): Date {
-  // Excel epoch starts 1900-01-00 (due to Excel bug compatibility)
   const millisecondsPerDay = 86400 * 1000;
-  const utcDays = serial - 25569; // 25569 days between Excel epoch and Unix epoch
+  const utcDays = serial - 25569;
   const utcValue = utcDays * millisecondsPerDay;
   const dateInfo = new Date(utcValue);
 
-  // Return corrected local date/time (avoid timezone shift)
   return new Date(
     dateInfo.getUTCFullYear(),
     dateInfo.getUTCMonth(),
@@ -91,11 +89,10 @@ export class ApplicantProcessService {
       throw new NotFoundException('Process form configuration not found.');
     }
 
-    // Use provided fields or fallback to processForm defaults
     const completedFormData = {
       applicantProcessId: newApplicantProcess.id,
       formId: formId,
-      reviewerId: applicantId, // The applicant is the first reviewer
+      reviewerId: applicantId,
       nextStaffId:
         nextStaffId ||
         (processForm.nextStepType === 'STATIC'
@@ -116,7 +113,6 @@ export class ApplicantProcessService {
       data: completedFormData,
     });
 
-    // Send notifications asynchronously
     setImmediate(async () => {
       try {
         await this.notificationService.sendNotification(
@@ -162,7 +158,6 @@ export class ApplicantProcessService {
       throw new NotFoundException('Applicant process not found');
     }
 
-    // Check if status is being changed
     const statusChanged = data.status && existingProcess.status !== data.status;
 
     const updatedApplicantProcess = await this.prisma.applicantProcess.update({
@@ -170,7 +165,6 @@ export class ApplicantProcessService {
       data,
     });
 
-    // Send email if status changed
     if (statusChanged && existingProcess.applicant) {
       setImmediate(async () => {
         try {
@@ -214,7 +208,6 @@ export class ApplicantProcessService {
   }
 
   async findByUserId(userId: string): Promise<any[]> {
-    // Get all applicant processes for the user
     const applicantProcesses = await this.prisma.applicantProcess.findMany({
       where: { applicantId: userId },
       include: {
@@ -229,7 +222,6 @@ export class ApplicantProcessService {
       orderBy: { createdAt: 'desc' },
     });
 
-    // Get all process forms to calculate levels
     const processIds = [
       ...new Set(applicantProcesses.map((ap) => ap.processId)),
     ];
@@ -238,14 +230,12 @@ export class ApplicantProcessService {
       include: { form: true },
     });
 
-    // Map the applications with all necessary data
     const applications = applicantProcesses.map((applicantProcess) => {
       const relatedProcessForms = processForms.filter(
         (pf) => pf.processId === applicantProcess.processId,
       );
       const relatedCompletedForms = applicantProcess.completedForms;
 
-      // Get first form ID from completed forms or process forms
       const firstFormId =
         relatedCompletedForms.length > 0
           ? relatedCompletedForms[0].formId
@@ -289,12 +279,10 @@ export class ApplicantProcessService {
       throw new BadRequestException('Excel file is required');
     }
 
-    // Validate required fields
     if (!processId || !formId) {
       throw new BadRequestException('processId and formId are required');
     }
 
-    // Get form design to understand question structure
     const form = await this.prisma.form.findUnique({
       where: { id: formId },
     });
@@ -308,7 +296,6 @@ export class ApplicantProcessService {
       throw new BadRequestException('Form design not found or invalid');
     }
 
-    // Parse Excel file
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(file.buffer as any);
     const worksheet = workbook.worksheets[0];
@@ -322,7 +309,6 @@ export class ApplicantProcessService {
     const jsonData: any[][] = [];
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber > 1) {
-        // Skip header
         const rowData: any[] = [];
         row.eachCell((cell) => {
           rowData.push(cell.value);
@@ -337,13 +323,11 @@ export class ApplicantProcessService {
       );
     }
 
-    // Get headers
     const headers: string[] = [];
     worksheet.getRow(1).eachCell((cell) => {
       headers.push(cell.value?.toString() || '');
     });
 
-    // Validate and process each row
     const errors: Array<{
       row: number;
       column: string;
@@ -354,7 +338,7 @@ export class ApplicantProcessService {
 
     for (let i = 0; i < jsonData.length; i++) {
       const row = jsonData[i];
-      const rowNumber = i + 2; // Excel row number (1-based, plus header)
+      const rowNumber = i + 2;
 
       try {
         const submissionData = await this.validateAndParseRow(
@@ -381,7 +365,6 @@ export class ApplicantProcessService {
       }
     }
 
-    // If there are any errors, return them and don't process any submissions
     if (errors.length > 0) {
       return {
         success: false,
@@ -393,7 +376,6 @@ export class ApplicantProcessService {
       };
     }
 
-    // Process valid submissions
     const results: Array<{
       rowNumber: number;
       success: boolean;
@@ -460,7 +442,6 @@ export class ApplicantProcessService {
     }> = [];
     const responses: any[] = [];
 
-    // Create a map of column names to their indices (case-insensitive)
     const columnMap = new Map<string, number>();
     headers.forEach((header, index) => {
       if (header) {
@@ -468,7 +449,6 @@ export class ApplicantProcessService {
       }
     });
 
-    // Process each section
     for (const section of sections) {
       const sectionResponses: any[] = [];
 
@@ -479,7 +459,6 @@ export class ApplicantProcessService {
           question.descriptionName ||
           '';
 
-        // Find matching column (flexible matching)
         let columnIndex = -1;
         let matchedColumn = '';
 
@@ -497,7 +476,6 @@ export class ApplicantProcessService {
 
         const cellValue = columnIndex >= 0 ? row[columnIndex] : null;
 
-        // Validate based on question type
         try {
           const parsedValue = await this.validateQuestionValue(
             question,
@@ -545,10 +523,11 @@ export class ApplicantProcessService {
       return null;
     }
     console.log('value', value);
-    // Handle object values with text and hyperlink properties
-    const stringValue = (typeof value === 'object' && value !== null && 'text' in value)
-      ? String(value.text).trim()
-      : String(value).trim();
+
+    const stringValue =
+      typeof value === 'object' && value !== null && 'text' in value
+        ? String(value.text).trim()
+        : String(value).trim();
 
     switch (question.type) {
       case 'Short Text':
@@ -609,7 +588,6 @@ export class ApplicantProcessService {
           }
         }
 
-        // Return YYYY-MM-DD only
         return dateOnlyValue.toISOString().split('T')[0];
 
       case 'DateTime':
@@ -625,7 +603,6 @@ export class ApplicantProcessService {
           }
         }
 
-        // Return full ISO string (UTC normalized)
         return dateTimeValue.toISOString();
 
       case 'Time':
@@ -701,12 +678,10 @@ export class ApplicantProcessService {
         return stringValue;
 
       case 'Countries':
-        // Basic validation - can be enhanced with country list
         return stringValue;
 
       case 'From Database':
       case 'Add To Database':
-        // Would need database lookup - for now accept as string
         return stringValue;
 
       default:
@@ -748,7 +723,6 @@ export class ApplicantProcessService {
   }) {
     const { applicantId, processId, formId, nextStaffId, responses } = data;
 
-    // Create new applicant process
     const newApplicantProcess = await this.prisma.applicantProcess.create({
       data: {
         applicant: { connect: { id: applicantId } },
@@ -756,7 +730,6 @@ export class ApplicantProcessService {
       },
     });
 
-    // Fetch process form details
     const processForm = await this.prisma.processForm.findFirst({
       where: { processId, formId },
     });
@@ -784,7 +757,6 @@ export class ApplicantProcessService {
       },
     });
 
-    // Save form responses
     const submitResponse = await this.prisma.formResponse.create({
       data: {
         form: { connect: { id: formId } },
@@ -808,7 +780,13 @@ export class ApplicantProcessService {
   ): Promise<void> {
     const { processId, formId } = data;
 
-    // Get form design to understand question structure
+    console.log(
+      'Starting download for processId:',
+      processId,
+      'formId:',
+      formId,
+    );
+
     const form = await this.prisma.form.findUnique({
       where: { id: formId },
     });
@@ -817,12 +795,13 @@ export class ApplicantProcessService {
       throw new NotFoundException('Form not found');
     }
 
+
     const formDesign = form.design as any;
     if (!formDesign) {
       throw new BadRequestException('Form design not found or invalid');
     }
 
-    // Get all applicant processes for this process and form
+
     const applicantProcesses = await this.prisma.applicantProcess.findMany({
       where: { processId },
       include: {
@@ -833,63 +812,234 @@ export class ApplicantProcessService {
       },
     });
 
-    // Build export columns from form design
+
     const columns: ExportColumn[] = [];
+    const questionMap = new Map<string, any>();
 
-    // Process each section and question to create columns
-    for (const section of formDesign.sections || []) {
-      for (const question of section.questions || []) {
-        const questionLabel =
-          question.label ||
-          question.titleName ||
-          question.descriptionName ||
-          '';
+    if (
+      formDesign.sections &&
+      Array.isArray(formDesign.sections) &&
+      formDesign.sections.length > 0
+    ) {
+      for (const section of formDesign.sections) {
+        if (section.questions && Array.isArray(section.questions)) {
+          for (const question of section.questions) {
+            const questionLabel =
+              question.label ||
+              question.titleName ||
+              question.descriptionName ||
+              question.id ||
+              '';
 
-        // Skip file upload and signature questions as per requirements
-        if (question.type === 'Upload' || question.type === 'Signature') {
-          columns.push({
-            header: questionLabel,
-            key: question.id,
-            type: 'string',
-          });
-        } else {
-          columns.push({
-            header: questionLabel,
-            key: question.id,
-            type: this.getColumnTypeForQuestionType(question.type),
-          });
+            questionMap.set(question.id, question);
+            columns.push({
+              header: questionLabel,
+              key: question.id,
+              type: this.getColumnTypeForQuestionType(question.type),
+            });
+          }
         }
       }
-    }
+    } else {
 
-    // Build export rows from applicant process responses
-    const rows: Record<string, any>[] = [];
+      const allQuestionIds = new Set<string>();
 
-    for (const applicantProcess of applicantProcesses) {
-      const row: Record<string, any> = {};
+      for (const applicantProcess of applicantProcesses) {
+        for (const response of applicantProcess.responses) {
+          const responseData = response.responses as any;
+          if (!responseData) continue;
 
-      // Process responses for this applicant
-      for (const response of applicantProcess.responses) {
-        const responseData = response.responses as any;
-
-        // Process each section
-        for (const section of responseData) {
-          for (const sectionResponse of section.responses) {
-            const questionId = sectionResponse.questionId;
-            let value = sectionResponse.response;
-
-            // Handle different response formats
-            if (questionId in row) {
-              // If multiple responses for same question, keep the latest
-              row[questionId] = value;
-            } else {
-              row[questionId] = value;
+          if (Array.isArray(responseData)) {
+            for (const section of responseData) {
+              if (section.responses && Array.isArray(section.responses)) {
+                for (const sectionResponse of section.responses) {
+                  allQuestionIds.add(sectionResponse.questionId);
+                }
+              }
+            }
+          } else if (typeof responseData === 'object') {
+            for (const [sectionKey, sectionData] of Object.entries(
+              responseData,
+            )) {
+              if (
+                sectionData &&
+                typeof sectionData === 'object' &&
+                'questions' in sectionData
+              ) {
+                const section = sectionData as any;
+                if (
+                  section.questions &&
+                  typeof section.questions === 'object'
+                ) {
+                  for (const questionId of Object.keys(section.questions)) {
+                    allQuestionIds.add(questionId);
+                  }
+                }
+              }
             }
           }
         }
       }
 
-      // Ensure all columns have values (empty for missing responses)
+      // Found question IDs from responses
+
+      for (const questionId of allQuestionIds) {
+        let questionLabel = questionId;
+        let questionType = 'Short Text';
+
+        if (formDesign && typeof formDesign === 'object') {
+          for (const [key, value] of Object.entries(formDesign)) {
+            if (
+              key.startsWith('section') &&
+              value &&
+              typeof value === 'object' &&
+              'questions' in value
+            ) {
+              const section = value as any;
+              if (
+                section.questions &&
+                typeof section.questions === 'object' &&
+                questionId in section.questions
+              ) {
+                const q = section.questions[questionId] as any;
+                questionLabel =
+                  q.label || q.titleName || q.descriptionName || questionId;
+                questionType = q.type || questionType;
+                break;
+              }
+            }
+          }
+        }
+
+        if (questionLabel === questionId) {
+          for (const applicantProcess of applicantProcesses) {
+            for (const response of applicantProcess.responses) {
+              const responseData = response.responses as any;
+              if (!responseData) continue;
+
+              if (Array.isArray(responseData)) {
+                for (const section of responseData) {
+                  if (section.responses && Array.isArray(section.responses)) {
+                    for (const sectionResponse of section.responses) {
+                      if (
+                        sectionResponse.questionId === questionId &&
+                        sectionResponse.label
+                      ) {
+                        questionLabel = sectionResponse.label;
+                        break;
+                      }
+                    }
+                  }
+                }
+              } else if (typeof responseData === 'object') {
+                for (const [sectionKey, sectionData] of Object.entries(
+                  responseData,
+                )) {
+                  if (
+                    sectionData &&
+                    typeof sectionData === 'object' &&
+                    'questions' in sectionData
+                  ) {
+                    const section = sectionData as any;
+                    if (
+                      section.questions &&
+                      typeof section.questions === 'object' &&
+                      questionId in section.questions
+                    ) {
+                      const qResp = section.questions[questionId] as any;
+                      if (qResp.label) {
+                        questionLabel = qResp.label;
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+              if (questionLabel !== questionId) break;
+            }
+            if (questionLabel !== questionId) break;
+          }
+        }
+
+
+        questionMap.set(questionId, { type: questionType });
+        columns.push({
+          header: questionLabel,
+          key: questionId,
+          type: this.getColumnTypeForQuestionType(questionType),
+        });
+      }
+    }
+
+
+    const rows: Record<string, any>[] = [];
+
+    for (const applicantProcess of applicantProcesses) {
+      const row: Record<string, any> = {};
+
+      for (const response of applicantProcess.responses) {
+        const responseData = response.responses as any;
+
+        if (!responseData) {
+          continue;
+        }
+
+        if (Array.isArray(responseData)) {
+          for (const section of responseData) {
+            if (section.responses && Array.isArray(section.responses)) {
+              for (const sectionResponse of section.responses) {
+                const questionId = sectionResponse.questionId;
+                let value = sectionResponse.response;
+
+                const question = questionMap.get(questionId);
+                const formattedValue = this.formatResponseValue(
+                  value,
+                  sectionResponse.questionType || question?.type,
+                );
+
+                if (questionId in row) {
+                  row[questionId] = formattedValue;
+                } else {
+                  row[questionId] = formattedValue;
+                }
+              }
+            }
+          }
+        } else if (typeof responseData === 'object') {
+          for (const [sectionKey, sectionData] of Object.entries(
+            responseData,
+          )) {
+            if (
+              sectionData &&
+              typeof sectionData === 'object' &&
+              'questions' in sectionData
+            ) {
+              const section = sectionData as any;
+              if (section.questions && typeof section.questions === 'object') {
+                for (const [questionId, questionResponse] of Object.entries(
+                  section.questions,
+                )) {
+                  const qResp = questionResponse as any;
+                  let value = qResp.response;
+
+                  const question = questionMap.get(questionId);
+                  const formattedValue = this.formatResponseValue(
+                    value,
+                    qResp.questionType || question?.type,
+                  );
+
+                  if (questionId in row) {
+                    row[questionId] = formattedValue;
+                  } else {
+                    row[questionId] = formattedValue;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
       for (const column of columns) {
         if (!(column.key in row)) {
           row[column.key] = '';
@@ -899,11 +1049,9 @@ export class ApplicantProcessService {
       rows.push(row);
     }
 
-    // Generate filename with timestamp
     const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
     const filename = `applicant-process-data-${timestamp}`;
 
-    // Export to Excel
     const exportResult = await this.exportService.exportData(
       columns,
       rows,
@@ -918,7 +1066,6 @@ export class ApplicantProcessService {
       throw new BadRequestException(exportResult.error);
     }
 
-    // Log the download action
     await this.auditLogService.log({
       userId,
       action: 'APPLICANT_PROCESS_DATA_DOWNLOADED',
@@ -929,7 +1076,138 @@ export class ApplicantProcessService {
     });
   }
 
-  private getColumnTypeForQuestionType(questionType: string): 'string' | 'number' | 'date' | 'boolean' {
+  private formatResponseValue(value: any, questionType?: string): any {
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+
+
+    switch (questionType) {
+      case 'Paragraph':
+        if (typeof value === 'string') {
+          try {
+            const parsed = JSON.parse(value);
+            if (parsed.blocks && Array.isArray(parsed.blocks)) {
+              return parsed.blocks
+                .map((block: any) => block.text || '')
+                .join('\n');
+            }
+          } catch (e) {
+            return value;
+          }
+        }
+
+        if (
+          typeof value === 'object' &&
+          value.blocks &&
+          Array.isArray(value.blocks)
+        ) {
+          return value.blocks.map((block: any) => block.text || '').join('\n');
+        }
+        return String(value);
+
+      case 'Date':
+        if (value instanceof Date) {
+          return value.toISOString().split('T')[0];
+        }
+        if (typeof value === 'string') {
+          const date = new Date(value);
+          if (!isNaN(date.getTime())) {
+            return date.toISOString().split('T')[0];
+          }
+        }
+
+        if (typeof value === 'object' && value !== null) {
+          if (value.date) {
+            const date = new Date(value.date);
+            if (!isNaN(date.getTime())) {
+              return date.toISOString().split('T')[0];
+            }
+          }
+          return String(value);
+        }
+        return String(value);
+
+      case 'DateTime':
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+        if (typeof value === 'string') {
+          const date = new Date(value);
+          if (!isNaN(date.getTime())) {
+            return date.toISOString();
+          }
+        }
+
+        if (typeof value === 'object' && value !== null) {
+          if (value.dateTime || value.datetime) {
+            const date = new Date(value.dateTime || value.datetime);
+            if (!isNaN(date.getTime())) {
+              return date.toISOString();
+            }
+          }
+          return String(value);
+        }
+        return String(value);
+
+      case 'Time':
+        if (typeof value === 'string') {
+          return value;
+        }
+        if (value instanceof Date) {
+          return value.toTimeString().split(' ')[0];
+        }
+        if (typeof value === 'object' && value !== null) {
+          return String(value);
+        }
+        return String(value);
+
+      case 'Checkbox':
+        if (Array.isArray(value)) {
+          const selectedOptions = value
+            .filter(
+              (item) =>
+                item && typeof item === 'object' && item.checked === true,
+            )
+            .map((item) => item.option || '')
+            .filter((option) => option);
+          return selectedOptions.join(', ');
+        }
+
+        if (typeof value === 'string') {
+          return value;
+        }
+
+        if (typeof value === 'object' && value !== null) {
+          if (value.option && value.checked === true) {
+            return value.option;
+          }
+          return String(value);
+        }
+        return String(value);
+
+      case 'Number':
+        if (typeof value === 'number') {
+          return value;
+        }
+        if (typeof value === 'string') {
+          const num = parseFloat(value);
+          return isNaN(num) ? value : num;
+        }
+        return value;
+
+      case 'Upload':
+      case 'Signature':
+        return '';
+
+      default:
+        return String(value);
+    }
+  }
+
+  private getColumnTypeForQuestionType(
+    questionType: string,
+  ): 'string' | 'number' | 'date' | 'boolean' {
     switch (questionType) {
       case 'Number':
         return 'number';
