@@ -29,6 +29,7 @@ export type ChatMinAggregateOutputType = {
   title: string | null
   userId: string | null
   visibility: string | null
+  type: $Enums.ChatAIType | null
 }
 
 export type ChatMaxAggregateOutputType = {
@@ -37,6 +38,7 @@ export type ChatMaxAggregateOutputType = {
   title: string | null
   userId: string | null
   visibility: string | null
+  type: $Enums.ChatAIType | null
 }
 
 export type ChatCountAggregateOutputType = {
@@ -45,6 +47,7 @@ export type ChatCountAggregateOutputType = {
   title: number
   userId: number
   visibility: number
+  type: number
   _all: number
 }
 
@@ -55,6 +58,7 @@ export type ChatMinAggregateInputType = {
   title?: true
   userId?: true
   visibility?: true
+  type?: true
 }
 
 export type ChatMaxAggregateInputType = {
@@ -63,6 +67,7 @@ export type ChatMaxAggregateInputType = {
   title?: true
   userId?: true
   visibility?: true
+  type?: true
 }
 
 export type ChatCountAggregateInputType = {
@@ -71,6 +76,7 @@ export type ChatCountAggregateInputType = {
   title?: true
   userId?: true
   visibility?: true
+  type?: true
   _all?: true
 }
 
@@ -152,6 +158,7 @@ export type ChatGroupByOutputType = {
   title: string
   userId: string
   visibility: string
+  type: $Enums.ChatAIType
   _count: ChatCountAggregateOutputType | null
   _min: ChatMinAggregateOutputType | null
   _max: ChatMaxAggregateOutputType | null
@@ -181,7 +188,9 @@ export type ChatWhereInput = {
   title?: Prisma.StringFilter<"Chat"> | string
   userId?: Prisma.UuidFilter<"Chat"> | string
   visibility?: Prisma.StringFilter<"Chat"> | string
+  type?: Prisma.EnumChatAITypeFilter<"Chat"> | $Enums.ChatAIType
   messages?: Prisma.MessageListRelationFilter
+  widgetSandboxes?: Prisma.WidgetSandboxListRelationFilter
 }
 
 export type ChatOrderByWithRelationInput = {
@@ -190,7 +199,9 @@ export type ChatOrderByWithRelationInput = {
   title?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   messages?: Prisma.MessageOrderByRelationAggregateInput
+  widgetSandboxes?: Prisma.WidgetSandboxOrderByRelationAggregateInput
   _relevance?: Prisma.ChatOrderByRelevanceInput
 }
 
@@ -203,7 +214,9 @@ export type ChatWhereUniqueInput = Prisma.AtLeast<{
   title?: Prisma.StringFilter<"Chat"> | string
   userId?: Prisma.UuidFilter<"Chat"> | string
   visibility?: Prisma.StringFilter<"Chat"> | string
+  type?: Prisma.EnumChatAITypeFilter<"Chat"> | $Enums.ChatAIType
   messages?: Prisma.MessageListRelationFilter
+  widgetSandboxes?: Prisma.WidgetSandboxListRelationFilter
 }, "id">
 
 export type ChatOrderByWithAggregationInput = {
@@ -212,6 +225,7 @@ export type ChatOrderByWithAggregationInput = {
   title?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
+  type?: Prisma.SortOrder
   _count?: Prisma.ChatCountOrderByAggregateInput
   _max?: Prisma.ChatMaxOrderByAggregateInput
   _min?: Prisma.ChatMinOrderByAggregateInput
@@ -226,6 +240,7 @@ export type ChatScalarWhereWithAggregatesInput = {
   title?: Prisma.StringWithAggregatesFilter<"Chat"> | string
   userId?: Prisma.UuidWithAggregatesFilter<"Chat"> | string
   visibility?: Prisma.StringWithAggregatesFilter<"Chat"> | string
+  type?: Prisma.EnumChatAITypeWithAggregatesFilter<"Chat"> | $Enums.ChatAIType
 }
 
 export type ChatCreateInput = {
@@ -234,7 +249,9 @@ export type ChatCreateInput = {
   title: string
   userId: string
   visibility?: string
+  type?: $Enums.ChatAIType
   messages?: Prisma.MessageCreateNestedManyWithoutChatInput
+  widgetSandboxes?: Prisma.WidgetSandboxCreateNestedManyWithoutChatInput
 }
 
 export type ChatUncheckedCreateInput = {
@@ -243,7 +260,9 @@ export type ChatUncheckedCreateInput = {
   title: string
   userId: string
   visibility?: string
+  type?: $Enums.ChatAIType
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatInput
+  widgetSandboxes?: Prisma.WidgetSandboxUncheckedCreateNestedManyWithoutChatInput
 }
 
 export type ChatUpdateInput = {
@@ -252,7 +271,9 @@ export type ChatUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
   messages?: Prisma.MessageUpdateManyWithoutChatNestedInput
+  widgetSandboxes?: Prisma.WidgetSandboxUpdateManyWithoutChatNestedInput
 }
 
 export type ChatUncheckedUpdateInput = {
@@ -261,7 +282,9 @@ export type ChatUncheckedUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
   messages?: Prisma.MessageUncheckedUpdateManyWithoutChatNestedInput
+  widgetSandboxes?: Prisma.WidgetSandboxUncheckedUpdateManyWithoutChatNestedInput
 }
 
 export type ChatCreateManyInput = {
@@ -270,6 +293,7 @@ export type ChatCreateManyInput = {
   title: string
   userId: string
   visibility?: string
+  type?: $Enums.ChatAIType
 }
 
 export type ChatUpdateManyMutationInput = {
@@ -278,6 +302,7 @@ export type ChatUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
 }
 
 export type ChatUncheckedUpdateManyInput = {
@@ -286,6 +311,12 @@ export type ChatUncheckedUpdateManyInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
+}
+
+export type ChatScalarRelationFilter = {
+  is?: Prisma.ChatWhereInput
+  isNot?: Prisma.ChatWhereInput
 }
 
 export type ChatOrderByRelevanceInput = {
@@ -300,6 +331,7 @@ export type ChatCountOrderByAggregateInput = {
   title?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
+  type?: Prisma.SortOrder
 }
 
 export type ChatMaxOrderByAggregateInput = {
@@ -308,6 +340,7 @@ export type ChatMaxOrderByAggregateInput = {
   title?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
+  type?: Prisma.SortOrder
 }
 
 export type ChatMinOrderByAggregateInput = {
@@ -316,11 +349,25 @@ export type ChatMinOrderByAggregateInput = {
   title?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   visibility?: Prisma.SortOrder
+  type?: Prisma.SortOrder
 }
 
-export type ChatScalarRelationFilter = {
-  is?: Prisma.ChatWhereInput
-  isNot?: Prisma.ChatWhereInput
+export type ChatCreateNestedOneWithoutWidgetSandboxesInput = {
+  create?: Prisma.XOR<Prisma.ChatCreateWithoutWidgetSandboxesInput, Prisma.ChatUncheckedCreateWithoutWidgetSandboxesInput>
+  connectOrCreate?: Prisma.ChatCreateOrConnectWithoutWidgetSandboxesInput
+  connect?: Prisma.ChatWhereUniqueInput
+}
+
+export type ChatUpdateOneRequiredWithoutWidgetSandboxesNestedInput = {
+  create?: Prisma.XOR<Prisma.ChatCreateWithoutWidgetSandboxesInput, Prisma.ChatUncheckedCreateWithoutWidgetSandboxesInput>
+  connectOrCreate?: Prisma.ChatCreateOrConnectWithoutWidgetSandboxesInput
+  upsert?: Prisma.ChatUpsertWithoutWidgetSandboxesInput
+  connect?: Prisma.ChatWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ChatUpdateToOneWithWhereWithoutWidgetSandboxesInput, Prisma.ChatUpdateWithoutWidgetSandboxesInput>, Prisma.ChatUncheckedUpdateWithoutWidgetSandboxesInput>
+}
+
+export type EnumChatAITypeFieldUpdateOperationsInput = {
+  set?: $Enums.ChatAIType
 }
 
 export type ChatCreateNestedOneWithoutMessagesInput = {
@@ -337,12 +384,70 @@ export type ChatUpdateOneRequiredWithoutMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ChatUpdateToOneWithWhereWithoutMessagesInput, Prisma.ChatUpdateWithoutMessagesInput>, Prisma.ChatUncheckedUpdateWithoutMessagesInput>
 }
 
+export type ChatCreateWithoutWidgetSandboxesInput = {
+  id?: string
+  createdAt?: Date | string
+  title: string
+  userId: string
+  visibility?: string
+  type?: $Enums.ChatAIType
+  messages?: Prisma.MessageCreateNestedManyWithoutChatInput
+}
+
+export type ChatUncheckedCreateWithoutWidgetSandboxesInput = {
+  id?: string
+  createdAt?: Date | string
+  title: string
+  userId: string
+  visibility?: string
+  type?: $Enums.ChatAIType
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutChatInput
+}
+
+export type ChatCreateOrConnectWithoutWidgetSandboxesInput = {
+  where: Prisma.ChatWhereUniqueInput
+  create: Prisma.XOR<Prisma.ChatCreateWithoutWidgetSandboxesInput, Prisma.ChatUncheckedCreateWithoutWidgetSandboxesInput>
+}
+
+export type ChatUpsertWithoutWidgetSandboxesInput = {
+  update: Prisma.XOR<Prisma.ChatUpdateWithoutWidgetSandboxesInput, Prisma.ChatUncheckedUpdateWithoutWidgetSandboxesInput>
+  create: Prisma.XOR<Prisma.ChatCreateWithoutWidgetSandboxesInput, Prisma.ChatUncheckedCreateWithoutWidgetSandboxesInput>
+  where?: Prisma.ChatWhereInput
+}
+
+export type ChatUpdateToOneWithWhereWithoutWidgetSandboxesInput = {
+  where?: Prisma.ChatWhereInput
+  data: Prisma.XOR<Prisma.ChatUpdateWithoutWidgetSandboxesInput, Prisma.ChatUncheckedUpdateWithoutWidgetSandboxesInput>
+}
+
+export type ChatUpdateWithoutWidgetSandboxesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
+  messages?: Prisma.MessageUpdateManyWithoutChatNestedInput
+}
+
+export type ChatUncheckedUpdateWithoutWidgetSandboxesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutChatNestedInput
+}
+
 export type ChatCreateWithoutMessagesInput = {
   id?: string
   createdAt?: Date | string
   title: string
   userId: string
   visibility?: string
+  type?: $Enums.ChatAIType
+  widgetSandboxes?: Prisma.WidgetSandboxCreateNestedManyWithoutChatInput
 }
 
 export type ChatUncheckedCreateWithoutMessagesInput = {
@@ -351,6 +456,8 @@ export type ChatUncheckedCreateWithoutMessagesInput = {
   title: string
   userId: string
   visibility?: string
+  type?: $Enums.ChatAIType
+  widgetSandboxes?: Prisma.WidgetSandboxUncheckedCreateNestedManyWithoutChatInput
 }
 
 export type ChatCreateOrConnectWithoutMessagesInput = {
@@ -375,6 +482,8 @@ export type ChatUpdateWithoutMessagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
+  widgetSandboxes?: Prisma.WidgetSandboxUpdateManyWithoutChatNestedInput
 }
 
 export type ChatUncheckedUpdateWithoutMessagesInput = {
@@ -383,6 +492,8 @@ export type ChatUncheckedUpdateWithoutMessagesInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   visibility?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumChatAITypeFieldUpdateOperationsInput | $Enums.ChatAIType
+  widgetSandboxes?: Prisma.WidgetSandboxUncheckedUpdateManyWithoutChatNestedInput
 }
 
 
@@ -392,10 +503,12 @@ export type ChatUncheckedUpdateWithoutMessagesInput = {
 
 export type ChatCountOutputType = {
   messages: number
+  widgetSandboxes: number
 }
 
 export type ChatCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | ChatCountOutputTypeCountMessagesArgs
+  widgetSandboxes?: boolean | ChatCountOutputTypeCountWidgetSandboxesArgs
 }
 
 /**
@@ -415,6 +528,13 @@ export type ChatCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.MessageWhereInput
 }
 
+/**
+ * ChatCountOutputType without action
+ */
+export type ChatCountOutputTypeCountWidgetSandboxesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WidgetSandboxWhereInput
+}
+
 
 export type ChatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -422,7 +542,9 @@ export type ChatSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   title?: boolean
   userId?: boolean
   visibility?: boolean
+  type?: boolean
   messages?: boolean | Prisma.Chat$messagesArgs<ExtArgs>
+  widgetSandboxes?: boolean | Prisma.Chat$widgetSandboxesArgs<ExtArgs>
   _count?: boolean | Prisma.ChatCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["chat"]>
 
@@ -432,6 +554,7 @@ export type ChatSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   userId?: boolean
   visibility?: boolean
+  type?: boolean
 }, ExtArgs["result"]["chat"]>
 
 export type ChatSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -440,6 +563,7 @@ export type ChatSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   title?: boolean
   userId?: boolean
   visibility?: boolean
+  type?: boolean
 }, ExtArgs["result"]["chat"]>
 
 export type ChatSelectScalar = {
@@ -448,11 +572,13 @@ export type ChatSelectScalar = {
   title?: boolean
   userId?: boolean
   visibility?: boolean
+  type?: boolean
 }
 
-export type ChatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "title" | "userId" | "visibility", ExtArgs["result"]["chat"]>
+export type ChatOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "title" | "userId" | "visibility" | "type", ExtArgs["result"]["chat"]>
 export type ChatInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | Prisma.Chat$messagesArgs<ExtArgs>
+  widgetSandboxes?: boolean | Prisma.Chat$widgetSandboxesArgs<ExtArgs>
   _count?: boolean | Prisma.ChatCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ChatIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -462,6 +588,7 @@ export type $ChatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Chat"
   objects: {
     messages: Prisma.$MessagePayload<ExtArgs>[]
+    widgetSandboxes: Prisma.$WidgetSandboxPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -469,6 +596,7 @@ export type $ChatPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     title: string
     userId: string
     visibility: string
+    type: $Enums.ChatAIType
   }, ExtArgs["result"]["chat"]>
   composites: {}
 }
@@ -864,6 +992,7 @@ readonly fields: ChatFieldRefs;
 export interface Prisma__ChatClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   messages<T extends Prisma.Chat$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chat$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  widgetSandboxes<T extends Prisma.Chat$widgetSandboxesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Chat$widgetSandboxesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WidgetSandboxPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -898,6 +1027,7 @@ export interface ChatFieldRefs {
   readonly title: Prisma.FieldRef<"Chat", 'String'>
   readonly userId: Prisma.FieldRef<"Chat", 'String'>
   readonly visibility: Prisma.FieldRef<"Chat", 'String'>
+  readonly type: Prisma.FieldRef<"Chat", 'ChatAIType'>
 }
     
 
@@ -1316,6 +1446,30 @@ export type Chat$messagesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * Chat.widgetSandboxes
+ */
+export type Chat$widgetSandboxesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WidgetSandbox
+   */
+  select?: Prisma.WidgetSandboxSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WidgetSandbox
+   */
+  omit?: Prisma.WidgetSandboxOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WidgetSandboxInclude<ExtArgs> | null
+  where?: Prisma.WidgetSandboxWhereInput
+  orderBy?: Prisma.WidgetSandboxOrderByWithRelationInput | Prisma.WidgetSandboxOrderByWithRelationInput[]
+  cursor?: Prisma.WidgetSandboxWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WidgetSandboxScalarFieldEnum | Prisma.WidgetSandboxScalarFieldEnum[]
 }
 
 /**

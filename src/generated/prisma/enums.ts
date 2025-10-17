@@ -99,3 +99,11 @@ export const FormGenerationStatus = {
 } as const
 
 export type FormGenerationStatus = (typeof FormGenerationStatus)[keyof typeof FormGenerationStatus]
+
+
+export const ChatAIType = {
+  DASHBOARD: 'DASHBOARD',
+  FORM: 'FORM'
+} as const
+
+export type ChatAIType = (typeof ChatAIType)[keyof typeof ChatAIType]

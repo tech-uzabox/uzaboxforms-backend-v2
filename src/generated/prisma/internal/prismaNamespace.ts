@@ -409,6 +409,7 @@ export const ModelName = {
   OrganizationUser: 'OrganizationUser',
   Dashboard: 'Dashboard',
   Widget: 'Widget',
+  WidgetSandbox: 'WidgetSandbox',
   QrCodeDocument: 'QrCodeDocument',
   Otp: 'Otp',
   Management: 'Management',
@@ -436,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress"
+    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "widgetSandbox" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1920,6 +1921,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WidgetSandbox: {
+      payload: Prisma.$WidgetSandboxPayload<ExtArgs>
+      fields: Prisma.WidgetSandboxFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WidgetSandboxFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WidgetSandboxFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>
+        }
+        findFirst: {
+          args: Prisma.WidgetSandboxFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WidgetSandboxFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>
+        }
+        findMany: {
+          args: Prisma.WidgetSandboxFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>[]
+        }
+        create: {
+          args: Prisma.WidgetSandboxCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>
+        }
+        createMany: {
+          args: Prisma.WidgetSandboxCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WidgetSandboxCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>[]
+        }
+        delete: {
+          args: Prisma.WidgetSandboxDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>
+        }
+        update: {
+          args: Prisma.WidgetSandboxUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>
+        }
+        deleteMany: {
+          args: Prisma.WidgetSandboxDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WidgetSandboxUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WidgetSandboxUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>[]
+        }
+        upsert: {
+          args: Prisma.WidgetSandboxUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WidgetSandboxPayload>
+        }
+        aggregate: {
+          args: Prisma.WidgetSandboxAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWidgetSandbox>
+        }
+        groupBy: {
+          args: Prisma.WidgetSandboxGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WidgetSandboxGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WidgetSandboxCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WidgetSandboxCountAggregateOutputType> | number
+        }
+      }
+    }
     QrCodeDocument: {
       payload: Prisma.$QrCodeDocumentPayload<ExtArgs>
       fields: Prisma.QrCodeDocumentFieldRefs
@@ -3135,6 +3210,22 @@ export const WidgetScalarFieldEnum = {
 export type WidgetScalarFieldEnum = (typeof WidgetScalarFieldEnum)[keyof typeof WidgetScalarFieldEnum]
 
 
+export const WidgetSandboxScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  description: 'description',
+  title: 'title',
+  visualizationType: 'visualizationType',
+  config: 'config',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  isCommited: 'isCommited'
+} as const
+
+export type WidgetSandboxScalarFieldEnum = (typeof WidgetSandboxScalarFieldEnum)[keyof typeof WidgetSandboxScalarFieldEnum]
+
+
 export const QrCodeDocumentScalarFieldEnum = {
   id: 'id',
   documentName: 'documentName',
@@ -3200,7 +3291,8 @@ export const ChatScalarFieldEnum = {
   createdAt: 'createdAt',
   title: 'title',
   userId: 'userId',
-  visibility: 'visibility'
+  visibility: 'visibility',
+  type: 'type'
 } as const
 
 export type ChatScalarFieldEnum = (typeof ChatScalarFieldEnum)[keyof typeof ChatScalarFieldEnum]
@@ -3547,6 +3639,17 @@ export const WidgetOrderByRelevanceFieldEnum = {
 export type WidgetOrderByRelevanceFieldEnum = (typeof WidgetOrderByRelevanceFieldEnum)[keyof typeof WidgetOrderByRelevanceFieldEnum]
 
 
+export const WidgetSandboxOrderByRelevanceFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  description: 'description',
+  title: 'title',
+  visualizationType: 'visualizationType'
+} as const
+
+export type WidgetSandboxOrderByRelevanceFieldEnum = (typeof WidgetSandboxOrderByRelevanceFieldEnum)[keyof typeof WidgetSandboxOrderByRelevanceFieldEnum]
+
+
 export const QrCodeDocumentOrderByRelevanceFieldEnum = {
   id: 'id',
   documentName: 'documentName',
@@ -3874,6 +3977,20 @@ export type ListEnumAddToDatabaseStatusFieldRefInput<$PrismaModel> = FieldRefInp
 
 
 /**
+ * Reference to a field of type 'ChatAIType'
+ */
+export type EnumChatAITypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChatAIType'>
+    
+
+
+/**
+ * Reference to a field of type 'ChatAIType[]'
+ */
+export type ListEnumChatAITypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChatAIType[]'>
+    
+
+
+/**
  * Reference to a field of type 'FormGenerationStatus'
  */
 export type EnumFormGenerationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FormGenerationStatus'>
@@ -4007,6 +4124,7 @@ export type GlobalOmitConfig = {
   organizationUser?: Prisma.OrganizationUserOmit
   dashboard?: Prisma.DashboardOmit
   widget?: Prisma.WidgetOmit
+  widgetSandbox?: Prisma.WidgetSandboxOmit
   qrCodeDocument?: Prisma.QrCodeDocumentOmit
   otp?: Prisma.OtpOmit
   management?: Prisma.ManagementOmit

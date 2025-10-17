@@ -39,7 +39,56 @@ export class WidgetDataService {
       if (!widget) {
         throw new Error('Widget not found');
       }
-  
+
+      return this.processWidgetData(widget);
+    } catch (error) {
+      console.error('Error in getWidgetData:', error);
+      return {
+        type: 'card',
+        title: 'Error',
+        value: undefined,
+        statLabel: 'Failed to load data',
+        meta: {},
+        errors: [error instanceof Error ? error.message : 'Unknown error'],
+        empty: true,
+      };
+    }
+  }
+
+  /**
+   * Core data aggregation function for sandbox widgets
+   */
+  async getWidgetSandboxData(
+    widgetId: string,
+    currentUserId?: string,
+  ): Promise<WidgetDataPayload> {
+    try {
+      const widget = await this.prisma.widgetSandbox.findFirst({
+        where: { id: widgetId },
+      });
+
+      if (!widget) {
+        throw new Error('Sandbox widget not found');
+      }
+
+      return this.processWidgetData(widget);
+    } catch (error) {
+      console.error('Error in getWidgetSandboxData:', error);
+      return {
+        type: 'card',
+        title: 'Error',
+        value: undefined,
+        statLabel: 'Failed to load data',
+        meta: {},
+        errors: [error instanceof Error ? error.message : 'Unknown error'],
+        empty: true,
+      };
+    }
+  }
+
+  private async processWidgetData(widget: any): Promise<WidgetDataPayload> {
+    try {
+
       // console.log(widget)
 
       // Parse widget config from JSON

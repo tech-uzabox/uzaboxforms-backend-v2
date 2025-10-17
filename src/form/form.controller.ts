@@ -39,6 +39,14 @@ export class FormController {
     private readonly fileService: FileService,
   ) {}
 
+  @Post('duplicate')
+  duplicate(@Body() duplicateFormDto: DuplicateFormDto, @GetUser() user: AuthenticatedUser) {
+    return this.formService.duplicate(
+      duplicateFormDto.formId,
+      user.id,
+    );
+  }
+
   @Post()
   create(@Body() createFormDto: CreateFormDto) {
     return this.formService.create(createFormDto);
@@ -155,14 +163,6 @@ export class FormController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.formService.remove(id);
-  }
-
-  @Post('duplicate')
-  duplicate(@Body() duplicateFormDto: DuplicateFormDto) {
-    return this.formService.duplicate(
-      duplicateFormDto.formId,
-      duplicateFormDto.creatorId,
-    );
   }
 
   @Post('move')

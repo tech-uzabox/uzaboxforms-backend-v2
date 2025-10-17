@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import {
   appendResponseMessages,
   generateText,
@@ -12,9 +17,10 @@ import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { generateUUID } from 'src/utils/generate-uuid';
 import { PrismaService } from '../db/prisma.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
-import { systemPrompt, uzaAskAIPrompt } from './prompts';
+import { dashboardAIPrompt, systemPrompt, uzaAskAIPrompt } from './prompts';
 import { openrouter } from './providers';
 import {
+  createDashboardTool,
   createDeleteFormTool,
   createDeleteStepTool,
   createGenerateFormTool,
@@ -33,6 +39,13 @@ import { createGetProcessByIdTool } from './tools/get-process-by-id';
 import { createGetProcessesTool } from './tools/get-processes';
 import { createGetProcessesWithFormIdTool } from './tools/get-processes-with-form-id';
 import { createGetUserByIdTool } from './tools/get-user-by-id';
+import {
+  createWidgetSandboxTool,
+  updateWidgetSandboxTool,
+  deleteWidgetSandboxTool,
+  commitWidgetSandboxTool,
+  previewWidgetTool
+} from './tools/widget-tools';
 import { DBMessageInput } from './types/ai.types';
 import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
 
@@ -106,7 +119,9 @@ export class AiService {
     const isUzaAskAI = currentUser.roles.includes('Uza Ask AI');
 
     if (!isAdmin && !isUzaAskAI) {
-      throw new ForbiddenException('Access denied. You do not have the required role to use this feature.');
+      throw new ForbiddenException(
+        'Access denied. You do not have the required role to use this feature.',
+      );
     }
 
     const systemPromptText = isAdmin
@@ -132,6 +147,7 @@ export class AiService {
             email: u.email,
           })),
         });
+
 
     const baseTools = {
       get_forms: createGetFormsTool(this.prisma),
@@ -163,7 +179,9 @@ export class AiService {
       execute: async (dataStreamWriter) => {
         dataStreamWriter.writeData('initialized call');
         const result = streamText({
-          model: openrouter('x-ai/grok-4-fast'),
+          // model: openrouter('openai/gpt-5'),
+          model: openrouter('anthropic/claude-sonnet-4.5'),
+          // model: openrouter('x-ai/grok-4-fast'),
           system: systemPromptText,
           messages,
           experimental_generateMessageId: generateUUID,
@@ -209,13 +227,175 @@ export class AiService {
           },
         });
 
-        result.consumeStream()
+        result.consumeStream();
 
         result.mergeIntoDataStream(dataStreamWriter);
       },
       onError: (error) => {
-        console.log('error generation:', error instanceof Error ? error.message : String(error));
-        console.error(error)
+        console.log(
+          'error generation:',
+          error instanceof Error ? error.message : String(error),
+        );
+        console.error(error);
+        // Error messages are masked by default for security reasons.
+        // If you want to expose the error message to the client, you can do so here:
+        return error instanceof Error ? error.message : String(error);
+      },
+    });
+  }
+
+  async processChatDashboard(
+    dto: ChatProcessDto,
+    currentUser: AuthenticatedUser,
+    response: Response,
+  ) {
+    const { id, messages, selectedChatModel } = dto;
+
+    let chat = await this.prisma.chat.findUnique({ where: { id } });
+    if (!chat) {
+      const firstUserMessage = messages.find((m) => m.role === 'user');
+      const title = firstUserMessage
+        ? await this.generateTitleFromUserMessage({
+            message: firstUserMessage,
+          })
+        : 'New Chat';
+
+      chat = await this.prisma.chat.create({
+        data: {
+          id,
+          userId: currentUser.id,
+          title,
+          type: "DASHBOARD"
+        },
+      });
+    } else if (chat.userId !== currentUser.id) {
+      throw new Error('Unauthorized access to chat');
+    }
+
+    const userMessages = messages.filter((m) => m.role === 'user');
+    if (userMessages.length > 0) {
+      await this.saveMessages(
+        id,
+        userMessages.map((m) => ({
+          id: m.id,
+          chatId: id,
+          role: m.role,
+          parts: m.parts,
+          attachments: m.experimental_attachments || [],
+          createdAt: new Date(),
+        })),
+      );
+    }
+
+    const userMessage = getMostRecentUserMessage(messages);
+
+    if (!userMessage) {
+      throw new BadRequestException('No user message found');
+    }
+
+    const [forms, dashboards] = await Promise.all([
+      this.prisma.form.findMany({
+        select: { id: true, name: true },
+        where: { status: 'ENABLED' },
+        orderBy: { updatedAt: 'desc' },
+        // take: 50,
+      }),
+      this.prisma.dashboard.findMany({
+        select: { id: true, name: true },
+        orderBy: { updatedAt: 'desc' },
+      }),
+    ]);
+
+    const isAdmin = currentUser.roles.includes('Admin');
+
+    if (!isAdmin) {
+      throw new ForbiddenException(
+        'Access denied. You do not have the required role to use this feature.',
+      );
+    }
+
+    const systemPromptText = dashboardAIPrompt({
+      forms: forms.map((f) => ({ formId: f.id, formName: f.name })),
+      dashboards: dashboards.map((d) => ({
+        dashboardId: d.id,
+        dashboardName: d.name,
+      })),
+    });
+
+    const baseTools = {
+      get_form_schema_by_id: createGetFormSchemaByIdTool(this.prisma),
+      create_dashboard: createDashboardTool(this.prisma, currentUser.id),
+      create_widget: createWidgetSandboxTool(this.prisma, id),
+      update_widget: updateWidgetSandboxTool(this.prisma, id),
+      delete_widget: deleteWidgetSandboxTool(this.prisma, id),
+      commit_widget: commitWidgetSandboxTool(this.prisma, id),
+      preview_widget: previewWidgetTool,
+    };
+
+    const tools = baseTools;
+
+    pipeDataStreamToResponse(response, {
+      execute: async (dataStreamWriter) => {
+        dataStreamWriter.writeData('initialized call');
+        const result = streamText({
+          // model: openrouter('openai/gpt-5'),
+          model: openrouter('anthropic/claude-sonnet-4.5'),
+          // model: openrouter('x-ai/grok-4-fast'),
+          system: systemPromptText,
+          messages,
+          experimental_generateMessageId: generateUUID,
+          maxSteps: 100,
+          experimental_transform: smoothStream({ chunking: 'word' }),
+          providerOptions: {
+            openrouter: {
+              reasoning: {
+                max_tokens: 4000,
+              },
+            },
+          },
+          tools,
+          onFinish: async ({ response }) => {
+            try {
+              const assistantId = getTrailingMessageId({
+                messages: response.messages.filter(
+                  (message) => message.role === 'assistant',
+                ),
+              });
+
+              if (!assistantId) {
+                throw new Error('No assistant message found!');
+              }
+
+              const [, assistantMessage] = appendResponseMessages({
+                messages: [userMessage],
+                responseMessages: response.messages,
+              });
+              await this.saveMessages(id, [
+                {
+                  id: assistantId,
+                  chatId: id,
+                  role: assistantMessage.role,
+                  parts: assistantMessage.parts as any[],
+                  attachments: assistantMessage.experimental_attachments ?? [],
+                  createdAt: new Date(),
+                },
+              ]);
+            } catch (error) {
+              this.logger.error('Failed to save assistant message:', error);
+            }
+          },
+        });
+
+        result.consumeStream();
+
+        result.mergeIntoDataStream(dataStreamWriter);
+      },
+      onError: (error) => {
+        console.log(
+          'error generation:',
+          error instanceof Error ? error.message : String(error),
+        );
+        console.error(error);
         // Error messages are masked by default for security reasons.
         // If you want to expose the error message to the client, you can do so here:
         return error instanceof Error ? error.message : String(error);
@@ -293,22 +473,22 @@ export class AiService {
   }
 
   private async generateTitleFromUserMessage({
-  message,
-}: {
-  message: Message;
-}) {
-  const { text: title } = await generateText({
-    model: openrouter('x-ai/grok-4-fast'),
-    system: `\n
+    message,
+  }: {
+    message: Message;
+  }) {
+    const { text: title } = await generateText({
+      model: openrouter('x-ai/grok-4-fast'),
+      system: `\n
     - you will generate a short title based on the first message a user begins a conversation with
     - ensure it is not more than 80 characters long
     - the title should be a summary of the user's message
     - do not use quotes or colons`,
-    prompt: JSON.stringify(message),
-  });
+      prompt: JSON.stringify(message),
+    });
 
-  return title;
-}
+    return title;
+  }
 
   private async saveMessages(chatId: string, messages: DBMessageInput[]) {
     const messageIds = messages.map((m) => m.id);

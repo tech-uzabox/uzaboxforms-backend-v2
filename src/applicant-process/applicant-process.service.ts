@@ -539,7 +539,10 @@ export class ApplicantProcessService {
       return null;
     }
     console.log('value', value);
-    const stringValue = String(value).trim();
+    // Handle object values with text and hyperlink properties
+    const stringValue = (typeof value === 'object' && value !== null && 'text' in value)
+      ? String(value.text).trim()
+      : String(value).trim();
 
     switch (question.type) {
       case 'Short Text':

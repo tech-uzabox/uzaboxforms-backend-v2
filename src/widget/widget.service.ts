@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Widget } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
+import { WidgetDataService } from './widget-data.service';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 
@@ -10,6 +11,7 @@ export class WidgetService {
   constructor(
     private prisma: PrismaService,
     private auditLogService: AuditLogService,
+    private widgetDataService: WidgetDataService,
   ) {}
 
   async create(data: CreateWidgetDto): Promise<Widget> {
@@ -42,6 +44,12 @@ export class WidgetService {
 
   async findOne(id: string): Promise<Widget | null> {
     return this.prisma.widget.findUnique({ where: { id } });
+  }
+
+  async findOneSandbox(id: string): Promise<any | null> {
+    return this.prisma.widgetSandbox.findFirst({
+      where: { id }
+    });
   }
 
   async update(id: string, data: UpdateWidgetDto): Promise<Widget> {
@@ -166,5 +174,10 @@ export class WidgetService {
         dashboard: true,
       },
     });
+  }
+
+  async getSandboxWidgetData(widgetId: string, userId: string) {
+
+    return this.widgetDataService.getWidgetSandboxData(widgetId, userId);
   }
 }

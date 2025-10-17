@@ -384,9 +384,17 @@ export class ProcessService {
       throw new NotFoundException(`Process with ID ${processId} not found.`);
     }
 
+    // Generate unique name for the duplicated process
+    let newProcessName = `${originalProcess.name} - Copy`;
+    let counter = 1;
+    while (await this.prisma.process.findFirst({ where: { name: newProcessName } })) {
+      counter++;
+      newProcessName = `${originalProcess.name} - Copy (${counter})`;
+    }
+
     const duplicatedProcess = await this.prisma.process.create({
       data: {
-        name: `${originalProcess.name} - copy`,
+        name: newProcessName,
         type: originalProcess.type,
         groupId: originalProcess.groupId,
         creatorId: creatorId,

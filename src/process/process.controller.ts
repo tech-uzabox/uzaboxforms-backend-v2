@@ -57,7 +57,10 @@ export class ProcessController {
   }
 
   @Post('duplicate')
-  duplicate(@Body() duplicateProcessDto: DuplicateProcessDto) {
-    return this.processService.duplicate(duplicateProcessDto.processId, duplicateProcessDto.creatorId);
+  duplicate(
+    @Body() duplicateProcessDto: DuplicateProcessDto,
+    @GetUser() user: AuthenticatedUser
+  ) {
+    return this.processService.duplicate(duplicateProcessDto.processId, user.id);
   }
 }
