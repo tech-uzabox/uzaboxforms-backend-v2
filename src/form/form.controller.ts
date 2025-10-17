@@ -27,6 +27,7 @@ import { CreateFormDto } from './dto/create-form.dto';
 import { DuplicateFormDto } from './dto/duplicate-form.dto';
 import { MoveFormDto } from './dto/move-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
+import { DeleteFormProcessDataDto } from './dto/delete-form-process-data.dto';
 import { FormService } from './form.service';
 
 @ApiTags('Forms')
@@ -163,6 +164,30 @@ export class FormController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.formService.remove(id);
+  }
+
+  @Delete('full/:id')
+  @ApiOperation({ summary: 'Delete form with all associated data (hard delete)' })
+  @ApiResponse({ status: 200, description: 'Form and all associated data deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async fullDelete(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
+    return this.formService.fullDelete(id, user.id);
+  }
+
+  @Delete('process-data')
+  @ApiOperation({
+    summary: 'Delete all form-process data for specific form and process',
+    description: 'Deletes all responses, applicant processes, completed forms, and processed applications for the specified form within the specified process. Also deletes the process and all its applicant processes.'
+  })
+  @ApiResponse({ status: 200, description: 'Form-process data deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Form or process not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async deleteFormProcessData(
+    @Body() deleteFormProcessDataDto: DeleteFormProcessDataDto,
+    @GetUser() user: AuthenticatedUser
+  ) {
+    return this.formService.deleteFormProcessData(deleteFormProcessDataDto, user.id);
   }
 
   @Post('move')

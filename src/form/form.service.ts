@@ -84,6 +84,231 @@ export class FormService {
     return deletedForm;
   }
 
+  async fullDelete(id: string, userId: string): Promise<{ success: boolean; message: string }> {
+    return await this.prisma.$transaction(async (tx) => {
+      // Find the form and all related processes
+      const form = await tx.form.findUnique({
+        where: { id },
+        include: {
+          processForms: {
+            include: {
+              process: {
+                include: {
+                  applicantProcesses: {
+                    include: {
+                      responses: true,
+                      completedForms: true,
+                      processedApplications: true,
+                      comments: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!form) {
+        throw new NotFoundException(`Form with ID ${id} not found`);
+      }
+
+      // Collect all process IDs that have this form
+      const processIds = form.processForms.map(pf => pf.processId);
+
+      // Delete all related data in the correct order (respecting foreign key constraints)
+      for (const processId of processIds) {
+        // Delete process comments
+        await tx.processComment.deleteMany({
+          where: {
+            applicantProcess: {
+              processId,
+            },
+          },
+        });
+
+        // Delete processed applications
+        await tx.processedApplication.deleteMany({
+          where: { processId },
+        });
+
+        // Delete AP completed forms
+        await tx.aPCompletedForm.deleteMany({
+          where: {
+            applicantProcess: {
+              processId,
+            },
+          },
+        });
+
+        // Delete form responses
+        await tx.formResponse.deleteMany({
+          where: { processId },
+        });
+
+        // Delete applicant processes
+        await tx.applicantProcess.deleteMany({
+          where: { processId },
+        });
+
+        // Delete process forms
+        await tx.processForm.deleteMany({
+          where: { processId },
+        });
+
+        // Delete process roles
+        await tx.processRole.deleteMany({
+          where: { processId },
+        });
+
+        // Delete the process itself
+        await tx.process.delete({
+          where: { id: processId },
+        });
+      }
+
+      // Delete widgets that depend on this form
+      console.log('Finding widgets that depend on form:', id);
+      const widgetsToDelete = await tx.widget.findMany({
+        where: {
+          config: {
+            path: ['metrics'],
+            array_contains: [{ formId: id }],
+          },
+        },
+      });
+      console.log('Found widgets to delete:', widgetsToDelete.length);
+
+
+      for (const widget of widgetsToDelete) {
+        await tx.widget.delete({ where: { id: widget.id } });
+      }
+
+
+      // Delete the form
+      await tx.form.delete({ where: { id } });
+
+      // Log the full delete action
+      await this.auditLogService.log({
+        userId,
+        action: 'FORM_FULL_DELETED',
+        resource: 'Form',
+        resourceId: id,
+        status: 'SUCCESS',
+        details: {
+          formName: form.name,
+          deletedProcesses: processIds.length,
+          deletedApplicantProcesses: form.processForms.reduce((acc, pf) => acc + pf.process.applicantProcesses.length, 0),
+          deletedWidgets: widgetsToDelete.length,
+        },
+      });
+
+      return {
+        success: true,
+        message: `Form "${form.name}" and all associated data deleted successfully`,
+      };
+    });
+  }
+
+  async deleteFormProcessData(
+    data: { processId: string; formId: string },
+    userId: string
+  ): Promise<{ success: boolean; message: string }> {
+    return await this.prisma.$transaction(async (tx) => {
+      const { processId, formId } = data;
+
+      // Verify form and process exist
+      const form = await tx.form.findUnique({ where: { id: formId } });
+      if (!form) {
+        throw new NotFoundException(`Form with ID ${formId} not found`);
+      }
+
+      const process = await tx.process.findUnique({ where: { id: processId } });
+      if (!process) {
+        throw new NotFoundException(`Process with ID ${processId} not found`);
+      }
+
+      // Delete all related data for this form in this process
+      // Delete process comments for applicant processes in this process
+      await tx.processComment.deleteMany({
+        where: {
+          applicantProcess: {
+            processId,
+          },
+        },
+      });
+
+      // Delete processed applications for this form and process
+      await tx.processedApplication.deleteMany({
+        where: {
+          processId,
+          formId,
+        },
+      });
+
+      // Delete AP completed forms for this form in this process
+      await tx.aPCompletedForm.deleteMany({
+        where: {
+          applicantProcess: {
+            processId,
+          },
+          formId,
+        },
+      });
+
+      // Delete form responses for this form and process
+      await tx.formResponse.deleteMany({
+        where: {
+          processId,
+          formId,
+        },
+      });
+
+      // Delete applicant processes for this process
+      await tx.applicantProcess.deleteMany({
+        where: { processId },
+      });
+
+      // Delete process forms for this form and process
+      await tx.processForm.deleteMany({
+        where: {
+          processId,
+          formId,
+        },
+      });
+
+      // Delete process roles
+      await tx.processRole.deleteMany({
+        where: { processId },
+      });
+
+      // Delete the process itself
+      await tx.process.delete({
+        where: { id: processId },
+      });
+
+      // Log the delete action
+      await this.auditLogService.log({
+        userId,
+        action: 'FORM_PROCESS_DATA_DELETED',
+        resource: 'FormProcessData',
+        resourceId: `${formId}-${processId}`,
+        status: 'SUCCESS',
+        details: {
+          formName: form.name,
+          processName: process.name,
+          formId,
+          processId,
+        },
+      });
+
+      return {
+        success: true,
+        message: `All data for form "${form.name}" in process "${process.name}" deleted successfully`,
+      };
+    });
+  }
+
   async moveForm(data: MoveFormDto): Promise<Form> {
     const { formId, targetFolderId } = data;
 
