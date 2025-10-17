@@ -10,7 +10,7 @@ export class OtpService {
     private emailService: EmailService,
   ) {}
 
-  async generateOtp(email: string): Promise<{ message: string }> {
+  async generateOtp(email: string, type?: string): Promise<{ message: string }> {
     // Delete any existing OTPs for this email
     await this.prisma.otp.deleteMany({ where: { email } });
 
@@ -42,13 +42,20 @@ export class OtpService {
     return { message: 'OTP sent successfully' };
   }
 
-  async validateOtp(email: string, otp: string): Promise<{ message: string }> {
+  async validateOtp(email: string, otp: string, type?: string): Promise<{ message: string }> {
     const otpRecord = await this.prisma.otp.findFirst({
       where: { email, otp },
     });
 
     if (!otpRecord) {
       throw new BadRequestException('Invalid OTP or email.');
+    }
+
+    // Check if OTP has expired
+    if (otpRecord.expiresAt < new Date()) {
+      // Delete expired OTP
+      await this.prisma.otp.delete({ where: { id: otpRecord.id } });
+      throw new BadRequestException('OTP has expired. Please request a new one.');
     }
 
     // Delete the OTP after successful validation

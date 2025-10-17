@@ -215,7 +215,7 @@ export class FormFieldsService {
     const formFields = result.data.formFields;
 
     if (formFields.length === 0) {
-      throw new BadRequestException('No form fields found to generate template');
+      throw new BadRequestException('No form fields found to generate structure');
     }
 
     // Create export columns from form fields
@@ -226,15 +226,15 @@ export class FormFieldsService {
       type: this.mapFieldTypeToExportType(field.type)
     }));
 
-    // Create a single empty row for the template
+    // Create a single empty row for the structure
     const rows = [{}];
 
-    // Generate Excel template
+    // Generate Excel structure
     await this.exportService.exportData(
       columns,
       rows,
       {
-        filename: `form_${formId}_template`,
+        filename: `form_${formId}_structure`,
         type: 'excel'
       },
       res

@@ -259,7 +259,7 @@ export class AuthService {
     if (!user) {
       throw new BadRequestException('User with this email does not exist.');
     }
-    return this.otpService.generateOtp(email);
+    return this.otpService.generateOtp(email, 'password_reset');
   }
 
   async resetPassword(
@@ -267,7 +267,7 @@ export class AuthService {
     otp: string,
     newPassword: string,
   ): Promise<{ message: string }> {
-    await this.otpService.validateOtp(email, otp);
+    await this.otpService.validateOtp(email, otp, 'password_reset');
 
     const user = await this.userService.findByEmail(email);
     if (!user) {
@@ -321,8 +321,8 @@ export class AuthService {
     if (!isMatch) {
       throw new BadRequestException('Current password is incorrect.');
     }
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    await this.userService.update(userId, { password: hashedNewPassword });
+    // Don't hash here - let the userService handle it
+    await this.userService.update(userId, { password: newPassword });
     return { message: 'Password changed successfully' };
   }
 

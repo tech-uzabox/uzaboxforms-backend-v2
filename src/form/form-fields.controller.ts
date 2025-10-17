@@ -17,11 +17,11 @@ import { FormFieldsService } from './form-fields.service';
 @ApiBearerAuth()
 export class FormFieldsController {
   constructor(private readonly formFieldsService: FormFieldsService) {}
-  @Get(':id/template')
-  @ApiOperation({ summary: 'Generate Excel template for a specific form' })
+  @Get(':id/structure')
+  @ApiOperation({ summary: 'Generate Excel structure for a specific form' })
   @ApiResponse({
     status: 200,
-    description: 'Excel template generated successfully',
+    description: 'Excel structure generated successfully',
     content: {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
         schema: {
@@ -35,9 +35,9 @@ export class FormFieldsController {
   @ApiResponse({ status: 404, description: 'Form not found' })
   @ApiResponse({
     status: 400,
-    description: 'No form fields found to generate template',
+    description: 'No form fields found to generate structure',
   })
-  async generateTemplate(
+  async generateStructure(
     @Param('id') formId: string,
     @GetUser() user: AuthenticatedUser,
     @Res() res: Response,
