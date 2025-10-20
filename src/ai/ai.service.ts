@@ -339,7 +339,7 @@ export class AiService {
         dataStreamWriter.writeData('initialized call');
         const result = streamText({
           // model: openrouter('openai/gpt-5'),
-          model: openrouter('anthropic/claude-sonnet-4.5'),
+          model: openrouter('anthropic/claude-haiku-4.5'),
           // model: openrouter('x-ai/grok-4-fast'),
           system: systemPromptText,
           messages,
