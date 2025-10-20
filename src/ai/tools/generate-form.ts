@@ -7,6 +7,7 @@ import {
   FormSchema,
   GeneratedFormSchema,
 } from './form-schemas';
+import crypto from 'crypto';
 
 export const createGenerateFormTool = tool({
   description: 'generate form schema according to description',
@@ -57,7 +58,7 @@ export const createGenerateFormTool = tool({
           questions: section.questions.map(
             (question: any, questionIndex: number) => ({
               ...question,
-              id: `question-${Date.now() + sectionIndex + questionIndex}`,
+              id: `question-${crypto.randomUUID()}`,
             }),
           ),
         }),
