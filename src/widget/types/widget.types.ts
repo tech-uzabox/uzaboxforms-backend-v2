@@ -34,7 +34,8 @@ export interface WidgetDataPayload {
     | 'histogram'
     | 'scatter'
     | 'calendar-heatmap'
-    | 'map';
+    | 'map'
+    | 'crosstab';
   title: string;
   value?: number;
   statLabel?: string;
@@ -44,13 +45,19 @@ export interface WidgetDataPayload {
   slices?: { label: string; value: number }[];
   bins?: { label: string }[];
   points?: { x: number; y: number }[];
-  values?: { date: string; value: number }[];
+  values?: { date: string; value: number }[] | (number | string)[][];
   startDate?: string;
   endDate?: string;
   countries?: Record<
     string,
     { values: Record<string, unknown>; colorValue?: string }
   >;
+  // Crosstab-specific fields
+  rows?: string[];
+  columns?: string[];
+  rowTotals?: (number | string)[];
+  colTotals?: (number | string)[];
+  grandTotal?: number | string;
   meta: any;
   empty: boolean;
   errors?: string[];

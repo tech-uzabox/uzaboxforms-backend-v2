@@ -3,6 +3,7 @@ import { PrismaService } from '../db/prisma.service';
 import {
   processCalendarHeatmapWidget,
   processCardWidget,
+  processCrossTabWidget,
   processHistogramWidget,
   processMapWidget,
   processMultiMetricWidget,
@@ -201,6 +202,14 @@ export class WidgetDataService {
             config,
             this,
           );
+        case 'crosstab':
+          return await processCrossTabWidget(
+            widget,
+            filteredResponses,
+            formDesignsMap,
+            config,
+            this,
+          );
         default:
           throw new Error(
             `Unsupported visualization type: ${widget.visualizationType}`,
@@ -251,6 +260,14 @@ export class WidgetDataService {
           values: [],
           startDate: '',
           endDate: '',
+        };
+      case 'crosstab':
+        return {
+          ...base,
+          type: 'crosstab',
+          rows: [],
+          columns: [],
+          values: [],
         };
       default:
         return { ...base, type: 'card', value: 0, statLabel: 'No Data' };

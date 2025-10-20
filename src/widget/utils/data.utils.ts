@@ -14,21 +14,36 @@ export function normalizeResponses(responses: any[]): ProcessedResponse[] {
 
 export function getUniqueFormIds(config: any): string[] {
   const formIds = new Set<string>();
-  if (config?.metrics && Array.isArray(config?.metrics)) {
-    config.metrics.forEach((metric: any) => {
-      if (metric.formId) formIds.add(metric.formId);
-    });
+
+  // Metrics-based widgets
+  if (config?.metrics && Array.isArray(config.metrics)) {
+    for (const metric of config.metrics) {
+      if (metric?.formId) formIds.add(String(metric.formId));
+    }
   }
-  if (config?.sources && Array.isArray(config?.sources)) {
-    config.sources.forEach((source: any) => {
-      if (source.formId) formIds.add(source.formId);
-    });
+
+  // Legacy sources
+  if (config?.sources && Array.isArray(config.sources)) {
+    for (const source of config.sources) {
+      if (source?.formId) formIds.add(String(source.formId));
+    }
   }
-  if (config?.options?.map?.metrics && Array.isArray(config?.options?.map?.metrics)) {
-    config.options.map.metrics.forEach((metric: any) => {
-      if (metric.formId) formIds.add(metric.formId);
-    });
+
+  // Map metrics
+  if (config?.options?.map?.metrics && Array.isArray(config.options.map.metrics)) {
+    for (const m of config.options.map.metrics) {
+      if (m?.formId) formIds.add(String(m.formId));
+    }
   }
+
+  // Crosstab widget: include row/column/value forms
+  const cx = config?.options?.crosstab || config?.crosstab;
+  if (cx) {
+    if (cx.row?.formId) formIds.add(String(cx.row.formId));
+    if (cx.column?.formId) formIds.add(String(cx.column.formId));
+    if (cx.value?.formId) formIds.add(String(cx.value.formId));
+  }
+
   return Array.from(formIds);
 }
 

@@ -772,6 +772,14 @@ function createEmptyPayload(widget: any): WidgetDataPayload {
         startDate: '',
         endDate: '',
       };
+    case 'crosstab':
+      return {
+        ...base,
+        type: 'crosstab',
+        rows: [],
+        columns: [],
+        values: [],
+      };
     default:
       return { ...base, type: 'card', value: 0, statLabel: 'No Data' };
   }
@@ -870,4 +878,380 @@ function getQuestion(formDesign: any, fieldId: string): any {
     }
   }
   return null;
+}
+
+export async function processCrossTabWidget(
+  widget: any,
+  filteredResponses: ProcessedResponse[],
+  formDesignsMap: Map<string, any>,
+  config: any,
+  service: any,
+): Promise<WidgetDataPayload> {
+  console.log('processCrossTabWidget: Starting with', filteredResponses.length, 'responses');
+  const cx = config.options?.crosstab || config.crosstab;
+  if (!cx) {
+    console.log('processCrossTabWidget: No crosstab config found');
+    return createEmptyPayload(widget) as any;
+  }
+
+  const { row, column, value } = cx;
+  console.log('processCrossTabWidget: Config - row:', row, 'column:', column, 'value:', value);
+  const rowFD = formDesignsMap.get(String(row.formId));
+  const colFD = formDesignsMap.get(String(column.formId));
+  const valFD = formDesignsMap.get(String(value.formId));
+  console.log('processCrossTabWidget: Form designs found - rowFD:', !!rowFD, 'colFD:', !!colFD, 'valFD:', !!valFD);
+
+  const MISSING = 'Missing';
+
+  // Debug helper to extract questionIds seen in a response payload (array/object shapes)
+  const extractQuestionIdsFromResponse = (resp: any): string[] => {
+    try {
+      const ids = new Set<string>();
+      let rr: any = resp?.responses ?? resp;
+      if (typeof rr === 'string') {
+        try { rr = JSON.parse(rr); } catch { /* ignore */ }
+      }
+      const walk = (node: any, depth = 0) => {
+        if (!node || depth > 6) return;
+        if (Array.isArray(node)) {
+          for (const item of node) walk(item, depth + 1);
+          return;
+        }
+        if (typeof node === 'object') {
+          if (Array.isArray((node as any).responses)) {
+            for (const qr of (node as any).responses) {
+              const qid = qr?.questionId ?? qr?.id;
+              if (qid) ids.add(String(qid));
+            }
+          }
+          for (const k of Object.keys(node)) {
+            if (k !== 'responses') {
+              if (k.startsWith('question-')) ids.add(k);
+              walk((node as any)[k], depth + 1);
+            }
+          }
+        }
+      };
+      walk(rr);
+      return Array.from(ids).slice(0, 50);
+    } catch {
+      return [];
+    }
+  };
+
+  // Helpers to fallback-resolve values by axis title (label-based) when fieldId mismatches
+  const normText = (s: any): string => String(s ?? '').trim().toLowerCase();
+  const extractByLabel = (resp: any, targetLabel?: string): any => {
+    if (!targetLabel) return null;
+    let rr: any = resp?.responses ?? resp;
+    if (typeof rr === 'string') {
+      try { rr = JSON.parse(rr); } catch { /* ignore */ }
+    }
+    const match = (label: any) => normText(label) === normText(targetLabel) ||
+      normText(label).includes(normText(targetLabel));
+    // Array-of-sections
+    if (Array.isArray(rr)) {
+      for (const sec of rr) {
+        const arr = sec?.responses;
+        if (Array.isArray(arr)) {
+          for (const qr of arr) {
+            if (match(qr?.label)) return qr?.response;
+          }
+        }
+      }
+    }
+    // Object-with-sections
+    if (rr && Array.isArray(rr.sections)) {
+      for (const sec of rr.sections) {
+        const arr = sec?.responses;
+        if (Array.isArray(arr)) {
+          for (const qr of arr) {
+            if (match(qr?.label)) return qr?.response;
+          }
+        }
+      }
+    }
+    return null;
+  };
+  const firstCheckedOption = (val: any): string | null => {
+    if (!Array.isArray(val)) return null;
+    for (const item of val) {
+      if (item && typeof item === 'object' && item.checked && item.option) {
+        return String(item.option);
+      }
+    }
+    return null;
+  };
+
+  // Index latest response per form and applicantProcessId
+  function buildLatestIndex(formId: string): Map<string, ProcessedResponse> {
+    const map = new Map<string, ProcessedResponse>();
+    for (const r of filteredResponses) {
+      if (String(r.formId) !== String(formId)) continue;
+      const key = String(r.applicantProcessId || r.id);
+      const existing = map.get(key);
+      if (!existing || (r.createdAt && existing.createdAt && r.createdAt > existing.createdAt)) {
+        map.set(key, r);
+      } else if (!existing) {
+        map.set(key, r);
+      }
+    }
+    return map;
+  }
+
+  const rowIdx = buildLatestIndex(row.formId);
+  const colIdx = buildLatestIndex(column.formId);
+  const valIdx = buildLatestIndex(value.formId);
+  console.log('processCrossTabWidget: Indexes built - rowIdx:', rowIdx.size, 'colIdx:', colIdx.size, 'valIdx:', valIdx.size);
+
+  // Collect cells using value responses as driver
+  const rowsSet = new Set<string>();
+  const colsSet = new Set<string>();
+  const cellAgg = new Map<string, Map<string, number[]>>();
+
+  const norm = (s: any): string => (s === null || s === undefined ? '' : String(s).trim());
+  const addAgg = (rk: string, ck: string, v: number) => {
+    if (!Number.isFinite(v)) return;
+    let m = cellAgg.get(rk);
+    if (!m) {
+      m = new Map();
+      cellAgg.set(rk, m);
+    }
+    const existing = m.get(ck);
+    if (existing) {
+      existing.push(v);
+    } else {
+      m.set(ck, [v]);
+    }
+  };
+
+  let processedCount = 0;
+  for (const [apId, vResp] of valIdx.entries()) {
+    console.log('processCrossTabWidget: Processing value response for apId:', apId, 'formId:', vResp.formId);
+    // Resolve row value (same form or via index)
+    let rVal: any = null;
+    if (String(row.formId) === String(value.formId)) {
+      rVal = service.getFieldValue(vResp, row.fieldId, row.systemField, valFD);
+      console.log('processCrossTabWidget: Row value from same form:', rVal);
+    } else {
+      const rr = rowIdx.get(apId);
+      if (rr) {
+        rVal = service.getFieldValue(rr, row.fieldId, row.systemField, rowFD);
+        console.log('processCrossTabWidget: Row value from index:', rVal);
+      } else {
+        console.log('processCrossTabWidget: No row response found for apId:', apId);
+      }
+    }
+    if (rVal === null || rVal === undefined) {
+      // Try fallback via axis title label
+      const fbRow = extractByLabel(vResp, cx?.rowAxisTitle);
+      let chosenRow: any = fbRow;
+      if (Array.isArray(fbRow)) {
+        const fc = firstCheckedOption(fbRow);
+        if (fc !== null) chosenRow = fc;
+      }
+      if (chosenRow !== null && chosenRow !== undefined) {
+        console.log('processCrossTabWidget: Row fallback via label matched axis title =>', cx?.rowAxisTitle, 'value=', chosenRow);
+        rVal = chosenRow;
+      }
+    }
+    if ((rVal === null || rVal === undefined) && !row.includeMissing) {
+      const avail = extractQuestionIdsFromResponse(vResp);
+      console.log(
+        'processCrossTabWidget: Skipping due to missing row value and includeMissing=false. Expected fieldId=',
+        row.fieldId,
+        'systemField=',
+        row.systemField,
+        'Available questionIds(sample)=',
+        avail,
+        'rowAxisTitle=',
+        cx?.rowAxisTitle
+      );
+      continue;
+    }
+    const rKey = norm(rVal ?? MISSING);
+
+    // Resolve column value
+    let cVal: any = null;
+    if (String(column.formId) === String(value.formId)) {
+      cVal = service.getFieldValue(vResp, column.fieldId, column.systemField, valFD);
+      console.log('processCrossTabWidget: Column value from same form:', cVal);
+    } else {
+      const cr = colIdx.get(apId);
+      if (cr) {
+        cVal = service.getFieldValue(cr, column.fieldId, column.systemField, colFD);
+        console.log('processCrossTabWidget: Column value from index:', cVal);
+      } else {
+        console.log('processCrossTabWidget: No column response found for apId:', apId);
+      }
+    }
+    if (cVal === null || cVal === undefined) {
+      // Try fallback via axis title label
+      const fbCol = extractByLabel(vResp, cx?.colAxisTitle || cx?.columnAxisTitle);
+      let chosenCol: any = fbCol;
+      if (Array.isArray(fbCol)) {
+        const fc = firstCheckedOption(fbCol);
+        if (fc !== null) chosenCol = fc;
+      }
+      if (chosenCol !== null && chosenCol !== undefined) {
+        console.log('processCrossTabWidget: Column fallback via label matched axis title =>', (cx?.colAxisTitle || cx?.columnAxisTitle), 'value=', chosenCol);
+        cVal = chosenCol;
+      }
+    }
+    if ((cVal === null || cVal === undefined) && !column.includeMissing) {
+      const avail = extractQuestionIdsFromResponse(vResp);
+      console.log(
+        'processCrossTabWidget: Skipping due to missing column value and includeMissing=false. Expected fieldId=',
+        column.fieldId,
+        'systemField=',
+        column.systemField,
+        'Available questionIds(sample)=',
+        avail,
+        'colAxisTitle=',
+        (cx?.colAxisTitle || cx?.columnAxisTitle)
+      );
+      continue;
+    }
+    const cKey = norm(cVal ?? MISSING);
+    console.log('processCrossTabWidget: Resolved keys => row:', rKey, 'col:', cKey);
+
+    // Compute numeric contribution
+    let contrib = 0;
+    if (value.aggregation === 'count') {
+      contrib = 1;
+      console.log('processCrossTabWidget: Count aggregation, contrib=1');
+    } else {
+      const raw = service.getFieldValue(vResp, value.fieldId, value.systemField, valFD);
+      const num = toNumber(raw);
+      console.log('processCrossTabWidget: Value field raw:', raw, 'num:', num);
+      if (num === null) {
+        console.log('processCrossTabWidget: Skipping due to null numeric value');
+        continue;
+      }
+      contrib = num;
+    }
+
+    rowsSet.add(rKey);
+    colsSet.add(cKey);
+    addAgg(rKey, cKey, contrib);
+    processedCount++;
+    console.log('processCrossTabWidget: Added to cell', rKey, cKey, 'contrib:', contrib);
+  }
+  console.log('processCrossTabWidget: Processed', processedCount, 'responses');
+
+  // If nothing matched, return empty
+  console.log('processCrossTabWidget: Final sets - rows:', rowsSet.size, 'cols:', colsSet.size, 'cellAgg:', cellAgg.size);
+  if (rowsSet.size === 0 || colsSet.size === 0 || cellAgg.size === 0) {
+    console.log('processCrossTabWidget: Returning empty due to no data');
+    return createEmptyPayload(widget) as any;
+  }
+
+  // Sort categories for stable output
+  const rows = Array.from(rowsSet).sort();
+  const columns = Array.from(colsSet).sort();
+  console.log('processCrossTabWidget: Rows sample:', rows.slice(0, 10), 'Columns sample:', columns.slice(0, 10));
+
+  // Build matrix with aggregation
+  const values: number[][] = Array.from({ length: rows.length }, () =>
+    Array.from({ length: columns.length }, () => 0),
+  );
+
+  for (let i = 0; i < rows.length; i++) {
+    const rk = rows[i];
+    const rowMap = cellAgg.get(rk);
+    if (!rowMap) continue;
+    for (let j = 0; j < columns.length; j++) {
+      const ck = columns[j];
+      const arr = rowMap.get(ck) || [];
+      if (arr.length === 0) {
+        values[i][j] = 0;
+      } else {
+        if (value.aggregation === 'count') {
+          values[i][j] = arr.length;
+        } else if (value.aggregation === 'sum') {
+          values[i][j] = arr.reduce((a, b) => a + b, 0);
+        } else if (value.aggregation === 'mean') {
+          values[i][j] = arr.reduce((a, b) => a + b, 0) / arr.length;
+        } else if (value.aggregation === 'median') {
+          const sorted = [...arr].sort((a, b) => a - b);
+          const mid = Math.floor(sorted.length / 2);
+          values[i][j] = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+        } else if (value.aggregation === 'mode') {
+          const freq: Record<number, number> = {};
+          arr.forEach(v => freq[v] = (freq[v] || 0) + 1);
+          const maxFreq = Math.max(...Object.values(freq));
+          const modes = Object.keys(freq).filter(k => freq[Number(k)] === maxFreq).map(Number);
+          values[i][j] = modes.length === 1 ? modes[0] : modes[0]; // Take first mode if multiple
+        } else if (value.aggregation === 'min') {
+          values[i][j] = Math.min(...arr);
+        } else if (value.aggregation === 'max') {
+          values[i][j] = Math.max(...arr);
+        } else if (value.aggregation === 'std') {
+          const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+          const variance = arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / arr.length;
+          values[i][j] = Math.sqrt(variance);
+        } else if (value.aggregation === 'variance') {
+          const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+          values[i][j] = arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / arr.length;
+        } else if (value.aggregation === 'p10') {
+          const sorted = [...arr].sort((a, b) => a - b);
+          const idx = Math.floor(sorted.length * 0.1);
+          values[i][j] = sorted[Math.max(0, idx)];
+        } else if (value.aggregation === 'p25') {
+          const sorted = [...arr].sort((a, b) => a - b);
+          const idx = Math.floor(sorted.length * 0.25);
+          values[i][j] = sorted[Math.max(0, idx)];
+        } else if (value.aggregation === 'p50') {
+          const sorted = [...arr].sort((a, b) => a - b);
+          const idx = Math.floor(sorted.length * 0.5);
+          values[i][j] = sorted[Math.max(0, idx)];
+        } else if (value.aggregation === 'p75') {
+          const sorted = [...arr].sort((a, b) => a - b);
+          const idx = Math.floor(sorted.length * 0.75);
+          values[i][j] = sorted[Math.max(0, idx)];
+        } else if (value.aggregation === 'p90') {
+          const sorted = [...arr].sort((a, b) => a - b);
+          const idx = Math.floor(sorted.length * 0.9);
+          values[i][j] = sorted[Math.max(0, idx)];
+        } else {
+          // Default to sum for unknown aggregations
+          values[i][j] = arr.reduce((a, b) => a + b, 0);
+        }
+      }
+    }
+  }
+
+  // Totals
+  let rowTotals: number[] | undefined;
+  let colTotals: number[] | undefined;
+  let grandTotal: number | undefined;
+  const appearance = config.appearance || {};
+
+  if (appearance.showRowTotals) {
+    rowTotals = values.map((rowArr) => rowArr.reduce((a, b) => a + (Number(b) || 0), 0));
+  }
+  if (appearance.showColumnTotals) {
+    colTotals = columns.map((_, j) => values.reduce((sum, r) => sum + (Number(r[j]) || 0), 0));
+  }
+  if (appearance.showGrandTotal) {
+    if (rowTotals) {
+      grandTotal = rowTotals.reduce((a, b) => a + (Number(b) || 0), 0);
+    } else {
+      grandTotal = values.flat().reduce((a, b) => a + (Number(b) || 0), 0);
+    }
+  }
+
+  console.log('processCrossTabWidget: Returning data - rows:', rows.length, 'columns:', columns.length, 'values shape:', values.length, 'x', values[0]?.length);
+  return {
+    type: 'crosstab',
+    title: widget.title,
+    rows,
+    columns,
+    values,
+    rowTotals,
+    colTotals,
+    grandTotal,
+    meta: widget.config || {},
+    empty: rows.length === 0 || columns.length === 0,
+  };
 }

@@ -13,6 +13,26 @@ export function transformWidgetPayload(payload: any) {
     throw new Error("Multi-metric widgets require at least one metric");
   }
 
+  // Validate crosstab widgets have required configuration
+  if (payload.visualizationType === "crosstab") {
+    if (!payload.options?.crosstab) {
+      throw new Error("Crosstab widgets require crosstab configuration in options");
+    }
+    const crosstab = payload.options.crosstab;
+    if (!crosstab.row?.formId || (!crosstab.row?.fieldId && !crosstab.row?.systemField)) {
+      throw new Error("Crosstab row category must be configured");
+    }
+    if (!crosstab.column?.formId || (!crosstab.column?.fieldId && !crosstab.column?.systemField)) {
+      throw new Error("Crosstab column category must be configured");
+    }
+    if (!crosstab.value?.formId || (!crosstab.value?.fieldId && !crosstab.value?.systemField)) {
+      throw new Error("Crosstab value metric must be configured");
+    }
+    if (!crosstab.value?.aggregation) {
+      throw new Error("Crosstab value aggregation must be specified");
+    }
+  }
+
   // Transform groupBy
   const transformedGroupBy = payload.groupBy
     ? {
@@ -96,6 +116,21 @@ export function transformWidgetPayload(payload: any) {
     : [];
 
   // Build the config object
+  // Normalize options to ensure crosstab is correctly nested under options
+  const normalizedOptions: any = { ...(payload.options || {}) };
+  if (payload.visualizationType === "crosstab") {
+    const crosstab = (payload.options?.crosstab) || payload.crosstab;
+    if (crosstab) {
+      normalizedOptions.crosstab = {
+        row: { includeMissing: false, ...(crosstab.row || {}) },
+        column: { includeMissing: false, ...(crosstab.column || {}) },
+        value: { ...(crosstab.value || {}) },
+        ...(crosstab.rowAxisTitle !== undefined ? { rowAxisTitle: String(crosstab.rowAxisTitle) } : {}),
+        ...(crosstab.colAxisTitle !== undefined ? { colAxisTitle: String(crosstab.colAxisTitle) } : {}),
+      };
+    }
+  }
+
   const config: any = {
     ...(transformedGroupBy && { groupBy: transformedGroupBy }),
     dateRange: transformedDateRange,
@@ -104,7 +139,7 @@ export function transformWidgetPayload(payload: any) {
     ...(payload.sort && { sort: payload.sort }),
     ...(payload.combinationMode && { combinationMode: payload.combinationMode }),
     ...(payload.appearance && { appearance: payload.appearance }),
-    ...(payload.options && { options: payload.options }),
+    ...(Object.keys(normalizedOptions).length > 0 && { options: normalizedOptions }),
     ...(payload.realTime && { realTime: payload.realTime }),
     ...(payload.valueModeFieldId && { valueModeFieldId: payload.valueModeFieldId }),
     ...(payload.metricMode && { metricMode: payload.metricMode }),
@@ -217,6 +252,21 @@ export function transformWidgetPayloadSpecial(payload: any) {
     : [];
 
   // Build the config object
+  // Normalize options to ensure crosstab is correctly nested under options
+  const normalizedOptionsSpecial: any = { ...(payload.options || {}) };
+  if (payload.visualizationType === "crosstab") {
+    const crosstab = (payload.options?.crosstab) || payload.crosstab;
+    if (crosstab) {
+      normalizedOptionsSpecial.crosstab = {
+        row: { includeMissing: false, ...(crosstab.row || {}) },
+        column: { includeMissing: false, ...(crosstab.column || {}) },
+        value: { ...(crosstab.value || {}) },
+        ...(crosstab.rowAxisTitle !== undefined ? { rowAxisTitle: String(crosstab.rowAxisTitle) } : {}),
+        ...(crosstab.colAxisTitle !== undefined ? { colAxisTitle: String(crosstab.colAxisTitle) } : {}),
+      };
+    }
+  }
+
   const config: any = {
     ...(transformedGroupBy && { groupBy: transformedGroupBy }),
     dateRange: transformedDateRange,
@@ -225,7 +275,7 @@ export function transformWidgetPayloadSpecial(payload: any) {
     ...(payload.sort && { sort: payload.sort }),
     ...(payload.combinationMode && { combinationMode: payload.combinationMode }),
     ...(payload.appearance && { appearance: payload.appearance }),
-    ...(payload.options && { options: payload.options }),
+    ...(Object.keys(normalizedOptionsSpecial).length > 0 && { options: normalizedOptionsSpecial }),
     ...(payload.realTime && { realTime: payload.realTime }),
     ...(payload.valueModeFieldId && { valueModeFieldId: payload.valueModeFieldId }),
     ...(payload.metricMode && { metricMode: payload.metricMode }),
@@ -303,6 +353,19 @@ export function transformWidgetUpdatePayload(payload: any) {
   if (payload.combinationMode !== undefined) configUpdates.combinationMode = payload.combinationMode;
   if (payload.appearance !== undefined) configUpdates.appearance = payload.appearance;
   if (payload.options !== undefined) configUpdates.options = payload.options;
+  // Allow direct crosstab updates without requiring full options object
+  if (payload.crosstab !== undefined) {
+    configUpdates.options = {
+      ...(configUpdates.options || {}),
+      crosstab: {
+        row: { includeMissing: false, ...(payload.crosstab.row || {}) },
+        column: { includeMissing: false, ...(payload.crosstab.column || {}) },
+        value: { ...(payload.crosstab.value || {}) },
+        ...(payload.crosstab.rowAxisTitle !== undefined ? { rowAxisTitle: String(payload.crosstab.rowAxisTitle) } : {}),
+        ...(payload.crosstab.colAxisTitle !== undefined ? { colAxisTitle: String(payload.crosstab.colAxisTitle) } : {}),
+      },
+    };
+  }
   if (payload.realTime !== undefined) configUpdates.realTime = payload.realTime;
   if (payload.valueModeFieldId !== undefined) configUpdates.valueModeFieldId = payload.valueModeFieldId;
   if (payload.configuration !== undefined) configUpdates.configuration = payload.configuration;

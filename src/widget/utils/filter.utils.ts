@@ -19,21 +19,103 @@ export function getFieldValue(
 
   if (fieldId && response.responses) {
     let rawValue: any = null;
-    if (Array.isArray(response.responses)) {
-      for (const section of response.responses) {
-        if (section.responses && Array.isArray(section.responses)) {
-          for (const questionResponse of section.responses) {
-            if (questionResponse.questionId === fieldId) {
+
+    // Normalize responses shape (may be JSON string, array of sections, or object with sections)
+    let rr: any = response.responses;
+    if (typeof rr === 'string') {
+      try {
+        rr = JSON.parse(rr);
+      } catch (_e) {
+        // leave as string if not JSON
+      }
+    }
+
+    // Case 1: responses is already an array of sections
+    if (Array.isArray(rr)) {
+      for (const section of rr) {
+        const sectionResponses = section?.responses;
+        if (Array.isArray(sectionResponses)) {
+          for (const questionResponse of sectionResponses) {
+            if (questionResponse?.questionId === fieldId) {
               rawValue = questionResponse.response;
               break;
             }
           }
         }
-        if (rawValue) break;
+        if (rawValue !== null && rawValue !== undefined) break;
       }
     }
-    if (rawValue === null) rawValue = response.responses[fieldId];
-    if (rawValue === null || rawValue === undefined) return null;
+
+    // Case 2: responses is an object with a 'sections' array
+    if ((rawValue === null || rawValue === undefined) && rr && Array.isArray(rr.sections)) {
+      for (const section of rr.sections) {
+        const sectionResponses = section?.responses;
+        if (Array.isArray(sectionResponses)) {
+          for (const questionResponse of sectionResponses) {
+            if (questionResponse?.questionId === fieldId) {
+              rawValue = questionResponse.response;
+              break;
+            }
+          }
+        }
+        if (rawValue !== null && rawValue !== undefined) break;
+      }
+    }
+
+    // Case 3: responses may be an object keyed by fieldId
+    if (rawValue === null || rawValue === undefined) {
+      if (rr && typeof rr === 'object') {
+        rawValue = rr[fieldId] ?? null;
+      }
+    }
+
+    if (rawValue === null || rawValue === undefined) {
+      // Optional debug visibility for Crosstab diagnosis
+      const DBG = true;
+      if (DBG) {
+        try {
+          const seen = new Set<string>();
+          const collectIds = (node: any, depth = 0) => {
+            if (!node || depth > 5) return;
+            if (Array.isArray(node)) {
+              for (const item of node) collectIds(item, depth + 1);
+              return;
+            }
+            if (typeof node === 'object') {
+              // Common shapes
+              if (Array.isArray((node as any).responses)) {
+                for (const qr of (node as any).responses) {
+                  const qid = qr?.questionId ?? qr?.id;
+                  if (qid) seen.add(String(qid));
+                }
+              }
+              for (const k of Object.keys(node)) {
+                if (k === 'responses') continue;
+                // If an object is keyed by field id, catch that too
+                if (k === String(fieldId)) {
+                  seen.add(k);
+                }
+                collectIds(node[k], depth + 1);
+              }
+            }
+          };
+          collectIds(rr);
+          console.log(
+            'getFieldValue: could not resolve fieldId',
+            fieldId,
+            'systemField',
+            systemField,
+            'formId',
+            response.formId,
+            'availableIds(sample):',
+            Array.from(seen).slice(0, 25),
+          );
+        } catch (_e) {
+          // ignore debug errors
+        }
+      }
+      return null;
+    }
 
     const question = formDesign ? getQuestion(formDesign, fieldId) : null;
     const questionType = question?.type;
@@ -100,18 +182,30 @@ export function getFieldValue(
 }
 
 export function getQuestion(formDesign: any, fieldId: string): any | null {
-  if (
-    !formDesign ||
-    !formDesign.sections ||
-    !Array.isArray(formDesign.sections)
-  )
-    return null;
-  for (const section of formDesign) {
-    if (section.questions && Array.isArray(section.questions)) {
-      const question = section.questions.find((q: any) => q.id === fieldId);
-      if (question) return question;
+  if (!formDesign) return null;
+
+  // Preferred shape: { sections: [...] }
+  if (Array.isArray((formDesign as any).sections)) {
+    for (const section of (formDesign as any).sections) {
+      if (section?.questions && Array.isArray(section.questions)) {
+        const question = section.questions.find((q: any) => q.id === fieldId);
+        if (question) return question;
+      }
     }
+    return null;
   }
+
+  // Legacy shape: formDesign is already an array of sections
+  if (Array.isArray(formDesign)) {
+    for (const section of formDesign) {
+      if (section?.questions && Array.isArray(section.questions)) {
+        const question = section.questions.find((q: any) => q.id === fieldId);
+        if (question) return question;
+      }
+    }
+    return null;
+  }
+
   return null;
 }
 
