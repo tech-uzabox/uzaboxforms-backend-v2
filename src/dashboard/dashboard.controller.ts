@@ -30,17 +30,17 @@ export class DashboardController {
     @Body() createDashboardDto: CreateDashboardDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.dashboardService.create(createDashboardDto, user);
+    return this.dashboardService.createDashboard(createDashboardDto, user);
   }
 
   @Get()
   findAll(@Req() req: { user: AuthenticatedUser }) {
-    return this.dashboardService.findAllForUser(req.user.id, req.user.roles);
+    return this.dashboardService.findAllDashboardsForUser(req.user);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
-    return this.dashboardService.findOne(id, user);
+    return this.dashboardService.findOneDashboard(id, user);
   }
 
   @Patch(':id')
@@ -49,12 +49,12 @@ export class DashboardController {
     @Body() updateDashboardDto: UpdateDashboardDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.dashboardService.update(id, updateDashboardDto, user);
+    return this.dashboardService.updateDashboard(id, updateDashboardDto, user);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
-    return this.dashboardService.remove(id, user);
+    return this.dashboardService.removeDashboard(id, user);
   }
 
   @Put(':id/widget-order')
@@ -63,6 +63,6 @@ export class DashboardController {
     @Body() layout: any,
     @GetUser() user: AuthenticatedUser,
   ) {
-    return this.dashboardService.updateWidgetOrder(id, layout, user);
+    return this.dashboardService.updateDashboardWidgetOrder(id, layout, user);
   }
 }

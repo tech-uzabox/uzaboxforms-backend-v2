@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
 import { Dashboard, Prisma } from 'db/client';
 import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { CreateDashboardDto } from './dto/create-dashboard.dto';
+import { UpdateDashboardDto } from './dto/update-dashboard.dto';
 
 @Injectable()
 export class DashboardService {
@@ -44,19 +45,32 @@ export class DashboardService {
     return newDashboard;
   }
 
+  async createDashboard(
+    data: CreateDashboardDto,
+    user: AuthenticatedUser,
+  ) {
+    const dashboard = await this.create(data, user);
+
+    return {
+      success: true,
+      message: 'Dashboard created successfully',
+      data: dashboard,
+    };
+  }
+
   async findAll(): Promise<Dashboard[]> {
     return this.prisma.dashboard.findMany();
   }
 
-  async findAllForUser(userId: string, roles: string[]): Promise<Dashboard[]> {
-    const isAdmin = roles.includes('Admin') || roles.includes('SuperAdmin');
-    const whereCondition = isAdmin
+  async findAllForUser(user: AuthenticatedUser): Promise<Dashboard[]> {
+
+    const isAdmin = user.roles.includes('Admin');
+    const whereCondition: Prisma.DashboardWhereInput = isAdmin
       ? {} // Admins see all dashboards
       : {
           OR: [
-            { ownerId: userId },
-            { allowedUsers: { has: userId } },
-            { allowedRoles: { hasSome: roles } },
+            { allowedUsers: { has: user.id } },
+            { allowedRoles: { hasSome: user.roleIds } },
           ],
         };
 
@@ -77,6 +91,16 @@ export class DashboardService {
       },
     });
     return dashboards;
+  }
+
+  async findAllDashboardsForUser(user: AuthenticatedUser) {
+    const dashboards = await this.findAllForUser(user);
+
+    return {
+      success: true,
+      data: dashboards,
+      count: dashboards.length,
+    };
   }
 
   async findOne(
@@ -104,23 +128,30 @@ export class DashboardService {
     });
 
     if (!dashboard) {
-      return null;
+      throw new NotFoundException('Dashboard not found')
     }
 
     // Check permissions
-    const isOwner = dashboard.ownerId === user.id;
     const isAllowedUser = dashboard.allowedUsers.includes(user.id);
     const isAllowedRole = dashboard.allowedRoles.some((role) =>
-      user.roles.includes(role),
+      user.roleIds.includes(role),
     );
-    const isAdmin =
-      user.roles.includes('Admin') || user.roles.includes('SuperAdmin');
+    const isAdmin = user.roles.includes('Admin');
 
-    if (!isOwner && !isAllowedUser && !isAllowedRole && !isAdmin) {
+    if (!isAllowedUser && !isAllowedRole && !isAdmin) {
       throw new Error('Access denied');
     }
 
     return dashboard;
+  }
+
+  async findOneDashboard(id: string, user: AuthenticatedUser) {
+    const dashboard = await this.findOne(id, user);
+
+    return {
+      success: true,
+      data: dashboard,
+    };
   }
 
   async update(
@@ -134,8 +165,10 @@ export class DashboardService {
       throw new Error('Dashboard not found');
     }
 
-    if (dashboard.ownerId !== user.id) {
-      throw new Error('Only dashboard owner can update properties');
+    const isAdmin = user.roles.includes('Admin');
+
+    if (!isAdmin) {
+      throw new Error('Only admins can update the dashboard');
     }
 
     const updatedDashboard = await this.prisma.dashboard.update({
@@ -163,6 +196,20 @@ export class DashboardService {
     return updatedDashboard;
   }
 
+  async updateDashboard(
+    id: string,
+    data: UpdateDashboardDto,
+    user: AuthenticatedUser,
+  ) {
+    const updatedDashboard = await this.update(id, data, user);
+
+    return {
+      success: true,
+      message: 'Dashboard updated successfully',
+      data: updatedDashboard,
+    };
+  }
+
   async remove(id: string, user: AuthenticatedUser): Promise<Dashboard> {
     // Check if user is owner
     const dashboard = await this.prisma.dashboard.findUnique({ where: { id } });
@@ -170,8 +217,10 @@ export class DashboardService {
       throw new Error('Dashboard not found');
     }
 
-    if (dashboard.ownerId !== user.id) {
-      throw new Error('Only dashboard owner can delete the dashboard');
+    const isAdmin = user.roles.includes('Admin');
+
+    if (!isAdmin) {
+      throw new Error('Only admins can update the dashboard');
     }
 
     const deletedDashboard = await this.prisma.dashboard.delete({
@@ -188,6 +237,16 @@ export class DashboardService {
     return deletedDashboard;
   }
 
+  async removeDashboard(id: string, user: AuthenticatedUser) {
+    const deletedDashboard = await this.remove(id, user);
+
+    return {
+      success: true,
+      message: 'Dashboard deleted successfully',
+      data: deletedDashboard,
+    };
+  }
+
   async updateWidgetOrder(
     id: string,
     layout: any,
@@ -198,14 +257,34 @@ export class DashboardService {
     if (!dashboard) {
       throw new Error('Dashboard not found');
     }
+    const isAdmin =
+      user.roles.includes('Admin');
+
+    if (!isAdmin) {
+      throw new Error('Only admins can update the dashboard');
+    }
 
     const canModify =
-      dashboard.ownerId === user.id || dashboard.allowedUsers.includes(user.id);
+      isAdmin || dashboard.allowedUsers.includes(user.id);
 
     if (!canModify) {
       throw new Error('Access denied to modify dashboard');
     }
 
     return this.update(id, { layout }, user);
+  }
+
+  async updateDashboardWidgetOrder(
+    id: string,
+    layout: any,
+    user: AuthenticatedUser,
+  ) {
+    const updatedDashboard = await this.updateWidgetOrder(id, layout, user);
+
+    return {
+      success: true,
+      message: 'Widget order updated successfully',
+      data: updatedDashboard,
+    };
   }
 }

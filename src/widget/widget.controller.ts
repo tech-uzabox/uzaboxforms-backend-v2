@@ -3,15 +3,19 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Param,
   Post,
   Put,
   Query,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ZodValidationPipe } from 'nestjs-zod';
 import type { AuthenticatedUser } from '../auth/decorators/get-user.decorator';
 import { GetUser } from '../auth/decorators/get-user.decorator';
@@ -22,7 +26,6 @@ import { CreateWidgetDto } from './dto/create-widget.dto';
 import { DuplicateWidgetDto } from './dto/duplicate-widget.dto';
 import { UpdateWidgetAccessDto } from './dto/update-widget-access.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
-import { transformWidgetPayload, transformWidgetUpdatePayload } from './utils/widget-transform.utils';
 import { WidgetDataService } from './widget-data.service';
 import { WidgetService } from './widget.service';
 
@@ -37,78 +40,33 @@ export class WidgetController {
     private readonly prisma: PrismaService,
   ) {}
 
-
   @Get('sandbox/:id/data')
   @ApiOperation({ summary: 'Get sandbox widget data for visualization' })
-  @ApiResponse({ status: 200, description: 'Sandbox widget data retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sandbox widget data retrieved successfully',
+  })
   @ApiResponse({ status: 404, description: 'Sandbox widget not found' })
   async getSandboxWidgetData(
     @Param('id') id: string,
-    @GetUser() user: AuthenticatedUser
+    @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-      const widgetData = await this.widgetService.getSandboxWidgetData(id, user.id);
-
-      return {
-        success: true,
-        data: widgetData,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-
-      // Return error in widget data format for frontend compatibility
-      return {
-        success: false,
-        data: {
-          type: 'card',
-          title: 'Error',
-          value: null,
-          statLabel: 'Failed to load data',
-          meta: {},
-          errors: [error instanceof Error ? error.message : 'Internal server error'],
-          empty: true,
-        },
-      };
-    }
+    return this.widgetService.getSandboxWidgetDataForUser(id, user);
   }
 
   @Get('sandbox/:id')
   @ApiOperation({ summary: 'Get a single sandbox widget by ID' })
-  @ApiResponse({ status: 200, description: 'Sandbox widget retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Sandbox widget retrieved successfully',
+  })
   @ApiResponse({ status: 404, description: 'Sandbox widget not found' })
   async findOneSandbox(
     @Param('id') id: string,
-    @GetUser() user: AuthenticatedUser
+    @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-
-      const widget = await this.widgetService.findOneSandbox(id);
-      if (!widget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Sandbox widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      return {
-        success: true,
-        data: widget,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to fetch sandbox widget',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.findOneSandboxWidget(id, user);
   }
-
 
   @Post()
   @ApiOperation({ summary: 'Create a new widget' })
@@ -119,100 +77,31 @@ export class WidgetController {
     @Body(ZodValidationPipe) createWidgetDto: CreateWidgetDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-      // Check dashboard access
-      const hasAccess = await this.widgetService.checkDashboardAccess(
-        createWidgetDto.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      // Transform the payload to internal format
-      const transformedData = transformWidgetPayload(createWidgetDto);
-
-      const widget = await this.widgetService.create(transformedData as CreateWidgetDto);
-
-      return {
-        success: true,
-        message: 'Widget created successfully',
-        data: widget,
-      };
-    } catch (error) {
-      console.log(error);
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: error.message || 'Failed to create widget',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.createWidget(createWidgetDto, user);
   }
 
   @Get()
   @ApiOperation({ summary: 'List widgets with optional filtering' })
-  @ApiQuery({ name: 'dashboardId', required: false, description: 'Filter by dashboard ID' })
-  @ApiQuery({ name: 'type', required: false, description: 'Filter by visualization type' })
+  @ApiQuery({
+    name: 'dashboardId',
+    required: false,
+    description: 'Filter by dashboard ID',
+  })
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    description: 'Filter by visualization type',
+  })
   @ApiResponse({ status: 200, description: 'Widgets retrieved successfully' })
   async findAll(
     @GetUser() user: AuthenticatedUser,
     @Query('dashboardId') dashboardId?: string,
     @Query('type') type?: string,
   ) {
-    try {
-      let widgets = await this.widgetService.findAllForUser(user.id, user.roles);
-
-      if (dashboardId) {
-        // Additional check for specific dashboard access
-        const hasAccess = await this.widgetService.checkDashboardAccess(
-          dashboardId,
-          user.id,
-          user.roles,
-        );
-
-        if (!hasAccess) {
-          throw new HttpException(
-            {
-              success: false,
-              message: 'Access denied to dashboard',
-            },
-            HttpStatus.FORBIDDEN,
-          );
-        }
-
-        widgets = widgets.filter(w => w.dashboardId === dashboardId);
-      }
-
-      if (type) {
-        widgets = widgets.filter(w => w.visualizationType === type);
-      }
-
-      return {
-        success: true,
-        data: widgets,
-        count: widgets.length,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to fetch widgets',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.findAllWidgetsForUser(user, {
+      dashboardId,
+      type,
+    });
   }
 
   @Get(':id')
@@ -220,51 +109,8 @@ export class WidgetController {
   @ApiResponse({ status: 200, description: 'Widget retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Widget not found' })
   async findOne(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
-    try {
-      const widget = await this.widgetService.findOne(id);
-      if (!widget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      // Check dashboard access
-      const hasAccess = await this.widgetService.checkDashboardAccess(
-        widget.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      return {
-        success: true,
-        data: widget,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to fetch widget',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.findOneWidget(id, user);
   }
-
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a widget' })
@@ -275,56 +121,7 @@ export class WidgetController {
     @Body(ZodValidationPipe) updateWidgetDto: UpdateWidgetDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-      const widget = await this.widgetService.findOne(id);
-      if (!widget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      // Check dashboard access
-      const hasAccess = await this.widgetService.checkDashboardAccess(
-        widget.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      // Transform the payload to internal format
-      const transformedData = transformWidgetUpdatePayload(updateWidgetDto);
-
-      const updatedWidget = await this.widgetService.update(id, transformedData);
-
-      return {
-        success: true,
-        message: 'Widget updated successfully',
-        data: updatedWidget,
-      };
-    } catch (error) {
-      console.error(error);
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to update widget',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.updateWidget(id, updateWidgetDto, user);
   }
 
   @Delete(':id')
@@ -332,51 +129,7 @@ export class WidgetController {
   @ApiResponse({ status: 200, description: 'Widget deleted successfully' })
   @ApiResponse({ status: 404, description: 'Widget not found' })
   async remove(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
-    try {
-      const widget = await this.widgetService.findOne(id);
-      if (!widget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      // Check dashboard access
-      const hasAccess = await this.widgetService.checkDashboardAccess(
-        widget.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      await this.widgetService.remove(id);
-
-      return {
-        success: true,
-        message: 'Widget deleted successfully',
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to delete widget',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.removeWidget(id, user);
   }
 
   @Post('duplicate')
@@ -387,79 +140,7 @@ export class WidgetController {
     @Body(ZodValidationPipe) duplicateWidgetDto: DuplicateWidgetDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-      // Check access to target dashboard
-      const hasTargetAccess = await this.widgetService.checkDashboardAccess(
-        duplicateWidgetDto.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasTargetAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to target dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      // Check access to source widget's dashboard
-      const sourceWidget = await this.widgetService.findOne(duplicateWidgetDto.sourceWidgetId);
-      if (!sourceWidget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Source widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      const hasSourceAccess = await this.widgetService.checkDashboardAccess(
-        sourceWidget.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasSourceAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to source widget',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      const duplicatedWidget = await this.widgetService.duplicate(
-        duplicateWidgetDto.sourceWidgetId,
-        duplicateWidgetDto.dashboardId,
-      );
-
-      // Update title if provided
-      if (duplicateWidgetDto.title) {
-        await this.widgetService.update(duplicatedWidget.id, {
-          title: duplicateWidgetDto.title,
-        });
-      }
-
-      return {
-        success: true,
-        message: 'Widget duplicated successfully',
-        data: duplicatedWidget,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: error.message || 'Failed to duplicate widget',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.duplicateWidget(duplicateWidgetDto, user);
   }
 
   @Post('bulk-refresh')
@@ -469,177 +150,35 @@ export class WidgetController {
     @Body(ZodValidationPipe) bulkRefreshDto: BulkRefreshWidgetsDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-      // Check access to all widgets
-      for (const widgetId of bulkRefreshDto.widgetIds) {
-        const widget = await this.widgetService.findOne(widgetId);
-        if (!widget) {
-          throw new HttpException(
-            {
-              success: false,
-              message: `Widget ${widgetId} not found`,
-            },
-            HttpStatus.NOT_FOUND,
-          );
-        }
-
-        const hasAccess = await this.widgetService.checkDashboardAccess(
-          widget.dashboardId,
-          user.id,
-          user.roles,
-        );
-
-        if (!hasAccess) {
-          throw new HttpException(
-            {
-              success: false,
-              message: `Access denied to widget ${widgetId}`,
-            },
-            HttpStatus.FORBIDDEN,
-          );
-        }
-      }
-
-      // For now, just return success as the actual refresh logic would be implemented
-      return {
-        success: true,
-        message: `Successfully refreshed ${bulkRefreshDto.widgetIds.length} widgets`,
-        data: { refreshedWidgetIds: bulkRefreshDto.widgetIds },
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to bulk refresh widgets',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.bulkRefreshWidgets(bulkRefreshDto, user);
   }
 
   @Put(':id/access')
   @ApiOperation({ summary: 'Update widget access control' })
-  @ApiResponse({ status: 200, description: 'Widget access updated successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Widget access updated successfully',
+  })
   @ApiResponse({ status: 404, description: 'Widget not found' })
   async updateAccess(
     @Param('id') id: string,
     @Body(ZodValidationPipe) updateAccessDto: UpdateWidgetAccessDto,
     @GetUser() user: AuthenticatedUser,
   ) {
-    try {
-      const widget = await this.widgetService.findOne(id);
-      if (!widget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      // Check dashboard access
-      const hasAccess = await this.widgetService.checkDashboardAccess(
-        widget.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      const updateData: any = {};
-      if (updateAccessDto.allowedUsers) {
-        updateData.allowedUsers = updateAccessDto.allowedUsers;
-      }
-      if (updateAccessDto.allowedRoles) {
-        updateData.allowedRoles = updateAccessDto.allowedRoles;
-      }
-
-      const updatedWidget = await this.widgetService.update(id, updateData);
-
-      return {
-        success: true,
-        message: 'Widget access updated successfully',
-        data: updatedWidget,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      throw new HttpException(
-        {
-          success: false,
-          message: 'Failed to update widget access',
-        },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    return this.widgetService.updateWidgetAccess(id, updateAccessDto, user);
   }
 
   @Get(':id/data')
   @ApiOperation({ summary: 'Get widget data for visualization' })
-  @ApiResponse({ status: 200, description: 'Widget data retrieved successfully' })
+  @ApiResponse({
+    status: 200,
+    description: 'Widget data retrieved successfully',
+  })
   @ApiResponse({ status: 404, description: 'Widget not found' })
-  async getWidgetData(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
-    try {
-      const widget = await this.widgetService.findOne(id);
-      if (!widget) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Widget not found',
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
-      // Check dashboard access
-      const hasAccess = await this.widgetService.checkDashboardAccess(
-        widget.dashboardId,
-        user.id,
-        user.roles,
-      );
-
-      if (!hasAccess) {
-        throw new HttpException(
-          {
-            success: false,
-            message: 'Access denied to dashboard',
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
-      const widgetData = await this.widgetDataService.getWidgetData(id, user.id);
-
-      return {
-        success: true,
-        data: widgetData,
-      };
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-
-      // Return error in widget data format for frontend compatibility
-      return {
-        success: false,
-        data: {
-          type: 'card',
-          title: 'Error',
-          value: null,
-          statLabel: 'Failed to load data',
-          meta: {},
-          errors: [error instanceof Error ? error.message : 'Internal server error'],
-          empty: true,
-        },
-      };
-    }
+  async getWidgetData(
+    @Param('id') id: string,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    return this.widgetService.getWidgetData(id, user);
   }
-
 }
