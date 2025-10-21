@@ -90,6 +90,52 @@ export class IncomingApplicationService {
     return roles.map((role) => role.id);
   }
 
+  // Compute access without DB calls using preloaded context to avoid N+1
+  private computeAccessWithContext(
+    actor: AuthenticatedUser,
+    lastCompletedForm:
+      | {
+          nextStepType: NextStepType;
+          nextStaffId?: string | null;
+          nextStepRoles?: string[];
+          nextStepSpecifiedTo?: string | null;
+        }
+      | undefined,
+    ctx: {
+      actorRoleIds: string[];
+      actorOrgUser?: { id: string } | null;
+      applicantOrgUser?: { superiorId?: string | null } | null;
+    },
+  ): boolean {
+    if (!lastCompletedForm) return false;
+
+    switch (lastCompletedForm.nextStepType) {
+      case NextStepType.STATIC:
+        return (lastCompletedForm.nextStaffId || '') === actor.id;
+
+      case NextStepType.DYNAMIC: {
+        if (lastCompletedForm.nextStepSpecifiedTo === 'SINGLE_STAFF') {
+          return (lastCompletedForm.nextStaffId || '') === actor.id;
+        }
+        const nextRoles = lastCompletedForm.nextStepRoles || [];
+        if (!nextRoles.length || !ctx.actorRoleIds.length) return false;
+        return nextRoles.some((r) => ctx.actorRoleIds.includes(r));
+      }
+
+      case NextStepType.FOLLOW_ORGANIZATION_CHART:
+        return (
+          (ctx.applicantOrgUser?.superiorId || null) ===
+          (ctx.actorOrgUser?.id || null)
+        );
+
+      case NextStepType.NOT_APPLICABLE:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
   // 1. Get all applications by type
   async getAllApplications(
     type: 'pending' | 'completed' | 'disabled' | 'processed',
@@ -97,6 +143,7 @@ export class IncomingApplicationService {
     actor: AuthenticatedUser,
     isAdminView: boolean = false,
   ): Promise<any[]> {
+    // 1) Load processes (enabled) with forms and group once
     const processes = await this.prisma.process.findMany({
       where: { status: ProcessStatus.ENABLED },
       include: {
@@ -105,122 +152,195 @@ export class IncomingApplicationService {
       },
     });
 
-    const groupedApplications: any[] = [];
+    // Build lookup maps for quick access
+    const processById = new Map<string, any>();
+    const processIds: string[] = [];
+    for (const p of processes) {
+      if (!p.forms || p.forms.length === 0) continue;
+      processById.set(p.id, p);
+      processIds.push(p.id);
+    }
 
-    for (const process of processes) {
-      if (process.forms.length === 0) continue;
-
-      const statusFilter =
-        type === 'disabled' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
-
-      const applicantProcesses = await this.prisma.applicantProcess.findMany({
-        where: { processId: process.id, status: statusFilter },
-        include: {
-          applicant: true,
-          completedForms: { orderBy: { createdAt: 'asc' } },
-          _count: { select: { completedForms: true } },
-        },
+    if (processIds.length === 0) {
+      await this.auditLogService.log({
+        userId: actor.id,
+        action: `GET_${type.toUpperCase()}_APPLICATIONS`,
+        resource: 'IncomingApplication',
+        status: 'SUCCESS',
+        details: { count: 0 },
       });
+      return [];
+    }
 
-      const applicantProcessesForProcess: any[] = [];
+    // Determine status filter for applicant processes
+    const statusFilter =
+      type === 'disabled' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
 
-      for (const ap of applicantProcesses) {
-        const completedForms = await this.prisma.aPCompletedForm.findMany({
-          where: { applicantProcessId: ap.id },
+    // 2) Batch fetch applicant processes across all processes
+    const applicantProcesses = await this.prisma.applicantProcess.findMany({
+      where: { processId: { in: processIds }, status: statusFilter },
+      include: {
+        applicant: {
+          select: { id: true, firstName: true, lastName: true, email: true },
+        },
+        completedForms: {
           orderBy: { createdAt: 'asc' },
-        });
+          select: {
+            formId: true,
+            reviewerId: true,
+            nextStepType: true,
+            nextStaffId: true,
+            nextStepRoles: true,
+            nextStepSpecifiedTo: true,
+            applicantProcessId: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
 
-        const currentLevel = completedForms.length;
+    // 3) Preload access context (roles and org chart) once
+    const [actorRoleIds, actorOrgUser] = await Promise.all([
+      this.getUserRoleIds(actor.roles),
+      this.prisma.organizationUser.findFirst({
+        where: { userId: actor.id },
+        select: { id: true },
+      }),
+    ]);
 
-        // For completed/processed: only include if all forms are completed
-        if (
-          (type === 'completed' || type === 'processed') &&
-          currentLevel < process.forms.length
-        ) {
-          continue;
-        }
+    const applicantIds = Array.from(
+      new Set(applicantProcesses.map((ap) => ap.applicantId)),
+    );
 
-        // For pending/disabled: only include if not all forms are completed
-        if (
-          (type === 'pending' || type === 'disabled') &&
-          currentLevel >= process.forms.length
-        ) {
-          continue;
-        }
+    const applicantOrgUsers =
+      applicantIds.length > 0
+        ? await this.prisma.organizationUser.findMany({
+            where: { userId: { in: applicantIds } },
+            select: { userId: true, superiorId: true },
+          })
+        : [];
 
-        const nextForm = process.forms[currentLevel];
-        if (!nextForm && (type === 'pending' || type === 'disabled')) continue;
+    const applicantOrgUserByUserId = new Map<string, { superiorId?: string | null }>();
+    for (const ou of applicantOrgUsers) {
+      applicantOrgUserByUserId.set(ou.userId, { superiorId: ou.superiorId });
+    }
 
-        const lastCompletedForm = completedForms[currentLevel - 1];
+    // 4) Build grouped applications using Maps for O(1) grouping
+    const groupAgg = new Map<
+      string,
+      {
+        groupName: string;
+        groupId: string;
+        processes: Map<
+          string,
+          { processId: string; name: string; applicantProcesses: any[] }
+        >;
+      }
+    >();
 
-        let shouldInclude = false;
+    for (const ap of applicantProcesses) {
+      const process = processById.get(ap.processId);
+      if (!process) continue;
 
-        if (isAdminView) {
+      const totalForms = process.forms.length;
+      const completedForms = ap.completedForms || [];
+      const currentLevel = completedForms.length;
+
+      // Type-based filtering
+      if (
+        (type === 'completed' || type === 'processed') &&
+        currentLevel < totalForms
+      ) {
+        continue;
+      }
+      if (
+        (type === 'pending' || type === 'disabled') &&
+        currentLevel >= totalForms
+      ) {
+        continue;
+      }
+
+      const nextForm = process.forms[currentLevel];
+      if (!nextForm && (type === 'pending' || type === 'disabled')) {
+        continue;
+      }
+
+      const lastCompletedForm =
+        currentLevel > 0 ? completedForms[currentLevel - 1] : undefined;
+
+      // Access control
+      let shouldInclude = false;
+      if (isAdminView) {
+        shouldInclude = true;
+      } else {
+        if (currentLevel === 0) {
           shouldInclude = true;
-        } else {
-          if (currentLevel === 0) {
-            shouldInclude = true;
-          } else if (lastCompletedForm) {
-            shouldInclude = await this.userHasAccess(actor, {
-              reviewerId: lastCompletedForm.reviewerId || '',
-              nextStepType: lastCompletedForm.nextStepType,
-              nextStaffId: lastCompletedForm.nextStaffId || '',
-              nextStepRoles: lastCompletedForm.nextStepRoles,
-              formId: lastCompletedForm.formId,
-              applicantProcessId: lastCompletedForm.applicantProcessId,
-            });
-          }
+        } else if (lastCompletedForm) {
+          shouldInclude = this.computeAccessWithContext(
+            actor,
+            lastCompletedForm as any,
+            {
+              actorRoleIds,
+              actorOrgUser,
+              applicantOrgUser:
+                applicantOrgUserByUserId.get(ap.applicantId) || null,
+            },
+          );
         }
+      }
+      if (!shouldInclude) continue;
 
-        if (!shouldInclude) continue;
+      const applicationData: any = {
+        applicantProcessId: ap.id,
+        applicantId: ap.applicantId,
+        applicant: ap.applicant,
+        status: ap.status,
+        completedForms: completedForms.map((cf: any) => cf.formId),
+        processLevel: `${currentLevel}/${totalForms}`,
+      };
 
-        const applicationData: any = {
-          applicantProcessId: ap.id,
-          applicantId: ap.applicantId,
-          applicant: ap.applicant,
-          status: ap.status,
-          completedForms: completedForms.map((cf) => cf.formId),
-          processLevel: `${currentLevel}/${process.forms.length}`,
+      if (ap.status === ProcessStatus.ENABLED && nextForm) {
+        applicationData.pendingForm = {
+          formId: nextForm.formId,
+          nextStepType: lastCompletedForm?.nextStepType || 'NOT_APPLICABLE',
+          nextStepRoles: lastCompletedForm?.nextStepRoles || [],
+          nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo,
         };
-
-        // Only add pendingForm for ENABLED applications
-        if (ap.status === ProcessStatus.ENABLED && nextForm) {
-          applicationData.pendingForm = {
-            formId: nextForm.formId,
-            nextStepType: lastCompletedForm?.nextStepType || 'NOT_APPLICABLE',
-            nextStepRoles: lastCompletedForm?.nextStepRoles || [],
-            nextStepSpecifiedTo: lastCompletedForm?.nextStepSpecifiedTo,
-          };
-        }
-
-        applicantProcessesForProcess.push(applicationData);
       }
 
-      if (applicantProcessesForProcess.length > 0) {
-        const groupIndex = groupedApplications.findIndex(
-          (group) => group.groupId.toString() === process.groupId.toString(),
-        );
-
-        if (groupIndex !== -1) {
-          groupedApplications[groupIndex].processes.push({
-            processId: process.id,
-            name: process.name,
-            applicantProcesses: applicantProcessesForProcess,
-          });
-        } else {
-          groupedApplications.push({
-            groupName: process.group.name,
-            groupId: process.group.id,
-            processes: [
-              {
-                processId: process.id,
-                name: process.name,
-                applicantProcesses: applicantProcessesForProcess,
-              },
-            ],
-          });
-        }
+      // Group -> Process -> applicantProcesses
+      const groupId = process.groupId as string;
+      let groupEntry = groupAgg.get(groupId);
+      if (!groupEntry) {
+        groupEntry = {
+          groupName: process.group.name,
+          groupId: process.group.id,
+          processes: new Map(),
+        };
+        groupAgg.set(groupId, groupEntry);
       }
+
+      let procEntry = groupEntry.processes.get(process.id);
+      if (!procEntry) {
+        procEntry = {
+          processId: process.id,
+          name: process.name,
+          applicantProcesses: [],
+        };
+        groupEntry.processes.set(process.id, procEntry);
+      }
+
+      procEntry.applicantProcesses.push(applicationData);
+    }
+
+    // 5) Materialize result
+    const groupedApplications: any[] = [];
+    for (const groupEntry of groupAgg.values()) {
+      groupedApplications.push({
+        groupName: groupEntry.groupName,
+        groupId: groupEntry.groupId,
+        processes: Array.from(groupEntry.processes.values()),
+      });
     }
 
     await this.auditLogService.log({
