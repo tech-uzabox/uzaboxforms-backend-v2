@@ -1050,7 +1050,7 @@ export class ApplicantProcessService {
     }
 
     const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
-    const filename = `applicant-process-data-${timestamp}`;
+    const filename = `${form.name}-${timestamp}`;
 
     const exportResult = await this.exportService.exportData(
       columns,
