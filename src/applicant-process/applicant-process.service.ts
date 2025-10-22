@@ -328,6 +328,14 @@ export class ApplicantProcessService {
       headers.push(cell.value?.toString() || '');
     });
 
+    // Validate that headers are not empty and contain question labels
+    const emptyHeaders = headers.filter(header => !header || header.trim() === '');
+    if (emptyHeaders.length > 0) {
+      throw new BadRequestException(
+        'Excel file headers (first row) cannot be empty. Please ensure all column headers contain question labels.',
+      );
+    }
+
     const errors: Array<{
       row: number;
       column: string;
@@ -518,7 +526,7 @@ export class ApplicantProcessService {
   ): Promise<any> {
     if (value === null || value === undefined || value === '') {
       if (question.required === 'yes') {
-        throw new Error(`Required field is empty`);
+        throw new Error(`Required field "${columnName}" is empty`);
       }
       return null;
     }
