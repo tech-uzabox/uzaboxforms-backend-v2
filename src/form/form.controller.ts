@@ -161,20 +161,6 @@ export class FormController {
     return this.formService.update(id, updateFormDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.formService.remove(id);
-  }
-
-  @Delete('full/:id')
-  @ApiOperation({ summary: 'Delete form with all associated data (hard delete)' })
-  @ApiResponse({ status: 200, description: 'Form and all associated data deleted successfully' })
-  @ApiResponse({ status: 404, description: 'Form not found' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
-  async fullDelete(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
-    return this.formService.fullDelete(id, user.id);
-  }
-
   @Delete('process-data')
   @ApiOperation({
     summary: 'Delete all form-process data for specific form and process',
@@ -189,6 +175,21 @@ export class FormController {
   ) {
     return this.formService.deleteFormProcessData(deleteFormProcessDataDto, user.id);
   }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.formService.remove(id);
+  }
+
+  @Delete('full/:id')
+  @ApiOperation({ summary: 'Delete form with all associated data (hard delete)' })
+  @ApiResponse({ status: 200, description: 'Form and all associated data deleted successfully' })
+  @ApiResponse({ status: 404, description: 'Form not found' })
+  @ApiResponse({ status: 500, description: 'Internal server error' })
+  async fullDelete(@Param('id') id: string, @GetUser() user: AuthenticatedUser) {
+    return this.formService.fullDelete(id, user.id);
+  }
+
 
   @Post('move')
   @ApiOperation({ summary: 'Move form to another folder' })
