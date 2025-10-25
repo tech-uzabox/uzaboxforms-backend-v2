@@ -609,60 +609,137 @@ export async function processMapWidget(
     };
   }
 
-  const latestPerMetric: Array<
-    Record<string, { value: any; createdAt: Date }>
-  > = [];
+  // Check if all metrics share the same formId
+  const sameFormId = metrics.length > 0 ? String(metrics[0].formId) : null;
+  const sameForm = metrics.every(m => String(m.formId) === sameFormId);
 
-  for (const metric of metrics) {
-    const perCountry: Record<string, { value: any; createdAt: Date }> = {};
-    const formIdStr = String(metric.formId);
-    const formDesign = formDesignsMap.get(formIdStr);
+  const countries: Record<
+    string,
+    { values: Record<string, unknown> | Array<Record<string, unknown>>; colorValue?: string }
+  > = {};
+
+  if (sameForm && sameFormId) {
+    // Collect responses per country for the shared form
+    const countryResponses: Record<string, ProcessedResponse[]> = {};
+    const formDesign = formDesignsMap.get(sameFormId);
 
     for (const resp of filteredResponses) {
-      if (resp.formId !== formIdStr) continue;
+      if (resp.formId !== sameFormId) continue;
       const countryRaw = service.getFieldValue(
         resp,
-        metric.countryFieldId,
+        metrics[0].countryFieldId,
         undefined,
         formDesign,
       );
       if (!countryRaw) continue;
       const countryKey = canonicalizeCountryName(String(countryRaw));
-      const val = service.getFieldValue(
-        resp,
-        metric.valueFieldId,
-        undefined,
-        formDesign,
-      );
-      const curr = perCountry[countryKey];
-      if (!curr || resp.createdAt > curr.createdAt) {
-        perCountry[countryKey] = { value: val, createdAt: resp.createdAt };
+      if (!countryResponses[countryKey]) {
+        countryResponses[countryKey] = [];
       }
+      countryResponses[countryKey].push(resp);
     }
 
-    latestPerMetric.push(perCountry);
+    // Sort responses per country by createdAt desc
+    for (const country in countryResponses) {
+      countryResponses[country].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    }
+
+    // Build values for each country
+    for (const country in countryResponses) {
+      const responses = countryResponses[country];
+      if (responses.length > 1) {
+        // Build table rows
+        const rows: Array<Record<string, unknown>> = [];
+        for (const resp of responses) {
+          const row: Record<string, unknown> = {};
+          metrics.forEach((metric) => {
+            const question = getQuestion(formDesign, metric.valueFieldId);
+            const label = metric.label || question?.label || metric.valueFieldId;
+            const val = service.getFieldValue(
+              resp,
+              metric.valueFieldId,
+              undefined,
+              formDesign,
+            );
+            row[label] = val;
+          });
+          rows.push(row);
+        }
+        countries[country] = { values: rows };
+      } else {
+        // Single response: build single record
+        const values: Record<string, unknown> = {};
+        metrics.forEach((metric) => {
+          const question = getQuestion(formDesign, metric.valueFieldId);
+          const label = metric.label || question?.label || metric.valueFieldId;
+          const val = service.getFieldValue(
+            responses[0],
+            metric.valueFieldId,
+            undefined,
+            formDesign,
+          );
+          values[label] = val;
+        });
+        countries[country] = { values };
+      }
+    }
+  } else {
+    // Fallback to original logic when metrics do not share the same formId
+    const latestPerMetric: Array<
+      Record<string, { value: any; createdAt: Date }>
+    > = [];
+
+    for (const metric of metrics) {
+      const perCountry: Record<string, { value: any; createdAt: Date }> = {};
+      const formIdStr = String(metric.formId);
+      const formDesign = formDesignsMap.get(formIdStr);
+
+      for (const resp of filteredResponses) {
+        if (resp.formId !== formIdStr) continue;
+        const countryRaw = service.getFieldValue(
+          resp,
+          metric.countryFieldId,
+          undefined,
+          formDesign,
+        );
+        if (!countryRaw) continue;
+        const countryKey = canonicalizeCountryName(String(countryRaw));
+        const val = service.getFieldValue(
+          resp,
+          metric.valueFieldId,
+          undefined,
+          formDesign,
+        );
+        const curr = perCountry[countryKey];
+        if (!curr || resp.createdAt > curr.createdAt) {
+          perCountry[countryKey] = { value: val, createdAt: resp.createdAt };
+        }
+      }
+
+      latestPerMetric.push(perCountry);
+    }
+
+    const allCountryKeys = new Set<string>();
+    latestPerMetric.forEach((m) =>
+      Object.keys(m).forEach((k) => allCountryKeys.add(k)),
+    );
+
+    for (const country of allCountryKeys) {
+      const values: Record<string, unknown> = {};
+      metrics.forEach((metric, idx) => {
+        const entry = latestPerMetric[idx][country];
+        const formDesign = formDesignsMap.get(String(metric.formId));
+        const question = getQuestion(formDesign, metric.valueFieldId);
+        const label = metric.label || question?.label || metric.valueFieldId;
+        values[label] = entry ? entry.value : null;
+      });
+
+      countries[country] = { values };
+    }
   }
 
-  const allCountryKeys = new Set<string>();
-  latestPerMetric.forEach((m) =>
-    Object.keys(m).forEach((k) => allCountryKeys.add(k)),
-  );
-
-  const countries: Record<
-    string,
-    { values: Record<string, unknown>; colorValue?: string }
-  > = {};
-
-  for (const country of allCountryKeys) {
-    const values: Record<string, unknown> = {};
-    metrics.forEach((metric, idx) => {
-      const entry = latestPerMetric[idx][country];
-      const formDesign = formDesignsMap.get(String(metric.formId));
-      const question = getQuestion(formDesign, metric.valueFieldId);
-      const label = metric.label || question?.label || metric.valueFieldId;
-      values[label] = entry ? entry.value : null;
-    });
-
+  // Compute colorValue for all countries (preserved logic)
+  for (const country in countries) {
     let colorValue: string | undefined = undefined;
     if (coloringMode === "options" && optionsSource) {
       console.log(`Processing options coloring for country: ${country}`);
@@ -707,7 +784,7 @@ export async function processMapWidget(
       }
     }
 
-    countries[country] = { values, colorValue };
+    countries[country].colorValue = colorValue;
   }
 
   console.log(`Map widget processing complete. Countries processed: ${Object.keys(countries).length}`);
@@ -779,6 +856,12 @@ function createEmptyPayload(widget: any): WidgetDataPayload {
         rows: [],
         columns: [],
         values: [],
+      };
+    case 'map':
+      return {
+        ...base,
+        type: 'map',
+        countries: {},
       };
     default:
       return { ...base, type: 'card', value: 0, statLabel: 'No Data' };

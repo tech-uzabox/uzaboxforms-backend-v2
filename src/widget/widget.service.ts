@@ -77,6 +77,16 @@ export class WidgetService {
       status: 'SUCCESS',
       details: { title: updatedWidget.title, changes: data },
     });
+
+    // Invalidate widget cache after update
+    setImmediate(async () => {
+      try {
+        await this.invalidateWidgetCaches([id]);
+      } catch (error) {
+        console.error('Failed to invalidate widget cache after update:', error);
+      }
+    });
+
     return updatedWidget;
   }
 
@@ -89,6 +99,16 @@ export class WidgetService {
       status: 'SUCCESS',
       details: { title: deletedWidget.title },
     });
+
+    // Invalidate widget cache after removal (though widget is deleted, this clears any remaining cache entries)
+    setImmediate(async () => {
+      try {
+        await this.invalidateWidgetCaches([id]);
+      } catch (error) {
+        console.error('Failed to invalidate widget cache after removal:', error);
+      }
+    });
+
     return deletedWidget;
   }
 
