@@ -38,7 +38,7 @@ const CrosstabSchema = z.object({
 const UpdateWidgetSchema = z.object({
   title: z.string().min(1).optional(),
   description: z.string().optional(),
-  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'group', 'crosstab']).optional(),
+  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'group', 'crosstab', 'cct']).optional(),
 
   // Enhanced multi-metric structure
   metrics: z.array(z.any()).optional(),
@@ -59,6 +59,21 @@ const UpdateWidgetSchema = z.object({
 
   // Allow direct crosstab updates for convenience (transform will nest into options)
   crosstab: CrosstabSchema.optional(),
+
+  // CCT schemas (validate if provided)
+  cct: z.object({
+    formId: z.string().uuid(),
+    factors: z.array(z.object({
+      fieldId: z.string(),
+      label: z.string().optional(),
+    })).min(1),
+    measures: z.array(z.object({
+      id: z.string().optional(),
+      fieldId: z.string(),
+      aggregation: CrosstabValueAgg,
+      label: z.string().optional(),
+    })).min(1),
+  }).optional(),
 
   // New config field for processed data
   config: z.any().optional(),
@@ -86,6 +101,60 @@ const UpdateWidgetSchema = z.object({
           code: z.ZodIssueCode.custom,
           message: issue.message,
           path: ['crosstab', ...(issue.path as (string | number)[])],
+        });
+      }
+    }
+  }
+
+  // If options.cct is provided, validate its shape
+  const cct = (data.options as any)?.cct;
+  if (cct !== undefined) {
+    const cctSchema = z.object({
+      formId: z.string().uuid(),
+      factors: z.array(z.object({
+        fieldId: z.string(),
+        label: z.string().optional(),
+      })).min(1),
+      measures: z.array(z.object({
+        id: z.string().optional(),
+        fieldId: z.string(),
+        aggregation: CrosstabValueAgg,
+        label: z.string().optional(),
+      })).min(1),
+    });
+    const res = cctSchema.safeParse(cct);
+    if (!res.success) {
+      for (const issue of res.error.issues) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: issue.message,
+          path: ['options', 'cct', ...(issue.path as (string | number)[])],
+        });
+      }
+    }
+  }
+  // If a direct cct field is provided, validate as well
+  if (data.cct !== undefined) {
+    const cctSchema = z.object({
+      formId: z.string().uuid(),
+      factors: z.array(z.object({
+        fieldId: z.string(),
+        label: z.string().optional(),
+      })).min(1),
+      measures: z.array(z.object({
+        id: z.string().optional(),
+        fieldId: z.string(),
+        aggregation: CrosstabValueAgg,
+        label: z.string().optional(),
+      })).min(1),
+    });
+    const res2 = cctSchema.safeParse(data.cct);
+    if (!res2.success) {
+      for (const issue of res2.error.issues) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: issue.message,
+          path: ['cct', ...(issue.path as (string | number)[])],
         });
       }
     }
