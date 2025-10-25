@@ -920,11 +920,20 @@ export async function processCCTWidget(
       }
     }
     factorValuesMap.set(factor.fieldId, values);
+    console.log('processCCTWidget: Factor', factor.fieldId, 'has', values.size, 'distinct values:', Array.from(values));
+  }
+
+  // Check if we have any factor values
+  const hasFactorValues = Array.from(factorValuesMap.values()).some(set => set.size > 0);
+  if (!hasFactorValues) {
+    console.log('processCCTWidget: No factor values found, returning empty');
+    return createEmptyPayload(widget) as any;
   }
 
   // Generate Cartesian product of factor combinations
   const factorLists = factors.map(f => Array.from(factorValuesMap.get(f.fieldId) || []));
   const combinations = cartesianProduct(factorLists) as string[][];
+  console.log('processCCTWidget: Generated', combinations.length, 'combinations from factors:', factorLists.map(list => list.length));
 
   console.log('processCCTWidget: Generated', combinations.length, 'combinations');
 
@@ -954,10 +963,11 @@ export async function processCCTWidget(
 
     // Compute each measure
     for (const measure of measures) {
-      if (!measureMap.has(measure.id)) {
-        measureMap.set(measure.id, []);
+      const measureKey = `${measure.fieldId}:${measure.aggregation}`;
+      if (!measureMap.has(measureKey)) {
+        measureMap.set(measureKey, []);
       }
-      const values = measureMap.get(measure.id)!;
+      const values = measureMap.get(measureKey)!;
 
       if (measure.aggregation === 'count') {
         values.push(1);
@@ -983,8 +993,9 @@ export async function processCCTWidget(
 
     const measureValues: (number | null)[] = [];
     for (const measure of measures) {
-      if (measureMap && measureMap.has(measure.id)) {
-        const values = measureMap.get(measure.id)!;
+      const measureKey = `${measure.fieldId}:${measure.aggregation}`;
+      if (measureMap && measureMap.has(measureKey)) {
+        const values = measureMap.get(measureKey)!;
         if (values.length === 0) {
           measureValues.push(null);
         } else {
@@ -1064,8 +1075,15 @@ export async function processCCTWidget(
     resultValues.push(measureValues);
   }
 
-  const factorLabels = factors.map(f => f.label || f.fieldId);
-  const measureLabels = measures.map(m => ({ id: m.id, label: m.label || m.fieldId }));
+  const factorLabels = factors.map(f => {
+    const question = getQuestion(formDesign, f.fieldId);
+    return f.label || question?.label || f.fieldId;
+  });
+  const measureLabels = measures.map(m => {
+    const question = getQuestion(formDesign, m.fieldId);
+    const questionLabel = question?.label || m.fieldId;
+    return { id: `${m.fieldId}:${m.aggregation}`, label: m.label || `${questionLabel}` };
+  });
 
   console.log('processCCTWidget: Returning data - combinations:', resultCombinations.length, 'measures:', measureLabels.length);
 

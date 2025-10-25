@@ -44,6 +44,12 @@ export function getUniqueFormIds(config: any): string[] {
     if (cx.value?.formId) formIds.add(String(cx.value.formId));
   }
 
+  // CCT widget: include formId
+  const cct = config?.options?.cct || config?.cct;
+  if (cct?.formId) {
+    formIds.add(String(cct.formId));
+  }
+
   return Array.from(formIds);
 }
 
