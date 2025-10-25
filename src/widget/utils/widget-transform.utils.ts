@@ -33,6 +33,38 @@ export function transformWidgetPayload(payload: any) {
     }
   }
 
+  // Validate CCT widgets have required configuration
+  if (payload.visualizationType === "cct") {
+    if (!payload.options?.cct) {
+      throw new Error("CCT widgets require CCT configuration in options");
+    }
+    const cct = payload.options.cct;
+    if (!cct.formId) {
+      throw new Error("CCT widgets require a form ID");
+    }
+    if (!cct.factors || !Array.isArray(cct.factors) || cct.factors.length === 0) {
+      throw new Error("CCT widgets require at least one factor");
+    }
+    if (!cct.measures || !Array.isArray(cct.measures) || cct.measures.length === 0) {
+      throw new Error("CCT widgets require at least one measure");
+    }
+    // Validate each factor has fieldId
+    for (const factor of cct.factors) {
+      if (!factor.fieldId) {
+        throw new Error("CCT factors must have fieldId specified");
+      }
+    }
+    // Validate each measure has fieldId and aggregation
+    for (const measure of cct.measures) {
+      if (!measure.fieldId) {
+        throw new Error("CCT measures must have fieldId specified");
+      }
+      if (!measure.aggregation) {
+        throw new Error("CCT measures must have aggregation specified");
+      }
+    }
+  }
+
   // Transform groupBy
   const transformedGroupBy = payload.groupBy
     ? {
@@ -116,7 +148,7 @@ export function transformWidgetPayload(payload: any) {
     : [];
 
   // Build the config object
-  // Normalize options to ensure crosstab is correctly nested under options
+  // Normalize options to ensure crosstab and cct are correctly nested under options
   const normalizedOptions: any = { ...(payload.options || {}) };
   if (payload.visualizationType === "crosstab") {
     const crosstab = (payload.options?.crosstab) || payload.crosstab;
@@ -127,6 +159,16 @@ export function transformWidgetPayload(payload: any) {
         value: { ...(crosstab.value || {}) },
         ...(crosstab.rowAxisTitle !== undefined ? { rowAxisTitle: String(crosstab.rowAxisTitle) } : {}),
         ...(crosstab.colAxisTitle !== undefined ? { colAxisTitle: String(crosstab.colAxisTitle) } : {}),
+      };
+    }
+  }
+  if (payload.visualizationType === "cct") {
+    const cct = (payload.options?.cct) || payload.cct;
+    if (cct) {
+      normalizedOptions.cct = {
+        formId: cct.formId,
+        factors: cct.factors || [],
+        measures: cct.measures || [],
       };
     }
   }
@@ -252,7 +294,7 @@ export function transformWidgetPayloadSpecial(payload: any) {
     : [];
 
   // Build the config object
-  // Normalize options to ensure crosstab is correctly nested under options
+  // Normalize options to ensure crosstab and cct are correctly nested under options
   const normalizedOptionsSpecial: any = { ...(payload.options || {}) };
   if (payload.visualizationType === "crosstab") {
     const crosstab = (payload.options?.crosstab) || payload.crosstab;
@@ -263,6 +305,16 @@ export function transformWidgetPayloadSpecial(payload: any) {
         value: { ...(crosstab.value || {}) },
         ...(crosstab.rowAxisTitle !== undefined ? { rowAxisTitle: String(crosstab.rowAxisTitle) } : {}),
         ...(crosstab.colAxisTitle !== undefined ? { colAxisTitle: String(crosstab.colAxisTitle) } : {}),
+      };
+    }
+  }
+  if (payload.visualizationType === "cct") {
+    const cct = (payload.options?.cct) || payload.cct;
+    if (cct) {
+      normalizedOptionsSpecial.cct = {
+        formId: cct.formId,
+        factors: cct.factors || [],
+        measures: cct.measures || [],
       };
     }
   }
@@ -363,6 +415,17 @@ export function transformWidgetUpdatePayload(payload: any) {
         value: { ...(payload.crosstab.value || {}) },
         ...(payload.crosstab.rowAxisTitle !== undefined ? { rowAxisTitle: String(payload.crosstab.rowAxisTitle) } : {}),
         ...(payload.crosstab.colAxisTitle !== undefined ? { colAxisTitle: String(payload.crosstab.colAxisTitle) } : {}),
+      },
+    };
+  }
+  // Allow direct CCT updates without requiring full options object
+  if (payload.cct !== undefined) {
+    configUpdates.options = {
+      ...(configUpdates.options || {}),
+      cct: {
+        formId: payload.cct.formId,
+        factors: payload.cct.factors || [],
+        measures: payload.cct.measures || [],
       },
     };
   }

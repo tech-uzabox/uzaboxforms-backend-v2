@@ -268,25 +268,6 @@ export class FormService {
       await tx.applicantProcess.deleteMany({
         where: { processId },
       });
-
-      // Delete process forms for this form and process
-      await tx.processForm.deleteMany({
-        where: {
-          processId,
-          formId,
-        },
-      });
-
-      // Delete process roles
-      await tx.processRole.deleteMany({
-        where: { processId },
-      });
-
-      // Delete the process itself
-      await tx.process.delete({
-        where: { id: processId },
-      });
-
       // Log the delete action
       await this.auditLogService.log({
         userId,

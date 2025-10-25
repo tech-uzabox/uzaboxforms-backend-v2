@@ -880,6 +880,224 @@ function getQuestion(formDesign: any, fieldId: string): any {
   return null;
 }
 
+export async function processCCTWidget(
+  widget: any,
+  filteredResponses: ProcessedResponse[],
+  formDesignsMap: Map<string, any>,
+  config: any,
+  service: any,
+): Promise<WidgetDataPayload> {
+  console.log('processCCTWidget: Starting with', filteredResponses.length, 'responses');
+  const cct = config.options?.cct || config.cct;
+  if (!cct) {
+    console.log('processCCTWidget: No CCT config found');
+    return createEmptyPayload(widget) as any;
+  }
+
+  const { formId, factors, measures } = cct;
+  console.log('processCCTWidget: Config - formId:', formId, 'factors:', factors, 'measures:', measures);
+
+  if (!factors || factors.length === 0 || !measures || measures.length === 0) {
+    console.log('processCCTWidget: Missing factors or measures');
+    return createEmptyPayload(widget) as any;
+  }
+
+  const formDesign = formDesignsMap.get(String(formId));
+  if (!formDesign) {
+    console.log('processCCTWidget: Form design not found for formId:', formId);
+    return createEmptyPayload(widget) as any;
+  }
+
+  // Get distinct factor values
+  const factorValuesMap = new Map<string, Set<string>>();
+  for (const factor of factors) {
+    const values = new Set<string>();
+    for (const response of filteredResponses) {
+      if (String(response.formId) !== String(formId)) continue;
+      const value = service.getFieldValue(response, factor.fieldId, undefined, formDesign);
+      if (value !== null && value !== undefined) {
+        values.add(String(value));
+      }
+    }
+    factorValuesMap.set(factor.fieldId, values);
+  }
+
+  // Generate Cartesian product of factor combinations
+  const factorLists = factors.map(f => Array.from(factorValuesMap.get(f.fieldId) || []));
+  const combinations = cartesianProduct(factorLists) as string[][];
+
+  console.log('processCCTWidget: Generated', combinations.length, 'combinations');
+
+  // Group responses by factor combination and compute aggregations
+  const combinationMap = new Map<string, Map<string, number[]>>();
+  const factorKeys = factors.map(f => f.fieldId);
+
+  for (const response of filteredResponses) {
+    if (String(response.formId) !== String(formId)) continue;
+
+    // Get factor values for this response
+    const factorCombo = factorKeys.map(key => {
+      const value = service.getFieldValue(response, key, undefined, formDesign);
+      return value !== null && value !== undefined ? String(value) : null;
+    });
+
+    // Skip if any factor is missing
+    if (factorCombo.some(v => v === null)) continue;
+
+    const comboKey = factorCombo.join('|');
+
+    // Initialize measure aggregations for this combination
+    if (!combinationMap.has(comboKey)) {
+      combinationMap.set(comboKey, new Map());
+    }
+    const measureMap = combinationMap.get(comboKey)!;
+
+    // Compute each measure
+    for (const measure of measures) {
+      if (!measureMap.has(measure.id)) {
+        measureMap.set(measure.id, []);
+      }
+      const values = measureMap.get(measure.id)!;
+
+      if (measure.aggregation === 'count') {
+        values.push(1);
+      } else {
+        const rawValue = service.getFieldValue(response, measure.fieldId, undefined, formDesign);
+        const numericValue = toNumber(rawValue);
+        if (numericValue !== null) {
+          values.push(numericValue);
+        }
+      }
+    }
+  }
+
+  // Build final data structure
+  const resultCombinations: string[][] = [];
+  const resultValues: (number | null)[][] = [];
+
+  for (const combo of combinations) {
+    const comboKey = combo.join('|');
+    const measureMap = combinationMap.get(comboKey);
+
+    resultCombinations.push(combo);
+
+    const measureValues: (number | null)[] = [];
+    for (const measure of measures) {
+      if (measureMap && measureMap.has(measure.id)) {
+        const values = measureMap.get(measure.id)!;
+        if (values.length === 0) {
+          measureValues.push(null);
+        } else {
+          // Apply aggregation
+          let aggregatedValue: number;
+          switch (measure.aggregation) {
+            case 'count':
+              aggregatedValue = values.length;
+              break;
+            case 'sum':
+              aggregatedValue = values.reduce((a, b) => a + b, 0);
+              break;
+            case 'mean':
+              aggregatedValue = values.reduce((a, b) => a + b, 0) / values.length;
+              break;
+            case 'median':
+              const sorted = [...values].sort((a, b) => a - b);
+              const mid = Math.floor(sorted.length / 2);
+              aggregatedValue = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+              break;
+            case 'mode':
+              const freq: Record<number, number> = {};
+              values.forEach(v => freq[v] = (freq[v] || 0) + 1);
+              const maxFreq = Math.max(...Object.values(freq));
+              const modes = Object.keys(freq).filter(k => freq[Number(k)] === maxFreq).map(Number);
+              aggregatedValue = modes[0]; // Take first mode
+              break;
+            case 'min':
+              aggregatedValue = Math.min(...values);
+              break;
+            case 'max':
+              aggregatedValue = Math.max(...values);
+              break;
+            case 'std':
+              const mean = values.reduce((a, b) => a + b, 0) / values.length;
+              const variance = values.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / values.length;
+              aggregatedValue = Math.sqrt(variance);
+              break;
+            case 'variance':
+              const mean2 = values.reduce((a, b) => a + b, 0) / values.length;
+              aggregatedValue = values.reduce((a, b) => a + Math.pow(b - mean2, 2), 0) / values.length;
+              break;
+            case 'p10':
+              const sorted10 = [...values].sort((a, b) => a - b);
+              const idx10 = Math.floor(sorted10.length * 0.1);
+              aggregatedValue = sorted10[Math.max(0, idx10)];
+              break;
+            case 'p25':
+              const sorted25 = [...values].sort((a, b) => a - b);
+              const idx25 = Math.floor(sorted25.length * 0.25);
+              aggregatedValue = sorted25[Math.max(0, idx25)];
+              break;
+            case 'p50':
+              const sorted50 = [...values].sort((a, b) => a - b);
+              const idx50 = Math.floor(sorted50.length * 0.5);
+              aggregatedValue = sorted50[Math.max(0, idx50)];
+              break;
+            case 'p75':
+              const sorted75 = [...values].sort((a, b) => a - b);
+              const idx75 = Math.floor(sorted75.length * 0.75);
+              aggregatedValue = sorted75[Math.max(0, idx75)];
+              break;
+            case 'p90':
+              const sorted90 = [...values].sort((a, b) => a - b);
+              const idx90 = Math.floor(sorted90.length * 0.9);
+              aggregatedValue = sorted90[Math.max(0, idx90)];
+              break;
+            default:
+              aggregatedValue = values.reduce((a, b) => a + b, 0); // Default to sum
+          }
+          measureValues.push(aggregatedValue);
+        }
+      } else {
+        measureValues.push(null);
+      }
+    }
+    resultValues.push(measureValues);
+  }
+
+  const factorLabels = factors.map(f => f.label || f.fieldId);
+  const measureLabels = measures.map(m => ({ id: m.id, label: m.label || m.fieldId }));
+
+  console.log('processCCTWidget: Returning data - combinations:', resultCombinations.length, 'measures:', measureLabels.length);
+
+  return {
+    type: 'cct',
+    title: widget.title,
+    factors: factorLabels,
+    measures: measureLabels,
+    combinations: resultCombinations,
+    values: resultValues as (string | number)[][],
+    meta: widget.config || {},
+    empty: resultCombinations.length === 0,
+  } as WidgetDataPayload;
+}
+
+// Helper function for Cartesian product
+function cartesianProduct<T>(arrays: T[][]): T[][] {
+  if (arrays.length === 0) return [[]];
+  if (arrays.length === 1) return arrays[0].map(item => [item]);
+
+  const [first, ...rest] = arrays;
+  const restProduct = cartesianProduct(rest);
+
+  const result: T[][] = [];
+  for (const item of first) {
+    for (const combo of restProduct) {
+      result.push([item, ...combo]);
+    }
+  }
+  return result;
+}
+
 export async function processCrossTabWidget(
   widget: any,
   filteredResponses: ProcessedResponse[],

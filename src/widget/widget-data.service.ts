@@ -4,6 +4,7 @@ import {
   processCalendarHeatmapWidget,
   processCardWidget,
   processCrossTabWidget,
+  processCCTWidget,
   processHistogramWidget,
   processMapWidget,
   processMultiMetricWidget,
@@ -210,6 +211,14 @@ export class WidgetDataService {
             config,
             this,
           );
+        case 'cct':
+          return await processCCTWidget(
+            widget,
+            filteredResponses,
+            formDesignsMap,
+            config,
+            this,
+          );
         default:
           throw new Error(
             `Unsupported visualization type: ${widget.visualizationType}`,
@@ -267,6 +276,15 @@ export class WidgetDataService {
           type: 'crosstab',
           rows: [],
           columns: [],
+          values: [],
+        };
+      case 'cct':
+        return {
+          ...base,
+          type: 'cct',
+          factors: [],
+          measures: [],
+          combinations: [],
           values: [],
         };
       default:

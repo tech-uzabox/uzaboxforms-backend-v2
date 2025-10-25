@@ -39,7 +39,7 @@ const CreateWidgetSchema = z.object({
   dashboardId: z.string().uuid(),
   title: z.string().min(1),
   description: z.string().optional(),
-  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'group', 'crosstab']),
+  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'group', 'crosstab', 'cct']),
 
   // Enhanced multi-metric structure
   metrics: z.array(z.any()).optional(),
@@ -91,6 +91,76 @@ const CreateWidgetSchema = z.object({
           path: ['options', 'crosstab', ...(issue.path as (string | number)[])],
         });
       }
+    }
+  }
+
+  if (data.visualizationType === 'cct') {
+    const cct = (data.options as any)?.cct;
+    if (!cct) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'CCT widgets require options.cct configuration',
+        path: ['options', 'cct'],
+      });
+      return;
+    }
+
+    // Basic CCT validation
+    if (!cct.formId || typeof cct.formId !== 'string') {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'CCT configuration must include a valid formId',
+        path: ['options', 'cct', 'formId'],
+      });
+    }
+
+    if (!Array.isArray(cct.factors) || cct.factors.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'CCT configuration must include at least one factor',
+        path: ['options', 'cct', 'factors'],
+      });
+    }
+
+    if (!Array.isArray(cct.measures) || cct.measures.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'CCT configuration must include at least one measure',
+        path: ['options', 'cct', 'measures'],
+      });
+    }
+
+    // Validate factors
+    if (Array.isArray(cct.factors)) {
+      cct.factors.forEach((factor: any, index: number) => {
+        if (!factor.fieldId || typeof factor.fieldId !== 'string') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Each factor must have a valid fieldId',
+            path: ['options', 'cct', 'factors', index, 'fieldId'],
+          });
+        }
+      });
+    }
+
+    // Validate measures
+    if (Array.isArray(cct.measures)) {
+      cct.measures.forEach((measure: any, index: number) => {
+        if (!measure.fieldId || typeof measure.fieldId !== 'string') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Each measure must have a valid fieldId',
+            path: ['options', 'cct', 'measures', index, 'fieldId'],
+          });
+        }
+        if (!measure.aggregation || typeof measure.aggregation !== 'string') {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Each measure must have a valid aggregation',
+            path: ['options', 'cct', 'measures', index, 'aggregation'],
+          });
+        }
+      });
     }
   }
 });

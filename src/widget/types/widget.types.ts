@@ -35,7 +35,8 @@ export interface WidgetDataPayload {
     | 'scatter'
     | 'calendar-heatmap'
     | 'map'
-    | 'crosstab';
+    | 'crosstab'
+    | 'cct';
   title: string;
   value?: number;
   statLabel?: string;
@@ -58,6 +59,10 @@ export interface WidgetDataPayload {
   rowTotals?: (number | string)[];
   colTotals?: (number | string)[];
   grandTotal?: number | string;
+  // CCT-specific fields
+  factors?: string[];
+  measures?: { id: string; label: string }[];
+  combinations?: string[][];
   meta: any;
   empty: boolean;
   errors?: string[];
