@@ -284,6 +284,7 @@ export type UserWhereInput = {
   files?: Prisma.FileListRelationFilter
   createdForms?: Prisma.FormListRelationFilter
   createdFolders?: Prisma.FolderListRelationFilter
+  createdProcessFolders?: Prisma.ProcessFolderListRelationFilter
   createdGroups?: Prisma.GroupListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationUserNullableScalarRelationFilter, Prisma.OrganizationUserWhereInput> | null
   createdProcesses?: Prisma.ProcessListRelationFilter
@@ -313,6 +314,7 @@ export type UserOrderByWithRelationInput = {
   files?: Prisma.FileOrderByRelationAggregateInput
   createdForms?: Prisma.FormOrderByRelationAggregateInput
   createdFolders?: Prisma.FolderOrderByRelationAggregateInput
+  createdProcessFolders?: Prisma.ProcessFolderOrderByRelationAggregateInput
   createdGroups?: Prisma.GroupOrderByRelationAggregateInput
   organization?: Prisma.OrganizationUserOrderByWithRelationInput
   createdProcesses?: Prisma.ProcessOrderByRelationAggregateInput
@@ -346,6 +348,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   files?: Prisma.FileListRelationFilter
   createdForms?: Prisma.FormListRelationFilter
   createdFolders?: Prisma.FolderListRelationFilter
+  createdProcessFolders?: Prisma.ProcessFolderListRelationFilter
   createdGroups?: Prisma.GroupListRelationFilter
   organization?: Prisma.XOR<Prisma.OrganizationUserNullableScalarRelationFilter, Prisma.OrganizationUserWhereInput> | null
   createdProcesses?: Prisma.ProcessListRelationFilter
@@ -415,6 +418,7 @@ export type UserCreateInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -444,6 +448,7 @@ export type UserUncheckedCreateInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -473,6 +478,7 @@ export type UserUpdateInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -502,6 +508,7 @@ export type UserUncheckedUpdateInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -750,6 +757,20 @@ export type UserUpdateOneRequiredWithoutCreatedFoldersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedFoldersInput, Prisma.UserUpdateWithoutCreatedFoldersInput>, Prisma.UserUncheckedUpdateWithoutCreatedFoldersInput>
 }
 
+export type UserCreateNestedOneWithoutCreatedProcessFoldersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedProcessFoldersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedProcessFoldersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCreatedProcessFoldersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedProcessFoldersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedProcessFoldersInput
+  upsert?: Prisma.UserUpsertWithoutCreatedProcessFoldersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCreatedProcessFoldersInput, Prisma.UserUpdateWithoutCreatedProcessFoldersInput>, Prisma.UserUncheckedUpdateWithoutCreatedProcessFoldersInput>
+}
+
 export type UserCreateNestedOneWithoutCreatedFormsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCreatedFormsInput, Prisma.UserUncheckedCreateWithoutCreatedFormsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCreatedFormsInput
@@ -867,6 +888,7 @@ export type UserCreateWithoutRolesInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -895,6 +917,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -939,6 +962,7 @@ export type UserUpdateWithoutRolesInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -967,6 +991,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -994,6 +1019,7 @@ export type UserCreateWithoutFilesInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -1022,6 +1048,7 @@ export type UserUncheckedCreateWithoutFilesInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -1066,6 +1093,7 @@ export type UserUpdateWithoutFilesInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -1094,6 +1122,7 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1122,6 +1151,7 @@ export type UserCreateWithoutAuditLogsInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -1150,6 +1180,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -1194,6 +1225,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -1222,6 +1254,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1251,6 +1284,7 @@ export type UserCreateWithoutCreatedGroupsInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
@@ -1279,6 +1313,7 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1323,6 +1358,7 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
@@ -1351,6 +1387,7 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1379,6 +1416,7 @@ export type UserCreateWithoutCreatedProcessesInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
@@ -1407,6 +1445,7 @@ export type UserUncheckedCreateWithoutCreatedProcessesInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -1451,6 +1490,7 @@ export type UserUpdateWithoutCreatedProcessesInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
@@ -1479,6 +1519,7 @@ export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -1506,6 +1547,7 @@ export type UserCreateWithoutCreatedFoldersInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -1534,6 +1576,7 @@ export type UserUncheckedCreateWithoutCreatedFoldersInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -1578,6 +1621,7 @@ export type UserUpdateWithoutCreatedFoldersInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -1606,6 +1650,139 @@ export type UserUncheckedUpdateWithoutCreatedFoldersInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutCreatedProcessFoldersInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutCreatedProcessFoldersInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutCreatedProcessFoldersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedProcessFoldersInput>
+}
+
+export type UserUpsertWithoutCreatedProcessFoldersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCreatedProcessFoldersInput, Prisma.UserUncheckedUpdateWithoutCreatedProcessFoldersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCreatedProcessFoldersInput, Prisma.UserUncheckedCreateWithoutCreatedProcessFoldersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCreatedProcessFoldersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCreatedProcessFoldersInput, Prisma.UserUncheckedUpdateWithoutCreatedProcessFoldersInput>
+}
+
+export type UserUpdateWithoutCreatedProcessFoldersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCreatedProcessFoldersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1634,6 +1811,7 @@ export type UserCreateWithoutCreatedFormsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -1662,6 +1840,7 @@ export type UserUncheckedCreateWithoutCreatedFormsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -1706,6 +1885,7 @@ export type UserUpdateWithoutCreatedFormsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -1734,6 +1914,7 @@ export type UserUncheckedUpdateWithoutCreatedFormsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1762,6 +1943,7 @@ export type UserCreateWithoutApplicantProcessesInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -1790,6 +1972,7 @@ export type UserUncheckedCreateWithoutApplicantProcessesInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -1834,6 +2017,7 @@ export type UserUpdateWithoutApplicantProcessesInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -1862,6 +2046,7 @@ export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1891,6 +2076,7 @@ export type UserCreateWithoutProcessedApplicationsInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -1919,6 +2105,7 @@ export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -1963,6 +2150,7 @@ export type UserUpdateWithoutProcessedApplicationsInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -1991,6 +2179,7 @@ export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2019,6 +2208,7 @@ export type UserCreateWithoutOrganizationInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
@@ -2047,6 +2237,7 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
@@ -2091,6 +2282,7 @@ export type UserUpdateWithoutOrganizationInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
@@ -2119,6 +2311,7 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
@@ -2147,6 +2340,7 @@ export type UserCreateWithoutOwnedDashboardsInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -2175,6 +2369,7 @@ export type UserUncheckedCreateWithoutOwnedDashboardsInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -2219,6 +2414,7 @@ export type UserUpdateWithoutOwnedDashboardsInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -2247,6 +2443,7 @@ export type UserUncheckedUpdateWithoutOwnedDashboardsInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2275,6 +2472,7 @@ export type UserCreateWithoutQrCodeDocumentsInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -2303,6 +2501,7 @@ export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -2347,6 +2546,7 @@ export type UserUpdateWithoutQrCodeDocumentsInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -2375,6 +2575,7 @@ export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2403,6 +2604,7 @@ export type UserCreateWithoutFormGenerationProgressInput = {
   files?: Prisma.FileCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
@@ -2431,6 +2633,7 @@ export type UserUncheckedCreateWithoutFormGenerationProgressInput = {
   files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
   createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
   createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
   createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
   organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
   createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
@@ -2475,6 +2678,7 @@ export type UserUpdateWithoutFormGenerationProgressInput = {
   files?: Prisma.FileUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
@@ -2503,6 +2707,7 @@ export type UserUncheckedUpdateWithoutFormGenerationProgressInput = {
   files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
   createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
   createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
   createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
   organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
   createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2523,6 +2728,7 @@ export type UserCountOutputType = {
   files: number
   createdForms: number
   createdFolders: number
+  createdProcessFolders: number
   createdGroups: number
   createdProcesses: number
   processedApplications: number
@@ -2538,6 +2744,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   files?: boolean | UserCountOutputTypeCountFilesArgs
   createdForms?: boolean | UserCountOutputTypeCountCreatedFormsArgs
   createdFolders?: boolean | UserCountOutputTypeCountCreatedFoldersArgs
+  createdProcessFolders?: boolean | UserCountOutputTypeCountCreatedProcessFoldersArgs
   createdGroups?: boolean | UserCountOutputTypeCountCreatedGroupsArgs
   createdProcesses?: boolean | UserCountOutputTypeCountCreatedProcessesArgs
   processedApplications?: boolean | UserCountOutputTypeCountProcessedApplicationsArgs
@@ -2590,6 +2797,13 @@ export type UserCountOutputTypeCountCreatedFormsArgs<ExtArgs extends runtime.Typ
  */
 export type UserCountOutputTypeCountCreatedFoldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.FolderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCreatedProcessFoldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProcessFolderWhereInput
 }
 
 /**
@@ -2661,6 +2875,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   files?: boolean | Prisma.User$filesArgs<ExtArgs>
   createdForms?: boolean | Prisma.User$createdFormsArgs<ExtArgs>
   createdFolders?: boolean | Prisma.User$createdFoldersArgs<ExtArgs>
+  createdProcessFolders?: boolean | Prisma.User$createdProcessFoldersArgs<ExtArgs>
   createdGroups?: boolean | Prisma.User$createdGroupsArgs<ExtArgs>
   organization?: boolean | Prisma.User$organizationArgs<ExtArgs>
   createdProcesses?: boolean | Prisma.User$createdProcessesArgs<ExtArgs>
@@ -2727,6 +2942,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   files?: boolean | Prisma.User$filesArgs<ExtArgs>
   createdForms?: boolean | Prisma.User$createdFormsArgs<ExtArgs>
   createdFolders?: boolean | Prisma.User$createdFoldersArgs<ExtArgs>
+  createdProcessFolders?: boolean | Prisma.User$createdProcessFoldersArgs<ExtArgs>
   createdGroups?: boolean | Prisma.User$createdGroupsArgs<ExtArgs>
   organization?: boolean | Prisma.User$organizationArgs<ExtArgs>
   createdProcesses?: boolean | Prisma.User$createdProcessesArgs<ExtArgs>
@@ -2748,6 +2964,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     files: Prisma.$FilePayload<ExtArgs>[]
     createdForms: Prisma.$FormPayload<ExtArgs>[]
     createdFolders: Prisma.$FolderPayload<ExtArgs>[]
+    createdProcessFolders: Prisma.$ProcessFolderPayload<ExtArgs>[]
     createdGroups: Prisma.$GroupPayload<ExtArgs>[]
     organization: Prisma.$OrganizationUserPayload<ExtArgs> | null
     createdProcesses: Prisma.$ProcessPayload<ExtArgs>[]
@@ -3170,6 +3387,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   files<T extends Prisma.User$filesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdForms<T extends Prisma.User$createdFormsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdFormsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdFolders<T extends Prisma.User$createdFoldersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdFoldersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  createdProcessFolders<T extends Prisma.User$createdProcessFoldersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdProcessFoldersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   createdGroups<T extends Prisma.User$createdGroupsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   organization<T extends Prisma.User$organizationArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$organizationArgs<ExtArgs>>): Prisma.Prisma__OrganizationUserClient<runtime.Types.Result.GetResult<Prisma.$OrganizationUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   createdProcesses<T extends Prisma.User$createdProcessesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$createdProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3734,6 +3952,30 @@ export type User$createdFoldersArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.FolderScalarFieldEnum | Prisma.FolderScalarFieldEnum[]
+}
+
+/**
+ * User.createdProcessFolders
+ */
+export type User$createdProcessFoldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProcessFolder
+   */
+  select?: Prisma.ProcessFolderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProcessFolder
+   */
+  omit?: Prisma.ProcessFolderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProcessFolderInclude<ExtArgs> | null
+  where?: Prisma.ProcessFolderWhereInput
+  orderBy?: Prisma.ProcessFolderOrderByWithRelationInput | Prisma.ProcessFolderOrderByWithRelationInput[]
+  cursor?: Prisma.ProcessFolderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProcessFolderScalarFieldEnum | Prisma.ProcessFolderScalarFieldEnum[]
 }
 
 /**

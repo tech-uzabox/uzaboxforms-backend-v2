@@ -29,6 +29,7 @@ export type ProcessMinAggregateOutputType = {
   type: $Enums.ProcessType | null
   groupId: string | null
   creatorId: string | null
+  processFolderId: string | null
   status: $Enums.ProcessStatus | null
   archived: boolean | null
   staffViewForms: boolean | null
@@ -43,6 +44,7 @@ export type ProcessMaxAggregateOutputType = {
   type: $Enums.ProcessType | null
   groupId: string | null
   creatorId: string | null
+  processFolderId: string | null
   status: $Enums.ProcessStatus | null
   archived: boolean | null
   staffViewForms: boolean | null
@@ -57,6 +59,7 @@ export type ProcessCountAggregateOutputType = {
   type: number
   groupId: number
   creatorId: number
+  processFolderId: number
   status: number
   archived: number
   staffViewForms: number
@@ -73,6 +76,7 @@ export type ProcessMinAggregateInputType = {
   type?: true
   groupId?: true
   creatorId?: true
+  processFolderId?: true
   status?: true
   archived?: true
   staffViewForms?: true
@@ -87,6 +91,7 @@ export type ProcessMaxAggregateInputType = {
   type?: true
   groupId?: true
   creatorId?: true
+  processFolderId?: true
   status?: true
   archived?: true
   staffViewForms?: true
@@ -101,6 +106,7 @@ export type ProcessCountAggregateInputType = {
   type?: true
   groupId?: true
   creatorId?: true
+  processFolderId?: true
   status?: true
   archived?: true
   staffViewForms?: true
@@ -188,6 +194,7 @@ export type ProcessGroupByOutputType = {
   type: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId: string | null
   status: $Enums.ProcessStatus
   archived: boolean
   staffViewForms: boolean
@@ -223,6 +230,7 @@ export type ProcessWhereInput = {
   type?: Prisma.EnumProcessTypeFilter<"Process"> | $Enums.ProcessType
   groupId?: Prisma.UuidFilter<"Process"> | string
   creatorId?: Prisma.UuidFilter<"Process"> | string
+  processFolderId?: Prisma.UuidNullableFilter<"Process"> | string | null
   status?: Prisma.EnumProcessStatusFilter<"Process"> | $Enums.ProcessStatus
   archived?: Prisma.BoolFilter<"Process"> | boolean
   staffViewForms?: Prisma.BoolFilter<"Process"> | boolean
@@ -236,6 +244,7 @@ export type ProcessWhereInput = {
   roles?: Prisma.ProcessRoleListRelationFilter
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
+  processFolder?: Prisma.XOR<Prisma.ProcessFolderNullableScalarRelationFilter, Prisma.ProcessFolderWhereInput> | null
 }
 
 export type ProcessOrderByWithRelationInput = {
@@ -244,6 +253,7 @@ export type ProcessOrderByWithRelationInput = {
   type?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  processFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   staffViewForms?: Prisma.SortOrder
@@ -257,6 +267,7 @@ export type ProcessOrderByWithRelationInput = {
   roles?: Prisma.ProcessRoleOrderByRelationAggregateInput
   creator?: Prisma.UserOrderByWithRelationInput
   group?: Prisma.GroupOrderByWithRelationInput
+  processFolder?: Prisma.ProcessFolderOrderByWithRelationInput
   _relevance?: Prisma.ProcessOrderByRelevanceInput
 }
 
@@ -269,6 +280,7 @@ export type ProcessWhereUniqueInput = Prisma.AtLeast<{
   type?: Prisma.EnumProcessTypeFilter<"Process"> | $Enums.ProcessType
   groupId?: Prisma.UuidFilter<"Process"> | string
   creatorId?: Prisma.UuidFilter<"Process"> | string
+  processFolderId?: Prisma.UuidNullableFilter<"Process"> | string | null
   status?: Prisma.EnumProcessStatusFilter<"Process"> | $Enums.ProcessStatus
   archived?: Prisma.BoolFilter<"Process"> | boolean
   staffViewForms?: Prisma.BoolFilter<"Process"> | boolean
@@ -282,6 +294,7 @@ export type ProcessWhereUniqueInput = Prisma.AtLeast<{
   roles?: Prisma.ProcessRoleListRelationFilter
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
+  processFolder?: Prisma.XOR<Prisma.ProcessFolderNullableScalarRelationFilter, Prisma.ProcessFolderWhereInput> | null
 }, "id">
 
 export type ProcessOrderByWithAggregationInput = {
@@ -290,6 +303,7 @@ export type ProcessOrderByWithAggregationInput = {
   type?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  processFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   staffViewForms?: Prisma.SortOrder
@@ -310,6 +324,7 @@ export type ProcessScalarWhereWithAggregatesInput = {
   type?: Prisma.EnumProcessTypeWithAggregatesFilter<"Process"> | $Enums.ProcessType
   groupId?: Prisma.UuidWithAggregatesFilter<"Process"> | string
   creatorId?: Prisma.UuidWithAggregatesFilter<"Process"> | string
+  processFolderId?: Prisma.UuidNullableWithAggregatesFilter<"Process"> | string | null
   status?: Prisma.EnumProcessStatusWithAggregatesFilter<"Process"> | $Enums.ProcessStatus
   archived?: Prisma.BoolWithAggregatesFilter<"Process"> | boolean
   staffViewForms?: Prisma.BoolWithAggregatesFilter<"Process"> | boolean
@@ -335,6 +350,7 @@ export type ProcessCreateInput = {
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateInput = {
@@ -343,6 +359,7 @@ export type ProcessUncheckedCreateInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -373,6 +390,7 @@ export type ProcessUpdateInput = {
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateInput = {
@@ -381,6 +399,7 @@ export type ProcessUncheckedUpdateInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -400,6 +419,7 @@ export type ProcessCreateManyInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -426,6 +446,7 @@ export type ProcessUncheckedUpdateManyInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -456,6 +477,7 @@ export type ProcessCountOrderByAggregateInput = {
   type?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  processFolderId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   staffViewForms?: Prisma.SortOrder
@@ -470,6 +492,7 @@ export type ProcessMaxOrderByAggregateInput = {
   type?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  processFolderId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   staffViewForms?: Prisma.SortOrder
@@ -484,6 +507,7 @@ export type ProcessMinOrderByAggregateInput = {
   type?: Prisma.SortOrder
   groupId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
+  processFolderId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   archived?: Prisma.SortOrder
   staffViewForms?: Prisma.SortOrder
@@ -603,6 +627,48 @@ export type ProcessUpdateOneRequiredWithoutRolesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessUpdateToOneWithWhereWithoutRolesInput, Prisma.ProcessUpdateWithoutRolesInput>, Prisma.ProcessUncheckedUpdateWithoutRolesInput>
 }
 
+export type ProcessCreateNestedManyWithoutProcessFolderInput = {
+  create?: Prisma.XOR<Prisma.ProcessCreateWithoutProcessFolderInput, Prisma.ProcessUncheckedCreateWithoutProcessFolderInput> | Prisma.ProcessCreateWithoutProcessFolderInput[] | Prisma.ProcessUncheckedCreateWithoutProcessFolderInput[]
+  connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutProcessFolderInput | Prisma.ProcessCreateOrConnectWithoutProcessFolderInput[]
+  createMany?: Prisma.ProcessCreateManyProcessFolderInputEnvelope
+  connect?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+}
+
+export type ProcessUncheckedCreateNestedManyWithoutProcessFolderInput = {
+  create?: Prisma.XOR<Prisma.ProcessCreateWithoutProcessFolderInput, Prisma.ProcessUncheckedCreateWithoutProcessFolderInput> | Prisma.ProcessCreateWithoutProcessFolderInput[] | Prisma.ProcessUncheckedCreateWithoutProcessFolderInput[]
+  connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutProcessFolderInput | Prisma.ProcessCreateOrConnectWithoutProcessFolderInput[]
+  createMany?: Prisma.ProcessCreateManyProcessFolderInputEnvelope
+  connect?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+}
+
+export type ProcessUpdateManyWithoutProcessFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcessCreateWithoutProcessFolderInput, Prisma.ProcessUncheckedCreateWithoutProcessFolderInput> | Prisma.ProcessCreateWithoutProcessFolderInput[] | Prisma.ProcessUncheckedCreateWithoutProcessFolderInput[]
+  connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutProcessFolderInput | Prisma.ProcessCreateOrConnectWithoutProcessFolderInput[]
+  upsert?: Prisma.ProcessUpsertWithWhereUniqueWithoutProcessFolderInput | Prisma.ProcessUpsertWithWhereUniqueWithoutProcessFolderInput[]
+  createMany?: Prisma.ProcessCreateManyProcessFolderInputEnvelope
+  set?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  disconnect?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  delete?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  connect?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  update?: Prisma.ProcessUpdateWithWhereUniqueWithoutProcessFolderInput | Prisma.ProcessUpdateWithWhereUniqueWithoutProcessFolderInput[]
+  updateMany?: Prisma.ProcessUpdateManyWithWhereWithoutProcessFolderInput | Prisma.ProcessUpdateManyWithWhereWithoutProcessFolderInput[]
+  deleteMany?: Prisma.ProcessScalarWhereInput | Prisma.ProcessScalarWhereInput[]
+}
+
+export type ProcessUncheckedUpdateManyWithoutProcessFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcessCreateWithoutProcessFolderInput, Prisma.ProcessUncheckedCreateWithoutProcessFolderInput> | Prisma.ProcessCreateWithoutProcessFolderInput[] | Prisma.ProcessUncheckedCreateWithoutProcessFolderInput[]
+  connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutProcessFolderInput | Prisma.ProcessCreateOrConnectWithoutProcessFolderInput[]
+  upsert?: Prisma.ProcessUpsertWithWhereUniqueWithoutProcessFolderInput | Prisma.ProcessUpsertWithWhereUniqueWithoutProcessFolderInput[]
+  createMany?: Prisma.ProcessCreateManyProcessFolderInputEnvelope
+  set?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  disconnect?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  delete?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  connect?: Prisma.ProcessWhereUniqueInput | Prisma.ProcessWhereUniqueInput[]
+  update?: Prisma.ProcessUpdateWithWhereUniqueWithoutProcessFolderInput | Prisma.ProcessUpdateWithWhereUniqueWithoutProcessFolderInput[]
+  updateMany?: Prisma.ProcessUpdateManyWithWhereWithoutProcessFolderInput | Prisma.ProcessUpdateManyWithWhereWithoutProcessFolderInput[]
+  deleteMany?: Prisma.ProcessScalarWhereInput | Prisma.ProcessScalarWhereInput[]
+}
+
 export type ProcessCreateNestedOneWithoutFormResponsesInput = {
   create?: Prisma.XOR<Prisma.ProcessCreateWithoutFormResponsesInput, Prisma.ProcessUncheckedCreateWithoutFormResponsesInput>
   connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutFormResponsesInput
@@ -675,6 +741,7 @@ export type ProcessCreateWithoutCreatorInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutCreatorInput = {
@@ -682,6 +749,7 @@ export type ProcessUncheckedCreateWithoutCreatorInput = {
   name: string
   type?: $Enums.ProcessType
   groupId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -730,6 +798,7 @@ export type ProcessScalarWhereInput = {
   type?: Prisma.EnumProcessTypeFilter<"Process"> | $Enums.ProcessType
   groupId?: Prisma.UuidFilter<"Process"> | string
   creatorId?: Prisma.UuidFilter<"Process"> | string
+  processFolderId?: Prisma.UuidNullableFilter<"Process"> | string | null
   status?: Prisma.EnumProcessStatusFilter<"Process"> | $Enums.ProcessStatus
   archived?: Prisma.BoolFilter<"Process"> | boolean
   staffViewForms?: Prisma.BoolFilter<"Process"> | boolean
@@ -754,6 +823,7 @@ export type ProcessCreateWithoutGroupInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutGroupInput = {
@@ -761,6 +831,7 @@ export type ProcessUncheckedCreateWithoutGroupInput = {
   name: string
   type?: $Enums.ProcessType
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -816,6 +887,7 @@ export type ProcessCreateWithoutRolesInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutRolesInput = {
@@ -824,6 +896,7 @@ export type ProcessUncheckedCreateWithoutRolesInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -868,6 +941,7 @@ export type ProcessUpdateWithoutRolesInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutRolesInput = {
@@ -876,6 +950,7 @@ export type ProcessUncheckedUpdateWithoutRolesInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -886,6 +961,70 @@ export type ProcessUncheckedUpdateWithoutRolesInput = {
   formResponses?: Prisma.FormResponseUncheckedUpdateManyWithoutProcessNestedInput
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
+}
+
+export type ProcessCreateWithoutProcessFolderInput = {
+  id?: string
+  name: string
+  type?: $Enums.ProcessType
+  status?: $Enums.ProcessStatus
+  archived?: boolean
+  staffViewForms?: boolean
+  applicantViewProcessLevel?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutProcessInput
+  formResponses?: Prisma.FormResponseCreateNestedManyWithoutProcessInput
+  forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
+  roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
+  group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+}
+
+export type ProcessUncheckedCreateWithoutProcessFolderInput = {
+  id?: string
+  name: string
+  type?: $Enums.ProcessType
+  groupId: string
+  creatorId: string
+  status?: $Enums.ProcessStatus
+  archived?: boolean
+  staffViewForms?: boolean
+  applicantViewProcessLevel?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
+  formResponses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutProcessInput
+  forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
+  roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+}
+
+export type ProcessCreateOrConnectWithoutProcessFolderInput = {
+  where: Prisma.ProcessWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProcessCreateWithoutProcessFolderInput, Prisma.ProcessUncheckedCreateWithoutProcessFolderInput>
+}
+
+export type ProcessCreateManyProcessFolderInputEnvelope = {
+  data: Prisma.ProcessCreateManyProcessFolderInput | Prisma.ProcessCreateManyProcessFolderInput[]
+  skipDuplicates?: boolean
+}
+
+export type ProcessUpsertWithWhereUniqueWithoutProcessFolderInput = {
+  where: Prisma.ProcessWhereUniqueInput
+  update: Prisma.XOR<Prisma.ProcessUpdateWithoutProcessFolderInput, Prisma.ProcessUncheckedUpdateWithoutProcessFolderInput>
+  create: Prisma.XOR<Prisma.ProcessCreateWithoutProcessFolderInput, Prisma.ProcessUncheckedCreateWithoutProcessFolderInput>
+}
+
+export type ProcessUpdateWithWhereUniqueWithoutProcessFolderInput = {
+  where: Prisma.ProcessWhereUniqueInput
+  data: Prisma.XOR<Prisma.ProcessUpdateWithoutProcessFolderInput, Prisma.ProcessUncheckedUpdateWithoutProcessFolderInput>
+}
+
+export type ProcessUpdateManyWithWhereWithoutProcessFolderInput = {
+  where: Prisma.ProcessScalarWhereInput
+  data: Prisma.XOR<Prisma.ProcessUpdateManyMutationInput, Prisma.ProcessUncheckedUpdateManyWithoutProcessFolderInput>
 }
 
 export type ProcessCreateWithoutFormResponsesInput = {
@@ -904,6 +1043,7 @@ export type ProcessCreateWithoutFormResponsesInput = {
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutFormResponsesInput = {
@@ -912,6 +1052,7 @@ export type ProcessUncheckedCreateWithoutFormResponsesInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -956,6 +1097,7 @@ export type ProcessUpdateWithoutFormResponsesInput = {
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutFormResponsesInput = {
@@ -964,6 +1106,7 @@ export type ProcessUncheckedUpdateWithoutFormResponsesInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -992,6 +1135,7 @@ export type ProcessCreateWithoutFormsInput = {
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutFormsInput = {
@@ -1000,6 +1144,7 @@ export type ProcessUncheckedCreateWithoutFormsInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -1044,6 +1189,7 @@ export type ProcessUpdateWithoutFormsInput = {
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutFormsInput = {
@@ -1052,6 +1198,7 @@ export type ProcessUncheckedUpdateWithoutFormsInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1080,6 +1227,7 @@ export type ProcessCreateWithoutApplicantProcessesInput = {
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutApplicantProcessesInput = {
@@ -1088,6 +1236,7 @@ export type ProcessUncheckedCreateWithoutApplicantProcessesInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -1132,6 +1281,7 @@ export type ProcessUpdateWithoutApplicantProcessesInput = {
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutApplicantProcessesInput = {
@@ -1140,6 +1290,7 @@ export type ProcessUncheckedUpdateWithoutApplicantProcessesInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1168,6 +1319,7 @@ export type ProcessCreateWithoutProcessedApplicationsInput = {
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
 
 export type ProcessUncheckedCreateWithoutProcessedApplicationsInput = {
@@ -1176,6 +1328,7 @@ export type ProcessUncheckedCreateWithoutProcessedApplicationsInput = {
   type?: $Enums.ProcessType
   groupId: string
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -1220,6 +1373,7 @@ export type ProcessUpdateWithoutProcessedApplicationsInput = {
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
@@ -1228,6 +1382,7 @@ export type ProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1245,6 +1400,7 @@ export type ProcessCreateManyCreatorInput = {
   name: string
   type?: $Enums.ProcessType
   groupId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -1269,6 +1425,7 @@ export type ProcessUpdateWithoutCreatorInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutCreatorInput = {
@@ -1276,6 +1433,7 @@ export type ProcessUncheckedUpdateWithoutCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1294,6 +1452,7 @@ export type ProcessUncheckedUpdateManyWithoutCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1307,6 +1466,7 @@ export type ProcessCreateManyGroupInput = {
   name: string
   type?: $Enums.ProcessType
   creatorId: string
+  processFolderId?: string | null
   status?: $Enums.ProcessStatus
   archived?: boolean
   staffViewForms?: boolean
@@ -1331,6 +1491,7 @@ export type ProcessUpdateWithoutGroupInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
 
 export type ProcessUncheckedUpdateWithoutGroupInput = {
@@ -1338,6 +1499,7 @@ export type ProcessUncheckedUpdateWithoutGroupInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1355,6 +1517,73 @@ export type ProcessUncheckedUpdateManyWithoutGroupInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+  creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicantViewProcessLevel?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ProcessCreateManyProcessFolderInput = {
+  id?: string
+  name: string
+  type?: $Enums.ProcessType
+  groupId: string
+  creatorId: string
+  status?: $Enums.ProcessStatus
+  archived?: boolean
+  staffViewForms?: boolean
+  applicantViewProcessLevel?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type ProcessUpdateWithoutProcessFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicantViewProcessLevel?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutProcessNestedInput
+  formResponses?: Prisma.FormResponseUpdateManyWithoutProcessNestedInput
+  forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
+  roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+  group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+}
+
+export type ProcessUncheckedUpdateWithoutProcessFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicantViewProcessLevel?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
+  formResponses?: Prisma.FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+  forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
+  roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+}
+
+export type ProcessUncheckedUpdateManyWithoutProcessFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
   archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1437,6 +1666,7 @@ export type ProcessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   type?: boolean
   groupId?: boolean
   creatorId?: boolean
+  processFolderId?: boolean
   status?: boolean
   archived?: boolean
   staffViewForms?: boolean
@@ -1450,6 +1680,7 @@ export type ProcessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   roles?: boolean | Prisma.Process$rolesArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
   _count?: boolean | Prisma.ProcessCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["process"]>
 
@@ -1459,6 +1690,7 @@ export type ProcessSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   type?: boolean
   groupId?: boolean
   creatorId?: boolean
+  processFolderId?: boolean
   status?: boolean
   archived?: boolean
   staffViewForms?: boolean
@@ -1467,6 +1699,7 @@ export type ProcessSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   updatedAt?: boolean
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
 }, ExtArgs["result"]["process"]>
 
 export type ProcessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1475,6 +1708,7 @@ export type ProcessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   type?: boolean
   groupId?: boolean
   creatorId?: boolean
+  processFolderId?: boolean
   status?: boolean
   archived?: boolean
   staffViewForms?: boolean
@@ -1483,6 +1717,7 @@ export type ProcessSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   updatedAt?: boolean
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
 }, ExtArgs["result"]["process"]>
 
 export type ProcessSelectScalar = {
@@ -1491,6 +1726,7 @@ export type ProcessSelectScalar = {
   type?: boolean
   groupId?: boolean
   creatorId?: boolean
+  processFolderId?: boolean
   status?: boolean
   archived?: boolean
   staffViewForms?: boolean
@@ -1499,7 +1735,7 @@ export type ProcessSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ProcessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "groupId" | "creatorId" | "status" | "archived" | "staffViewForms" | "applicantViewProcessLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["process"]>
+export type ProcessOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "type" | "groupId" | "creatorId" | "processFolderId" | "status" | "archived" | "staffViewForms" | "applicantViewProcessLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["process"]>
 export type ProcessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applicantProcesses?: boolean | Prisma.Process$applicantProcessesArgs<ExtArgs>
   formResponses?: boolean | Prisma.Process$formResponsesArgs<ExtArgs>
@@ -1508,15 +1744,18 @@ export type ProcessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   roles?: boolean | Prisma.Process$rolesArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
   _count?: boolean | Prisma.ProcessCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProcessIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
 }
 export type ProcessIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
+  processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
 }
 
 export type $ProcessPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1529,6 +1768,7 @@ export type $ProcessPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     roles: Prisma.$ProcessRolePayload<ExtArgs>[]
     creator: Prisma.$UserPayload<ExtArgs>
     group: Prisma.$GroupPayload<ExtArgs>
+    processFolder: Prisma.$ProcessFolderPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1536,6 +1776,7 @@ export type $ProcessPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     type: $Enums.ProcessType
     groupId: string
     creatorId: string
+    processFolderId: string | null
     status: $Enums.ProcessStatus
     archived: boolean
     staffViewForms: boolean
@@ -1943,6 +2184,7 @@ export interface Prisma__ProcessClient<T, Null = never, ExtArgs extends runtime.
   roles<T extends Prisma.Process$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   group<T extends Prisma.GroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupDefaultArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  processFolder<T extends Prisma.Process$processFolderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$processFolderArgs<ExtArgs>>): Prisma.Prisma__ProcessFolderClient<runtime.Types.Result.GetResult<Prisma.$ProcessFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1977,6 +2219,7 @@ export interface ProcessFieldRefs {
   readonly type: Prisma.FieldRef<"Process", 'ProcessType'>
   readonly groupId: Prisma.FieldRef<"Process", 'String'>
   readonly creatorId: Prisma.FieldRef<"Process", 'String'>
+  readonly processFolderId: Prisma.FieldRef<"Process", 'String'>
   readonly status: Prisma.FieldRef<"Process", 'ProcessStatus'>
   readonly archived: Prisma.FieldRef<"Process", 'Boolean'>
   readonly staffViewForms: Prisma.FieldRef<"Process", 'Boolean'>
@@ -2505,6 +2748,25 @@ export type Process$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ProcessRoleScalarFieldEnum | Prisma.ProcessRoleScalarFieldEnum[]
+}
+
+/**
+ * Process.processFolder
+ */
+export type Process$processFolderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProcessFolder
+   */
+  select?: Prisma.ProcessFolderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProcessFolder
+   */
+  omit?: Prisma.ProcessFolderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProcessFolderInclude<ExtArgs> | null
+  where?: Prisma.ProcessFolderWhereInput
 }
 
 /**

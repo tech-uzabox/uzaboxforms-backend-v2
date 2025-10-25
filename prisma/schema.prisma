@@ -30,6 +30,7 @@ model User {
   files                 File[]
   createdForms          Form[]                 @relation("FormCreator")
   createdFolders        Folder[]               @relation("FolderCreator")
+  createdProcessFolders ProcessFolder[]        @relation("ProcessFolderCreator")
   createdGroups         Group[]                @relation("GroupCreator")
   organization          OrganizationUser?
   createdProcesses      Process[]              @relation("ProcessCreator")
@@ -132,6 +133,7 @@ model Process {
   type                      ProcessType            @default(PRIVATE)
   groupId                   String                 @db.Uuid
   creatorId                 String                 @db.Uuid
+  processFolderId           String?                @db.Uuid
   status                    ProcessStatus          @default(ENABLED)
   archived                  Boolean                @default(false)
   staffViewForms            Boolean                @default(false)
@@ -145,9 +147,11 @@ model Process {
   roles                     ProcessRole[]
   creator                   User                   @relation("ProcessCreator", fields: [creatorId], references: [id])
   group                     Group                  @relation(fields: [groupId], references: [id])
+  processFolder             ProcessFolder?         @relation(fields: [processFolderId], references: [id], onDelete: SetNull)
 
   @@index([groupId])
   @@index([creatorId])
+  @@index([processFolderId])
   @@map("processes")
 }
 
@@ -163,17 +167,31 @@ model ProcessRole {
 }
 
 model Folder {
-  id          String   @id @default(uuid()) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   name        String
   description String?
-  creatorId   String   @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  creator     User     @relation("FolderCreator", fields: [creatorId], references: [id])
+  creatorId   String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  creator     User      @relation("FolderCreator", fields: [creatorId], references: [id])
   forms       Form[]
 
   @@index([creatorId])
   @@map("folders")
+}
+
+model ProcessFolder {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  creatorId   String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  creator     User      @relation("ProcessFolderCreator", fields: [creatorId], references: [id])
+  processes   Process[]
+
+  @@index([creatorId])
+  @@map("process_folders")
 }
 
 model Form {

@@ -67,6 +67,11 @@ export type ProcessRole = Prisma.ProcessRoleModel
  */
 export type Folder = Prisma.FolderModel
 /**
+ * Model ProcessFolder
+ * 
+ */
+export type ProcessFolder = Prisma.ProcessFolderModel
+/**
  * Model Form
  * 
  */

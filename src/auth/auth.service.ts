@@ -404,7 +404,7 @@ export class AuthService {
     const updateData: any = {};
     if (profile.firstName != null) updateData.firstName = profile.firstName;
     if (profile.lastName != null) updateData.lastName = profile.lastName;
-    if (profile.photo != null) updateData.photo = profile.photo;
+    if (profile.photo !== undefined) updateData.photo = profile.photo;
     await this.userService.update(userId, updateData);
     const updated = await this.userService.findOne(userId);
     if (!updated) throw new BadRequestException('User not found after update');

@@ -23,6 +23,7 @@ export class ProcessService {
       type,
       groupId,
       creatorId,
+      processFolderId,
       status,
       archived,
       staffViewForms,
@@ -53,6 +54,7 @@ export class ProcessService {
         type,
         group: { connect: { id: groupId } },
         creator: { connect: { id: creatorId } },
+        processFolder: processFolderId ? { connect: { id: processFolderId } } : undefined,
         status,
         archived,
         staffViewForms,
@@ -69,6 +71,7 @@ export class ProcessService {
       },
       include: {
         creator: true,
+        processFolder: true,
         roles: {
           include: {
             role: true,
@@ -93,6 +96,7 @@ export class ProcessService {
       include: {
         group: true,
         creator: true,
+        processFolder: true,
         roles: {
           select: {
             role: true,
@@ -142,6 +146,7 @@ export class ProcessService {
           processStatus: process.status,
           updatedAt: process.updatedAt?.toISOString(),
           processForms: forms.filter((form) => form !== null),
+          roles: process.roles?.map((pr) => pr.role) || [],
         };
       }),
     );
@@ -166,6 +171,7 @@ export class ProcessService {
       include: {
         group: true,
         creator: true,
+        processFolder: true,
         roles: {
           select: {
             role: true,
@@ -215,6 +221,7 @@ export class ProcessService {
           processStatus: process.status,
           updatedAt: process.updatedAt?.toISOString(),
           processForms: forms.filter((form) => form !== null),
+          roles: process.roles?.map((pr) => pr.role) || [],
         };
       }),
     );
@@ -286,13 +293,14 @@ export class ProcessService {
   }
 
   async update(id: string, data: UpdateProcessDto): Promise<Process> {
-    const { name, groupId, status, archived } = data;
+    const { name, groupId, processFolderId, status, archived } = data;
 
     const updatedProcess = await this.prisma.process.update({
       where: { id },
       data: {
         name,
         groupId,
+        processFolderId: processFolderId !== undefined ? processFolderId : undefined,
         status,
         archived: archived !== undefined ? archived : false,
       },

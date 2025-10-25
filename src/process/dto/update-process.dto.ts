@@ -6,6 +6,7 @@ const UpdateProcessSchema = z.object({
   name: z.string().optional(),
   type: z.nativeEnum(ProcessType).optional(),
   groupId: z.string().uuid().optional(),
+  processFolderId: z.string().uuid().optional().nullable(),
   status: z.nativeEnum(ProcessStatus).optional(),
   archived: z.boolean().optional(),
   staffViewForms: z.boolean().optional(),

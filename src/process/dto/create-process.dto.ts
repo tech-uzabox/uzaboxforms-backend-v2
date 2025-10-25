@@ -7,6 +7,7 @@ const CreateProcessSchema = z.object({
   type: z.nativeEnum(ProcessType).default(ProcessType.PRIVATE),
   groupId: z.string().uuid(),
   creatorId: z.string().uuid(),
+  processFolderId: z.string().uuid().optional(),
   status: z.nativeEnum(ProcessStatus).default(ProcessStatus.ENABLED),
   archived: z.boolean().default(false),
   staffViewForms: z.boolean().default(false),

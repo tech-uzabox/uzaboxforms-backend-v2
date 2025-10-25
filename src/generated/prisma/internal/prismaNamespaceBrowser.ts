@@ -29,6 +29,7 @@ export const ModelName = {
   Process: 'Process',
   ProcessRole: 'ProcessRole',
   Folder: 'Folder',
+  ProcessFolder: 'ProcessFolder',
   Form: 'Form',
   FormResponse: 'FormResponse',
   ProcessForm: 'ProcessForm',
@@ -175,6 +176,7 @@ export const ProcessScalarFieldEnum = {
   type: 'type',
   groupId: 'groupId',
   creatorId: 'creatorId',
+  processFolderId: 'processFolderId',
   status: 'status',
   archived: 'archived',
   staffViewForms: 'staffViewForms',
@@ -205,6 +207,18 @@ export const FolderScalarFieldEnum = {
 } as const
 
 export type FolderScalarFieldEnum = (typeof FolderScalarFieldEnum)[keyof typeof FolderScalarFieldEnum]
+
+
+export const ProcessFolderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProcessFolderScalarFieldEnum = (typeof ProcessFolderScalarFieldEnum)[keyof typeof ProcessFolderScalarFieldEnum]
 
 
 export const FormScalarFieldEnum = {
@@ -646,7 +660,8 @@ export const ProcessOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   groupId: 'groupId',
-  creatorId: 'creatorId'
+  creatorId: 'creatorId',
+  processFolderId: 'processFolderId'
 } as const
 
 export type ProcessOrderByRelevanceFieldEnum = (typeof ProcessOrderByRelevanceFieldEnum)[keyof typeof ProcessOrderByRelevanceFieldEnum]
@@ -668,6 +683,16 @@ export const FolderOrderByRelevanceFieldEnum = {
 } as const
 
 export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFieldEnum)[keyof typeof FolderOrderByRelevanceFieldEnum]
+
+
+export const ProcessFolderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId'
+} as const
+
+export type ProcessFolderOrderByRelevanceFieldEnum = (typeof ProcessFolderOrderByRelevanceFieldEnum)[keyof typeof ProcessFolderOrderByRelevanceFieldEnum]
 
 
 export const FormOrderByRelevanceFieldEnum = {

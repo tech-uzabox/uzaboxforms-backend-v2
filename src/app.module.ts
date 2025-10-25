@@ -28,6 +28,7 @@ import { FilesModule } from './files/files.module';
 import { FormResponseModule } from './form-response/form-response.module';
 import { FormModule } from './form/form.module';
 import { FolderModule } from './folder/folder.module';
+import { ProcessFolderModule } from './process-folder/process-folder.module';
 import { GroupRoleModule } from './group-role/group-role.module';
 import { GroupModule } from './group/group.module';
 import { JobModule } from './job/job.module';
@@ -95,6 +96,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
     GroupModule,
     GroupRoleModule,
     FolderModule,
+    ProcessFolderModule,
     FormModule,
     FormResponseModule,
     ProcessModule,

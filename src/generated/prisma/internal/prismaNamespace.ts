@@ -399,6 +399,7 @@ export const ModelName = {
   Process: 'Process',
   ProcessRole: 'ProcessRole',
   Folder: 'Folder',
+  ProcessFolder: 'ProcessFolder',
   Form: 'Form',
   FormResponse: 'FormResponse',
   ProcessForm: 'ProcessForm',
@@ -437,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "widgetSandbox" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress"
+    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "processFolder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "widgetSandbox" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1178,6 +1179,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.FolderCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.FolderCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProcessFolder: {
+      payload: Prisma.$ProcessFolderPayload<ExtArgs>
+      fields: Prisma.ProcessFolderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProcessFolderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProcessFolderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>
+        }
+        findFirst: {
+          args: Prisma.ProcessFolderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProcessFolderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>
+        }
+        findMany: {
+          args: Prisma.ProcessFolderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>[]
+        }
+        create: {
+          args: Prisma.ProcessFolderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>
+        }
+        createMany: {
+          args: Prisma.ProcessFolderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProcessFolderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>[]
+        }
+        delete: {
+          args: Prisma.ProcessFolderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>
+        }
+        update: {
+          args: Prisma.ProcessFolderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProcessFolderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProcessFolderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProcessFolderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProcessFolderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProcessFolderPayload>
+        }
+        aggregate: {
+          args: Prisma.ProcessFolderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProcessFolder>
+        }
+        groupBy: {
+          args: Prisma.ProcessFolderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProcessFolderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProcessFolderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProcessFolderCountAggregateOutputType> | number
         }
       }
     }
@@ -3028,6 +3103,7 @@ export const ProcessScalarFieldEnum = {
   type: 'type',
   groupId: 'groupId',
   creatorId: 'creatorId',
+  processFolderId: 'processFolderId',
   status: 'status',
   archived: 'archived',
   staffViewForms: 'staffViewForms',
@@ -3058,6 +3134,18 @@ export const FolderScalarFieldEnum = {
 } as const
 
 export type FolderScalarFieldEnum = (typeof FolderScalarFieldEnum)[keyof typeof FolderScalarFieldEnum]
+
+
+export const ProcessFolderScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProcessFolderScalarFieldEnum = (typeof ProcessFolderScalarFieldEnum)[keyof typeof ProcessFolderScalarFieldEnum]
 
 
 export const FormScalarFieldEnum = {
@@ -3499,7 +3587,8 @@ export const ProcessOrderByRelevanceFieldEnum = {
   id: 'id',
   name: 'name',
   groupId: 'groupId',
-  creatorId: 'creatorId'
+  creatorId: 'creatorId',
+  processFolderId: 'processFolderId'
 } as const
 
 export type ProcessOrderByRelevanceFieldEnum = (typeof ProcessOrderByRelevanceFieldEnum)[keyof typeof ProcessOrderByRelevanceFieldEnum]
@@ -3521,6 +3610,16 @@ export const FolderOrderByRelevanceFieldEnum = {
 } as const
 
 export type FolderOrderByRelevanceFieldEnum = (typeof FolderOrderByRelevanceFieldEnum)[keyof typeof FolderOrderByRelevanceFieldEnum]
+
+
+export const ProcessFolderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  creatorId: 'creatorId'
+} as const
+
+export type ProcessFolderOrderByRelevanceFieldEnum = (typeof ProcessFolderOrderByRelevanceFieldEnum)[keyof typeof ProcessFolderOrderByRelevanceFieldEnum]
 
 
 export const FormOrderByRelevanceFieldEnum = {
@@ -4114,6 +4213,7 @@ export type GlobalOmitConfig = {
   process?: Prisma.ProcessOmit
   processRole?: Prisma.ProcessRoleOmit
   folder?: Prisma.FolderOmit
+  processFolder?: Prisma.ProcessFolderOmit
   form?: Prisma.FormOmit
   formResponse?: Prisma.FormResponseOmit
   processForm?: Prisma.ProcessFormOmit
