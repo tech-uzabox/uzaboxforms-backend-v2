@@ -6,6 +6,7 @@ import {
 import { Form, Prisma } from 'db/client';
 import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
+import { WidgetService } from '../widget/widget.service';
 import { CreateFormDto } from './dto/create-form.dto';
 import { MoveFormDto } from './dto/move-form.dto';
 
@@ -14,6 +15,7 @@ export class FormService {
   constructor(
     private prisma: PrismaService,
     private auditLogService: AuditLogService,
+    private widgetService: WidgetService,
   ) {}
 
   async create(data: CreateFormDto): Promise<Form> {
@@ -68,6 +70,20 @@ export class FormService {
       status: 'SUCCESS',
       details: { name: updatedForm.name, changes: data },
     });
+
+    // Invalidate widget caches for the updated form
+    setImmediate(async () => {
+      try {
+        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([id]);
+        if (affectedWidgets.length > 0) {
+          const widgetIds = affectedWidgets.map(w => w.id);
+          await this.widgetService.invalidateWidgetCaches(widgetIds);
+        }
+      } catch (error) {
+        console.error('Failed to invalidate widget caches after form update:', error);
+      }
+    });
+
     return updatedForm;
   }
 
@@ -203,6 +219,19 @@ export class FormService {
         },
       });
 
+      // Invalidate widget caches for the deleted form (additional safety net)
+      setImmediate(async () => {
+        try {
+          const affectedWidgets = await this.widgetService.findWidgetsByFormIds([id]);
+          if (affectedWidgets.length > 0) {
+            const widgetIds = affectedWidgets.map(w => w.id);
+            await this.widgetService.invalidateWidgetCaches(widgetIds);
+          }
+        } catch (error) {
+          console.error('Failed to invalidate widget caches after fullDelete:', error);
+        }
+      });
+
       return {
         success: true,
         message: `Form "${form.name}" and all associated data deleted successfully`,
@@ -268,6 +297,7 @@ export class FormService {
       await tx.applicantProcess.deleteMany({
         where: { processId },
       });
+
       // Log the delete action
       await this.auditLogService.log({
         userId,
@@ -281,6 +311,19 @@ export class FormService {
           formId,
           processId,
         },
+      });
+
+      // Invalidate widget caches for the affected form
+      setImmediate(async () => {
+        try {
+          const affectedWidgets = await this.widgetService.findWidgetsByFormIds([formId]);
+          if (affectedWidgets.length > 0) {
+            const widgetIds = affectedWidgets.map(w => w.id);
+            await this.widgetService.invalidateWidgetCaches(widgetIds);
+          }
+        } catch (error) {
+          console.error('Failed to invalidate widget caches after deleteFormProcessData:', error);
+        }
       });
 
       return {

@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { PrismaService } from '../db/prisma.service';
 import {
   processCalendarHeatmapWidget,
@@ -23,16 +25,28 @@ import { computeSortedGroupKeys, groupResponses } from './utils/grouping.utils';
 
 @Injectable()
 export class WidgetDataService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+  ) {}
 
   /**
-   * Core data aggregation function for widgets
-   */
+    * Core data aggregation function for widgets
+    */
   async getWidgetData(
     widgetId: string,
     currentUserId?: string,
   ): Promise<WidgetDataPayload> {
+
+    const cacheKey = `widget-data:${widgetId}`;
+
     try {
+      // Try to get from cache first
+      const cachedData = await this.cacheManager.get<WidgetDataPayload>(cacheKey);
+      if (cachedData) {
+        return cachedData;
+      }
+
       const widget = await this.prisma.widget.findUnique({
         where: { id: widgetId },
         include: { dashboard: true },
@@ -42,7 +56,12 @@ export class WidgetDataService {
         throw new Error('Widget not found');
       }
 
-      return this.processWidgetData(widget);
+      const data = await this.processWidgetData(widget);
+
+      // Cache the result for 1 hour (3600000 ms)
+      await this.cacheManager.set(cacheKey, data, 3600000);
+
+      return data;
     } catch (error) {
       console.error('Error in getWidgetData:', error);
       return {
@@ -58,13 +77,21 @@ export class WidgetDataService {
   }
 
   /**
-   * Core data aggregation function for sandbox widgets
-   */
+    * Core data aggregation function for sandbox widgets
+    */
   async getWidgetSandboxData(
     widgetId: string,
     currentUserId?: string,
   ): Promise<WidgetDataPayload> {
+    const cacheKey = `widget-sandbox-data:${widgetId}`;
+
     try {
+      // Try to get from cache first
+      const cachedData = await this.cacheManager.get<WidgetDataPayload>(cacheKey);
+      if (cachedData) {
+        return cachedData;
+      }
+
       const widget = await this.prisma.widgetSandbox.findFirst({
         where: { id: widgetId },
       });
@@ -73,7 +100,12 @@ export class WidgetDataService {
         throw new Error('Sandbox widget not found');
       }
 
-      return this.processWidgetData(widget);
+      const data = await this.processWidgetData(widget);
+
+      // Cache the result for 1 hour (3600000 ms)
+      await this.cacheManager.set(cacheKey, data, 3600000);
+
+      return data;
     } catch (error) {
       console.error('Error in getWidgetSandboxData:', error);
       return {
@@ -297,4 +329,18 @@ export class WidgetDataService {
   calculateAggregation = calculateAggregation;
   groupResponses = groupResponses;
   computeSortedGroupKeys = computeSortedGroupKeys;
+
+  /**
+   * Invalidate widget cache for specific widget IDs
+   */
+  async invalidateWidgetCache(widgetIds: string[]): Promise<void> {
+    const cacheKeys = widgetIds.flatMap(id => [
+      `widget-data:${id}`,
+      `widget-sandbox-data:${id}`
+    ]);
+
+    await Promise.all(
+      cacheKeys.map(key => this.cacheManager.del(key))
+    );
+  }
 }

@@ -5,9 +5,10 @@ import { FormFieldsController } from './form-fields.controller';
 import { FormFieldsService } from './form-fields.service';
 import { FormGenerationService } from './form-generation.service';
 import { ExportModule } from '../export/export.module';
+import { WidgetModule } from '../widget/widget.module';
 
 @Module({
-  imports: [ExportModule],
+  imports: [ExportModule, WidgetModule],
   providers: [FormService, FormFieldsService, FormGenerationService],
   controllers: [FormController, FormFieldsController],
   exports: [FormGenerationService]

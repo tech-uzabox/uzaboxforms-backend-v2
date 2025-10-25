@@ -12,6 +12,7 @@ import { EmailService } from '../email/email.service';
 import { ExportService } from '../export/export.service';
 import { ExportColumn } from '../export/interfaces/export.interface';
 import { NotificationService } from '../notification/notification.service';
+import { WidgetService } from '../widget/widget.service';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { DownloadApplicantProcessDto } from './dto/download-applicant-process.dto';
@@ -40,6 +41,7 @@ export class ApplicantProcessService {
     private emailService: EmailService,
     private notificationService: NotificationService,
     private exportService: ExportService,
+    private widgetService: WidgetService,
   ) {}
 
   async create(data: CreateApplicantProcessDto): Promise<ApplicantProcess> {
@@ -133,6 +135,20 @@ export class ApplicantProcessService {
       status: 'SUCCESS',
       details: { processId: newApplicantProcess.processId },
     });
+
+    // Invalidate widget caches for the affected form
+    setImmediate(async () => {
+      try {
+        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([formId]);
+        if (affectedWidgets.length > 0) {
+          const widgetIds = affectedWidgets.map(w => w.id);
+          await this.widgetService.invalidateWidgetCaches(widgetIds);
+        }
+      } catch (error) {
+        console.error('Failed to invalidate widget caches after create:', error);
+      }
+    });
+
     return newApplicantProcess;
   }
 
@@ -189,10 +205,38 @@ export class ApplicantProcessService {
       status: 'SUCCESS',
       details: { changes: data },
     });
+
+    // Invalidate widget caches for forms associated with this process
+    setImmediate(async () => {
+      try {
+        const formResponses = await this.prisma.formResponse.findMany({
+          where: { applicantProcessId: id },
+          select: { formId: true },
+        });
+        const formIds = [...new Set(formResponses.map(fr => fr.formId))];
+        if (formIds.length > 0) {
+          const affectedWidgets = await this.widgetService.findWidgetsByFormIds(formIds);
+          if (affectedWidgets.length > 0) {
+            const widgetIds = affectedWidgets.map(w => w.id);
+            await this.widgetService.invalidateWidgetCaches(widgetIds);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to invalidate widget caches after update:', error);
+      }
+    });
+
     return updatedApplicantProcess;
   }
 
   async remove(id: string): Promise<ApplicantProcess> {
+    // Get form IDs before deletion for cache invalidation
+    const formResponses = await this.prisma.formResponse.findMany({
+      where: { applicantProcessId: id },
+      select: { formId: true },
+    });
+    const formIds = [...new Set(formResponses.map(fr => fr.formId))];
+
     const deletedApplicantProcess = await this.prisma.applicantProcess.delete({
       where: { id },
     });
@@ -204,6 +248,22 @@ export class ApplicantProcessService {
       status: 'SUCCESS',
       details: { processId: deletedApplicantProcess.processId },
     });
+
+    // Invalidate widget caches for forms associated with this process
+    setImmediate(async () => {
+      try {
+        if (formIds.length > 0) {
+          const affectedWidgets = await this.widgetService.findWidgetsByFormIds(formIds);
+          if (affectedWidgets.length > 0) {
+            const widgetIds = affectedWidgets.map(w => w.id);
+            await this.widgetService.invalidateWidgetCaches(widgetIds);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to invalidate widget caches after delete:', error);
+      }
+    });
+
     return deletedApplicantProcess;
   }
 
@@ -415,6 +475,19 @@ export class ApplicantProcessService {
 
     const successful = results.filter((r) => r.success);
     const failed = results.filter((r) => !r.success);
+
+    // Invalidate widget caches for the affected form
+    setImmediate(async () => {
+      try {
+        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([formId]);
+        if (affectedWidgets.length > 0) {
+          const widgetIds = affectedWidgets.map(w => w.id);
+          await this.widgetService.invalidateWidgetCaches(widgetIds);
+        }
+      } catch (error) {
+        console.error('Failed to invalidate widget caches after bulkCreate:', error);
+      }
+    });
 
     return {
       success: true,
