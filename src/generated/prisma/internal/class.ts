@@ -22,17 +22,17 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server-v2/src/generated/prisma",
+      "value": "D:\\aurum\\work\\uzaform\\new\\ref-backend\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
-      "engineType": "client",
-      "moduleFormat": "cjs"
+      "moduleFormat": "cjs",
+      "engineType": "client"
     },
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin-arm64",
+        "value": "windows",
         "native": true
       }
     ],
@@ -40,7 +40,7 @@ const config: runtime.GetPrismaClientConfig = {
       "fullTextSearchPostgres",
       "relationJoins"
     ],
-    "sourceFilePath": "/Users/peaceishimwe/Desktop/Projecte/Uzabox/forms-v2/uzaboxforms-server-v2/prisma/schema.prisma",
+    "sourceFilePath": "D:\\aurum\\work\\uzaform\\new\\ref-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativePath": "../../../prisma",
@@ -50,7 +50,6 @@ const config: runtime.GetPrismaClientConfig = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
