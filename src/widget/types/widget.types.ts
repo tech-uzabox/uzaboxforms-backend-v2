@@ -51,7 +51,7 @@ export interface WidgetDataPayload {
   endDate?: string;
   countries?: Record<
     string,
-    { values: Record<string, unknown>; colorValue?: string }
+    { values: Record<string, unknown> | Array<Record<string, unknown>>; colorValue?: string }
   >;
   // Crosstab-specific fields
   rows?: string[];

@@ -77,6 +77,16 @@ export class WidgetService {
       status: 'SUCCESS',
       details: { title: updatedWidget.title, changes: data },
     });
+
+    // Invalidate widget cache after update
+    setImmediate(async () => {
+      try {
+        await this.invalidateWidgetCaches([id]);
+      } catch (error) {
+        console.error('Failed to invalidate widget cache after update:', error);
+      }
+    });
+
     return updatedWidget;
   }
 
@@ -89,6 +99,16 @@ export class WidgetService {
       status: 'SUCCESS',
       details: { title: deletedWidget.title },
     });
+
+    // Invalidate widget cache after removal (though widget is deleted, this clears any remaining cache entries)
+    setImmediate(async () => {
+      try {
+        await this.invalidateWidgetCaches([id]);
+      } catch (error) {
+        console.error('Failed to invalidate widget cache after removal:', error);
+      }
+    });
+
     return deletedWidget;
   }
 
@@ -210,6 +230,116 @@ export class WidgetService {
 
   async getSandboxWidgetData(widgetId: string, userId: string) {
     return this.widgetDataService.getWidgetSandboxData(widgetId, userId);
+  }
+
+  /**
+   * Invalidate widget caches for specific widget IDs
+   */
+  async invalidateWidgetCaches(widgetIds: string[]): Promise<void> {
+    await this.widgetDataService.invalidateWidgetCache(widgetIds);
+  }
+
+  /**
+   * Find widgets that use specific form IDs
+   */
+  async findWidgetsByFormIds(formIds: string[]): Promise<{ id: string; isSandbox: boolean }[]> {
+    const widgets = await this.prisma.widget.findMany({
+      where: {
+        config: {
+          path: ['forms'],
+          array_contains: formIds,
+        },
+      },
+      select: { id: true },
+    });
+
+    const sandboxWidgets = await this.prisma.widgetSandbox.findMany({
+      where: {
+        config: {
+          path: ['forms'],
+          array_contains: formIds,
+        },
+      },
+      select: { id: true },
+    });
+
+    // Also check for formIds in various widget configurations
+    const allWidgets = await this.prisma.widget.findMany({
+      select: { id: true, config: true },
+    });
+
+    const allSandboxWidgets = await this.prisma.widgetSandbox.findMany({
+      select: { id: true, config: true },
+    });
+
+    const extractFormIdsFromConfig = (config: any): string[] => {
+      const formIds: string[] = [];
+
+      if (!config) return formIds;
+
+      // Check for forms array
+      if (config.forms && Array.isArray(config.forms)) {
+        formIds.push(...config.forms);
+      }
+
+      // Check for sources (card, pie, histogram, calendar-heatmap)
+      if (config.sources && Array.isArray(config.sources)) {
+        config.sources.forEach((source: any) => {
+          if (source.formId) formIds.push(source.formId);
+        });
+      }
+
+      // Check for metrics (multi-metric, scatter, map)
+      if (config.metrics && Array.isArray(config.metrics)) {
+        config.metrics.forEach((metric: any) => {
+          if (metric.formId) formIds.push(metric.formId);
+        });
+      }
+
+      // Check for CCT configuration
+      if (config.options?.cct?.formId) {
+        formIds.push(config.options.cct.formId);
+      }
+
+      // Check for crosstab configuration
+      if (config.options?.crosstab) {
+        const cx = config.options.crosstab;
+        if (cx.row?.formId) formIds.push(cx.row.formId);
+        if (cx.column?.formId) formIds.push(cx.column.formId);
+        if (cx.value?.formId) formIds.push(cx.value.formId);
+      }
+
+      // Check for map options source
+      if (config.options?.map?.appearance?.optionsSource?.formId) {
+        formIds.push(config.options.map.appearance.optionsSource.formId);
+      }
+
+      return [...new Set(formIds)]; // Remove duplicates
+    };
+
+    // Check additional widgets that might use these formIds
+    allWidgets.forEach(widget => {
+      const configFormIds = extractFormIdsFromConfig(widget.config);
+      if (configFormIds.some(id => formIds.includes(id))) {
+        if (!widgets.some(w => w.id === widget.id)) {
+          widgets.push({ id: widget.id });
+        }
+      }
+    });
+
+    allSandboxWidgets.forEach(widget => {
+      const configFormIds = extractFormIdsFromConfig(widget.config);
+      if (configFormIds.some(id => formIds.includes(id))) {
+        if (!sandboxWidgets.some(w => w.id === widget.id)) {
+          sandboxWidgets.push({ id: widget.id });
+        }
+      }
+    });
+
+    return [
+      ...widgets.map(w => ({ id: w.id, isSandbox: false })),
+      ...sandboxWidgets.map(w => ({ id: w.id, isSandbox: true })),
+    ];
   }
 
   async createWidget(
