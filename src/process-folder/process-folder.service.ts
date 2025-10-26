@@ -43,6 +43,18 @@ export class ProcessFolderService {
         processes: {
           include: {
             group: true,
+            creator: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                photo: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
             roles: {
               include: {
                 role: true,
@@ -62,6 +74,18 @@ export class ProcessFolderService {
         processes: {
           include: {
             group: true,
+            creator: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
+                photo: true,
+                status: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
             roles: {
               include: {
                 role: true,
