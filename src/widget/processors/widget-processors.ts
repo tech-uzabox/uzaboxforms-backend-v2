@@ -932,21 +932,7 @@ function canonicalizeCountryName(input: string): string {
     .replace(/[^\p{L}\p{N} ]+/gu, '')
     .trim()
     .toLowerCase();
-  const aliases: Record<string, string> = {
-    'cote divoire': 'cote divoire',
-    'cote d ivoire': 'cote divoire',
-    'ivory coast': 'cote divoire',
-    drc: 'democratic republic of the congo',
-    'dr congo': 'democratic republic of the congo',
-    'congo kinshasa': 'democratic republic of the congo',
-    'congo brazzaville': 'republic of the congo',
-    'cape verde': 'cabo verde',
-    eswatini: 'eswatini',
-    swaziland: 'eswatini',
-    'sao tome': 'sao tome and principe',
-    'sao tome and principe': 'sao tome and principe',
-    'the gambia': 'gambia',
-  };
+  const aliases: Record<string, string> = {};
   return aliases[s] || s;
 }
 
