@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { formatInTimezone, formatDateForDisplay, formatDateTimeForDisplay } from '../utils/timezone';
 
 export class DataFormatter {
   private static readonly DEFAULT_DATE_FORMAT = 'MMM dd, yyyy';
@@ -29,7 +30,7 @@ export class DataFormatter {
 
     switch (type) {
       case 'date':
-        formattedValue = this.formatDate(value, dateFormat);
+        formattedValue = this.formatDate(value, dateFormat, options?.timezone);
         break;
       case 'number':
         formattedValue = this.formatNumber(value, floatPrecision);
@@ -51,7 +52,7 @@ export class DataFormatter {
     return formattedValue;
   }
 
-  private static formatDate(value: any, dateFormat: string): string {
+  private static formatDate(value: any, dateFormat: string, timezone?: string): string {
     try {
       let date: Date;
 
@@ -69,6 +70,28 @@ export class DataFormatter {
         }
       } else {
         return String(value);
+      }
+
+      // Use timezone-aware formatting if timezone is provided
+      if (timezone) {
+        const hasTime = date.getHours() !== 0 || date.getMinutes() !== 0 || date.getSeconds() !== 0;
+        
+        if (hasTime) {
+          return formatDateTimeForDisplay(date, timezone, {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          });
+        } else {
+          return formatDateForDisplay(date, timezone, {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+          });
+        }
       }
 
       // Check if it's a datetime (has time component) or just date

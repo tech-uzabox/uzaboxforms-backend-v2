@@ -16,6 +16,12 @@ import { WidgetService } from '../widget/widget.service';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { DownloadApplicantProcessDto } from './dto/download-applicant-process.dto';
+import { 
+  formatDateForStorage, 
+  parseStoredDate, 
+  isValidTimezone,
+  formatInTimezone 
+} from '../utils/timezone';
 
 function excelSerialToJSDate(serial: number): Date {
   const millisecondsPerDay = 86400 * 1000;
@@ -669,6 +675,12 @@ export class ApplicantProcessService {
           }
         }
 
+        // Handle timezone if specified in question
+        const timezone = question?.timezone;
+        if (timezone && isValidTimezone(timezone)) {
+          return formatDateForStorage(dateOnlyValue, timezone).split('T')[0];
+        }
+
         return dateOnlyValue.toISOString().split('T')[0];
 
       case 'DateTime':
@@ -682,6 +694,12 @@ export class ApplicantProcessService {
           if (isNaN(dateTimeValue.getTime())) {
             throw new Error(`Invalid date/time format. Use MM/DD/YYYY HH:mm`);
           }
+        }
+
+        // Handle timezone if specified in question
+        const dateTimeTimezone = question?.timezone;
+        if (dateTimeTimezone && isValidTimezone(dateTimeTimezone)) {
+          return formatDateForStorage(dateTimeValue, dateTimeTimezone);
         }
 
         return dateTimeValue.toISOString();
@@ -699,6 +717,16 @@ export class ApplicantProcessService {
           if (isNaN(start.getTime()) || isNaN(end.getTime())) {
             throw new Error(`Invalid date range format`);
           }
+          
+          // Handle timezone if specified in question
+          const dateRangeTimezone = question?.timezone;
+          if (dateRangeTimezone && isValidTimezone(dateRangeTimezone)) {
+            return {
+              startDate: formatDateForStorage(start, dateRangeTimezone).split('T')[0],
+              endDate: formatDateForStorage(end, dateRangeTimezone).split('T')[0],
+            };
+          }
+          
           return {
             startDate: start.toISOString().split('T')[0],
             endDate: end.toISOString().split('T')[0],
