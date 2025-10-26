@@ -276,7 +276,7 @@ export class FileService {
     try {
       await this.s3Client.send(
         new DeleteObjectCommand({
-          Bucket:this.bucketName,
+          Bucket: bucket,
           Key: key,
         }),
       );
@@ -311,7 +311,7 @@ export class FileService {
     key: string,
     file: Express.Multer.File,
   ): Promise<string> {
-    await this.deleteObject(this.bucketName, key);
+    await this.deleteObject(bucket, key);
     const { fileKey } = await this.uploadFile(
       file,
       bucket as 'private' | 'public',
