@@ -187,6 +187,16 @@ export const formInputTypes = [
         value: 'all-time | future-only | past-only',
         note: 'this is used to determine the date boundaries where the date will be selected from, if not sure set the value to all-time, for example date of birth should be past-only',
       },
+      useTimezone: {
+        required: false,
+        dataType: 'boolean',
+        description: 'whether to use a specific timezone for this date question',
+      },
+      timezone: {
+        required: false,
+        dataType: 'string',
+        description: 'the timezone to use for this date question (e.g., "America/New_York", "Europe/London", "UTC")',
+      },
     },
   },
   {
@@ -216,6 +226,16 @@ export const formInputTypes = [
         value: 'all-time | future-only | past-only',
         note: 'this is used to determine the date boundaries where the date will be selected from, if not sure set the value to all-time, for example date of birth should be past-only',
       },
+      useTimezone: {
+        required: false,
+        dataType: 'boolean',
+        description: 'whether to use a specific timezone for this datetime question',
+      },
+      timezone: {
+        required: false,
+        dataType: 'string',
+        description: 'the timezone to use for this datetime question (e.g., "America/New_York", "Europe/London", "UTC")',
+      },
     },
   },
   {
@@ -240,6 +260,16 @@ export const formInputTypes = [
         description:
           'whether or not the question is option, if unsure, set it to yes',
       },
+      useTimezone: {
+        required: false,
+        dataType: 'boolean',
+        description: 'whether to use a specific timezone for this date range question',
+      },
+      timezone: {
+        required: false,
+        dataType: 'string',
+        description: 'the timezone to use for this date range question (e.g., "America/New_York", "Europe/London", "UTC")',
+      },
     },
   },
   {
@@ -263,6 +293,16 @@ export const formInputTypes = [
         dataType: 'yes | no',
         description:
           'whether or not the question is option, if unsure, set it to yes',
+      },
+      useTimezone: {
+        required: false,
+        dataType: 'boolean',
+        description: 'whether to use a specific timezone for this time question',
+      },
+      timezone: {
+        required: false,
+        dataType: 'string',
+        description: 'the timezone to use for this time question (e.g., "America/New_York", "Europe/London", "UTC")',
       },
     },
   },
