@@ -70,7 +70,18 @@ export class ProcessService {
             : undefined,
       },
       include: {
-        creator: true,
+        creator: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            photo: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         processFolder: true,
         roles: {
           include: {
@@ -95,7 +106,18 @@ export class ProcessService {
     const processes = await this.prisma.process.findMany({
       include: {
         group: true,
-        creator: true,
+        creator: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            photo: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         processFolder: true,
         roles: {
           select: {
@@ -170,7 +192,18 @@ export class ProcessService {
       },
       include: {
         group: true,
-        creator: true,
+        creator: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            photo: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         processFolder: true,
         roles: {
           select: {
