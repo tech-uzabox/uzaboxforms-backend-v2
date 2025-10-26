@@ -648,8 +648,9 @@ export async function processMapWidget(
     for (const country in countryResponses) {
       const responses = countryResponses[country];
       if (responses.length > 1) {
-        // Build table rows
+        // Build table rows and remove duplicates
         const rows: Array<Record<string, unknown>> = [];
+        const seen = new Set<string>();
         for (const resp of responses) {
           const row: Record<string, unknown> = {};
           metrics.forEach((metric) => {
@@ -663,7 +664,12 @@ export async function processMapWidget(
             );
             row[label] = val;
           });
-          rows.push(row);
+          // Create a hash for deduplication
+          const rowHash = JSON.stringify(row);
+          if (!seen.has(rowHash)) {
+            seen.add(rowHash);
+            rows.push(row);
+          }
         }
         countries[country] = { values: rows };
       } else {
