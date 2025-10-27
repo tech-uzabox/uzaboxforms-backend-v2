@@ -214,7 +214,7 @@ export class FormService {
           return { form, processIds, widgetsToDelete };
         },
         {
-          timeout: 100000000000000,
+          timeout: 100000000,
         },
       );
 
@@ -324,7 +324,7 @@ export class FormService {
         return { form, process };
       },
       {
-        timeout: 100000000000000,
+        timeout: 1000000000,
       },
     );
     await this.auditLogService.log({
