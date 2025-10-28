@@ -1,5 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, UseGuards, BadRequestException, Res } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, UseInterceptors, UseGuards, BadRequestException, Res } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import * as path from 'path';
+import * as fs from 'fs';
 import { ApplicantProcessService } from './applicant-process.service';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { UpdateApplicantProcessDto } from './dto/update-applicant-process.dto';
@@ -54,8 +57,21 @@ export class ApplicantProcessController {
 
   @Post('bulk')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('excelFile', {
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  @UseInterceptors(FilesInterceptor('excelFiles', 10, {
+    storage: diskStorage({
+      destination: (req, file, cb) => {
+        const uploadDir = path.join(process.cwd(), 'uploads', 'temp');
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+        cb(null, uploadDir);
+      },
+      filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+      },
+    }),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit per file
     fileFilter: (req, file, cb) => {
       const allowedMimes = [
         'application/vnd.ms-excel',
@@ -71,15 +87,15 @@ export class ApplicantProcessController {
   }))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Bulk create applicant processes from Excel file',
+    description: 'Bulk create applicant processes from multiple Excel files',
     type: BulkCreateApplicantProcessDto,
   })
   async bulkCreate(
     @Body() bulkCreateApplicantProcessDto: BulkCreateApplicantProcessDto,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles() files: Express.Multer.File[],
     @GetUser() user: AuthenticatedUser,
   ) {
-    const result = await this.applicantProcessService.bulkCreate(bulkCreateApplicantProcessDto, file, user.id);
+    const result = await this.applicantProcessService.bulkCreate(bulkCreateApplicantProcessDto, files, user.id);
     if (!result.success) {
       throw new BadRequestException(result);
     }
