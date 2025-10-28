@@ -57,7 +57,7 @@ export class ApplicantProcessController {
 
   @Post('bulk')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FilesInterceptor('excelFiles', 10, {
+  @UseInterceptors(FilesInterceptor('excelFiles', 50, {
     storage: diskStorage({
       destination: (req, file, cb) => {
         const uploadDir = path.join(process.cwd(), 'uploads', 'temp');
