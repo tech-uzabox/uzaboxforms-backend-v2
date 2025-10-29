@@ -16,12 +16,14 @@ import { WidgetService } from '../widget/widget.service';
 import { BulkCreateApplicantProcessDto } from './dto/bulk-create-applicant-process.dto';
 import { CreateApplicantProcessDto } from './dto/create-applicant-process.dto';
 import { DownloadApplicantProcessDto } from './dto/download-applicant-process.dto';
-import { 
-  formatDateForStorage, 
-  parseStoredDate, 
+import {
+  formatDateForStorage,
+  parseStoredDate,
   isValidTimezone,
-  formatInTimezone 
+  formatInTimezone
 } from '../utils/timezone';
+import * as fs from 'fs';
+import * as path from 'path';
 
 function excelSerialToJSDate(serial: number): Date {
   const millisecondsPerDay = 86400 * 1000;
@@ -336,13 +338,13 @@ export class ApplicantProcessService {
 
   async bulkCreate(
     data: BulkCreateApplicantProcessDto,
-    file: Express.Multer.File,
+    files: Express.Multer.File[],
     userId: string,
   ): Promise<any> {
     const { processId, formId, nextStaffId } = data;
 
-    if (!file) {
-      throw new BadRequestException('Excel file is required');
+    if (!files || files.length === 0) {
+      throw new BadRequestException('At least one Excel file is required');
     }
 
     if (!processId || !formId) {
@@ -362,125 +364,193 @@ export class ApplicantProcessService {
       throw new BadRequestException('Form design not found or invalid');
     }
 
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(file.buffer as any);
-    const worksheet = workbook.worksheets[0];
-
-    if (!worksheet) {
-      throw new BadRequestException(
-        'Excel file must contain at least one worksheet',
-      );
-    }
-
-    const jsonData: any[][] = [];
-    worksheet.eachRow((row, rowNumber) => {
-      if (rowNumber > 1) {
-        const rowData: any[] = [];
-        row.eachCell((cell) => {
-          rowData.push(cell.value);
-        });
-        jsonData.push(rowData);
-      }
-    });
-
-    if (jsonData.length === 0) {
-      throw new BadRequestException(
-        'Excel file must contain at least a header row and one data row',
-      );
-    }
-
-    const headers: string[] = [];
-    worksheet.getRow(1).eachCell((cell) => {
-      headers.push(cell.value?.toString() || '');
-    });
-
-    // Validate that headers are not empty and contain question labels
-    const emptyHeaders = headers.filter(header => !header || header.trim() === '');
-    if (emptyHeaders.length > 0) {
-      throw new BadRequestException(
-        'Excel file headers (first row) cannot be empty. Please ensure all column headers contain question labels.',
-      );
-    }
-
-    const errors: Array<{
+    const allResults: any[] = [];
+    const allErrors: Array<{
+      file: string;
       row: number;
       column: string;
       error: string;
       suggestion?: string;
     }> = [];
-    const validSubmissions: any[] = [];
 
-    for (let i = 0; i < jsonData.length; i++) {
-      const row = jsonData[i];
-      const rowNumber = i + 2;
-
+    for (const file of files) {
       try {
-        const submissionData = await this.validateAndParseRow(
-          headers,
-          row,
-          formDesign,
-          rowNumber,
-        );
-        if (submissionData.errors.length > 0) {
-          errors.push(...submissionData.errors);
-        } else {
-          validSubmissions.push({
-            rowNumber,
-            responses: submissionData.responses,
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(fs.readFileSync(file.path) as any);
+        const worksheet = workbook.worksheets[0];
+
+        if (!worksheet) {
+          allErrors.push({
+            file: file.originalname,
+            row: 0,
+            column: 'General',
+            error: 'Excel file must contain at least one worksheet',
+          });
+          continue;
+        }
+
+        const jsonData: any[][] = [];
+        worksheet.eachRow((row, rowNumber) => {
+          if (rowNumber > 1) {
+            const rowData: any[] = [];
+            row.eachCell((cell) => {
+              rowData.push(cell.value);
+            });
+            jsonData.push(rowData);
+          }
+        });
+
+        if (jsonData.length === 0) {
+          allErrors.push({
+            file: file.originalname,
+            row: 0,
+            column: 'General',
+            error: 'Excel file must contain at least a header row and one data row',
+          });
+          continue;
+        }
+
+        const headers: string[] = [];
+        worksheet.getRow(1).eachCell((cell) => {
+          headers.push(cell.value?.toString() || '');
+        });
+
+        // Validate that headers are not empty and contain question labels
+        const emptyHeaders = headers.filter(header => !header || header.trim() === '');
+        if (emptyHeaders.length > 0) {
+          allErrors.push({
+            file: file.originalname,
+            row: 0,
+            column: 'Headers',
+            error: 'Excel file headers (first row) cannot be empty. Please ensure all column headers contain question labels.',
+          });
+          continue;
+        }
+
+        const fileErrors: Array<{
+          file: string;
+          row: number;
+          column: string;
+          error: string;
+          suggestion?: string;
+        }> = [];
+        const validSubmissions: any[] = [];
+
+        for (let i = 0; i < jsonData.length; i++) {
+          const row = jsonData[i];
+          const rowNumber = i + 2;
+
+          try {
+            const submissionData = await this.validateAndParseRow(
+              headers,
+              row,
+              formDesign,
+              rowNumber,
+            );
+            if (submissionData.errors.length > 0) {
+              fileErrors.push(...submissionData.errors.map(err => ({
+                ...err,
+                file: file.originalname,
+              } as any)));
+            } else {
+              validSubmissions.push({
+                rowNumber,
+                responses: submissionData.responses,
+              });
+            }
+          } catch (error) {
+            fileErrors.push({
+              row: rowNumber,
+              column: 'General',
+              error: error instanceof Error ? error.message : 'Unknown error',
+              suggestion: 'Check the row data format',
+              file: file.originalname,
+            });
+          }
+        }
+
+        allErrors.push(...fileErrors);
+
+        if (fileErrors.length === 0) {
+          const results: Array<{
+            rowNumber: number;
+            success: boolean;
+            applicantProcessId?: string;
+            error?: string;
+          }> = [];
+          for (const submission of validSubmissions) {
+            try {
+              const result = await this.createSingleApplicantProcess({
+                applicantId: userId,
+                processId,
+                formId,
+                nextStaffId,
+                responses: submission.responses,
+              });
+              results.push({
+                rowNumber: submission.rowNumber,
+                success: true,
+                applicantProcessId: result.applicantProcessId,
+              });
+            } catch (error) {
+              results.push({
+                rowNumber: submission.rowNumber,
+                success: false,
+                error: error instanceof Error ? error.message : 'Unknown error',
+              });
+            }
+          }
+
+          allResults.push({
+            file: file.originalname,
+            results,
           });
         }
       } catch (error) {
-        errors.push({
-          row: rowNumber,
+        allErrors.push({
+          file: file.originalname,
+          row: 0,
           column: 'General',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          suggestion: 'Check the row data format',
+          error: error instanceof Error ? error.message : 'Failed to process file',
         });
+      } finally {
+        // Clean up the uploaded file
+        try {
+          if (fs.existsSync(file.path)) {
+            fs.unlinkSync(file.path);
+          }
+        } catch (cleanupError) {
+          console.error('Failed to cleanup file:', file.path, cleanupError);
+        }
       }
     }
 
-    if (errors.length > 0) {
+    // Clean up the uploads/temp directory if empty
+    try {
+      const tempDir = path.join(process.cwd(), 'uploads', 'temp');
+      const filesInTemp = fs.readdirSync(tempDir);
+      if (filesInTemp.length === 0) {
+        fs.rmdirSync(tempDir);
+      }
+    } catch (cleanupError) {
+      console.error('Failed to cleanup temp directory:', cleanupError);
+    }
+
+    if (allErrors.length > 0) {
       return {
         success: false,
-        message: 'Validation errors found in Excel file',
-        errors,
-        totalRows: jsonData.length,
-        validRows: validSubmissions.length,
-        errorRows: errors.length,
+        message: 'Validation errors found in Excel files',
+        errors: allErrors,
+        totalFiles: files.length,
+        processedFiles: allResults.length,
+        errorFiles: allErrors.length,
       };
     }
 
-    const results: Array<{
-      rowNumber: number;
-      success: boolean;
-      applicantProcessId?: string;
-      error?: string;
-    }> = [];
-    for (const submission of validSubmissions) {
-      try {
-        const result = await this.createSingleApplicantProcess({
-          applicantId: userId,
-          processId,
-          formId,
-          nextStaffId,
-          responses: submission.responses,
-        });
-        results.push({
-          rowNumber: submission.rowNumber,
-          success: true,
-          applicantProcessId: result.applicantProcessId,
-        });
-      } catch (error) {
-        results.push({
-          rowNumber: submission.rowNumber,
-          success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        });
-      }
-    }
-
-    const successful = results.filter((r) => r.success);
-    const failed = results.filter((r) => !r.success);
+    const totalSuccessful = allResults.reduce((sum, fileResult) =>
+      sum + fileResult.results.filter(r => r.success).length, 0);
+    const totalFailed = allResults.reduce((sum, fileResult) =>
+      sum + fileResult.results.filter(r => !r.success).length, 0);
 
     // Invalidate widget caches for the affected form
     setImmediate(async () => {
@@ -497,12 +567,14 @@ export class ApplicantProcessService {
 
     return {
       success: true,
-      message: `Bulk submission completed. ${successful.length} successful, ${failed.length} failed.`,
+      message: `Bulk submission completed. ${totalSuccessful} successful, ${totalFailed} failed across ${allResults.length} files.`,
       results: {
-        total: validSubmissions.length,
-        successful: successful.length,
-        failed: failed.length,
-        details: results,
+        totalFiles: files.length,
+        processedFiles: allResults.length,
+        totalSubmissions: totalSuccessful + totalFailed,
+        successful: totalSuccessful,
+        failed: totalFailed,
+        fileDetails: allResults,
       },
     };
   }
@@ -717,7 +789,7 @@ export class ApplicantProcessService {
           if (isNaN(start.getTime()) || isNaN(end.getTime())) {
             throw new Error(`Invalid date range format`);
           }
-          
+
           // Handle timezone if specified in question
           const dateRangeTimezone = question?.timezone;
           if (dateRangeTimezone && isValidTimezone(dateRangeTimezone)) {
@@ -726,7 +798,7 @@ export class ApplicantProcessService {
               endDate: formatDateForStorage(end, dateRangeTimezone).split('T')[0],
             };
           }
-          
+
           return {
             startDate: start.toISOString().split('T')[0],
             endDate: end.toISOString().split('T')[0],

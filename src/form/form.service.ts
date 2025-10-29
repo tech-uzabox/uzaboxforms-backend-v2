@@ -74,13 +74,18 @@ export class FormService {
     // Invalidate widget caches for the updated form
     setImmediate(async () => {
       try {
-        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([id]);
+        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([
+          id,
+        ]);
         if (affectedWidgets.length > 0) {
-          const widgetIds = affectedWidgets.map(w => w.id);
+          const widgetIds = affectedWidgets.map((w) => w.id);
           await this.widgetService.invalidateWidgetCaches(widgetIds);
         }
       } catch (error) {
-        console.error('Failed to invalidate widget caches after form update:', error);
+        console.error(
+          'Failed to invalidate widget caches after form update:',
+          error,
+        );
       }
     });
 
@@ -100,41 +105,183 @@ export class FormService {
     return deletedForm;
   }
 
-  async fullDelete(id: string, userId: string): Promise<{ success: boolean; message: string }> {
-    return await this.prisma.$transaction(async (tx) => {
-      // Find the form and all related processes
-      const form = await tx.form.findUnique({
-        where: { id },
-        include: {
-          processForms: {
+  async fullDelete(
+    id: string,
+    userId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    const { form, processIds, widgetsToDelete } =
+      await this.prisma.$transaction(
+        async (tx) => {
+          // Find the forresum and all related processes
+          const form = await tx.form.findUnique({
+            where: { id },
             include: {
-              process: {
+              processForms: {
                 include: {
-                  applicantProcesses: {
+                  process: {
                     include: {
-                      responses: true,
-                      completedForms: true,
-                      processedApplications: true,
-                      comments: true,
+                      applicantProcesses: {
+                        include: {
+                          responses: true,
+                          completedForms: true,
+                          processedApplications: true,
+                          comments: true,
+                        },
+                      },
                     },
                   },
                 },
               },
             },
-          },
+          });
+
+          if (!form) {
+            throw new NotFoundException(`Form with ID ${id} not found`);
+          }
+
+          // Collect all process IDs that have this form
+          const processIds = form.processForms.map((pf) => pf.processId);
+
+          // Delete all related data in the correct order (respecting foreign key constraints)
+          for (const processId of processIds) {
+            // Delete process comments
+            await tx.processComment.deleteMany({
+              where: {
+                applicantProcess: {
+                  processId,
+                },
+              },
+            });
+
+            // Delete processed applications
+            await tx.processedApplication.deleteMany({
+              where: { processId },
+            });
+
+            // Delete AP completed forms
+            await tx.aPCompletedForm.deleteMany({
+              where: {
+                applicantProcess: {
+                  processId,
+                },
+              },
+            });
+
+            // Delete form responses
+            await tx.formResponse.deleteMany({
+              where: { processId },
+            });
+
+            // Delete applicant processes
+            await tx.applicantProcess.deleteMany({
+              where: { processId },
+            });
+
+            // Delete process forms
+            await tx.processForm.deleteMany({
+              where: { processId },
+            });
+
+            // Delete process roles
+            await tx.processRole.deleteMany({
+              where: { processId },
+            });
+
+            // Delete the process itself
+            await tx.process.delete({
+              where: { id: processId },
+            });
+          }
+
+          // Delete widgets that depend on this form
+          console.log('Finding widgets that depend on form:', id);
+          const widgetsToDelete = await tx.widget.findMany({
+            where: {
+              config: {
+                path: ['metrics'],
+                array_contains: [{ formId: id }],
+              },
+            },
+          });
+          console.log('Found widgets to delete:', widgetsToDelete.length);
+
+          for (const widget of widgetsToDelete) {
+            await tx.widget.delete({ where: { id: widget.id } });
+          }
+
+          // Delete the form
+          await tx.form.delete({ where: { id } });
+          return { form, processIds, widgetsToDelete };
         },
-      });
+        {
+          timeout: 100000000,
+        },
+      );
 
-      if (!form) {
-        throw new NotFoundException(`Form with ID ${id} not found`);
+    // Log the full delete action
+    await this.auditLogService.log({
+      userId,
+      action: 'FORM_FULL_DELETED',
+      resource: 'Form',
+      resourceId: id,
+      status: 'SUCCESS',
+      details: {
+        formName: form.name,
+        deletedProcesses: processIds.length,
+        deletedApplicantProcesses: form.processForms.reduce(
+          (acc, pf) => acc + pf.process.applicantProcesses.length,
+          0,
+        ),
+        deletedWidgets: widgetsToDelete.length,
+      },
+    });
+
+    // Invalidate widget caches for the deleted form (additional safety net)
+    setImmediate(async () => {
+      try {
+        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([
+          id,
+        ]);
+        if (affectedWidgets.length > 0) {
+          const widgetIds = affectedWidgets.map((w) => w.id);
+          await this.widgetService.invalidateWidgetCaches(widgetIds);
+        }
+      } catch (error) {
+        console.error(
+          'Failed to invalidate widget caches after fullDelete:',
+          error,
+        );
       }
+    });
 
-      // Collect all process IDs that have this form
-      const processIds = form.processForms.map(pf => pf.processId);
+    return {
+      success: true,
+      message: `Form "${form.name}" and all associated data deleted successfully`,
+    };
+  }
 
-      // Delete all related data in the correct order (respecting foreign key constraints)
-      for (const processId of processIds) {
-        // Delete process comments
+  async deleteFormProcessData(
+    data: { processId: string; formId: string },
+    userId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    const { processId, formId } = data;
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        // Verify form and process exist
+        const form = await tx.form.findUnique({ where: { id: formId } });
+        if (!form) {
+          throw new NotFoundException(`Form with ID ${formId} not found`);
+        }
+
+        const process = await tx.process.findUnique({
+          where: { id: processId },
+        });
+        if (!process) {
+          throw new NotFoundException(`Process with ID ${processId} not found`);
+        }
+
+        // Delete all related data for this form in this process
+        // Delete process comments for applicant processes in this process
         await tx.processComment.deleteMany({
           where: {
             applicantProcess: {
@@ -143,194 +290,76 @@ export class FormService {
           },
         });
 
-        // Delete processed applications
+        // Delete processed applications for this form and process
         await tx.processedApplication.deleteMany({
-          where: { processId },
+          where: {
+            processId,
+            formId,
+          },
         });
 
-        // Delete AP completed forms
+        // Delete AP completed forms for this form in this process
         await tx.aPCompletedForm.deleteMany({
           where: {
             applicantProcess: {
               processId,
             },
+            formId,
           },
         });
 
-        // Delete form responses
+        // Delete form responses for this form and process
         await tx.formResponse.deleteMany({
-          where: { processId },
+          where: {
+            processId,
+            formId,
+          },
         });
 
-        // Delete applicant processes
+        // Delete applicant processes for this process
         await tx.applicantProcess.deleteMany({
           where: { processId },
         });
 
-        // Delete process forms
-        await tx.processForm.deleteMany({
-          where: { processId },
-        });
-
-        // Delete process roles
-        await tx.processRole.deleteMany({
-          where: { processId },
-        });
-
-        // Delete the process itself
-        await tx.process.delete({
-          where: { id: processId },
-        });
-      }
-
-      // Delete widgets that depend on this form
-      console.log('Finding widgets that depend on form:', id);
-      const widgetsToDelete = await tx.widget.findMany({
-        where: {
-          config: {
-            path: ['metrics'],
-            array_contains: [{ formId: id }],
-          },
-        },
-      });
-      console.log('Found widgets to delete:', widgetsToDelete.length);
-
-
-      for (const widget of widgetsToDelete) {
-        await tx.widget.delete({ where: { id: widget.id } });
-      }
-
-
-      // Delete the form
-      await tx.form.delete({ where: { id } });
-
-      // Log the full delete action
-      await this.auditLogService.log({
-        userId,
-        action: 'FORM_FULL_DELETED',
-        resource: 'Form',
-        resourceId: id,
-        status: 'SUCCESS',
-        details: {
-          formName: form.name,
-          deletedProcesses: processIds.length,
-          deletedApplicantProcesses: form.processForms.reduce((acc, pf) => acc + pf.process.applicantProcesses.length, 0),
-          deletedWidgets: widgetsToDelete.length,
-        },
-      });
-
-      // Invalidate widget caches for the deleted form (additional safety net)
-      setImmediate(async () => {
-        try {
-          const affectedWidgets = await this.widgetService.findWidgetsByFormIds([id]);
-          if (affectedWidgets.length > 0) {
-            const widgetIds = affectedWidgets.map(w => w.id);
-            await this.widgetService.invalidateWidgetCaches(widgetIds);
-          }
-        } catch (error) {
-          console.error('Failed to invalidate widget caches after fullDelete:', error);
-        }
-      });
-
-      return {
-        success: true,
-        message: `Form "${form.name}" and all associated data deleted successfully`,
-      };
+        return { form, process };
+      },
+      {
+        timeout: 1000000000,
+      },
+    );
+    await this.auditLogService.log({
+      userId,
+      action: 'FORM_PROCESS_DATA_DELETED',
+      resource: 'FormProcessData',
+      resourceId: `${formId}-${processId}`,
+      status: 'SUCCESS',
+      details: {
+        formName: result.form.name,
+        processName: result.process.name,
+        formId,
+        processId,
+      },
     });
-  }
 
-  async deleteFormProcessData(
-    data: { processId: string; formId: string },
-    userId: string
-  ): Promise<{ success: boolean; message: string }> {
-    return await this.prisma.$transaction(async (tx) => {
-      const { processId, formId } = data;
-
-      // Verify form and process exist
-      const form = await tx.form.findUnique({ where: { id: formId } });
-      if (!form) {
-        throw new NotFoundException(`Form with ID ${formId} not found`);
-      }
-
-      const process = await tx.process.findUnique({ where: { id: processId } });
-      if (!process) {
-        throw new NotFoundException(`Process with ID ${processId} not found`);
-      }
-
-      // Delete all related data for this form in this process
-      // Delete process comments for applicant processes in this process
-      await tx.processComment.deleteMany({
-        where: {
-          applicantProcess: {
-            processId,
-          },
-        },
-      });
-
-      // Delete processed applications for this form and process
-      await tx.processedApplication.deleteMany({
-        where: {
-          processId,
+    // ✅ Run cache invalidation outside transaction
+    setImmediate(async () => {
+      try {
+        const affectedWidgets = await this.widgetService.findWidgetsByFormIds([
           formId,
-        },
-      });
-
-      // Delete AP completed forms for this form in this process
-      await tx.aPCompletedForm.deleteMany({
-        where: {
-          applicantProcess: {
-            processId,
-          },
-          formId,
-        },
-      });
-
-      // Delete form responses for this form and process
-      await tx.formResponse.deleteMany({
-        where: {
-          processId,
-          formId,
-        },
-      });
-
-      // Delete applicant processes for this process
-      await tx.applicantProcess.deleteMany({
-        where: { processId },
-      });
-
-      // Log the delete action
-      await this.auditLogService.log({
-        userId,
-        action: 'FORM_PROCESS_DATA_DELETED',
-        resource: 'FormProcessData',
-        resourceId: `${formId}-${processId}`,
-        status: 'SUCCESS',
-        details: {
-          formName: form.name,
-          processName: process.name,
-          formId,
-          processId,
-        },
-      });
-
-      // Invalidate widget caches for the affected form
-      setImmediate(async () => {
-        try {
-          const affectedWidgets = await this.widgetService.findWidgetsByFormIds([formId]);
-          if (affectedWidgets.length > 0) {
-            const widgetIds = affectedWidgets.map(w => w.id);
-            await this.widgetService.invalidateWidgetCaches(widgetIds);
-          }
-        } catch (error) {
-          console.error('Failed to invalidate widget caches after deleteFormProcessData:', error);
+        ]);
+        if (affectedWidgets.length > 0) {
+          const widgetIds = affectedWidgets.map((w) => w.id);
+          await this.widgetService.invalidateWidgetCaches(widgetIds);
         }
-      });
-
-      return {
-        success: true,
-        message: `All data for form "${form.name}" in process "${process.name}" deleted successfully`,
-      };
+      } catch (error) {
+        console.error('Failed to invalidate widget caches:', error);
+      }
     });
+
+    return {
+      success: true,
+      message: `All data for form "${result.form.name}" in process "${result.process.name}" deleted successfully`,
+    };
   }
 
   async moveForm(data: MoveFormDto): Promise<Form> {
@@ -352,7 +381,9 @@ export class FormService {
     });
 
     if (!targetFolder) {
-      throw new NotFoundException(`Target folder with ID ${targetFolderId} not found.`);
+      throw new NotFoundException(
+        `Target folder with ID ${targetFolderId} not found.`,
+      );
     }
 
     // Update the form's folder
