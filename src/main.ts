@@ -11,6 +11,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AuditLogInterceptor } from './audit-log/audit-log.interceptor';
 import { AuditLogService } from './audit-log/audit-log.service';
+import { JwtService } from '@nestjs/jwt';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -33,7 +34,8 @@ async function bootstrap() {
   });
   // Register global audit interceptor for mutating routes
   const auditLogService = app.get(AuditLogService);
-  app.useGlobalInterceptors(new AuditLogInterceptor(auditLogService));
+  const jwtService = app.get(JwtService);
+  app.useGlobalInterceptors(new AuditLogInterceptor(auditLogService, jwtService));
 
   const openApiDoc = SwaggerModule.createDocument(
     app,

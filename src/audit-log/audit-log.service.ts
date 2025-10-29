@@ -6,6 +6,7 @@ import {
 import { AuditLog, Prisma } from 'db/client';
 
 import { PrismaService } from '../db/prisma.service';
+import { RequestContext } from '../utils/request-context';
 import { AuditLogQueryDto } from './dto/audit-log-query.dto';
 
 export interface AuditLogEntry {
@@ -26,9 +27,10 @@ export class AuditLogService {
 
   async log(entry: AuditLogEntry): Promise<void> {
     try {
+      const fallbackUserId = RequestContext.getUserId();
       await this.prisma.auditLog.create({
         data: {
-          userId: entry.userId,
+          userId: entry.userId || fallbackUserId,
           action: entry.action,
           resource: entry.resource,
           resourceId: entry.resourceId,
@@ -132,6 +134,16 @@ export class AuditLogService {
         skip,
         take: limit,
         orderBy: { [sortBy]: sortOrder },
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       });
       const count = await this.prisma.auditLog.count({ where });
 

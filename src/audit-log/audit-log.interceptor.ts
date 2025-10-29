@@ -4,12 +4,19 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Observable, catchError, tap, throwError } from 'rxjs';
 import { AuditLogService } from './audit-log.service';
+import { RequestContext } from '../utils/request-context';
 
 @Injectable()
 export class AuditLogInterceptor implements NestInterceptor {
-  constructor(private readonly auditLogService: AuditLogService) {}
+  constructor(
+    private readonly auditLogService: AuditLogService,
+    private readonly jwtService: JwtService,
+  ) {}
+  private readonly logger = new Logger(AuditLogInterceptor.name);
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const http = context.switchToHttp();
@@ -18,11 +25,32 @@ export class AuditLogInterceptor implements NestInterceptor {
 
     // Only log mutating requests by default
     const shouldLog = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method);
-    if (!shouldLog) {
-      return next.handle();
-    }
 
-    const userId: string | undefined = request.user?.id;
+    let userId: string | undefined = request.user?.id;
+    // Fallback: try to decode bearer token if guard didn't attach user
+    if (!userId) {
+      const authHeader: string | undefined = request.headers?.authorization;
+      const token = typeof authHeader === 'string' && authHeader.startsWith('Bearer ')
+        ? authHeader.slice(7)
+        : undefined;
+      // Try cookies if header missing
+      const cookieToken = request.cookies?.accessToken || request.cookies?.token || request.cookies?.Authorization;
+      if (token) {
+        try {
+          const decoded: any = this.jwtService.decode(token);
+          if (decoded && typeof decoded === 'object' && decoded.sub) {
+            userId = decoded.sub as string;
+          }
+        } catch {}
+      } else if (cookieToken) {
+        try {
+          const decoded: any = this.jwtService.decode(cookieToken);
+          if (decoded && typeof decoded === 'object' && decoded.sub) {
+            userId = decoded.sub as string;
+          }
+        } catch {}
+      }
+    }
     const fullPath: string = (request.originalUrl || request.url || '') as string;
     // Normalize path: /api/v1/<resource>/...
     const resource = this.extractResourceFromPath(fullPath);
@@ -33,32 +61,37 @@ export class AuditLogInterceptor implements NestInterceptor {
       return next.handle();
     }
     const action = this.generateAction(method, resource);
+    // debug removed
     const details = this.buildDetails(request);
 
     const start = Date.now();
 
-    return next.handle().pipe(
-      tap(async () => {
-        await this.auditLogService.log({
-          userId,
-          action,
-          resource,
-          status: 'SUCCESS',
-          details: { ...details, path: fullPath, durationMs: Date.now() - start },
-        });
-      }),
-      catchError((err) => {
-        // Log failure
-        void this.auditLogService.log({
-          userId,
-          action,
-          resource,
-          status: 'FAILURE',
-          errorMessage: err?.message || 'Unknown error',
-          details: { ...details, path: fullPath, durationMs: Date.now() - start },
-        });
-        return throwError(() => err);
-      }),
+    return RequestContext.run({ userId }, () =>
+      next.handle().pipe(
+        tap(async () => {
+          if (!shouldLog) return;
+          await this.auditLogService.log({
+            userId,
+            action,
+            resource,
+            status: 'SUCCESS',
+            details: { ...details, path: fullPath, durationMs: Date.now() - start },
+          });
+        }),
+        catchError((err) => {
+          if (shouldLog) {
+            void this.auditLogService.log({
+              userId,
+              action,
+              resource,
+              status: 'FAILURE',
+              errorMessage: err?.message || 'Unknown error',
+              details: { ...details, path: fullPath, durationMs: Date.now() - start },
+            });
+          }
+          return throwError(() => err);
+        }),
+      )
     );
   }
 
