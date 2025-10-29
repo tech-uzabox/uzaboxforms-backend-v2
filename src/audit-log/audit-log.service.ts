@@ -90,18 +90,40 @@ export class AuditLogService {
       };
     }
     if (search) {
-      where.OR = [
-        { action: { contains: search, mode: 'insensitive' } },
-        { resource: { contains: search, mode: 'insensitive' } },
-        { resourceId: { contains: search, mode: 'insensitive' } },
-        { errorMessage: { contains: search, mode: 'insensitive' } },
-        // Search in user fields
-        { user: { email: { contains: search, mode: 'insensitive' } } },
-        { user: { firstName: { contains: search, mode: 'insensitive' } } },
-        { user: { lastName: { contains: search, mode: 'insensitive' } } },
-        // Search JSON details stringified (fallback):
-        { details: { equals: search as any } },
+      const norm = String(search).trim();
+      const normUnderscoreUpper = norm.replace(/\s+/g, '_').toUpperCase();
+      const statusCandidates: string[] = [];
+      const lower = norm.toLowerCase();
+      if (['success', 'succès', 'succes'].includes(lower)) statusCandidates.push('SUCCESS');
+      if (['failure', 'failed', 'échec', 'echec', 'error'].includes(lower)) statusCandidates.push('FAILURE');
+
+      const or: Prisma.AuditLogWhereInput[] = [
+        { action: { contains: norm, mode: 'insensitive' } },
+        { action: { contains: normUnderscoreUpper, mode: 'insensitive' } },
+        { resource: { contains: norm, mode: 'insensitive' } },
+        { resourceId: { contains: norm, mode: 'insensitive' } },
+        { errorMessage: { contains: norm, mode: 'insensitive' } },
+        { user: { email: { contains: norm, mode: 'insensitive' } } },
+        { user: { firstName: { contains: norm, mode: 'insensitive' } } },
+        { user: { lastName: { contains: norm, mode: 'insensitive' } } },
       ];
+
+      // Status text mapping
+      if (statusCandidates.length > 0) {
+        or.push({ status: { in: statusCandidates as any } } as any);
+      }
+
+      // Date-like search: if parseable, match same-day window
+      const d = new Date(norm);
+      if (!isNaN(d.getTime())) {
+        const start = new Date(d);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(d);
+        end.setHours(23, 59, 59, 999);
+        or.push({ timestamp: { gte: start, lte: end } } as any);
+      }
+
+      where.OR = or;
     }
 
     try {

@@ -100,17 +100,7 @@ export class AuthService {
           lockedUntil: null,
         });
       }
-      
-      await this.auditLogService.log({
-        userId: user.id,
-        action: 'LOGIN_ATTEMPT_SUCCESS',
-        resource: 'Auth',
-        status: 'SUCCESS',
-        details: {
-          email: user.email,
-        },
-      });
-      
+      // Note: We log the definitive login event in login(), not here, to avoid duplicates
       return user;
     } else {
       // Increment failed attempts

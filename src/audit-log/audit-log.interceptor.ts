@@ -23,9 +23,15 @@ export class AuditLogInterceptor implements NestInterceptor {
     }
 
     const userId: string | undefined = request.user?.id;
-    const path: string = request.route?.path || request.url || '';
-    const controllerBase: string = request.baseUrl || '';
-    const resource = this.extractResource(controllerBase);
+    const fullPath: string = (request.originalUrl || request.url || '') as string;
+    // Normalize path: /api/v1/<resource>/...
+    const resource = this.extractResourceFromPath(fullPath);
+
+    // Skip unknown resource and auth (to avoid duplicate logs where services already log specifically)
+    const blocklisted = resource === 'unknown' || resource === 'auth';
+    if (blocklisted) {
+      return next.handle();
+    }
     const action = this.generateAction(method, resource);
     const details = this.buildDetails(request);
 
@@ -38,11 +44,7 @@ export class AuditLogInterceptor implements NestInterceptor {
           action,
           resource,
           status: 'SUCCESS',
-          details: {
-            ...details,
-            path,
-            durationMs: Date.now() - start,
-          },
+          details: { ...details, path: fullPath, durationMs: Date.now() - start },
         });
       }),
       catchError((err) => {
@@ -53,21 +55,27 @@ export class AuditLogInterceptor implements NestInterceptor {
           resource,
           status: 'FAILURE',
           errorMessage: err?.message || 'Unknown error',
-          details: {
-            ...details,
-            path,
-            durationMs: Date.now() - start,
-          },
+          details: { ...details, path: fullPath, durationMs: Date.now() - start },
         });
         return throwError(() => err);
       }),
     );
   }
 
-  private extractResource(baseUrl: string): string {
-    // e.g. '/logs', '/users', '/process' => 'logs', 'users', 'process'
-    const cleaned = baseUrl.replace(/^\/+/, '').replace(/\/+$/, '');
-    return cleaned.split('/')[0] || 'unknown';
+  private extractResourceFromPath(url: string): string {
+    try {
+      const path = url.split('?')[0] || '';
+      const parts = path.split('/').filter(Boolean); // ['', 'api','v1','resource'] -> ['api','v1','resource']
+      // Find the segment after 'api' and version if present
+      const apiIdx = parts.findIndex((p) => p.toLowerCase() === 'api');
+      if (apiIdx >= 0 && parts.length > apiIdx + 2) {
+        return parts[apiIdx + 2].toLowerCase();
+      }
+      // Fallback: first segment
+      return parts[0]?.toLowerCase() || 'unknown';
+    } catch {
+      return 'unknown';
+    }
   }
 
   private generateAction(method: string, resource: string): string {
