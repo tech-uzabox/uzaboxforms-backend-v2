@@ -16,6 +16,7 @@ import type { Response } from 'express';
 import { AuthenticatedUser } from 'src/auth/decorators/get-user.decorator';
 import { generateUUID } from 'src/utils/generate-uuid';
 import { PrismaService } from '../db/prisma.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
 import { ChatProcessDto } from './dto/chat-process.dto';
 import { dashboardAIPrompt, systemPrompt, uzaAskAIPrompt } from './prompts';
 import { openrouter } from './providers';
@@ -53,7 +54,10 @@ import { getMostRecentUserMessage, getTrailingMessageId } from './utils/chat';
 export class AiService {
   private readonly logger = new Logger(AiService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private auditLogService: AuditLogService,
+  ) {}
 
   async processChat(
     dto: ChatProcessDto,
@@ -77,6 +81,15 @@ export class AiService {
           userId: currentUser.id,
           title,
         },
+      });
+
+      await this.auditLogService.log({
+        userId: currentUser.id,
+        action: 'AI_CHAT_CREATED',
+        resource: 'Chat',
+        resourceId: chat.id,
+        status: 'SUCCESS',
+        details: { title: chat.title, model: selectedChatModel },
       });
     } else if (chat.userId !== currentUser.id) {
       throw new Error('Unauthorized access to chat');
@@ -102,6 +115,20 @@ export class AiService {
     if (!userMessage) {
       throw new BadRequestException('No user message found');
     }
+
+    // Log AI chat interaction
+    await this.auditLogService.log({
+      userId: currentUser.id,
+      action: 'AI_CHAT_INTERACTION',
+      resource: 'Chat',
+      resourceId: chat.id,
+      status: 'SUCCESS',
+      details: { 
+        messageLength: userMessage.parts?.length || 0,
+        model: selectedChatModel,
+        chatTitle: chat.title,
+      },
+    });
 
     const [roles, groups, users] = await Promise.all([
       this.prisma.role.findMany({

@@ -95,7 +95,12 @@ export class AuditLogService {
         { resource: { contains: search, mode: 'insensitive' } },
         { resourceId: { contains: search, mode: 'insensitive' } },
         { errorMessage: { contains: search, mode: 'insensitive' } },
+        // Search in user fields
         { user: { email: { contains: search, mode: 'insensitive' } } },
+        { user: { firstName: { contains: search, mode: 'insensitive' } } },
+        { user: { lastName: { contains: search, mode: 'insensitive' } } },
+        // Search JSON details stringified (fallback):
+        { details: { equals: search as any } },
       ];
     }
 
@@ -127,5 +132,137 @@ export class AuditLogService {
       },
     });
     return logs.map((log) => log.action);
+  }
+
+  async getAuditLogAnalytics(filters?: {
+    startDate?: string;
+    endDate?: string;
+    userId?: string;
+  }) {
+    const whereClause: any = {};
+    
+    if (filters?.startDate && filters?.endDate) {
+      whereClause.timestamp = {
+        gte: new Date(filters.startDate),
+        lte: new Date(filters.endDate),
+      };
+    }
+    
+    if (filters?.userId) {
+      whereClause.userId = filters.userId;
+    }
+
+    const [
+      totalLogs,
+      successLogs,
+      failureLogs,
+      topActions,
+      topUsersRaw,
+      recentActivity,
+    ] = await Promise.all([
+      // Total logs count
+      this.prisma.auditLog.count({ where: whereClause }),
+      
+      // Success logs count
+      this.prisma.auditLog.count({ 
+        where: { ...whereClause, status: 'SUCCESS' } 
+      }),
+      
+      // Failure logs count
+      this.prisma.auditLog.count({ 
+        where: { ...whereClause, status: 'FAILURE' } 
+      }),
+      
+      // Top actions
+      this.prisma.auditLog.groupBy({
+        by: ['action'],
+        where: whereClause,
+        _count: { action: true },
+        orderBy: { _count: { action: 'desc' } },
+        take: 10,
+      }),
+      
+      // Top users
+      this.prisma.auditLog.groupBy({
+        by: ['userId'],
+        where: { ...whereClause, userId: { not: null } },
+        _count: { userId: true },
+        orderBy: { _count: { userId: 'desc' } },
+        take: 10,
+      }),
+      
+      // Recent activity
+      this.prisma.auditLog.findMany({
+        where: whereClause,
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: { timestamp: 'desc' },
+        take: 10,
+      }),
+    ]);
+
+    const successRate = totalLogs > 0 ? (successLogs / totalLogs) * 100 : 0;
+
+    // Enrich top users with profile info
+    const userIds = topUsersRaw.map(t => t.userId).filter(Boolean) as string[];
+    const usersMap = userIds.length > 0
+      ? (await this.prisma.user.findMany({
+          where: { id: { in: userIds } },
+          select: { id: true, firstName: true, lastName: true, email: true },
+        })).reduce((acc, u) => {
+          acc[u.id] = u;
+          return acc;
+        }, {} as Record<string, any>)
+      : {};
+
+    return {
+      totalLogs,
+      successLogs,
+      failureLogs,
+      successRate: Math.round(successRate * 100) / 100,
+      topActions: topActions.map(item => ({
+        action: item.action,
+        count: item._count.action,
+        percentage: totalLogs > 0 ? Math.round((item._count.action / totalLogs) * 10000) / 100 : 0,
+      })),
+      topUsers: topUsersRaw.map(item => {
+        const u = item.userId ? usersMap[item.userId] : null;
+        return {
+          userId: item.userId,
+          count: item._count.userId,
+          percentage: totalLogs > 0 ? Math.round((item._count.userId / totalLogs) * 10000) / 100 : 0,
+          user: u
+            ? {
+                id: u.id,
+                email: u.email,
+                firstName: u.firstName,
+                lastName: u.lastName,
+              }
+            : null,
+        };
+      }),
+      recentActivity: recentActivity.map(log => ({
+        id: log.id,
+        timestamp: log.timestamp,
+        action: log.action,
+        user: log.user ? {
+          id: log.user.id,
+          email: log.user.email,
+          name: log.user.firstName && log.user.lastName 
+            ? `${log.user.firstName} ${log.user.lastName}` 
+            : log.user.email,
+        } : null,
+        status: log.status,
+        resource: log.resource,
+      })),
+    };
   }
 }

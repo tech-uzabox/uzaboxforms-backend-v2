@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { AuditLogService } from '../audit-log/audit-log.service';
 import { Response } from 'express';
 import { ExportColumn, ExportData, ExportOptions, ExportResult } from './interfaces/export.interface';
 import { ExcelHandler } from './excel-handler';
@@ -9,6 +10,7 @@ import { DataFormatter } from './data-formatter';
 @Injectable()
 export class ExportService {
   private readonly logger = new Logger(ExportService.name);
+  constructor(private readonly auditLogService: AuditLogService) {}
 
   async exportData(
     columns: ExportColumn[],
@@ -38,12 +40,35 @@ export class ExportService {
       }
 
       this.logger.log(`Successfully exported ${rows.length} rows as ${options.type}`);
+      // Audit success
+      await this.auditLogService.log({
+        action: 'EXPORT_COMPLETED',
+        resource: 'Export',
+        status: 'SUCCESS',
+        details: {
+          type: options.type,
+          filename: (options as any).filename ?? (options as any).fileName,
+          columns: exportData.columns?.length ?? 0,
+          rows: rows.length,
+        },
+      });
       return {
         success: true,
         message: `Successfully exported ${rows.length} rows as ${options.type}`,
       };
     } catch (error) {
       this.logger.error('Export failed', error);
+      // Audit failure
+      await this.auditLogService.log({
+        action: 'EXPORT_FAILED',
+        resource: 'Export',
+        status: 'FAILURE',
+        details: {
+          type: options?.type,
+          filename: (options as any)?.filename ?? (options as any)?.fileName,
+        },
+        errorMessage: error instanceof Error ? error.message : 'Unknown export error',
+      });
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown export error',

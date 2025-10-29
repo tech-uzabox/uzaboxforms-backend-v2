@@ -9,6 +9,8 @@ import { RequestMethod } from '@nestjs/common';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { AuditLogInterceptor } from './audit-log/audit-log.interceptor';
+import { AuditLogService } from './audit-log/audit-log.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -29,6 +31,10 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1', {
     exclude: [{ path: 'health', method: RequestMethod.GET }],
   });
+  // Register global audit interceptor for mutating routes
+  const auditLogService = app.get(AuditLogService);
+  app.useGlobalInterceptors(new AuditLogInterceptor(auditLogService));
+
   const openApiDoc = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()

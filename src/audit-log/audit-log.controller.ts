@@ -122,4 +122,45 @@ export class AuditLogController {
   async getAuditLogTypes() {
     return this.auditLogService.getAuditLogTypes();
   }
+
+  @Get('/analytics')
+  @ApiOperation({ summary: 'Get audit log analytics' })
+  @ApiQuery({
+    name: 'startDate',
+    required: false,
+    type: String,
+    description: 'Start date for analytics (ISO string)',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    required: false,
+    type: String,
+    description: 'End date for analytics (ISO string)',
+  })
+  @ApiQuery({
+    name: 'userId',
+    required: false,
+    type: String,
+    description: 'Filter by user ID',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Audit log analytics retrieved.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden resource (User is not an Admin).',
+  })
+  async getAuditLogAnalytics(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+    @Query('userId') userId?: string,
+  ) {
+    return this.auditLogService.getAuditLogAnalytics({
+      startDate,
+      endDate,
+      userId,
+    });
+  }
 }
