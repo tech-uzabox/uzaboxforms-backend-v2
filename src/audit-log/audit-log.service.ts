@@ -250,7 +250,7 @@ export class AuditLogService {
     const usersMap = userIds.length > 0
       ? (await this.prisma.user.findMany({
           where: { id: { in: userIds } },
-          select: { id: true, firstName: true, lastName: true, email: true },
+          select: { id: true, firstName: true, lastName: true, email: true, photo: true },
         })).reduce((acc, u) => {
           acc[u.id] = u;
           return acc;
@@ -279,6 +279,7 @@ export class AuditLogService {
                 email: u.email,
                 firstName: u.firstName,
                 lastName: u.lastName,
+                avatarUrl: u.photo ?? null,
               }
             : null,
         };
