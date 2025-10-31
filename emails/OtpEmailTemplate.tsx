@@ -8,29 +8,22 @@ import {
   Section,
   Text,
   Hr,
-  Button,
 } from '@react-email/components';
 import * as React from 'react';
 
-interface BaseEmailTemplateProps {
-  text?: string;
-  title?: string;
-  preview?: string;
-  children?: React.ReactNode;
-  showFooter?: boolean;
+interface OtpEmailTemplateProps {
+  otp: string;
+  purpose?: string;
 }
 
-export const BaseEmailTemplate = ({
-  text,
-  title = 'UzaForms',
-  preview = 'Email from UzaForms',
-  children,
-  showFooter = true,
-}: BaseEmailTemplateProps) => {
+export const OtpEmailTemplate = ({
+  otp,
+  purpose = 'email verification',
+}: OtpEmailTemplateProps) => {
   return (
     <Html>
       <Head />
-      <Preview>{preview}</Preview>
+      <Preview>Your verification code is: {otp}</Preview>
       <Body style={main}>
         <Container style={container}>
           {/* Header */}
@@ -42,33 +35,42 @@ export const BaseEmailTemplate = ({
 
           {/* Content */}
           <Section style={contentSection}>
-            {title !== 'UzaForms' && (
-              <Heading style={titleStyle}>{title}</Heading>
-            )}
-            {children || (text && <Text style={paragraphStyle}>{text}</Text>)}
+            <Heading style={titleStyle}>Verification Code</Heading>
+            <Text style={paragraphStyle}>
+              Please use the following verification code to complete your {purpose}:
+            </Text>
+
+            {/* OTP Display */}
+            <Section style={otpContainer}>
+              <Text style={otpCode}>{otp}</Text>
+            </Section>
+
+            <Text style={paragraphStyle}>
+              This code will expire in 10 minutes. If you didn't request this code, please ignore this email.
+            </Text>
+
+            <Text style={warningText}>
+              For security reasons, never share this code with anyone.
+            </Text>
           </Section>
 
           {/* Footer */}
-          {showFooter && (
-            <>
-              <Hr style={divider} />
-              <Section style={footerSection}>
-                <Text style={footerText}>
-                  This is an automated email from UzaForms. Please do not reply to this message.
-                </Text>
-                <Text style={footerText}>
-                  © {new Date().getFullYear()} UzaForms. All rights reserved.
-                </Text>
-              </Section>
-            </>
-          )}
+          <Hr style={divider} />
+          <Section style={footerSection}>
+            <Text style={footerText}>
+              This is an automated email from UzaForms. Please do not reply to this message.
+            </Text>
+            <Text style={footerText}>
+              © {new Date().getFullYear()} UzaForms. All rights reserved.
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>
   );
 };
 
-export default BaseEmailTemplate;
+export default OtpEmailTemplate;
 
 const main = {
   backgroundColor: '#f8f9fa',
@@ -125,6 +127,32 @@ const paragraphStyle = {
   margin: '0 0 16px 0',
 };
 
+const otpContainer = {
+  margin: '32px 0',
+  padding: '24px',
+  backgroundColor: '#f3f4f6',
+  borderRadius: '8px',
+  border: '2px solid #e5e7eb',
+  textAlign: 'center' as const,
+};
+
+const otpCode = {
+  fontSize: '36px',
+  fontWeight: '700',
+  color: '#001A55',
+  letterSpacing: '8px',
+  margin: '0',
+  fontFamily: 'monospace',
+};
+
+const warningText = {
+  fontSize: '14px',
+  lineHeight: '20px',
+  color: '#dc2626',
+  margin: '24px 0 0 0',
+  fontWeight: '500',
+};
+
 const footerSection = {
   padding: '24px 40px',
   backgroundColor: '#f9fafb',
@@ -137,3 +165,4 @@ const footerText = {
   margin: '0 0 8px 0',
   textAlign: 'center' as const,
 };
+

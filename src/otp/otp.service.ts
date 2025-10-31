@@ -2,15 +2,20 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as otpGenerator from 'otp-generator';
 import { PrismaService } from '../db/prisma.service';
 import { EmailService } from '../email/email.service';
+import { AuditLogService } from '../audit-log/audit-log.service';
 
 @Injectable()
 export class OtpService {
   constructor(
     private prisma: PrismaService,
     private emailService: EmailService,
+    private auditLogService: AuditLogService,
   ) {}
 
   async generateOtp(email: string, type?: string): Promise<{ message: string }> {
+    // Look up user by email to get userId for audit logging
+    const user = await this.prisma.user.findFirst({ where: { email } });
+
     // Delete any existing OTPs for this email
     await this.prisma.otp.deleteMany({ where: { email } });
 
@@ -36,8 +41,29 @@ export class OtpService {
       },
     });
 
-    // Send OTP via email
-    await this.emailService.sendEmail(email, `Your OTP is: ${otp}`);
+    // Send OTP via email using professional template
+    const purpose = type === 'email_verification' 
+      ? 'email verification'
+      : type === 'password_reset'
+      ? 'password reset'
+      : 'verification';
+    
+    await this.emailService.sendOtpEmail(email, otp, purpose);
+
+    // Log audit only if user exists (account has been created)
+    if (user?.id) {
+      await this.auditLogService.log({
+        userId: user.id,
+        action: 'OTP_GENERATED',
+        resource: 'OTP',
+        resourceId: user.id,
+        status: 'SUCCESS',
+        details: {
+          email,
+          type: type || 'general',
+        },
+      });
+    }
 
     return { message: 'OTP sent successfully' };
   }

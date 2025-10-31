@@ -52,8 +52,13 @@ export class AuthController {
   async register(
     @Body(new ZodValidationPipe(RegisterUserDto))
     registerUserDto: RegisterUserDto,
-  ): Promise<Omit<User, 'password'>> {
-    return this.authService.register(registerUserDto);
+  ) {
+    const user = await this.authService.register(registerUserDto);
+    return {
+      success: true,
+      userId: user.id,
+      user,
+    };
   }
 
   @UseGuards(LocalAuthGuard)
@@ -168,11 +173,11 @@ export class AuthController {
       });
 
       // Redirect to frontend success URL
-      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3001';
+      const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
       res.redirect(`${frontendUrl}`);
     } catch (error) {
       // Redirect to frontend login page on failure
-      const loginUrl = process.env.FRONTEND_LOGIN_URL || 'http://localhost:3001/auth/login';
+      const loginUrl = process.env.FRONTEND_LOGIN_URL || 'http://localhost:5/auth/login';
       res.redirect(`${loginUrl}?error=google_auth_failed`);
     }
   }

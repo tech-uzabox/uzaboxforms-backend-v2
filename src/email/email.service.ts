@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { render } from '@react-email/render';
 import BaseEmailTemplate from 'emails/BaseEmailTemplate';
+import OtpEmailTemplate from 'emails/OtpEmailTemplate';
 import * as nodemailer from 'nodemailer';
 import { PrismaService } from '../db/prisma.service';
 import { JobService } from '../job/job.service';
@@ -70,6 +71,8 @@ export class EmailService {
       const emailHtml = await render(
         BaseEmailTemplate({
           text,
+          title: 'UzaForms Notification',
+          preview: text.substring(0, 100),
         }),
       );
 
@@ -87,6 +90,35 @@ export class EmailService {
         throw error;
       }
       // Do not rethrow other errors to avoid breaking the calling process
+    }
+  }
+
+  async sendOtpEmail(email: string, otp: string, purpose?: string) {
+    try {
+      const emailHtml = await render(
+        OtpEmailTemplate({
+          otp,
+          purpose: purpose || 'email verification',
+        }),
+      );
+
+      const subject = purpose === 'password_reset' 
+        ? 'Password Reset Verification Code'
+        : 'Email Verification Code - UzaForms';
+
+      await this.jobService.sendEmail({
+        to: email,
+        subject,
+        html: emailHtml,
+      });
+    } catch (error) {
+      this.logger.error(
+        `Failed to send OTP email to ${email}: ${error.message}`,
+        error.stack,
+      );
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
     }
   }
 }

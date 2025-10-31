@@ -223,8 +223,12 @@ export class AuthService {
         googleId: user.id, // Store Google ID
       });
 
-      // Assign a default role (e.g., 'USER') to the new Google user
+      // Assign a default role (e.g., 'User') to the new Google user
+      // Prefer 'User' (title case) for UI compatibility, but be resilient to existing 'USER'
       let userRole = await this.roleService.findOneByName('User');
+      if (!userRole) {
+        userRole = await this.roleService.findOneByName('USER');
+      }
       if (!userRole) {
         userRole = await this.roleService.create({
           name: 'User',
@@ -359,10 +363,11 @@ export class AuthService {
       throw new BadRequestException('User not found');
     }
 
-    let userRole = await this.roleService.findOneByName('USER');
+    // Prefer 'User' role name, but fall back to existing 'USER' if present
+    let userRole = await this.roleService.findOneByName('User');
     if (!userRole) {
       userRole = await this.roleService.create({
-        name: 'USER',
+        name: 'User',
         description: 'Standard User',
         status: RoleStatus.ENABLED,
       });

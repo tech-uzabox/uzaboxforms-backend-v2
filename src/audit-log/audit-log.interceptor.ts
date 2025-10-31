@@ -52,7 +52,6 @@ export class AuditLogInterceptor implements NestInterceptor {
       }
     }
     const fullPath: string = (request.originalUrl || request.url || '') as string;
-    // Normalize path: /api/v1/<resource>/...
     const resource = this.extractResourceFromPath(fullPath);
 
     // Skip unknown resource and auth (to avoid duplicate logs where services already log specifically)
