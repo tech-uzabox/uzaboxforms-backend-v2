@@ -11,6 +11,7 @@ import { PrismaService } from '../db/prisma.service';
 import { BulkRefreshWidgetsDto } from './dto/bulk-refresh-widgets.dto';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { DuplicateWidgetDto } from './dto/duplicate-widget.dto';
+import { MoveWidgetDto } from './dto/move-widget.dto';
 import { UpdateWidgetAccessDto } from './dto/update-widget-access.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 import {
@@ -779,5 +780,102 @@ export class WidgetService {
         },
       };
     }
+  }
+
+  async moveWidget(
+    id: string,
+    moveWidgetDto: MoveWidgetDto,
+    user: AuthenticatedUser,
+  ) {
+    const widget = await this.findOne(id);
+    if (!widget) {
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Widget not found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    // Check access to source dashboard
+    const hasSourceAccess = await this.checkDashboardAccess(
+      widget.dashboardId,
+      user,
+    );
+
+    if (!hasSourceAccess) {
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Access denied to source dashboard',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    // Check access to target dashboard
+    const hasTargetAccess = await this.checkDashboardAccess(
+      moveWidgetDto.targetDashboardId,
+      user,
+    );
+
+    if (!hasTargetAccess) {
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Access denied to target dashboard',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    // Prevent moving to the same dashboard
+    if (widget.dashboardId === moveWidgetDto.targetDashboardId) {
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Widget is already in the target dashboard',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    // Move the widget
+    const movedWidget = await this.prisma.widget.update({
+      where: { id },
+      data: {
+        dashboardId: moveWidgetDto.targetDashboardId,
+        updatedAt: new Date(),
+      },
+    });
+
+    await this.auditLogService.log({
+      userId: user.id,
+      action: 'WIDGET_MOVED',
+      resource: 'Widget',
+      resourceId: movedWidget.id,
+      status: 'SUCCESS',
+      details: {
+        widgetTitle: movedWidget.title,
+        sourceDashboardId: widget.dashboardId,
+        targetDashboardId: moveWidgetDto.targetDashboardId,
+      },
+    });
+
+    // Invalidate widget cache
+    setImmediate(async () => {
+      try {
+        await this.invalidateWidgetCaches([id]);
+      } catch (error) {
+        console.error('Failed to invalidate widget cache after move:', error);
+      }
+    });
+
+    return {
+      success: true,
+      message: 'Widget moved successfully',
+      data: movedWidget,
+    };
   }
 }

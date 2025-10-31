@@ -24,6 +24,7 @@ import { PrismaService } from '../db/prisma.service';
 import { BulkRefreshWidgetsDto } from './dto/bulk-refresh-widgets.dto';
 import { CreateWidgetDto } from './dto/create-widget.dto';
 import { DuplicateWidgetDto } from './dto/duplicate-widget.dto';
+import { MoveWidgetDto } from './dto/move-widget.dto';
 import { UpdateWidgetAccessDto } from './dto/update-widget-access.dto';
 import { UpdateWidgetDto } from './dto/update-widget.dto';
 import { WidgetDataService } from './widget-data.service';
@@ -166,6 +167,22 @@ export class WidgetController {
     @GetUser() user: AuthenticatedUser,
   ) {
     return this.widgetService.updateWidgetAccess(id, updateAccessDto, user);
+  }
+
+  @Post(':id/move')
+  @ApiOperation({ summary: 'Move widget to another dashboard' })
+  @ApiResponse({
+    status: 200,
+    description: 'Widget moved successfully',
+  })
+  @ApiResponse({ status: 404, description: 'Widget not found' })
+  @ApiResponse({ status: 403, description: 'Access denied' })
+  async moveWidget(
+    @Param('id') id: string,
+    @Body(ZodValidationPipe) moveWidgetDto: MoveWidgetDto,
+    @GetUser() user: AuthenticatedUser,
+  ) {
+    return this.widgetService.moveWidget(id, moveWidgetDto, user);
   }
 
   @Get(':id/data')
