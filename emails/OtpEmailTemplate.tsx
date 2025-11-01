@@ -166,3 +166,4 @@ const footerText = {
   textAlign: 'center' as const,
 };
 
+
