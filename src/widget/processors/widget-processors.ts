@@ -580,7 +580,7 @@ export async function processMapWidget(
   config: any,
   service: any,
 ): Promise<WidgetDataPayload> {
-  console.log("Processing map widget with responses:", filteredResponses.length);
+  
   const mapConfig = config.options?.map || {};
   const metrics: Array<{
     formId: string;
@@ -593,7 +593,8 @@ export async function processMapWidget(
   const optionsSource = appearance.optionsSource || null;
   const optionColors: Record<string, string> = appearance.optionColors || {};
 
-  console.log("Map config:", { coloringMode, optionsSource, metricsCount: metrics.length });
+
+
 
   const normalizedOptionColors: Record<string, string> = Object.fromEntries(
     Object.entries(optionColors).map(([k, v]) => [normalizeScalarForCompare(k), v])
@@ -647,13 +648,14 @@ export async function processMapWidget(
     // Build values for each country
     for (const country in countryResponses) {
       const responses = countryResponses[country];
+
       if (responses.length > 1) {
         // Build table rows and remove duplicates
         const rows: Array<Record<string, unknown>> = [];
         const seen = new Set<string>();
         for (const resp of responses) {
           const row: Record<string, unknown> = {};
-          metrics.forEach((metric) => {
+          metrics.forEach((metric, idx) => {
             const question = getQuestion(formDesign, metric.valueFieldId);
             const label = metric.label || question?.label || metric.valueFieldId;
             const val = service.getFieldValue(
@@ -662,6 +664,7 @@ export async function processMapWidget(
               undefined,
               formDesign,
             );
+
             row[label] = val;
           });
           // Create a hash for deduplication
@@ -675,7 +678,7 @@ export async function processMapWidget(
       } else {
         // Single response: build single record
         const values: Record<string, unknown> = {};
-        metrics.forEach((metric) => {
+        metrics.forEach((metric, idx) => {
           const question = getQuestion(formDesign, metric.valueFieldId);
           const label = metric.label || question?.label || metric.valueFieldId;
           const val = service.getFieldValue(
@@ -684,6 +687,7 @@ export async function processMapWidget(
             undefined,
             formDesign,
           );
+
           values[label] = val;
         });
         countries[country] = { values };
@@ -737,6 +741,7 @@ export async function processMapWidget(
         const formDesign = formDesignsMap.get(String(metric.formId));
         const question = getQuestion(formDesign, metric.valueFieldId);
         const label = metric.label || question?.label || metric.valueFieldId;
+
         values[label] = entry ? entry.value : null;
       });
 
@@ -748,7 +753,7 @@ export async function processMapWidget(
   for (const country in countries) {
     let colorValue: string | undefined = undefined;
     if (coloringMode === "options" && optionsSource) {
-      console.log(`Processing options coloring for country: ${country}`);
+
       // Determine the country field to use for the options source form
       const srcFormIdStr = String(optionsSource.formId);
       const formDesign = formDesignsMap.get(srcFormIdStr);
@@ -756,7 +761,7 @@ export async function processMapWidget(
         optionsSource.countryFieldId ||
         (metrics.find((m) => String(m.formId) === srcFormIdStr)?.countryFieldId);
 
-      console.log(`Options source config:`, { srcFormIdStr, srcCountryFieldId, fieldId: optionsSource.fieldId });
+
 
       let latest: { value: any; createdAt: Date } | null = null;
       if (srcCountryFieldId) {
@@ -777,7 +782,7 @@ export async function processMapWidget(
             undefined,
             formDesign,
           );
-          console.log(`Found option value for ${country}:`, optVal);
+
           if (!latest || resp.createdAt > latest.createdAt) {
             latest = { value: optVal, createdAt: resp.createdAt };
           }
@@ -786,14 +791,14 @@ export async function processMapWidget(
       if (latest && latest.value != null) {
         const k = normalizeScalarForCompare(latest.value);
         colorValue = normalizedOptionColors[k] || undefined;
-        console.log(`Assigned color for ${country}:`, { optionKey: k, colorValue });
+
       }
     }
 
     countries[country].colorValue = colorValue;
   }
 
-  console.log(`Map widget processing complete. Countries processed: ${Object.keys(countries).length}`);
+
 
   // Determine region from country question's countryLevel
   let region: string | undefined;
@@ -962,24 +967,24 @@ export async function processCCTWidget(
   config: any,
   service: any,
 ): Promise<WidgetDataPayload> {
-  console.log('processCCTWidget: Starting with', filteredResponses.length, 'responses');
+
   const cct = config.options?.cct || config.cct;
   if (!cct) {
-    console.log('processCCTWidget: No CCT config found');
+
     return createEmptyPayload(widget) as any;
   }
 
   const { formId, factors, measures } = cct;
-  console.log('processCCTWidget: Config - formId:', formId, 'factors:', factors, 'measures:', measures);
+
 
   if (!factors || factors.length === 0 || !measures || measures.length === 0) {
-    console.log('processCCTWidget: Missing factors or measures');
+
     return createEmptyPayload(widget) as any;
   }
 
   const formDesign = formDesignsMap.get(String(formId));
   if (!formDesign) {
-    console.log('processCCTWidget: Form design not found for formId:', formId);
+
     return createEmptyPayload(widget) as any;
   }
 
@@ -995,22 +1000,22 @@ export async function processCCTWidget(
       }
     }
     factorValuesMap.set(factor.fieldId, values);
-    console.log('processCCTWidget: Factor', factor.fieldId, 'has', values.size, 'distinct values:', Array.from(values));
+
   }
 
   // Check if we have any factor values
   const hasFactorValues = Array.from(factorValuesMap.values()).some(set => set.size > 0);
   if (!hasFactorValues) {
-    console.log('processCCTWidget: No factor values found, returning empty');
+
     return createEmptyPayload(widget) as any;
   }
 
   // Generate Cartesian product of factor combinations
   const factorLists = factors.map(f => Array.from(factorValuesMap.get(f.fieldId) || []));
   const combinations = cartesianProduct(factorLists) as string[][];
-  console.log('processCCTWidget: Generated', combinations.length, 'combinations from factors:', factorLists.map(list => list.length));
 
-  console.log('processCCTWidget: Generated', combinations.length, 'combinations');
+
+
 
   // Group responses by factor combination and compute aggregations
   const combinationMap = new Map<string, Map<string, number[]>>();
@@ -1160,7 +1165,7 @@ export async function processCCTWidget(
     return { id: `${m.fieldId}:${m.aggregation}`, label: m.label || `${questionLabel}` };
   });
 
-  console.log('processCCTWidget: Returning data - combinations:', resultCombinations.length, 'measures:', measureLabels.length);
+
 
   return {
     type: 'cct',
@@ -1198,19 +1203,19 @@ export async function processCrossTabWidget(
   config: any,
   service: any,
 ): Promise<WidgetDataPayload> {
-  console.log('processCrossTabWidget: Starting with', filteredResponses.length, 'responses');
+
   const cx = config.options?.crosstab || config.crosstab;
   if (!cx) {
-    console.log('processCrossTabWidget: No crosstab config found');
+
     return createEmptyPayload(widget) as any;
   }
 
   const { row, column, value } = cx;
-  console.log('processCrossTabWidget: Config - row:', row, 'column:', column, 'value:', value);
+
   const rowFD = formDesignsMap.get(String(row.formId));
   const colFD = formDesignsMap.get(String(column.formId));
   const valFD = formDesignsMap.get(String(value.formId));
-  console.log('processCrossTabWidget: Form designs found - rowFD:', !!rowFD, 'colFD:', !!colFD, 'valFD:', !!valFD);
+
 
   const MISSING = 'Missing';
 
@@ -1313,7 +1318,7 @@ export async function processCrossTabWidget(
   const rowIdx = buildLatestIndex(row.formId);
   const colIdx = buildLatestIndex(column.formId);
   const valIdx = buildLatestIndex(value.formId);
-  console.log('processCrossTabWidget: Indexes built - rowIdx:', rowIdx.size, 'colIdx:', colIdx.size, 'valIdx:', valIdx.size);
+
 
   // Collect cells using value responses as driver
   const rowsSet = new Set<string>();
@@ -1338,19 +1343,19 @@ export async function processCrossTabWidget(
 
   let processedCount = 0;
   for (const [apId, vResp] of valIdx.entries()) {
-    console.log('processCrossTabWidget: Processing value response for apId:', apId, 'formId:', vResp.formId);
+
     // Resolve row value (same form or via index)
     let rVal: any = null;
     if (String(row.formId) === String(value.formId)) {
       rVal = service.getFieldValue(vResp, row.fieldId, row.systemField, valFD);
-      console.log('processCrossTabWidget: Row value from same form:', rVal);
+
     } else {
       const rr = rowIdx.get(apId);
       if (rr) {
         rVal = service.getFieldValue(rr, row.fieldId, row.systemField, rowFD);
-        console.log('processCrossTabWidget: Row value from index:', rVal);
+
       } else {
-        console.log('processCrossTabWidget: No row response found for apId:', apId);
+
       }
     }
     if (rVal === null || rVal === undefined) {
@@ -1362,7 +1367,7 @@ export async function processCrossTabWidget(
         if (fc !== null) chosenRow = fc;
       }
       if (chosenRow !== null && chosenRow !== undefined) {
-        console.log('processCrossTabWidget: Row fallback via label matched axis title =>', cx?.rowAxisTitle, 'value=', chosenRow);
+
         rVal = chosenRow;
       }
     }
@@ -1386,14 +1391,14 @@ export async function processCrossTabWidget(
     let cVal: any = null;
     if (String(column.formId) === String(value.formId)) {
       cVal = service.getFieldValue(vResp, column.fieldId, column.systemField, valFD);
-      console.log('processCrossTabWidget: Column value from same form:', cVal);
+
     } else {
       const cr = colIdx.get(apId);
       if (cr) {
         cVal = service.getFieldValue(cr, column.fieldId, column.systemField, colFD);
-        console.log('processCrossTabWidget: Column value from index:', cVal);
+
       } else {
-        console.log('processCrossTabWidget: No column response found for apId:', apId);
+
       }
     }
     if (cVal === null || cVal === undefined) {
@@ -1405,7 +1410,7 @@ export async function processCrossTabWidget(
         if (fc !== null) chosenCol = fc;
       }
       if (chosenCol !== null && chosenCol !== undefined) {
-        console.log('processCrossTabWidget: Column fallback via label matched axis title =>', (cx?.colAxisTitle || cx?.columnAxisTitle), 'value=', chosenCol);
+
         cVal = chosenCol;
       }
     }
@@ -1424,19 +1429,19 @@ export async function processCrossTabWidget(
       continue;
     }
     const cKey = norm(cVal ?? MISSING);
-    console.log('processCrossTabWidget: Resolved keys => row:', rKey, 'col:', cKey);
+
 
     // Compute numeric contribution
     let contrib = 0;
     if (value.aggregation === 'count') {
       contrib = 1;
-      console.log('processCrossTabWidget: Count aggregation, contrib=1');
+
     } else {
       const raw = service.getFieldValue(vResp, value.fieldId, value.systemField, valFD);
       const num = toNumber(raw);
-      console.log('processCrossTabWidget: Value field raw:', raw, 'num:', num);
+
       if (num === null) {
-        console.log('processCrossTabWidget: Skipping due to null numeric value');
+
         continue;
       }
       contrib = num;
@@ -1446,21 +1451,21 @@ export async function processCrossTabWidget(
     colsSet.add(cKey);
     addAgg(rKey, cKey, contrib);
     processedCount++;
-    console.log('processCrossTabWidget: Added to cell', rKey, cKey, 'contrib:', contrib);
+
   }
-  console.log('processCrossTabWidget: Processed', processedCount, 'responses');
+
 
   // If nothing matched, return empty
-  console.log('processCrossTabWidget: Final sets - rows:', rowsSet.size, 'cols:', colsSet.size, 'cellAgg:', cellAgg.size);
+
   if (rowsSet.size === 0 || colsSet.size === 0 || cellAgg.size === 0) {
-    console.log('processCrossTabWidget: Returning empty due to no data');
+
     return createEmptyPayload(widget) as any;
   }
 
   // Sort categories for stable output
   const rows = Array.from(rowsSet).sort();
   const columns = Array.from(colsSet).sort();
-  console.log('processCrossTabWidget: Rows sample:', rows.slice(0, 10), 'Columns sample:', columns.slice(0, 10));
+
 
   // Build matrix with aggregation
   const values: number[][] = Array.from({ length: rows.length }, () =>
@@ -1552,7 +1557,7 @@ export async function processCrossTabWidget(
     }
   }
 
-  console.log('processCrossTabWidget: Returning data - rows:', rows.length, 'columns:', columns.length, 'values shape:', values.length, 'x', values[0]?.length);
+
   return {
     type: 'crosstab',
     title: widget.title,

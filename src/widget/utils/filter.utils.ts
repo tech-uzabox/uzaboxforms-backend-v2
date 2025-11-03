@@ -148,7 +148,7 @@ export function getFieldValue(
         }
         return rawValue;
       case 'Date':
-        return rawValue?.date;
+        return rawValue;
       case 'DateTime':
         return rawValue?.date && rawValue?.time
           ? `${rawValue.date}T${rawValue.time}:00`
