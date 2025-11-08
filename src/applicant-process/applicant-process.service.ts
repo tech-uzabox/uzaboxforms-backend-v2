@@ -1038,22 +1038,42 @@ export class ApplicantProcessService {
                 }
               }
             }
-          } else if (typeof responseData === 'object') {
+          } else if (typeof responseData === 'object' && responseData !== null) {
             for (const [sectionKey, sectionData] of Object.entries(
               responseData,
             )) {
               if (
                 sectionData &&
                 typeof sectionData === 'object' &&
-                'questions' in sectionData
+                sectionData !== null &&
+                !Array.isArray(sectionData)
               ) {
                 const section = sectionData as any;
-                if (
-                  section.questions &&
-                  typeof section.questions === 'object'
-                ) {
-                  for (const questionId of Object.keys(section.questions)) {
-                    allQuestionIds.add(questionId);
+                
+                // Check if it has 'questions' property (form submission format)
+                if ('questions' in section && section.questions) {
+                  const questions = section.questions;
+                  
+                  // Handle both object and array formats for questions
+                  if (typeof questions === 'object' && !Array.isArray(questions)) {
+                    // Object format: { questionId: { questionId, questionType, label, response } }
+                    for (const questionId of Object.keys(questions)) {
+                      allQuestionIds.add(questionId);
+                    }
+                  } else if (Array.isArray(questions)) {
+                    // Array format: [{ questionId, questionType, label, response }, ...]
+                    for (const questionResponse of questions) {
+                      if (questionResponse && typeof questionResponse === 'object' && 'questionId' in questionResponse) {
+                        allQuestionIds.add(questionResponse.questionId);
+                      }
+                    }
+                  }
+                } else if ('responses' in section && Array.isArray(section.responses)) {
+                  // Fallback: Handle nested responses array format
+                  for (const sectionResponse of section.responses) {
+                    if (sectionResponse && typeof sectionResponse === 'object' && 'questionId' in sectionResponse) {
+                      allQuestionIds.add(sectionResponse.questionId);
+                    }
                   }
                 }
               }
@@ -1112,26 +1132,57 @@ export class ApplicantProcessService {
                     }
                   }
                 }
-              } else if (typeof responseData === 'object') {
+              } else if (typeof responseData === 'object' && responseData !== null) {
                 for (const [sectionKey, sectionData] of Object.entries(
                   responseData,
                 )) {
                   if (
                     sectionData &&
                     typeof sectionData === 'object' &&
-                    'questions' in sectionData
+                    sectionData !== null &&
+                    !Array.isArray(sectionData)
                   ) {
                     const section = sectionData as any;
-                    if (
-                      section.questions &&
-                      typeof section.questions === 'object' &&
-                      questionId in section.questions
-                    ) {
-                      const qResp = section.questions[questionId] as any;
-                      if (qResp.label) {
-                        questionLabel = qResp.label;
-                        break;
+                    
+                    // Check if it has 'questions' property (form submission format)
+                    if ('questions' in section && section.questions) {
+                      const questions = section.questions;
+                      
+                      // Handle both object and array formats for questions
+                      if (typeof questions === 'object' && !Array.isArray(questions)) {
+                        // Object format: { questionId: { questionId, questionType, label, response } }
+                        if (questionId in questions) {
+                          const qResp = questions[questionId] as any;
+                          if (qResp && typeof qResp === 'object' && qResp.label) {
+                            questionLabel = qResp.label;
+                            break;
+                          }
+                        }
+                      } else if (Array.isArray(questions)) {
+                        // Array format: [{ questionId, questionType, label, response }, ...]
+                        for (const questionResponse of questions) {
+                          if (questionResponse && typeof questionResponse === 'object' && 
+                              'questionId' in questionResponse && 
+                              questionResponse.questionId === questionId &&
+                              questionResponse.label) {
+                            questionLabel = questionResponse.label;
+                            break;
+                          }
+                        }
+                        if (questionLabel !== questionId) break;
                       }
+                    } else if ('responses' in section && Array.isArray(section.responses)) {
+                      // Fallback: Handle nested responses array format
+                      for (const sectionResponse of section.responses) {
+                        if (sectionResponse && typeof sectionResponse === 'object' && 
+                            'questionId' in sectionResponse &&
+                            sectionResponse.questionId === questionId &&
+                            sectionResponse.label) {
+                          questionLabel = sectionResponse.label;
+                          break;
+                        }
+                      }
+                      if (questionLabel !== questionId) break;
                     }
                   }
                 }
@@ -1166,6 +1217,7 @@ export class ApplicantProcessService {
         }
 
         if (Array.isArray(responseData)) {
+          // Handle Excel upload format: [{ sectionId, sectionName, responses: [...] }]
           for (const section of responseData) {
             if (section.responses && Array.isArray(section.responses)) {
               for (const sectionResponse of section.responses) {
@@ -1178,40 +1230,76 @@ export class ApplicantProcessService {
                   sectionResponse.questionType || question?.type,
                 );
 
-                if (questionId in row) {
-                  row[questionId] = formattedValue;
-                } else {
-                  row[questionId] = formattedValue;
-                }
+                row[questionId] = formattedValue;
               }
             }
           }
-        } else if (typeof responseData === 'object') {
+        } else if (typeof responseData === 'object' && responseData !== null) {
+          // Handle form submission format: { sectionId: { sectionId, sectionName, questions: { questionId: {...} } } } }
           for (const [sectionKey, sectionData] of Object.entries(
             responseData,
           )) {
             if (
               sectionData &&
               typeof sectionData === 'object' &&
-              'questions' in sectionData
+              sectionData !== null &&
+              !Array.isArray(sectionData)
             ) {
               const section = sectionData as any;
-              if (section.questions && typeof section.questions === 'object') {
-                for (const [questionId, questionResponse] of Object.entries(
-                  section.questions,
-                )) {
-                  const qResp = questionResponse as any;
-                  let value = qResp.response;
+              
+              // Check if it has 'questions' property (form submission format)
+              if ('questions' in section && section.questions) {
+                const questions = section.questions;
+                
+                // Handle both object and array formats for questions
+                if (typeof questions === 'object' && !Array.isArray(questions)) {
+                  // Object format: { questionId: { questionId, questionType, label, response } }
+                  for (const [questionId, questionResponse] of Object.entries(
+                    questions,
+                  )) {
+                    const qResp = questionResponse as any;
+                    if (qResp && typeof qResp === 'object' && 'response' in qResp) {
+                      let value = qResp.response;
 
-                  const question = questionMap.get(questionId);
-                  const formattedValue = this.formatResponseValue(
-                    value,
-                    qResp.questionType || question?.type,
-                  );
+                      const question = questionMap.get(questionId);
+                      const formattedValue = this.formatResponseValue(
+                        value,
+                        qResp.questionType || question?.type,
+                      );
 
-                  if (questionId in row) {
-                    row[questionId] = formattedValue;
-                  } else {
+                      row[questionId] = formattedValue;
+                    }
+                  }
+                } else if (Array.isArray(questions)) {
+                  // Array format: [{ questionId, questionType, label, response }, ...]
+                  for (const questionResponse of questions) {
+                    if (questionResponse && typeof questionResponse === 'object' && 'questionId' in questionResponse) {
+                      const questionId = questionResponse.questionId;
+                      let value = questionResponse.response;
+
+                      const question = questionMap.get(questionId);
+                      const formattedValue = this.formatResponseValue(
+                        value,
+                        questionResponse.questionType || question?.type,
+                      );
+
+                      row[questionId] = formattedValue;
+                    }
+                  }
+                }
+              } else if ('responses' in section && Array.isArray(section.responses)) {
+                // Fallback: Handle nested responses array format
+                for (const sectionResponse of section.responses) {
+                  if (sectionResponse && typeof sectionResponse === 'object' && 'questionId' in sectionResponse) {
+                    const questionId = sectionResponse.questionId;
+                    let value = sectionResponse.response;
+
+                    const question = questionMap.get(questionId);
+                    const formattedValue = this.formatResponseValue(
+                      value,
+                      sectionResponse.questionType || question?.type,
+                    );
+
                     row[questionId] = formattedValue;
                   }
                 }
@@ -1321,12 +1409,61 @@ export class ApplicantProcessService {
         }
 
         if (typeof value === 'object' && value !== null) {
+          // Handle { date, time } format
+          if (value.date && value.time) {
+            try {
+              // Parse date and time, combine them
+              const dateStr = value.date;
+              const timeStr = value.time;
+              
+              // Convert 12-hour format to 24-hour format if needed
+              let hours = 0;
+              let minutes = 0;
+              const timeMatch = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+              if (timeMatch) {
+                hours = parseInt(timeMatch[1], 10);
+                minutes = parseInt(timeMatch[2], 10);
+                const period = timeMatch[3].toUpperCase();
+                if (period === 'PM' && hours !== 12) {
+                  hours += 12;
+                } else if (period === 'AM' && hours === 12) {
+                  hours = 0;
+                }
+              } else {
+                // Try 24-hour format
+                const time24Match = timeStr.match(/(\d+):(\d+)/);
+                if (time24Match) {
+                  hours = parseInt(time24Match[1], 10);
+                  minutes = parseInt(time24Match[2], 10);
+                }
+              }
+              
+              const date = new Date(dateStr);
+              date.setHours(hours, minutes, 0, 0);
+              if (!isNaN(date.getTime())) {
+                return date.toISOString();
+              }
+            } catch (e) {
+              // Fall through to other formats
+            }
+          }
+          
+          // Handle { dateTime } or { datetime } format
           if (value.dateTime || value.datetime) {
             const date = new Date(value.dateTime || value.datetime);
             if (!isNaN(date.getTime())) {
               return date.toISOString();
             }
           }
+          
+          // Handle { date } format (without time)
+          if (value.date && !value.time) {
+            const date = new Date(value.date);
+            if (!isNaN(date.getTime())) {
+              return date.toISOString();
+            }
+          }
+          
           return String(value);
         }
         return String(value);
@@ -1377,11 +1514,47 @@ export class ApplicantProcessService {
         }
         return value;
 
+      case 'Date Range':
+        if (typeof value === 'string') {
+          // Handle string format like "2025-01-01 - 2025-01-31"
+          if (value.includes(' - ')) {
+            return value;
+          }
+          return value;
+        }
+        if (typeof value === 'object' && value !== null) {
+          // Handle { startDate, endDate } format
+          if (value.startDate && value.endDate) {
+            const startDate = value.startDate instanceof Date 
+              ? value.startDate 
+              : new Date(value.startDate);
+            const endDate = value.endDate instanceof Date 
+              ? value.endDate 
+              : new Date(value.endDate);
+            
+            if (!isNaN(startDate.getTime()) && !isNaN(endDate.getTime())) {
+              const startStr = startDate.toISOString().split('T')[0];
+              const endStr = endDate.toISOString().split('T')[0];
+              return `${startStr} - ${endStr}`;
+            }
+          }
+        }
+        return String(value);
+
       case 'Upload':
       case 'Signature':
         return '';
 
       default:
+        // Handle objects that might be accidentally passed
+        if (typeof value === 'object' && value !== null) {
+          // Try to stringify if it's a plain object
+          try {
+            return JSON.stringify(value);
+          } catch (e) {
+            return String(value);
+          }
+        }
         return String(value);
     }
   }
