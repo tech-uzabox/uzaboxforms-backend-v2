@@ -182,13 +182,14 @@ export class FormResponseService {
       };
     }
 
-    // Step 2: Get form name
+    // Step 2: Get form name and design
     const form = await this.prisma.form.findUnique({
       where: { id: userResponse.formId },
-      select: { name: true },
+      select: { name: true, design: true },
     });
     const responseByUser = {
       formName: form?.name || 'Untitled Form',
+      formDesign: form?.design || null,
       ...userResponse,
     };
 
@@ -243,9 +244,11 @@ export class FormResponseService {
         if (formResponse) {
           const formData = await this.prisma.form.findUnique({
             where: { id: formResponse.formId },
+            select: { name: true, design: true },
           });
           const formResult = {
             formName: formData?.name || 'Untitled Form',
+            formDesign: formData?.design || null,
             ...formResponse,
           };
           // Avoid duplicating the main response
