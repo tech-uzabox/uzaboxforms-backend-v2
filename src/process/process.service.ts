@@ -124,54 +124,19 @@ export class ProcessService {
             role: true,
           },
         },
-        forms: {
-          include: {
-            form: true,
-          },
-        },
       },
     });
 
-    // Format to match old API response
-    const formattedProcesses = await Promise.all(
-      processes.map(async (process) => {
-        const processForms = process.forms || [];
-
-        const forms = processForms.map((pf) => {
-          const form = pf.form;
-          if (!form) return null;
-
-          return {
-            name: form.name,
-            status: form.status,
-            createdAt: form.createdAt?.toISOString(),
-            updatedAt: form.updatedAt?.toISOString(),
-            nextStepType: pf.nextStepType,
-            nextStepRoles: pf.nextStepRoles,
-            nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
-            nextStaff: pf.nextStaffId, // Changed from nextStaff to nextStaffId
-            notificationType: pf.notificationType,
-            notificationTo: pf.notificationToId, // Changed from notificationTo to notificationToId
-            notificationToRoles: pf.notificationRoles, // Changed from notificationToRoles to notificationRoles
-            notificationComment: pf.notificationComment,
-            notifyApplicant: pf.notifyApplicant,
-            applicantNotificationContent: pf.applicantNotificationContent,
-            editApplicationStatus: pf.editApplicationStatus,
-            applicantViewFormAfterCompletion:
-              pf.applicantViewFormAfterCompletion,
-          };
-        });
-
-        return {
-          ...process,
-          processName: process.name,
-          processStatus: process.status,
-          updatedAt: process.updatedAt?.toISOString(),
-          processForms: forms.filter((form) => form !== null),
-          roles: process.roles?.map((pr) => pr.role) || [],
-        };
-      }),
-    );
+    // Format to match old API response - removed forms to reduce payload size
+    const formattedProcesses = processes.map((process) => {
+      return {
+        ...process,
+        processName: process.name,
+        processStatus: process.status,
+        updatedAt: process.updatedAt?.toISOString(),
+        roles: process.roles?.map((pr) => pr.role) || [],
+      };
+    });
 
     return {
       success: true,
@@ -210,54 +175,19 @@ export class ProcessService {
             role: true,
           },
         },
-        forms: {
-          include: {
-            form: true,
-          },
-        },
       },
     });
 
-    // Format to match old API response
-    const formattedProcesses = await Promise.all(
-      processes.map(async (process) => {
-        const processForms = process.forms || [];
-
-        const forms = processForms.map((pf) => {
-          const form = pf.form;
-          if (!form) return null;
-
-          return {
-            name: form.name,
-            status: form.status,
-            createdAt: form.createdAt?.toISOString(),
-            updatedAt: form.updatedAt?.toISOString(),
-            nextStepType: pf.nextStepType,
-            nextStepRoles: pf.nextStepRoles,
-            nextStepSpecifiedTo: pf.nextStepSpecifiedTo,
-            nextStaff: pf.nextStaffId, // Changed from nextStaff to nextStaffId
-            notificationType: pf.notificationType,
-            notificationTo: pf.notificationToId, // Changed from notificationTo to notificationToId
-            notificationToRoles: pf.notificationRoles, // Changed from notificationToRoles to notificationRoles
-            notificationComment: pf.notificationComment,
-            notifyApplicant: pf.notifyApplicant,
-            applicantNotificationContent: pf.applicantNotificationContent,
-            editApplicationStatus: pf.editApplicationStatus,
-            applicantViewFormAfterCompletion:
-              pf.applicantViewFormAfterCompletion,
-          };
-        });
-
-        return {
-          ...process,
-          processName: process.name,
-          processStatus: process.status,
-          updatedAt: process.updatedAt?.toISOString(),
-          processForms: forms.filter((form) => form !== null),
-          roles: process.roles?.map((pr) => pr.role) || [],
-        };
-      }),
-    );
+    // Format to match old API response - removed forms to reduce payload size
+    const formattedProcesses = processes.map((process) => {
+      return {
+        ...process,
+        processName: process.name,
+        processStatus: process.status,
+        updatedAt: process.updatedAt?.toISOString(),
+        roles: process.roles?.map((pr) => pr.role) || [],
+      };
+    });
 
     return {
       success: true,
@@ -269,6 +199,25 @@ export class ProcessService {
     const process = await this.prisma.process.findUnique({
       where: { id },
       include: {
+        group: true,
+        creator: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+            photo: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        processFolder: true,
+        roles: {
+          select: {
+            role: true,
+          },
+        },
         forms: {
           include: {
             form: {
@@ -284,6 +233,9 @@ export class ProcessService {
                 design: true,
               },
             },
+          },
+          orderBy: {
+            order: 'asc',
           },
         },
       },
@@ -438,6 +390,7 @@ export class ProcessService {
         name: newProcessName,
         type: originalProcess.type,
         groupId: originalProcess.groupId,
+        processFolderId: originalProcess.processFolderId,
         creatorId: creatorId,
         status: originalProcess.status,
         archived: originalProcess.archived,
