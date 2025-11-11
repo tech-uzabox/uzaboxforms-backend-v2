@@ -56,6 +56,12 @@ export function getUniqueFormIds(config: any): string[] {
     formIds.add(String(bubbleMap.metric.formId));
   }
 
+  // Flow map widget: include formId from metric
+  const flowMap = config?.options?.flowMap || config?.flowMap;
+  if (flowMap?.metric?.formId) {
+    formIds.add(String(flowMap.metric.formId));
+  }
+
   return Array.from(formIds);
 }
 

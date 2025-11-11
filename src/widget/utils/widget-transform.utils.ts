@@ -199,6 +199,38 @@ export function transformWidgetPayload(payload: any) {
     }
   }
 
+  if (payload.visualizationType === "flow-map") {
+    const flowMap = (payload.options?.flowMap) || payload.flowMap;
+    if (flowMap) {
+      normalizedOptions.flowMap = {
+        metric: flowMap.metric || {
+          formId: "",
+          region: "africa",
+          city1FieldId: "",
+          city2FieldId: "",
+          valueFieldId: "",
+          primaryCityIndicator: { fieldId: "", value: "" },
+        },
+        filters: flowMap.filters || [],
+        appearance: flowMap.appearance || {
+          showLegend: false,
+          legendLabel: "Value",
+          legendLocation: "bottom-center",
+          primaryCityColor: "#ef4444",
+          secondaryCityColor: "#06b6d4",
+          lineColor: "#3b82f6",
+          showCityName: true,
+          primaryCityNameColor: "#ffffff",
+          secondaryCityNameColor: "#ffffff",
+          showValueTooltip: true,
+          showArrowHead: false,
+          countryFillColor: "#e5e7eb",
+          countryHoverColor: "#d1d5db",
+        },
+      };
+    }
+  }
+
   const config: any = {
     ...(transformedGroupBy && { groupBy: transformedGroupBy }),
     dateRange: transformedDateRange,
@@ -370,6 +402,37 @@ export function transformWidgetPayloadSpecial(payload: any) {
       };
     }
   }
+  if (payload.visualizationType === "flow-map") {
+    const flowMap = (payload.options?.flowMap) || payload.flowMap;
+    if (flowMap) {
+      normalizedOptionsSpecial.flowMap = {
+        metric: flowMap.metric || {
+          formId: "",
+          region: "africa",
+          city1FieldId: "",
+          city2FieldId: "",
+          valueFieldId: "",
+          primaryCityIndicator: { fieldId: "", value: "" },
+        },
+        filters: flowMap.filters || [],
+        appearance: flowMap.appearance || {
+          showLegend: false,
+          legendLabel: "Value",
+          legendLocation: "bottom-center",
+          primaryCityColor: "#ef4444",
+          secondaryCityColor: "#06b6d4",
+          lineColor: "#3b82f6",
+          showCityName: true,
+          primaryCityNameColor: "#ffffff",
+          secondaryCityNameColor: "#ffffff",
+          showValueTooltip: true,
+          showArrowHead: false,
+          countryFillColor: "#e5e7eb",
+          countryHoverColor: "#d1d5db",
+        },
+      };
+    }
+  }
 
   const config: any = {
     ...(transformedGroupBy && { groupBy: transformedGroupBy }),
@@ -502,6 +565,39 @@ export function transformWidgetUpdatePayload(payload: any) {
           showCityName: true,
           cityNameColor: "#ffffff",
           showValueTooltip: true,
+          countryFillColor: "#e5e7eb",
+          countryHoverColor: "#d1d5db",
+        },
+      },
+    };
+  }
+
+  // Allow direct flowMap updates without requiring full options object
+  if (payload.flowMap !== undefined) {
+    configUpdates.options = {
+      ...(configUpdates.options || {}),
+      flowMap: {
+        metric: payload.flowMap.metric || {
+          formId: "",
+          region: "africa",
+          city1FieldId: "",
+          city2FieldId: "",
+          valueFieldId: "",
+          primaryCityIndicator: { fieldId: "", value: "" },
+        },
+        filters: payload.flowMap.filters || [],
+        appearance: payload.flowMap.appearance || {
+          showLegend: false,
+          legendLabel: "Value",
+          legendLocation: "bottom-center",
+          primaryCityColor: "#ef4444",
+          secondaryCityColor: "#06b6d4",
+          lineColor: "#3b82f6",
+          showCityName: true,
+          primaryCityNameColor: "#ffffff",
+          secondaryCityNameColor: "#ffffff",
+          showValueTooltip: true,
+          showArrowHead: false,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
         },

@@ -1034,6 +1034,187 @@ export async function processBubbleMapWidget(
   return result;
 }
 
+export async function processFlowMapWidget(
+  widget: any,
+  filteredResponses: ProcessedResponse[],
+  formDesignsMap: Map<string, any>,
+  config: any,
+  service: any,
+): Promise<WidgetDataPayload> {
+  console.log('[FlowMap] Starting processing for widget:', widget.id);
+  console.log('[FlowMap] Total filtered responses:', filteredResponses.length);
+  console.log('[FlowMap] Config:', JSON.stringify(config, null, 2));
+
+  const flowMapConfig = config.options?.flowMap || {};
+  console.log('[FlowMap] FlowMap config:', JSON.stringify(flowMapConfig, null, 2));
+
+  const metric: {
+    formId: string;
+    region: string;
+    city1FieldId: string;
+    city2FieldId: string;
+    valueFieldId: string;
+    primaryCityIndicator: {
+      fieldId: string;
+      value: string;
+    };
+  } = flowMapConfig.metric || {
+    formId: "",
+    region: "africa",
+    city1FieldId: "",
+    city2FieldId: "",
+    valueFieldId: "",
+    primaryCityIndicator: { fieldId: "", value: "" },
+  };
+
+  console.log('[FlowMap] Metric config:', JSON.stringify(metric, null, 2));
+
+  if (!metric.formId || !metric.city1FieldId || !metric.city2FieldId || !metric.valueFieldId || !metric.primaryCityIndicator?.fieldId || !metric.primaryCityIndicator?.value) {
+    console.log('[FlowMap] Missing required metric fields - returning empty');
+    return {
+      type: 'flow-map',
+      title: widget.title,
+      connections: [],
+      primaryCities: [],
+      meta: widget.config || {},
+      empty: true,
+    };
+  }
+
+  const formIdStr = String(metric.formId);
+  console.log('[FlowMap] Processing form ID:', formIdStr);
+  const formDesign = formDesignsMap.get(formIdStr);
+  if (!formDesign) {
+    console.log('[FlowMap] ERROR: Form design not found for formId:', formIdStr);
+    return {
+      type: 'flow-map',
+      title: widget.title,
+      connections: [],
+      primaryCities: [],
+      meta: widget.config || {},
+      empty: true,
+    };
+  }
+
+  // Normalize indicator value for comparison (case-insensitive for text)
+  const normalizeIndicatorValue = (val: any): string => {
+    if (val === null || val === undefined) return "";
+    return String(val).trim().toLowerCase();
+  };
+  const indicatorValueNormalized = normalizeIndicatorValue(metric.primaryCityIndicator.value);
+
+  // Process connections - directional (City1→City2 and City2→City1 are separate)
+  const connectionMap: Record<string, {
+    city1: string;
+    city2: string;
+    value: number;
+    city1Country: string;
+    city2Country: string;
+  }> = {};
+
+  const primaryCitiesSet = new Set<string>();
+
+  for (const resp of filteredResponses) {
+    if (resp.formId !== formIdStr) continue;
+
+    const city1Raw = service.getFieldValue(
+      resp,
+      metric.city1FieldId,
+      undefined,
+      formDesign,
+    );
+    const city2Raw = service.getFieldValue(
+      resp,
+      metric.city2FieldId,
+      undefined,
+      formDesign,
+    );
+    const valueRaw = service.getFieldValue(
+      resp,
+      metric.valueFieldId,
+      undefined,
+      formDesign,
+    );
+    const indicatorRaw = service.getFieldValue(
+      resp,
+      metric.primaryCityIndicator.fieldId,
+      undefined,
+      formDesign,
+    );
+
+    if (!city1Raw || !city2Raw || valueRaw === null || valueRaw === undefined) continue;
+
+    const city1 = String(city1Raw).trim();
+    const city2 = String(city2Raw).trim();
+    const value = typeof valueRaw === 'number' ? valueRaw : parseFloat(String(valueRaw));
+
+    if (isNaN(value)) continue;
+
+    // Use directional key (City1→City2, not normalized)
+    const pairKey = `${city1}::${city2}`;
+
+    // Check if this response indicates a primary city
+    // A city is primary if city1's indicator field value matches the configured indicator value
+    const indicatorValue = normalizeIndicatorValue(indicatorRaw);
+    if (indicatorValue === indicatorValueNormalized) {
+      // Only city1 is marked as primary when indicator matches
+      primaryCitiesSet.add(city1);
+    }
+
+    // Get country for cities (try to get from country field if available)
+    // For now, we'll use a placeholder - in real implementation, you'd need country fields
+    const city1Country = "Unknown"; // TODO: Extract from country field if available
+    const city2Country = "Unknown";
+
+    if (!connectionMap[pairKey]) {
+      connectionMap[pairKey] = {
+        city1: city1,
+        city2: city2,
+        value: 0,
+        city1Country,
+        city2Country,
+      };
+    }
+
+    // Sum values for same directional pairs
+    connectionMap[pairKey].value += value;
+  }
+
+  // Convert to array format
+  const connections = Object.values(connectionMap);
+
+  console.log('[FlowMap] Processing summary:', {
+    totalResponses: filteredResponses.length,
+    connectionsCount: connections.length,
+    primaryCitiesCount: primaryCitiesSet.size,
+    primaryCities: Array.from(primaryCitiesSet),
+  });
+
+  // Determine region from config
+  const region = metric.region || "africa";
+
+  const meta = { ...widget.config };
+  if (region) {
+    meta.options = meta.options || {};
+    meta.options.flowMap = meta.options.flowMap || {};
+    meta.options.flowMap.region = region;
+  }
+
+  const result: WidgetDataPayload = {
+    type: 'flow-map',
+    title: widget.title,
+    connections,
+    primaryCities: Array.from(primaryCitiesSet),
+    meta,
+    empty: connections.length === 0,
+  };
+
+  console.log('[FlowMap] Final result:', JSON.stringify(result, null, 2));
+  console.log('[FlowMap] Result empty:', result.empty);
+
+  return result;
+}
+
 // Helper functions
 function createEmptyPayload(widget: any): WidgetDataPayload {
   const base = {
@@ -1086,6 +1267,13 @@ function createEmptyPayload(widget: any): WidgetDataPayload {
         ...base,
         type: 'bubble-map',
         cities: [],
+      };
+    case 'flow-map':
+      return {
+        ...base,
+        type: 'flow-map',
+        connections: [],
+        primaryCities: [],
       };
     default:
       return { ...base, type: 'card', value: 0, statLabel: 'No Data' };

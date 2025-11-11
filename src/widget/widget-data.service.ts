@@ -10,6 +10,7 @@ import {
   processHistogramWidget,
   processMapWidget,
   processBubbleMapWidget,
+  processFlowMapWidget,
   processMultiMetricWidget,
   processPieWidget,
   processScatterWidget,
@@ -270,6 +271,15 @@ export class WidgetDataService {
             config,
             this,
           );
+        case 'flow-map':
+          console.log('[WidgetDataService] Routing to processFlowMapWidget');
+          return await processFlowMapWidget(
+            widget,
+            filteredResponses,
+            formDesignsMap,
+            config,
+            this,
+          );
         case 'crosstab':
           return await processCrossTabWidget(
             widget,
@@ -349,6 +359,13 @@ export class WidgetDataService {
           ...base,
           type: 'bubble-map',
           cities: [],
+        };
+      case 'flow-map':
+        return {
+          ...base,
+          type: 'flow-map',
+          connections: [],
+          primaryCities: [],
         };
       case 'crosstab':
         return {

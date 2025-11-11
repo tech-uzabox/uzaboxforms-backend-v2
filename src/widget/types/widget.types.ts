@@ -36,6 +36,7 @@ export interface WidgetDataPayload {
     | 'calendar-heatmap'
     | 'map'
     | 'bubble-map'
+    | 'flow-map'
     | 'crosstab'
     | 'cct';
   title: string;
@@ -62,6 +63,19 @@ export interface WidgetDataPayload {
     latitude?: string;
     longitude?: string;
   }>;
+  // Flow map-specific fields
+  connections?: Array<{
+    city1: string;
+    city2: string;
+    value: number;
+    city1Country: string;
+    city2Country: string;
+    city1Lat?: number;
+    city1Lng?: number;
+    city2Lat?: number;
+    city2Lng?: number;
+  }>;
+  primaryCities?: string[];
   // Crosstab-specific fields
   rows?: string[];
   columns?: string[];
