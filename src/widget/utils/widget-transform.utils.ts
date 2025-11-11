@@ -172,6 +172,32 @@ export function transformWidgetPayload(payload: any) {
       };
     }
   }
+  if (payload.visualizationType === "bubble-map") {
+    const bubbleMap = (payload.options?.bubbleMap) || payload.bubbleMap;
+    if (bubbleMap) {
+      normalizedOptions.bubbleMap = {
+        metric: bubbleMap.metric || {
+          formId: "",
+          countryFieldId: "",
+          cityFieldId: "",
+          valueFieldId: "",
+        },
+        filters: bubbleMap.filters || [],
+        appearance: bubbleMap.appearance || {
+          showLegend: false,
+          legendLabel: "Value",
+          legendLocation: "bottom-center",
+          fillColor: "#3b82f6",
+          borderColor: "#ffffff",
+          showCityName: true,
+          cityNameColor: "#ffffff",
+          showValueTooltip: true,
+          countryFillColor: "#e5e7eb",
+          countryHoverColor: "#d1d5db",
+        },
+      };
+    }
+  }
 
   const config: any = {
     ...(transformedGroupBy && { groupBy: transformedGroupBy }),
@@ -318,6 +344,32 @@ export function transformWidgetPayloadSpecial(payload: any) {
       };
     }
   }
+  if (payload.visualizationType === "bubble-map") {
+    const bubbleMap = (payload.options?.bubbleMap) || payload.bubbleMap;
+    if (bubbleMap) {
+      normalizedOptionsSpecial.bubbleMap = {
+        metric: bubbleMap.metric || {
+          formId: "",
+          countryFieldId: "",
+          cityFieldId: "",
+          valueFieldId: "",
+        },
+        filters: bubbleMap.filters || [],
+        appearance: bubbleMap.appearance || {
+          showLegend: false,
+          legendLabel: "Value",
+          legendLocation: "bottom-center",
+          fillColor: "#3b82f6",
+          borderColor: "#ffffff",
+          showCityName: true,
+          cityNameColor: "#ffffff",
+          showValueTooltip: true,
+          countryFillColor: "#e5e7eb",
+          countryHoverColor: "#d1d5db",
+        },
+      };
+    }
+  }
 
   const config: any = {
     ...(transformedGroupBy && { groupBy: transformedGroupBy }),
@@ -426,6 +478,33 @@ export function transformWidgetUpdatePayload(payload: any) {
         formId: payload.cct.formId,
         factors: payload.cct.factors || [],
         measures: payload.cct.measures || [],
+      },
+    };
+  }
+  // Allow direct bubbleMap updates without requiring full options object
+  if (payload.bubbleMap !== undefined) {
+    configUpdates.options = {
+      ...(configUpdates.options || {}),
+      bubbleMap: {
+        metric: payload.bubbleMap.metric || {
+          formId: "",
+          countryFieldId: "",
+          cityFieldId: "",
+          valueFieldId: "",
+        },
+        filters: payload.bubbleMap.filters || [],
+        appearance: payload.bubbleMap.appearance || {
+          showLegend: false,
+          legendLabel: "Value",
+          legendLocation: "bottom-center",
+          fillColor: "#3b82f6",
+          borderColor: "#ffffff",
+          showCityName: true,
+          cityNameColor: "#ffffff",
+          showValueTooltip: true,
+          countryFillColor: "#e5e7eb",
+          countryHoverColor: "#d1d5db",
+        },
       },
     };
   }

@@ -9,6 +9,7 @@ import {
   processCCTWidget,
   processHistogramWidget,
   processMapWidget,
+  processBubbleMapWidget,
   processMultiMetricWidget,
   processPieWidget,
   processScatterWidget,
@@ -121,26 +122,38 @@ export class WidgetDataService {
   }
 
   private async processWidgetData(widget: any): Promise<WidgetDataPayload> {
+    console.log('[WidgetDataService] processWidgetData called');
+    console.log('[WidgetDataService] Widget ID:', widget.id);
+    console.log('[WidgetDataService] Widget visualizationType:', widget.visualizationType);
+    console.log('[WidgetDataService] Widget config:', JSON.stringify(widget.config, null, 2));
+
     try {
-
-      // console.log(widget)
-
       // Parse widget config from JSON
       const config = widget.config as any;
+      console.log('[WidgetDataService] Parsed config:', JSON.stringify(config, null, 2));
+
       if (!config) {
+        console.log('[WidgetDataService] No config found - returning empty payload');
         return this.createEmptyPayload(widget);
       }
 
       const uniqueFormIds = getUniqueFormIds(config);
+      console.log('[WidgetDataService] Unique form IDs:', uniqueFormIds);
+
       const { startDate, endDate } = resolveDateRange(config.dateRange);
+      console.log('[WidgetDataService] Date range:', { startDate, endDate });
 
       // Get form designs for field processing
       const forms = await this.prisma.form.findMany({
         where: { id: { in: uniqueFormIds } },
       });
+      console.log('[WidgetDataService] Found forms:', forms.length, forms.map(f => ({ id: f.id, name: f.name })));
+
       const formDesignsMap = new Map(forms.map((f) => [f.id, f.design as any]));
+      console.log('[WidgetDataService] Form designs map size:', formDesignsMap.size);
 
       // Get form responses
+      console.log('[WidgetDataService] Fetching form responses...');
       const responses = await this.prisma.formResponse.findMany({
         where: {
           formId: { in: uniqueFormIds },
@@ -159,24 +172,34 @@ export class WidgetDataService {
         },
       });
 
+      console.log('[WidgetDataService] Raw responses count:', responses?.length || 0);
+
       if (!responses || responses.length === 0) {
+        console.log('[WidgetDataService] No responses found - returning empty payload');
         return this.createEmptyPayload(widget);
       }
 
       const allResponses = normalizeResponses(responses);
+      console.log('[WidgetDataService] Normalized responses count:', allResponses.length);
+
       const filteredResponses = await applyFilters(
         allResponses,
         config.filters || [],
         formDesignsMap,
       );
+      console.log('[WidgetDataService] After filtering, responses count:', filteredResponses.length);
       if (widget.visualizationType === 'map') {
         console.log(widget.visualizationType, filteredResponses);
       }
 
+      console.log('[WidgetDataService] Filtered responses count:', filteredResponses.length);
+
       if (filteredResponses.length === 0) {
+        console.log('[WidgetDataService] No filtered responses - returning empty payload');
         return this.createEmptyPayload(widget);
       }
 
+      console.log('[WidgetDataService] Entering switch statement for visualizationType:', widget.visualizationType);
       switch (widget.visualizationType) {
         case 'bar':
         case 'line':
@@ -235,6 +258,18 @@ export class WidgetDataService {
             config,
             this,
           );
+        case 'bubble-map':
+          console.log('[WidgetDataService] Routing to processBubbleMapWidget');
+          console.log('[WidgetDataService] Widget:', JSON.stringify(widget, null, 2));
+          console.log('[WidgetDataService] Filtered responses:', filteredResponses.length);
+          console.log('[WidgetDataService] Form designs map keys:', Array.from(formDesignsMap.keys()));
+          return await processBubbleMapWidget(
+            widget,
+            filteredResponses,
+            formDesignsMap,
+            config,
+            this,
+          );
         case 'crosstab':
           return await processCrossTabWidget(
             widget,
@@ -252,6 +287,7 @@ export class WidgetDataService {
             this,
           );
         default:
+          console.log('[WidgetDataService] ERROR: Unsupported visualization type:', widget.visualizationType);
           throw new Error(
             `Unsupported visualization type: ${widget.visualizationType}`,
           );
@@ -301,6 +337,18 @@ export class WidgetDataService {
           values: [],
           startDate: '',
           endDate: '',
+        };
+      case 'map':
+        return {
+          ...base,
+          type: 'map',
+          countries: {},
+        };
+      case 'bubble-map':
+        return {
+          ...base,
+          type: 'bubble-map',
+          cities: [],
         };
       case 'crosstab':
         return {

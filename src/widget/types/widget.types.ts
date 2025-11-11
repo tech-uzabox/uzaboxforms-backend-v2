@@ -35,6 +35,7 @@ export interface WidgetDataPayload {
     | 'scatter'
     | 'calendar-heatmap'
     | 'map'
+    | 'bubble-map'
     | 'crosstab'
     | 'cct';
   title: string;
@@ -53,6 +54,14 @@ export interface WidgetDataPayload {
     string,
     { values: Record<string, unknown> | Array<Record<string, unknown>>; colorValue?: string }
   >;
+  // Bubble map-specific fields
+  cities?: Array<{
+    country: string;
+    city: string;
+    value: number;
+    latitude?: string;
+    longitude?: string;
+  }>;
   // Crosstab-specific fields
   rows?: string[];
   columns?: string[];

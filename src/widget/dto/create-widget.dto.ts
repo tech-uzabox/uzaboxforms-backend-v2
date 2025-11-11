@@ -39,7 +39,7 @@ const CreateWidgetSchema = z.object({
   dashboardId: z.string().uuid(),
   title: z.string().min(1),
   description: z.string().optional(),
-  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'group', 'crosstab', 'cct']),
+  visualizationType: z.enum(['card', 'bar', 'line', 'pie', 'histogram', 'scatter', 'calendar-heatmap', 'map', 'bubble-map', 'group', 'crosstab', 'cct']),
 
   // Enhanced multi-metric structure
   metrics: z.array(z.any()).optional(),

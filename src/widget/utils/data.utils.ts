@@ -50,6 +50,12 @@ export function getUniqueFormIds(config: any): string[] {
     formIds.add(String(cct.formId));
   }
 
+  // Bubble map widget: include formId from metric
+  const bubbleMap = config?.options?.bubbleMap || config?.bubbleMap;
+  if (bubbleMap?.metric?.formId) {
+    formIds.add(String(bubbleMap.metric.formId));
+  }
+
   return Array.from(formIds);
 }
 

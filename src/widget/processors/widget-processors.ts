@@ -580,7 +580,7 @@ export async function processMapWidget(
   config: any,
   service: any,
 ): Promise<WidgetDataPayload> {
-  
+
   const mapConfig = config.options?.map || {};
   const metrics: Array<{
     formId: string;
@@ -827,6 +827,213 @@ export async function processMapWidget(
   };
 }
 
+export async function processBubbleMapWidget(
+  widget: any,
+  filteredResponses: ProcessedResponse[],
+  formDesignsMap: Map<string, any>,
+  config: any,
+  service: any,
+): Promise<WidgetDataPayload> {
+  console.log('[BubbleMap] Starting processing for widget:', widget.id);
+  console.log('[BubbleMap] Total filtered responses:', filteredResponses.length);
+  console.log('[BubbleMap] Config:', JSON.stringify(config, null, 2));
+
+  const bubbleMapConfig = config.options?.bubbleMap || {};
+  console.log('[BubbleMap] BubbleMap config:', JSON.stringify(bubbleMapConfig, null, 2));
+
+  const metric: {
+    formId: string;
+    countryFieldId: string;
+    cityFieldId: string;
+    valueFieldId: string;
+  } = bubbleMapConfig.metric || {
+    formId: "",
+    countryFieldId: "",
+    cityFieldId: "",
+    valueFieldId: "",
+  };
+
+  console.log('[BubbleMap] Metric config:', JSON.stringify(metric, null, 2));
+
+  if (!metric.formId || !metric.countryFieldId || !metric.cityFieldId || !metric.valueFieldId) {
+    console.log('[BubbleMap] Missing required metric fields - returning empty');
+    console.log('[BubbleMap] Missing fields:', {
+      formId: !metric.formId,
+      countryFieldId: !metric.countryFieldId,
+      cityFieldId: !metric.cityFieldId,
+      valueFieldId: !metric.valueFieldId,
+    });
+    return {
+      type: 'bubble-map',
+      title: widget.title,
+      cities: [],
+      meta: widget.config || {},
+      empty: true,
+    };
+  }
+
+  const formIdStr = String(metric.formId);
+  console.log('[BubbleMap] Processing form ID:', formIdStr);
+  console.log('[BubbleMap] Field IDs:', {
+    countryFieldId: metric.countryFieldId,
+    cityFieldId: metric.cityFieldId,
+    valueFieldId: metric.valueFieldId,
+  });
+
+  const formDesign = formDesignsMap.get(formIdStr);
+  if (!formDesign) {
+    console.log('[BubbleMap] ERROR: Form design not found for formId:', formIdStr);
+    console.log('[BubbleMap] Available form IDs in map:', Array.from(formDesignsMap.keys()));
+  } else {
+    console.log('[BubbleMap] Form design found:', formDesign.id || formDesign.name || 'unnamed');
+  }
+
+  // Group responses by country and city, aggregating values
+  const cityDataMap: Record<string, {
+    country: string;
+    city: string;
+    value: number;
+    count: number;
+  }> = {};
+
+  let processedCount = 0;
+  let skippedCount = 0;
+  let skippedReasons = {
+    wrongForm: 0,
+    missingCountry: 0,
+    missingCity: 0,
+    missingValue: 0,
+    invalidValue: 0,
+  };
+
+  for (const resp of filteredResponses) {
+    if (resp.formId !== formIdStr) {
+      skippedReasons.wrongForm++;
+      continue;
+    }
+
+    processedCount++;
+    console.log(`[BubbleMap] Processing response ${processedCount}:`, resp.id);
+
+    const countryRaw = service.getFieldValue(
+      resp,
+      metric.countryFieldId,
+      undefined,
+      formDesign,
+    );
+    console.log(`[BubbleMap] Response ${processedCount} - countryRaw:`, countryRaw);
+
+    const cityRaw = service.getFieldValue(
+      resp,
+      metric.cityFieldId,
+      undefined,
+      formDesign,
+    );
+    console.log(`[BubbleMap] Response ${processedCount} - cityRaw:`, cityRaw);
+
+    const valueRaw = service.getFieldValue(
+      resp,
+      metric.valueFieldId,
+      undefined,
+      formDesign,
+    );
+    console.log(`[BubbleMap] Response ${processedCount} - valueRaw:`, valueRaw, typeof valueRaw);
+
+    if (!countryRaw) {
+      skippedReasons.missingCountry++;
+      console.log(`[BubbleMap] Response ${processedCount} - SKIPPED: missing country`);
+      continue;
+    }
+    if (!cityRaw) {
+      skippedReasons.missingCity++;
+      console.log(`[BubbleMap] Response ${processedCount} - SKIPPED: missing city`);
+      continue;
+    }
+    if (valueRaw === null || valueRaw === undefined) {
+      skippedReasons.missingValue++;
+      console.log(`[BubbleMap] Response ${processedCount} - SKIPPED: missing value`);
+      continue;
+    }
+
+    const country = canonicalizeCountryName(String(countryRaw));
+    const city = String(cityRaw).trim();
+    const value = typeof valueRaw === 'number' ? valueRaw : parseFloat(String(valueRaw));
+
+    console.log(`[BubbleMap] Response ${processedCount} - parsed:`, { country, city, value });
+
+    if (isNaN(value)) {
+      skippedReasons.invalidValue++;
+      console.log(`[BubbleMap] Response ${processedCount} - SKIPPED: invalid value (NaN)`);
+      continue;
+    }
+
+    // Create a unique key for country-city combination
+    const key = `${country}::${city}`;
+
+    if (!cityDataMap[key]) {
+      cityDataMap[key] = {
+        country,
+        city,
+        value: 0,
+        count: 0,
+      };
+    }
+
+    // Sum values for cities with multiple responses
+    cityDataMap[key].value += value;
+    cityDataMap[key].count += 1;
+    console.log(`[BubbleMap] Response ${processedCount} - Added to cityDataMap:`, key, cityDataMap[key]);
+  }
+
+  console.log('[BubbleMap] Processing summary:', {
+    totalResponses: filteredResponses.length,
+    processedCount,
+    skippedCount: skippedReasons.wrongForm + skippedReasons.missingCountry + skippedReasons.missingCity + skippedReasons.missingValue + skippedReasons.invalidValue,
+    skippedReasons,
+    cityDataMapSize: Object.keys(cityDataMap).length,
+    cityDataMap: JSON.stringify(cityDataMap, null, 2),
+  });
+
+  // Convert to array format
+  const cities = Object.values(cityDataMap).map((item) => ({
+    country: item.country,
+    city: item.city,
+    value: item.value,
+  }));
+
+  console.log('[BubbleMap] Final cities array:', JSON.stringify(cities, null, 2));
+
+  // Determine region from country question's countryLevel
+  let region: string | undefined;
+  const countryQuestion = getQuestion(formDesign, metric.countryFieldId);
+  if (countryQuestion?.countryLevel) {
+    region = countryQuestion.countryLevel;
+    console.log('[BubbleMap] Region determined:', region);
+  } else {
+    console.log('[BubbleMap] No region found in country question');
+  }
+
+  const meta = { ...widget.config };
+  if (region) {
+    meta.options = meta.options || {};
+    meta.options.bubbleMap = meta.options.bubbleMap || {};
+    meta.options.bubbleMap.region = region;
+  }
+
+  const result: WidgetDataPayload = {
+    type: 'bubble-map',
+    title: widget.title,
+    cities,
+    meta,
+    empty: cities.length === 0,
+  };
+
+  console.log('[BubbleMap] Final result:', JSON.stringify(result, null, 2));
+  console.log('[BubbleMap] Result empty:', result.empty);
+
+  return result;
+}
+
 // Helper functions
 function createEmptyPayload(widget: any): WidgetDataPayload {
   const base = {
@@ -873,6 +1080,12 @@ function createEmptyPayload(widget: any): WidgetDataPayload {
         ...base,
         type: 'map',
         countries: {},
+      };
+    case 'bubble-map':
+      return {
+        ...base,
+        type: 'bubble-map',
+        cities: [],
       };
     default:
       return { ...base, type: 'card', value: 0, statLabel: 'No Data' };
