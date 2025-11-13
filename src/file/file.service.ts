@@ -334,10 +334,11 @@ export class FileService {
     file: Express.Multer.File,
     userId: string,
     folderId?: string,
+    formId?: string,
   ): Promise<string> {
     try {
       this.logger.log(
-        `Queuing file for form generation: ${file.originalname} for user: ${userId}`,
+        `Queuing file for form generation: ${file.originalname} for user: ${userId}${formId ? ` (updating form: ${formId})` : ''}`,
       );
 
       const jobResult = await this.jobService.processFile({
@@ -347,6 +348,7 @@ export class FileService {
         },
         userId,
         folderId,
+        formId,
       });
 
       const jobId = jobResult;

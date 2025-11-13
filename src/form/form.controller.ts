@@ -223,10 +223,10 @@ export class FormController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async generateFormFromFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: { folderId?: string },
+    @Body() body: { folderId?: string; formId?: string },
     @GetUser() user: AuthenticatedUser,
   ) {
-    const jobId = await this.fileService.processFileForFormGeneration(file, user.id, body.folderId);
+    const jobId = await this.fileService.processFileForFormGeneration(file, user.id, body.folderId, body.formId);
     return {
       jobId,
       message: 'Form generation started. Use the jobId to track progress.',
