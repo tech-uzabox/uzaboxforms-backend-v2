@@ -194,6 +194,7 @@ export function transformWidgetPayload(payload: any) {
           showValueTooltip: true,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
+          countryBorderColor: "#d1d5db",
         },
       };
     }
@@ -226,6 +227,7 @@ export function transformWidgetPayload(payload: any) {
           showArrowHead: false,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
+          countryBorderColor: "#d1d5db",
         },
       };
     }
@@ -398,6 +400,7 @@ export function transformWidgetPayloadSpecial(payload: any) {
           showValueTooltip: true,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
+          countryBorderColor: "#d1d5db",
         },
       };
     }
@@ -429,6 +432,7 @@ export function transformWidgetPayloadSpecial(payload: any) {
           showArrowHead: false,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
+          countryBorderColor: "#d1d5db",
         },
       };
     }
@@ -567,6 +571,7 @@ export function transformWidgetUpdatePayload(payload: any) {
           showValueTooltip: true,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
+          countryBorderColor: "#d1d5db",
         },
       },
     };
@@ -600,6 +605,7 @@ export function transformWidgetUpdatePayload(payload: any) {
           showArrowHead: false,
           countryFillColor: "#e5e7eb",
           countryHoverColor: "#d1d5db",
+          countryBorderColor: "#d1d5db",
         },
       },
     };
