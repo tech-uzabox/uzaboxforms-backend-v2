@@ -208,9 +208,12 @@ export class FilesController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 404, description: 'File not found.' })
-  async getPresignedUrlByFileUrl(@Param('fileUrl') fileUrl: string[]) {
+  async getPresignedUrlByFileUrl(
+    @Param('fileUrl') fileUrl: string[],
+    @Query('bucket') bucket?: 'private' | 'public',
+  ) {
     const decodedFileUrl = decodeURIComponent(fileUrl.join('/'));
-    return this.filesService.getPresignedUrlByFileUrl(decodedFileUrl);
+    return this.filesService.getPresignedUrlByFileUrl(decodedFileUrl, bucket);
   }
 
   @Get('serve/signed/:id')

@@ -293,6 +293,7 @@ export type UserWhereInput = {
   roles?: Prisma.UserRoleListRelationFilter
   ownedDashboards?: Prisma.DashboardListRelationFilter
   formGenerationProgress?: Prisma.FormGenerationProgressListRelationFilter
+  generatedCertificates?: Prisma.CertificateListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -323,6 +324,7 @@ export type UserOrderByWithRelationInput = {
   roles?: Prisma.UserRoleOrderByRelationAggregateInput
   ownedDashboards?: Prisma.DashboardOrderByRelationAggregateInput
   formGenerationProgress?: Prisma.FormGenerationProgressOrderByRelationAggregateInput
+  generatedCertificates?: Prisma.CertificateOrderByRelationAggregateInput
   _relevance?: Prisma.UserOrderByRelevanceInput
 }
 
@@ -357,6 +359,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   roles?: Prisma.UserRoleListRelationFilter
   ownedDashboards?: Prisma.DashboardListRelationFilter
   formGenerationProgress?: Prisma.FormGenerationProgressListRelationFilter
+  generatedCertificates?: Prisma.CertificateListRelationFilter
 }, "id" | "email" | "googleId">
 
 export type UserOrderByWithAggregationInput = {
@@ -427,6 +430,7 @@ export type UserCreateInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -457,6 +461,7 @@ export type UserUncheckedCreateInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUpdateInput = {
@@ -487,6 +492,7 @@ export type UserUpdateInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -517,6 +523,7 @@ export type UserUncheckedUpdateInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -869,6 +876,20 @@ export type UserUpdateOneRequiredWithoutFormGenerationProgressNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFormGenerationProgressInput, Prisma.UserUpdateWithoutFormGenerationProgressInput>, Prisma.UserUncheckedUpdateWithoutFormGenerationProgressInput>
 }
 
+export type UserCreateNestedOneWithoutGeneratedCertificatesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGeneratedCertificatesInput, Prisma.UserUncheckedCreateWithoutGeneratedCertificatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGeneratedCertificatesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGeneratedCertificatesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGeneratedCertificatesInput, Prisma.UserUncheckedCreateWithoutGeneratedCertificatesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGeneratedCertificatesInput
+  upsert?: Prisma.UserUpsertWithoutGeneratedCertificatesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGeneratedCertificatesInput, Prisma.UserUpdateWithoutGeneratedCertificatesInput>, Prisma.UserUncheckedUpdateWithoutGeneratedCertificatesInput>
+}
+
 export type UserCreateWithoutRolesInput = {
   id?: string
   email: string
@@ -896,6 +917,7 @@ export type UserCreateWithoutRolesInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutRolesInput = {
@@ -925,6 +947,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutRolesInput = {
@@ -970,6 +993,7 @@ export type UserUpdateWithoutRolesInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRolesInput = {
@@ -999,6 +1023,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutFilesInput = {
@@ -1028,6 +1053,7 @@ export type UserCreateWithoutFilesInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutFilesInput = {
@@ -1057,6 +1083,7 @@ export type UserUncheckedCreateWithoutFilesInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutFilesInput = {
@@ -1102,6 +1129,7 @@ export type UserUpdateWithoutFilesInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFilesInput = {
@@ -1131,6 +1159,7 @@ export type UserUncheckedUpdateWithoutFilesInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1160,6 +1189,7 @@ export type UserCreateWithoutAuditLogsInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1189,6 +1219,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1234,6 +1265,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1263,6 +1295,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutCreatedGroupsInput = {
@@ -1292,6 +1325,7 @@ export type UserCreateWithoutCreatedGroupsInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedGroupsInput = {
@@ -1321,6 +1355,7 @@ export type UserUncheckedCreateWithoutCreatedGroupsInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedGroupsInput = {
@@ -1366,6 +1401,7 @@ export type UserUpdateWithoutCreatedGroupsInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
@@ -1395,6 +1431,7 @@ export type UserUncheckedUpdateWithoutCreatedGroupsInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutCreatedProcessesInput = {
@@ -1424,6 +1461,7 @@ export type UserCreateWithoutCreatedProcessesInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProcessesInput = {
@@ -1453,6 +1491,7 @@ export type UserUncheckedCreateWithoutCreatedProcessesInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProcessesInput = {
@@ -1498,6 +1537,7 @@ export type UserUpdateWithoutCreatedProcessesInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
@@ -1527,6 +1567,7 @@ export type UserUncheckedUpdateWithoutCreatedProcessesInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutCreatedFoldersInput = {
@@ -1556,6 +1597,7 @@ export type UserCreateWithoutCreatedFoldersInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedFoldersInput = {
@@ -1585,6 +1627,7 @@ export type UserUncheckedCreateWithoutCreatedFoldersInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedFoldersInput = {
@@ -1630,6 +1673,7 @@ export type UserUpdateWithoutCreatedFoldersInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedFoldersInput = {
@@ -1659,6 +1703,7 @@ export type UserUncheckedUpdateWithoutCreatedFoldersInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutCreatedProcessFoldersInput = {
@@ -1688,6 +1733,7 @@ export type UserCreateWithoutCreatedProcessFoldersInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedProcessFoldersInput = {
@@ -1717,6 +1763,7 @@ export type UserUncheckedCreateWithoutCreatedProcessFoldersInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedProcessFoldersInput = {
@@ -1762,6 +1809,7 @@ export type UserUpdateWithoutCreatedProcessFoldersInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedProcessFoldersInput = {
@@ -1791,6 +1839,7 @@ export type UserUncheckedUpdateWithoutCreatedProcessFoldersInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutCreatedFormsInput = {
@@ -1820,6 +1869,7 @@ export type UserCreateWithoutCreatedFormsInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutCreatedFormsInput = {
@@ -1849,6 +1899,7 @@ export type UserUncheckedCreateWithoutCreatedFormsInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutCreatedFormsInput = {
@@ -1894,6 +1945,7 @@ export type UserUpdateWithoutCreatedFormsInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedFormsInput = {
@@ -1923,6 +1975,7 @@ export type UserUncheckedUpdateWithoutCreatedFormsInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutApplicantProcessesInput = {
@@ -1952,6 +2005,7 @@ export type UserCreateWithoutApplicantProcessesInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicantProcessesInput = {
@@ -1981,6 +2035,7 @@ export type UserUncheckedCreateWithoutApplicantProcessesInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicantProcessesInput = {
@@ -2026,6 +2081,7 @@ export type UserUpdateWithoutApplicantProcessesInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
@@ -2055,6 +2111,7 @@ export type UserUncheckedUpdateWithoutApplicantProcessesInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutProcessedApplicationsInput = {
@@ -2084,6 +2141,7 @@ export type UserCreateWithoutProcessedApplicationsInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
@@ -2113,6 +2171,7 @@ export type UserUncheckedCreateWithoutProcessedApplicationsInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutProcessedApplicationsInput = {
@@ -2158,6 +2217,7 @@ export type UserUpdateWithoutProcessedApplicationsInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
@@ -2187,6 +2247,7 @@ export type UserUncheckedUpdateWithoutProcessedApplicationsInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutOrganizationInput = {
@@ -2216,6 +2277,7 @@ export type UserCreateWithoutOrganizationInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutOrganizationInput = {
@@ -2245,6 +2307,7 @@ export type UserUncheckedCreateWithoutOrganizationInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutOrganizationInput = {
@@ -2290,6 +2353,7 @@ export type UserUpdateWithoutOrganizationInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrganizationInput = {
@@ -2319,6 +2383,7 @@ export type UserUncheckedUpdateWithoutOrganizationInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutOwnedDashboardsInput = {
@@ -2348,6 +2413,7 @@ export type UserCreateWithoutOwnedDashboardsInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutOwnedDashboardsInput = {
@@ -2377,6 +2443,7 @@ export type UserUncheckedCreateWithoutOwnedDashboardsInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutOwnedDashboardsInput = {
@@ -2422,6 +2489,7 @@ export type UserUpdateWithoutOwnedDashboardsInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOwnedDashboardsInput = {
@@ -2451,6 +2519,7 @@ export type UserUncheckedUpdateWithoutOwnedDashboardsInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutQrCodeDocumentsInput = {
@@ -2480,6 +2549,7 @@ export type UserCreateWithoutQrCodeDocumentsInput = {
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
@@ -2509,6 +2579,7 @@ export type UserUncheckedCreateWithoutQrCodeDocumentsInput = {
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutQrCodeDocumentsInput = {
@@ -2554,6 +2625,7 @@ export type UserUpdateWithoutQrCodeDocumentsInput = {
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
@@ -2583,6 +2655,7 @@ export type UserUncheckedUpdateWithoutQrCodeDocumentsInput = {
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserCreateWithoutFormGenerationProgressInput = {
@@ -2612,6 +2685,7 @@ export type UserCreateWithoutFormGenerationProgressInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+  generatedCertificates?: Prisma.CertificateCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserUncheckedCreateWithoutFormGenerationProgressInput = {
@@ -2641,6 +2715,7 @@ export type UserUncheckedCreateWithoutFormGenerationProgressInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
   ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+  generatedCertificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutGeneratedByUserInput
 }
 
 export type UserCreateOrConnectWithoutFormGenerationProgressInput = {
@@ -2686,6 +2761,7 @@ export type UserUpdateWithoutFormGenerationProgressInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+  generatedCertificates?: Prisma.CertificateUpdateManyWithoutGeneratedByUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFormGenerationProgressInput = {
@@ -2715,6 +2791,143 @@ export type UserUncheckedUpdateWithoutFormGenerationProgressInput = {
   qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
   ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+  generatedCertificates?: Prisma.CertificateUncheckedUpdateManyWithoutGeneratedByUserNestedInput
+}
+
+export type UserCreateWithoutGeneratedCertificatesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  files?: Prisma.FileCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardCreateNestedManyWithoutOwnerInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutGeneratedCertificatesInput = {
+  id?: string
+  email: string
+  password: string
+  firstName?: string | null
+  lastName?: string | null
+  photo?: string | null
+  googleId?: string | null
+  status?: $Enums.UserStatus
+  failedLoginAttempts?: number
+  lockedUntil?: Date | string | null
+  isLocked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutApplicantInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  files?: Prisma.FileUncheckedCreateNestedManyWithoutUserInput
+  createdForms?: Prisma.FormUncheckedCreateNestedManyWithoutCreatorInput
+  createdFolders?: Prisma.FolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedCreateNestedManyWithoutCreatorInput
+  createdGroups?: Prisma.GroupUncheckedCreateNestedManyWithoutCreatorInput
+  organization?: Prisma.OrganizationUserUncheckedCreateNestedOneWithoutUserInput
+  createdProcesses?: Prisma.ProcessUncheckedCreateNestedManyWithoutCreatorInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutUserInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedCreateNestedManyWithoutCreatorInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  ownedDashboards?: Prisma.DashboardUncheckedCreateNestedManyWithoutOwnerInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutGeneratedCertificatesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGeneratedCertificatesInput, Prisma.UserUncheckedCreateWithoutGeneratedCertificatesInput>
+}
+
+export type UserUpsertWithoutGeneratedCertificatesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGeneratedCertificatesInput, Prisma.UserUncheckedUpdateWithoutGeneratedCertificatesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGeneratedCertificatesInput, Prisma.UserUncheckedCreateWithoutGeneratedCertificatesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGeneratedCertificatesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGeneratedCertificatesInput, Prisma.UserUncheckedUpdateWithoutGeneratedCertificatesInput>
+}
+
+export type UserUpdateWithoutGeneratedCertificatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUpdateManyWithoutOwnerNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGeneratedCertificatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  failedLoginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isLocked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutApplicantNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  files?: Prisma.FileUncheckedUpdateManyWithoutUserNestedInput
+  createdForms?: Prisma.FormUncheckedUpdateManyWithoutCreatorNestedInput
+  createdFolders?: Prisma.FolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdProcessFolders?: Prisma.ProcessFolderUncheckedUpdateManyWithoutCreatorNestedInput
+  createdGroups?: Prisma.GroupUncheckedUpdateManyWithoutCreatorNestedInput
+  organization?: Prisma.OrganizationUserUncheckedUpdateOneWithoutUserNestedInput
+  createdProcesses?: Prisma.ProcessUncheckedUpdateManyWithoutCreatorNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutUserNestedInput
+  qrCodeDocuments?: Prisma.QrCodeDocumentUncheckedUpdateManyWithoutCreatorNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  ownedDashboards?: Prisma.DashboardUncheckedUpdateManyWithoutOwnerNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2736,6 +2949,7 @@ export type UserCountOutputType = {
   roles: number
   ownedDashboards: number
   formGenerationProgress: number
+  generatedCertificates: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2752,6 +2966,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   roles?: boolean | UserCountOutputTypeCountRolesArgs
   ownedDashboards?: boolean | UserCountOutputTypeCountOwnedDashboardsArgs
   formGenerationProgress?: boolean | UserCountOutputTypeCountFormGenerationProgressArgs
+  generatedCertificates?: boolean | UserCountOutputTypeCountGeneratedCertificatesArgs
 }
 
 /**
@@ -2855,6 +3070,13 @@ export type UserCountOutputTypeCountFormGenerationProgressArgs<ExtArgs extends r
   where?: Prisma.FormGenerationProgressWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGeneratedCertificatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2884,6 +3106,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
   ownedDashboards?: boolean | Prisma.User$ownedDashboardsArgs<ExtArgs>
   formGenerationProgress?: boolean | Prisma.User$formGenerationProgressArgs<ExtArgs>
+  generatedCertificates?: boolean | Prisma.User$generatedCertificatesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2951,6 +3174,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
   ownedDashboards?: boolean | Prisma.User$ownedDashboardsArgs<ExtArgs>
   formGenerationProgress?: boolean | Prisma.User$formGenerationProgressArgs<ExtArgs>
+  generatedCertificates?: boolean | Prisma.User$generatedCertificatesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2973,6 +3197,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     roles: Prisma.$UserRolePayload<ExtArgs>[]
     ownedDashboards: Prisma.$DashboardPayload<ExtArgs>[]
     formGenerationProgress: Prisma.$FormGenerationProgressPayload<ExtArgs>[]
+    generatedCertificates: Prisma.$CertificatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3396,6 +3621,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   roles<T extends Prisma.User$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ownedDashboards<T extends Prisma.User$ownedDashboardsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ownedDashboardsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DashboardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   formGenerationProgress<T extends Prisma.User$formGenerationProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$formGenerationProgressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormGenerationProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  generatedCertificates<T extends Prisma.User$generatedCertificatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$generatedCertificatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4163,6 +4389,30 @@ export type User$formGenerationProgressArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.FormGenerationProgressScalarFieldEnum | Prisma.FormGenerationProgressScalarFieldEnum[]
+}
+
+/**
+ * User.generatedCertificates
+ */
+export type User$generatedCertificatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Certificate
+   */
+  select?: Prisma.CertificateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Certificate
+   */
+  omit?: Prisma.CertificateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateInclude<ExtArgs> | null
+  where?: Prisma.CertificateWhereInput
+  orderBy?: Prisma.CertificateOrderByWithRelationInput | Prisma.CertificateOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateScalarFieldEnum | Prisma.CertificateScalarFieldEnum[]
 }
 
 /**

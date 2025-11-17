@@ -52,7 +52,10 @@ export const ModelName = {
   Document: 'Document',
   Suggestion: 'Suggestion',
   ProcessSave: 'ProcessSave',
-  FormGenerationProgress: 'FormGenerationProgress'
+  FormGenerationProgress: 'FormGenerationProgress',
+  CertificateTemplate: 'CertificateTemplate',
+  CertificateFieldMapping: 'CertificateFieldMapping',
+  Certificate: 'Certificate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -536,6 +539,65 @@ export const FormGenerationProgressScalarFieldEnum = {
 export type FormGenerationProgressScalarFieldEnum = (typeof FormGenerationProgressScalarFieldEnum)[keyof typeof FormGenerationProgressScalarFieldEnum]
 
 
+export const CertificateTemplateScalarFieldEnum = {
+  id: 'id',
+  processId: 'processId',
+  name: 'name',
+  templateFileUrl: 'templateFileUrl',
+  certificateNumberFormat: 'certificateNumberFormat',
+  approvalCondition: 'approvalCondition',
+  enableCertificateGeneration: 'enableCertificateGeneration',
+  validityType: 'validityType',
+  validityYears: 'validityYears',
+  customValidityDays: 'customValidityDays',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CertificateTemplateScalarFieldEnum = (typeof CertificateTemplateScalarFieldEnum)[keyof typeof CertificateTemplateScalarFieldEnum]
+
+
+export const CertificateFieldMappingScalarFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  fieldType: 'fieldType',
+  x: 'x',
+  y: 'y',
+  width: 'width',
+  height: 'height',
+  fontSize: 'fontSize',
+  fontFamily: 'fontFamily',
+  color: 'color',
+  alignment: 'alignment',
+  sourceFormId: 'sourceFormId',
+  sourceQuestionId: 'sourceQuestionId',
+  label: 'label',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CertificateFieldMappingScalarFieldEnum = (typeof CertificateFieldMappingScalarFieldEnum)[keyof typeof CertificateFieldMappingScalarFieldEnum]
+
+
+export const CertificateScalarFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  applicantProcessId: 'applicantProcessId',
+  certificateNumber: 'certificateNumber',
+  verificationCode: 'verificationCode',
+  fileUrl: 'fileUrl',
+  fileSize: 'fileSize',
+  issueDate: 'issueDate',
+  expiryDate: 'expiryDate',
+  isExpired: 'isExpired',
+  generatedAt: 'generatedAt',
+  generatedBy: 'generatedBy'
+} as const
+
+export type CertificateScalarFieldEnum = (typeof CertificateScalarFieldEnum)[keyof typeof CertificateScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -937,4 +999,41 @@ export const FormGenerationProgressOrderByRelevanceFieldEnum = {
 } as const
 
 export type FormGenerationProgressOrderByRelevanceFieldEnum = (typeof FormGenerationProgressOrderByRelevanceFieldEnum)[keyof typeof FormGenerationProgressOrderByRelevanceFieldEnum]
+
+
+export const CertificateTemplateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  processId: 'processId',
+  name: 'name',
+  templateFileUrl: 'templateFileUrl'
+} as const
+
+export type CertificateTemplateOrderByRelevanceFieldEnum = (typeof CertificateTemplateOrderByRelevanceFieldEnum)[keyof typeof CertificateTemplateOrderByRelevanceFieldEnum]
+
+
+export const CertificateFieldMappingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  fontFamily: 'fontFamily',
+  color: 'color',
+  alignment: 'alignment',
+  sourceFormId: 'sourceFormId',
+  sourceQuestionId: 'sourceQuestionId',
+  label: 'label'
+} as const
+
+export type CertificateFieldMappingOrderByRelevanceFieldEnum = (typeof CertificateFieldMappingOrderByRelevanceFieldEnum)[keyof typeof CertificateFieldMappingOrderByRelevanceFieldEnum]
+
+
+export const CertificateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  applicantProcessId: 'applicantProcessId',
+  certificateNumber: 'certificateNumber',
+  verificationCode: 'verificationCode',
+  fileUrl: 'fileUrl',
+  generatedBy: 'generatedBy'
+} as const
+
+export type CertificateOrderByRelevanceFieldEnum = (typeof CertificateOrderByRelevanceFieldEnum)[keyof typeof CertificateOrderByRelevanceFieldEnum]
 

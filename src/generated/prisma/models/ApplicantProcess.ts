@@ -187,6 +187,7 @@ export type ApplicantProcessWhereInput = {
   processedApplications?: Prisma.ProcessedApplicationListRelationFilter
   responses?: Prisma.FormResponseListRelationFilter
   comments?: Prisma.ProcessCommentListRelationFilter
+  certificates?: Prisma.CertificateListRelationFilter
 }
 
 export type ApplicantProcessOrderByWithRelationInput = {
@@ -201,6 +202,7 @@ export type ApplicantProcessOrderByWithRelationInput = {
   processedApplications?: Prisma.ProcessedApplicationOrderByRelationAggregateInput
   responses?: Prisma.FormResponseOrderByRelationAggregateInput
   comments?: Prisma.ProcessCommentOrderByRelationAggregateInput
+  certificates?: Prisma.CertificateOrderByRelationAggregateInput
   _relevance?: Prisma.ApplicantProcessOrderByRelevanceInput
 }
 
@@ -219,6 +221,7 @@ export type ApplicantProcessWhereUniqueInput = Prisma.AtLeast<{
   processedApplications?: Prisma.ProcessedApplicationListRelationFilter
   responses?: Prisma.FormResponseListRelationFilter
   comments?: Prisma.ProcessCommentListRelationFilter
+  certificates?: Prisma.CertificateListRelationFilter
 }, "id">
 
 export type ApplicantProcessOrderByWithAggregationInput = {
@@ -253,6 +256,7 @@ export type ApplicantProcessCreateInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateInput = {
@@ -265,6 +269,7 @@ export type ApplicantProcessUncheckedCreateInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUpdateInput = {
@@ -277,6 +282,7 @@ export type ApplicantProcessUpdateInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateInput = {
@@ -289,6 +295,7 @@ export type ApplicantProcessUncheckedUpdateInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessCreateManyInput = {
@@ -498,6 +505,20 @@ export type ApplicantProcessUpdateOneRequiredWithoutCommentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ApplicantProcessUpdateToOneWithWhereWithoutCommentsInput, Prisma.ApplicantProcessUpdateWithoutCommentsInput>, Prisma.ApplicantProcessUncheckedUpdateWithoutCommentsInput>
 }
 
+export type ApplicantProcessCreateNestedOneWithoutCertificatesInput = {
+  create?: Prisma.XOR<Prisma.ApplicantProcessCreateWithoutCertificatesInput, Prisma.ApplicantProcessUncheckedCreateWithoutCertificatesInput>
+  connectOrCreate?: Prisma.ApplicantProcessCreateOrConnectWithoutCertificatesInput
+  connect?: Prisma.ApplicantProcessWhereUniqueInput
+}
+
+export type ApplicantProcessUpdateOneRequiredWithoutCertificatesNestedInput = {
+  create?: Prisma.XOR<Prisma.ApplicantProcessCreateWithoutCertificatesInput, Prisma.ApplicantProcessUncheckedCreateWithoutCertificatesInput>
+  connectOrCreate?: Prisma.ApplicantProcessCreateOrConnectWithoutCertificatesInput
+  upsert?: Prisma.ApplicantProcessUpsertWithoutCertificatesInput
+  connect?: Prisma.ApplicantProcessWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ApplicantProcessUpdateToOneWithWhereWithoutCertificatesInput, Prisma.ApplicantProcessUpdateWithoutCertificatesInput>, Prisma.ApplicantProcessUncheckedUpdateWithoutCertificatesInput>
+}
+
 export type ApplicantProcessCreateWithoutApplicantInput = {
   id?: string
   status?: $Enums.ProcessStatus
@@ -507,6 +528,7 @@ export type ApplicantProcessCreateWithoutApplicantInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateWithoutApplicantInput = {
@@ -518,6 +540,7 @@ export type ApplicantProcessUncheckedCreateWithoutApplicantInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessCreateOrConnectWithoutApplicantInput = {
@@ -566,6 +589,7 @@ export type ApplicantProcessCreateWithoutProcessInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateWithoutProcessInput = {
@@ -577,6 +601,7 @@ export type ApplicantProcessUncheckedCreateWithoutProcessInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessCreateOrConnectWithoutProcessInput = {
@@ -614,6 +639,7 @@ export type ApplicantProcessCreateWithoutResponsesInput = {
   process: Prisma.ProcessCreateNestedOneWithoutApplicantProcessesInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateWithoutResponsesInput = {
@@ -625,6 +651,7 @@ export type ApplicantProcessUncheckedCreateWithoutResponsesInput = {
   completedForms?: Prisma.APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessCreateOrConnectWithoutResponsesInput = {
@@ -652,6 +679,7 @@ export type ApplicantProcessUpdateWithoutResponsesInput = {
   process?: Prisma.ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateWithoutResponsesInput = {
@@ -663,6 +691,7 @@ export type ApplicantProcessUncheckedUpdateWithoutResponsesInput = {
   completedForms?: Prisma.APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessCreateWithoutProcessedApplicationsInput = {
@@ -674,6 +703,7 @@ export type ApplicantProcessCreateWithoutProcessedApplicationsInput = {
   process: Prisma.ProcessCreateNestedOneWithoutApplicantProcessesInput
   responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput = {
@@ -685,6 +715,7 @@ export type ApplicantProcessUncheckedCreateWithoutProcessedApplicationsInput = {
   completedForms?: Prisma.APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessCreateOrConnectWithoutProcessedApplicationsInput = {
@@ -712,6 +743,7 @@ export type ApplicantProcessUpdateWithoutProcessedApplicationsInput = {
   process?: Prisma.ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
   responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
@@ -723,6 +755,7 @@ export type ApplicantProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
   completedForms?: Prisma.APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessCreateWithoutCompletedFormsInput = {
@@ -734,6 +767,7 @@ export type ApplicantProcessCreateWithoutCompletedFormsInput = {
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateWithoutCompletedFormsInput = {
@@ -745,6 +779,7 @@ export type ApplicantProcessUncheckedCreateWithoutCompletedFormsInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
   comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessCreateOrConnectWithoutCompletedFormsInput = {
@@ -772,6 +807,7 @@ export type ApplicantProcessUpdateWithoutCompletedFormsInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateWithoutCompletedFormsInput = {
@@ -783,6 +819,7 @@ export type ApplicantProcessUncheckedUpdateWithoutCompletedFormsInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessCreateWithoutCommentsInput = {
@@ -794,6 +831,7 @@ export type ApplicantProcessCreateWithoutCommentsInput = {
   process: Prisma.ProcessCreateNestedOneWithoutApplicantProcessesInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessUncheckedCreateWithoutCommentsInput = {
@@ -805,6 +843,7 @@ export type ApplicantProcessUncheckedCreateWithoutCommentsInput = {
   completedForms?: Prisma.APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
+  certificates?: Prisma.CertificateUncheckedCreateNestedManyWithoutApplicantProcessInput
 }
 
 export type ApplicantProcessCreateOrConnectWithoutCommentsInput = {
@@ -832,6 +871,7 @@ export type ApplicantProcessUpdateWithoutCommentsInput = {
   process?: Prisma.ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateWithoutCommentsInput = {
@@ -843,6 +883,71 @@ export type ApplicantProcessUncheckedUpdateWithoutCommentsInput = {
   completedForms?: Prisma.APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
+}
+
+export type ApplicantProcessCreateWithoutCertificatesInput = {
+  id?: string
+  status?: $Enums.ProcessStatus
+  createdAt?: Date | string
+  completedForms?: Prisma.APCompletedFormCreateNestedManyWithoutApplicantProcessInput
+  applicant: Prisma.UserCreateNestedOneWithoutApplicantProcessesInput
+  process: Prisma.ProcessCreateNestedOneWithoutApplicantProcessesInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutApplicantProcessInput
+  responses?: Prisma.FormResponseCreateNestedManyWithoutApplicantProcessInput
+  comments?: Prisma.ProcessCommentCreateNestedManyWithoutApplicantProcessInput
+}
+
+export type ApplicantProcessUncheckedCreateWithoutCertificatesInput = {
+  id?: string
+  applicantId: string
+  processId: string
+  status?: $Enums.ProcessStatus
+  createdAt?: Date | string
+  completedForms?: Prisma.APCompletedFormUncheckedCreateNestedManyWithoutApplicantProcessInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutApplicantProcessInput
+  responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutApplicantProcessInput
+  comments?: Prisma.ProcessCommentUncheckedCreateNestedManyWithoutApplicantProcessInput
+}
+
+export type ApplicantProcessCreateOrConnectWithoutCertificatesInput = {
+  where: Prisma.ApplicantProcessWhereUniqueInput
+  create: Prisma.XOR<Prisma.ApplicantProcessCreateWithoutCertificatesInput, Prisma.ApplicantProcessUncheckedCreateWithoutCertificatesInput>
+}
+
+export type ApplicantProcessUpsertWithoutCertificatesInput = {
+  update: Prisma.XOR<Prisma.ApplicantProcessUpdateWithoutCertificatesInput, Prisma.ApplicantProcessUncheckedUpdateWithoutCertificatesInput>
+  create: Prisma.XOR<Prisma.ApplicantProcessCreateWithoutCertificatesInput, Prisma.ApplicantProcessUncheckedCreateWithoutCertificatesInput>
+  where?: Prisma.ApplicantProcessWhereInput
+}
+
+export type ApplicantProcessUpdateToOneWithWhereWithoutCertificatesInput = {
+  where?: Prisma.ApplicantProcessWhereInput
+  data: Prisma.XOR<Prisma.ApplicantProcessUpdateWithoutCertificatesInput, Prisma.ApplicantProcessUncheckedUpdateWithoutCertificatesInput>
+}
+
+export type ApplicantProcessUpdateWithoutCertificatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedForms?: Prisma.APCompletedFormUpdateManyWithoutApplicantProcessNestedInput
+  applicant?: Prisma.UserUpdateOneRequiredWithoutApplicantProcessesNestedInput
+  process?: Prisma.ProcessUpdateOneRequiredWithoutApplicantProcessesNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
+  responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
+  comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+}
+
+export type ApplicantProcessUncheckedUpdateWithoutCertificatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  applicantId?: Prisma.StringFieldUpdateOperationsInput | string
+  processId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  completedForms?: Prisma.APCompletedFormUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessCreateManyApplicantInput = {
@@ -861,6 +966,7 @@ export type ApplicantProcessUpdateWithoutApplicantInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateWithoutApplicantInput = {
@@ -872,6 +978,7 @@ export type ApplicantProcessUncheckedUpdateWithoutApplicantInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateManyWithoutApplicantInput = {
@@ -897,6 +1004,7 @@ export type ApplicantProcessUpdateWithoutProcessInput = {
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateWithoutProcessInput = {
@@ -908,6 +1016,7 @@ export type ApplicantProcessUncheckedUpdateWithoutProcessInput = {
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutApplicantProcessNestedInput
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutApplicantProcessNestedInput
   comments?: Prisma.ProcessCommentUncheckedUpdateManyWithoutApplicantProcessNestedInput
+  certificates?: Prisma.CertificateUncheckedUpdateManyWithoutApplicantProcessNestedInput
 }
 
 export type ApplicantProcessUncheckedUpdateManyWithoutProcessInput = {
@@ -927,6 +1036,7 @@ export type ApplicantProcessCountOutputType = {
   processedApplications: number
   responses: number
   comments: number
+  certificates: number
 }
 
 export type ApplicantProcessCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -934,6 +1044,7 @@ export type ApplicantProcessCountOutputTypeSelect<ExtArgs extends runtime.Types.
   processedApplications?: boolean | ApplicantProcessCountOutputTypeCountProcessedApplicationsArgs
   responses?: boolean | ApplicantProcessCountOutputTypeCountResponsesArgs
   comments?: boolean | ApplicantProcessCountOutputTypeCountCommentsArgs
+  certificates?: boolean | ApplicantProcessCountOutputTypeCountCertificatesArgs
 }
 
 /**
@@ -974,6 +1085,13 @@ export type ApplicantProcessCountOutputTypeCountCommentsArgs<ExtArgs extends run
   where?: Prisma.ProcessCommentWhereInput
 }
 
+/**
+ * ApplicantProcessCountOutputType without action
+ */
+export type ApplicantProcessCountOutputTypeCountCertificatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateWhereInput
+}
+
 
 export type ApplicantProcessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -987,6 +1105,7 @@ export type ApplicantProcessSelect<ExtArgs extends runtime.Types.Extensions.Inte
   processedApplications?: boolean | Prisma.ApplicantProcess$processedApplicationsArgs<ExtArgs>
   responses?: boolean | Prisma.ApplicantProcess$responsesArgs<ExtArgs>
   comments?: boolean | Prisma.ApplicantProcess$commentsArgs<ExtArgs>
+  certificates?: boolean | Prisma.ApplicantProcess$certificatesArgs<ExtArgs>
   _count?: boolean | Prisma.ApplicantProcessCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["applicantProcess"]>
 
@@ -1026,6 +1145,7 @@ export type ApplicantProcessInclude<ExtArgs extends runtime.Types.Extensions.Int
   processedApplications?: boolean | Prisma.ApplicantProcess$processedApplicationsArgs<ExtArgs>
   responses?: boolean | Prisma.ApplicantProcess$responsesArgs<ExtArgs>
   comments?: boolean | Prisma.ApplicantProcess$commentsArgs<ExtArgs>
+  certificates?: boolean | Prisma.ApplicantProcess$certificatesArgs<ExtArgs>
   _count?: boolean | Prisma.ApplicantProcessCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ApplicantProcessIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1046,6 +1166,7 @@ export type $ApplicantProcessPayload<ExtArgs extends runtime.Types.Extensions.In
     processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
     responses: Prisma.$FormResponsePayload<ExtArgs>[]
     comments: Prisma.$ProcessCommentPayload<ExtArgs>[]
+    certificates: Prisma.$CertificatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1453,6 +1574,7 @@ export interface Prisma__ApplicantProcessClient<T, Null = never, ExtArgs extends
   processedApplications<T extends Prisma.ApplicantProcess$processedApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApplicantProcess$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   responses<T extends Prisma.ApplicantProcess$responsesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApplicantProcess$responsesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormResponsePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   comments<T extends Prisma.ApplicantProcess$commentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApplicantProcess$commentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessCommentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  certificates<T extends Prisma.ApplicantProcess$certificatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ApplicantProcess$certificatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1985,6 +2107,30 @@ export type ApplicantProcess$commentsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.ProcessCommentScalarFieldEnum | Prisma.ProcessCommentScalarFieldEnum[]
+}
+
+/**
+ * ApplicantProcess.certificates
+ */
+export type ApplicantProcess$certificatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Certificate
+   */
+  select?: Prisma.CertificateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Certificate
+   */
+  omit?: Prisma.CertificateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateInclude<ExtArgs> | null
+  where?: Prisma.CertificateWhereInput
+  orderBy?: Prisma.CertificateOrderByWithRelationInput | Prisma.CertificateOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateScalarFieldEnum | Prisma.CertificateScalarFieldEnum[]
 }
 
 /**

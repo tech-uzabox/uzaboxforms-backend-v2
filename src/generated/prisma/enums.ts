@@ -101,6 +101,27 @@ export const FormGenerationStatus = {
 export type FormGenerationStatus = (typeof FormGenerationStatus)[keyof typeof FormGenerationStatus]
 
 
+export const CertificateValidityType = {
+  FOREVER: 'FOREVER',
+  FIXED_YEARS: 'FIXED_YEARS',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type CertificateValidityType = (typeof CertificateValidityType)[keyof typeof CertificateValidityType]
+
+
+export const CertificateFieldType = {
+  NAME: 'NAME',
+  CERT_NUMBER: 'CERT_NUMBER',
+  ISSUE_DATE: 'ISSUE_DATE',
+  EXPIRY_DATE: 'EXPIRY_DATE',
+  QR_CODE: 'QR_CODE',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type CertificateFieldType = (typeof CertificateFieldType)[keyof typeof CertificateFieldType]
+
+
 export const ChatAIType = {
   DASHBOARD: 'DASHBOARD',
   FORM: 'FORM'

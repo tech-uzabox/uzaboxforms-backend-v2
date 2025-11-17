@@ -242,6 +242,7 @@ export type ProcessWhereInput = {
   forms?: Prisma.ProcessFormListRelationFilter
   processedApplications?: Prisma.ProcessedApplicationListRelationFilter
   roles?: Prisma.ProcessRoleListRelationFilter
+  certificateTemplates?: Prisma.CertificateTemplateListRelationFilter
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
   processFolder?: Prisma.XOR<Prisma.ProcessFolderNullableScalarRelationFilter, Prisma.ProcessFolderWhereInput> | null
@@ -265,6 +266,7 @@ export type ProcessOrderByWithRelationInput = {
   forms?: Prisma.ProcessFormOrderByRelationAggregateInput
   processedApplications?: Prisma.ProcessedApplicationOrderByRelationAggregateInput
   roles?: Prisma.ProcessRoleOrderByRelationAggregateInput
+  certificateTemplates?: Prisma.CertificateTemplateOrderByRelationAggregateInput
   creator?: Prisma.UserOrderByWithRelationInput
   group?: Prisma.GroupOrderByWithRelationInput
   processFolder?: Prisma.ProcessFolderOrderByWithRelationInput
@@ -292,6 +294,7 @@ export type ProcessWhereUniqueInput = Prisma.AtLeast<{
   forms?: Prisma.ProcessFormListRelationFilter
   processedApplications?: Prisma.ProcessedApplicationListRelationFilter
   roles?: Prisma.ProcessRoleListRelationFilter
+  certificateTemplates?: Prisma.CertificateTemplateListRelationFilter
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   group?: Prisma.XOR<Prisma.GroupScalarRelationFilter, Prisma.GroupWhereInput>
   processFolder?: Prisma.XOR<Prisma.ProcessFolderNullableScalarRelationFilter, Prisma.ProcessFolderWhereInput> | null
@@ -348,6 +351,7 @@ export type ProcessCreateInput = {
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
@@ -371,6 +375,7 @@ export type ProcessUncheckedCreateInput = {
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessUpdateInput = {
@@ -388,6 +393,7 @@ export type ProcessUpdateInput = {
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
@@ -411,6 +417,7 @@ export type ProcessUncheckedUpdateInput = {
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessCreateManyInput = {
@@ -725,6 +732,20 @@ export type ProcessUpdateOneRequiredWithoutProcessedApplicationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessUpdateToOneWithWhereWithoutProcessedApplicationsInput, Prisma.ProcessUpdateWithoutProcessedApplicationsInput>, Prisma.ProcessUncheckedUpdateWithoutProcessedApplicationsInput>
 }
 
+export type ProcessCreateNestedOneWithoutCertificateTemplatesInput = {
+  create?: Prisma.XOR<Prisma.ProcessCreateWithoutCertificateTemplatesInput, Prisma.ProcessUncheckedCreateWithoutCertificateTemplatesInput>
+  connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutCertificateTemplatesInput
+  connect?: Prisma.ProcessWhereUniqueInput
+}
+
+export type ProcessUpdateOneRequiredWithoutCertificateTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcessCreateWithoutCertificateTemplatesInput, Prisma.ProcessUncheckedCreateWithoutCertificateTemplatesInput>
+  connectOrCreate?: Prisma.ProcessCreateOrConnectWithoutCertificateTemplatesInput
+  upsert?: Prisma.ProcessUpsertWithoutCertificateTemplatesInput
+  connect?: Prisma.ProcessWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcessUpdateToOneWithWhereWithoutCertificateTemplatesInput, Prisma.ProcessUpdateWithoutCertificateTemplatesInput>, Prisma.ProcessUncheckedUpdateWithoutCertificateTemplatesInput>
+}
+
 export type ProcessCreateWithoutCreatorInput = {
   id?: string
   name: string
@@ -740,6 +761,7 @@ export type ProcessCreateWithoutCreatorInput = {
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
@@ -761,6 +783,7 @@ export type ProcessUncheckedCreateWithoutCreatorInput = {
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutCreatorInput = {
@@ -822,6 +845,7 @@ export type ProcessCreateWithoutGroupInput = {
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
 }
@@ -843,6 +867,7 @@ export type ProcessUncheckedCreateWithoutGroupInput = {
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutGroupInput = {
@@ -885,6 +910,7 @@ export type ProcessCreateWithoutRolesInput = {
   formResponses?: Prisma.FormResponseCreateNestedManyWithoutProcessInput
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
@@ -907,6 +933,7 @@ export type ProcessUncheckedCreateWithoutRolesInput = {
   formResponses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutProcessInput
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutRolesInput = {
@@ -939,6 +966,7 @@ export type ProcessUpdateWithoutRolesInput = {
   formResponses?: Prisma.FormResponseUpdateManyWithoutProcessNestedInput
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
@@ -961,6 +989,7 @@ export type ProcessUncheckedUpdateWithoutRolesInput = {
   formResponses?: Prisma.FormResponseUncheckedUpdateManyWithoutProcessNestedInput
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessCreateWithoutProcessFolderInput = {
@@ -978,6 +1007,7 @@ export type ProcessCreateWithoutProcessFolderInput = {
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
 }
@@ -999,6 +1029,7 @@ export type ProcessUncheckedCreateWithoutProcessFolderInput = {
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutProcessFolderInput = {
@@ -1041,6 +1072,7 @@ export type ProcessCreateWithoutFormResponsesInput = {
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
@@ -1063,6 +1095,7 @@ export type ProcessUncheckedCreateWithoutFormResponsesInput = {
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutFormResponsesInput = {
@@ -1095,6 +1128,7 @@ export type ProcessUpdateWithoutFormResponsesInput = {
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
@@ -1117,6 +1151,7 @@ export type ProcessUncheckedUpdateWithoutFormResponsesInput = {
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessCreateWithoutFormsInput = {
@@ -1133,6 +1168,7 @@ export type ProcessCreateWithoutFormsInput = {
   formResponses?: Prisma.FormResponseCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
@@ -1155,6 +1191,7 @@ export type ProcessUncheckedCreateWithoutFormsInput = {
   formResponses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutFormsInput = {
@@ -1187,6 +1224,7 @@ export type ProcessUpdateWithoutFormsInput = {
   formResponses?: Prisma.FormResponseUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
@@ -1209,6 +1247,7 @@ export type ProcessUncheckedUpdateWithoutFormsInput = {
   formResponses?: Prisma.FormResponseUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessCreateWithoutApplicantProcessesInput = {
@@ -1225,6 +1264,7 @@ export type ProcessCreateWithoutApplicantProcessesInput = {
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
@@ -1247,6 +1287,7 @@ export type ProcessUncheckedCreateWithoutApplicantProcessesInput = {
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutApplicantProcessesInput = {
@@ -1279,6 +1320,7 @@ export type ProcessUpdateWithoutApplicantProcessesInput = {
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
@@ -1301,6 +1343,7 @@ export type ProcessUncheckedUpdateWithoutApplicantProcessesInput = {
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessCreateWithoutProcessedApplicationsInput = {
@@ -1317,6 +1360,7 @@ export type ProcessCreateWithoutProcessedApplicationsInput = {
   formResponses?: Prisma.FormResponseCreateNestedManyWithoutProcessInput
   forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateCreateNestedManyWithoutProcessInput
   creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
   group: Prisma.GroupCreateNestedOneWithoutProcessesInput
   processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
@@ -1339,6 +1383,7 @@ export type ProcessUncheckedCreateWithoutProcessedApplicationsInput = {
   formResponses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutProcessInput
   forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
   roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedCreateNestedManyWithoutProcessInput
 }
 
 export type ProcessCreateOrConnectWithoutProcessedApplicationsInput = {
@@ -1371,6 +1416,7 @@ export type ProcessUpdateWithoutProcessedApplicationsInput = {
   formResponses?: Prisma.FormResponseUpdateManyWithoutProcessNestedInput
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
@@ -1392,6 +1438,103 @@ export type ProcessUncheckedUpdateWithoutProcessedApplicationsInput = {
   applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
   formResponses?: Prisma.FormResponseUncheckedUpdateManyWithoutProcessNestedInput
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+  roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
+}
+
+export type ProcessCreateWithoutCertificateTemplatesInput = {
+  id?: string
+  name: string
+  type?: $Enums.ProcessType
+  status?: $Enums.ProcessStatus
+  archived?: boolean
+  staffViewForms?: boolean
+  applicantViewProcessLevel?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessCreateNestedManyWithoutProcessInput
+  formResponses?: Prisma.FormResponseCreateNestedManyWithoutProcessInput
+  forms?: Prisma.ProcessFormCreateNestedManyWithoutProcessInput
+  processedApplications?: Prisma.ProcessedApplicationCreateNestedManyWithoutProcessInput
+  roles?: Prisma.ProcessRoleCreateNestedManyWithoutProcessInput
+  creator: Prisma.UserCreateNestedOneWithoutCreatedProcessesInput
+  group: Prisma.GroupCreateNestedOneWithoutProcessesInput
+  processFolder?: Prisma.ProcessFolderCreateNestedOneWithoutProcessesInput
+}
+
+export type ProcessUncheckedCreateWithoutCertificateTemplatesInput = {
+  id?: string
+  name: string
+  type?: $Enums.ProcessType
+  groupId: string
+  creatorId: string
+  processFolderId?: string | null
+  status?: $Enums.ProcessStatus
+  archived?: boolean
+  staffViewForms?: boolean
+  applicantViewProcessLevel?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedCreateNestedManyWithoutProcessInput
+  formResponses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutProcessInput
+  forms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutProcessInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedCreateNestedManyWithoutProcessInput
+  roles?: Prisma.ProcessRoleUncheckedCreateNestedManyWithoutProcessInput
+}
+
+export type ProcessCreateOrConnectWithoutCertificateTemplatesInput = {
+  where: Prisma.ProcessWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProcessCreateWithoutCertificateTemplatesInput, Prisma.ProcessUncheckedCreateWithoutCertificateTemplatesInput>
+}
+
+export type ProcessUpsertWithoutCertificateTemplatesInput = {
+  update: Prisma.XOR<Prisma.ProcessUpdateWithoutCertificateTemplatesInput, Prisma.ProcessUncheckedUpdateWithoutCertificateTemplatesInput>
+  create: Prisma.XOR<Prisma.ProcessCreateWithoutCertificateTemplatesInput, Prisma.ProcessUncheckedCreateWithoutCertificateTemplatesInput>
+  where?: Prisma.ProcessWhereInput
+}
+
+export type ProcessUpdateToOneWithWhereWithoutCertificateTemplatesInput = {
+  where?: Prisma.ProcessWhereInput
+  data: Prisma.XOR<Prisma.ProcessUpdateWithoutCertificateTemplatesInput, Prisma.ProcessUncheckedUpdateWithoutCertificateTemplatesInput>
+}
+
+export type ProcessUpdateWithoutCertificateTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicantViewProcessLevel?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUpdateManyWithoutProcessNestedInput
+  formResponses?: Prisma.FormResponseUpdateManyWithoutProcessNestedInput
+  forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
+  roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
+  group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
+  processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
+}
+
+export type ProcessUncheckedUpdateWithoutCertificateTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumProcessTypeFieldUpdateOperationsInput | $Enums.ProcessType
+  groupId?: Prisma.StringFieldUpdateOperationsInput | string
+  creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  processFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumProcessStatusFieldUpdateOperationsInput | $Enums.ProcessStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  staffViewForms?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  applicantViewProcessLevel?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  applicantProcesses?: Prisma.ApplicantProcessUncheckedUpdateManyWithoutProcessNestedInput
+  formResponses?: Prisma.FormResponseUncheckedUpdateManyWithoutProcessNestedInput
+  forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
+  processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
 }
 
@@ -1424,6 +1567,7 @@ export type ProcessUpdateWithoutCreatorInput = {
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
@@ -1445,6 +1589,7 @@ export type ProcessUncheckedUpdateWithoutCreatorInput = {
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessUncheckedUpdateManyWithoutCreatorInput = {
@@ -1490,6 +1635,7 @@ export type ProcessUpdateWithoutGroupInput = {
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   processFolder?: Prisma.ProcessFolderUpdateOneWithoutProcessesNestedInput
 }
@@ -1511,6 +1657,7 @@ export type ProcessUncheckedUpdateWithoutGroupInput = {
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessUncheckedUpdateManyWithoutGroupInput = {
@@ -1556,6 +1703,7 @@ export type ProcessUpdateWithoutProcessFolderInput = {
   forms?: Prisma.ProcessFormUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUpdateManyWithoutProcessNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedProcessesNestedInput
   group?: Prisma.GroupUpdateOneRequiredWithoutProcessesNestedInput
 }
@@ -1577,6 +1725,7 @@ export type ProcessUncheckedUpdateWithoutProcessFolderInput = {
   forms?: Prisma.ProcessFormUncheckedUpdateManyWithoutProcessNestedInput
   processedApplications?: Prisma.ProcessedApplicationUncheckedUpdateManyWithoutProcessNestedInput
   roles?: Prisma.ProcessRoleUncheckedUpdateManyWithoutProcessNestedInput
+  certificateTemplates?: Prisma.CertificateTemplateUncheckedUpdateManyWithoutProcessNestedInput
 }
 
 export type ProcessUncheckedUpdateManyWithoutProcessFolderInput = {
@@ -1604,6 +1753,7 @@ export type ProcessCountOutputType = {
   forms: number
   processedApplications: number
   roles: number
+  certificateTemplates: number
 }
 
 export type ProcessCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1612,6 +1762,7 @@ export type ProcessCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   forms?: boolean | ProcessCountOutputTypeCountFormsArgs
   processedApplications?: boolean | ProcessCountOutputTypeCountProcessedApplicationsArgs
   roles?: boolean | ProcessCountOutputTypeCountRolesArgs
+  certificateTemplates?: boolean | ProcessCountOutputTypeCountCertificateTemplatesArgs
 }
 
 /**
@@ -1659,6 +1810,13 @@ export type ProcessCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.ProcessRoleWhereInput
 }
 
+/**
+ * ProcessCountOutputType without action
+ */
+export type ProcessCountOutputTypeCountCertificateTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateTemplateWhereInput
+}
+
 
 export type ProcessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1678,6 +1836,7 @@ export type ProcessSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   forms?: boolean | Prisma.Process$formsArgs<ExtArgs>
   processedApplications?: boolean | Prisma.Process$processedApplicationsArgs<ExtArgs>
   roles?: boolean | Prisma.Process$rolesArgs<ExtArgs>
+  certificateTemplates?: boolean | Prisma.Process$certificateTemplatesArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
   processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
@@ -1742,6 +1901,7 @@ export type ProcessInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   forms?: boolean | Prisma.Process$formsArgs<ExtArgs>
   processedApplications?: boolean | Prisma.Process$processedApplicationsArgs<ExtArgs>
   roles?: boolean | Prisma.Process$rolesArgs<ExtArgs>
+  certificateTemplates?: boolean | Prisma.Process$certificateTemplatesArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   group?: boolean | Prisma.GroupDefaultArgs<ExtArgs>
   processFolder?: boolean | Prisma.Process$processFolderArgs<ExtArgs>
@@ -1766,6 +1926,7 @@ export type $ProcessPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     forms: Prisma.$ProcessFormPayload<ExtArgs>[]
     processedApplications: Prisma.$ProcessedApplicationPayload<ExtArgs>[]
     roles: Prisma.$ProcessRolePayload<ExtArgs>[]
+    certificateTemplates: Prisma.$CertificateTemplatePayload<ExtArgs>[]
     creator: Prisma.$UserPayload<ExtArgs>
     group: Prisma.$GroupPayload<ExtArgs>
     processFolder: Prisma.$ProcessFolderPayload<ExtArgs> | null
@@ -2182,6 +2343,7 @@ export interface Prisma__ProcessClient<T, Null = never, ExtArgs extends runtime.
   forms<T extends Prisma.Process$formsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$formsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   processedApplications<T extends Prisma.Process$processedApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$processedApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessedApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   roles<T extends Prisma.Process$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  certificateTemplates<T extends Prisma.Process$certificateTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$certificateTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   group<T extends Prisma.GroupDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GroupDefaultArgs<ExtArgs>>): Prisma.Prisma__GroupClient<runtime.Types.Result.GetResult<Prisma.$GroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   processFolder<T extends Prisma.Process$processFolderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Process$processFolderArgs<ExtArgs>>): Prisma.Prisma__ProcessFolderClient<runtime.Types.Result.GetResult<Prisma.$ProcessFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2748,6 +2910,30 @@ export type Process$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ProcessRoleScalarFieldEnum | Prisma.ProcessRoleScalarFieldEnum[]
+}
+
+/**
+ * Process.certificateTemplates
+ */
+export type Process$certificateTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CertificateTemplate
+   */
+  select?: Prisma.CertificateTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CertificateTemplate
+   */
+  omit?: Prisma.CertificateTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateTemplateInclude<ExtArgs> | null
+  where?: Prisma.CertificateTemplateWhereInput
+  orderBy?: Prisma.CertificateTemplateOrderByWithRelationInput | Prisma.CertificateTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateTemplateScalarFieldEnum | Prisma.CertificateTemplateScalarFieldEnum[]
 }
 
 /**

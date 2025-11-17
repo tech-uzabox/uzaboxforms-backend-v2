@@ -39,6 +39,7 @@ model User {
   roles                 UserRole[]
   ownedDashboards       Dashboard[]
   formGenerationProgress FormGenerationProgress[]
+  generatedCertificates Certificate[]
 
   @@index([email])
   @@map("users")
@@ -145,6 +146,7 @@ model Process {
   forms                     ProcessForm[]
   processedApplications     ProcessedApplication[]
   roles                     ProcessRole[]
+  certificateTemplates       CertificateTemplate[]
   creator                   User                   @relation("ProcessCreator", fields: [creatorId], references: [id])
   group                     Group                  @relation(fields: [groupId], references: [id])
   processFolder             ProcessFolder?         @relation(fields: [processFolderId], references: [id], onDelete: SetNull)
@@ -210,6 +212,7 @@ model Form {
   folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: SetNull)
   processForms ProcessForm[]
   formGenerationProgress FormGenerationProgress[]
+  certificateFieldMappings CertificateFieldMapping[]
 
   @@index([creatorId])
   @@index([folderId])
@@ -272,6 +275,7 @@ model ApplicantProcess {
   processedApplications ProcessedApplication[]
   responses             FormResponse[]
   comments              ProcessComment[]
+  certificates          Certificate[]
 
   @@index([applicantId])
   @@index([processId])
@@ -526,6 +530,22 @@ enum FormGenerationStatus {
   COMPLETED
   FAILED
 }
+
+enum CertificateValidityType {
+  FOREVER
+  FIXED_YEARS
+  CUSTOM
+}
+
+enum CertificateFieldType {
+  NAME
+  CERT_NUMBER
+  ISSUE_DATE
+  EXPIRY_DATE
+  QR_CODE
+  CUSTOM
+}
+
 enum ChatAIType {
   DASHBOARD
   FORM
@@ -626,4 +646,75 @@ model FormGenerationProgress {
   @@index([userId])
   @@index([formId])
   @@map("form_generation_progress")
+}
+
+model CertificateTemplate {
+  id                        String                  @id @default(uuid()) @db.Uuid
+  processId                 String                  @db.Uuid
+  name                      String
+  templateFileUrl           String                  @db.VarChar(255)
+  certificateNumberFormat   Json
+  approvalCondition         Json
+  enableCertificateGeneration Boolean               @default(false)
+  validityType              CertificateValidityType @default(FOREVER)
+  validityYears             Int?
+  customValidityDays         Int?
+  isActive                  Boolean                 @default(true)
+  createdAt                 DateTime                @default(now())
+  updatedAt                 DateTime                @updatedAt
+  process                   Process                 @relation(fields: [processId], references: [id], onDelete: Cascade)
+  fieldMappings              CertificateFieldMapping[]
+  certificates              Certificate[]
+
+  @@unique([processId])
+  @@index([processId])
+  @@map("certificate_templates")
+}
+
+model CertificateFieldMapping {
+  id                  String              @id @default(uuid()) @db.Uuid
+  certificateTemplateId String            @db.Uuid
+  fieldType           CertificateFieldType
+  x                   Float
+  y                   Float
+  width               Float?
+  height              Float?
+  fontSize            Float?
+  fontFamily          String?
+  color               String?
+  alignment           String?
+  sourceFormId        String?             @db.Uuid
+  sourceQuestionId    String?
+  label               String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  certificateTemplate CertificateTemplate @relation(fields: [certificateTemplateId], references: [id], onDelete: Cascade)
+  sourceForm          Form?               @relation(fields: [sourceFormId], references: [id], onDelete: SetNull)
+
+  @@index([certificateTemplateId])
+  @@index([sourceFormId])
+  @@map("certificate_field_mappings")
+}
+
+model Certificate {
+  id                  String              @id @default(uuid()) @db.Uuid
+  certificateTemplateId String            @db.Uuid
+  applicantProcessId String              @db.Uuid
+  certificateNumber  String
+  verificationCode   String              @unique @db.Uuid
+  fileUrl             String              @db.VarChar(255)
+  fileSize            Int
+  issueDate           DateTime            @default(now())
+  expiryDate          DateTime?
+  isExpired           Boolean             @default(false)
+  generatedAt         DateTime            @default(now())
+  generatedBy         String              @db.Uuid
+  certificateTemplate CertificateTemplate @relation(fields: [certificateTemplateId], references: [id], onDelete: Cascade)
+  applicantProcess    ApplicantProcess    @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
+  generatedByUser     User                @relation(fields: [generatedBy], references: [id], onDelete: Cascade)
+
+  @@index([certificateTemplateId])
+  @@index([applicantProcessId])
+  @@index([verificationCode])
+  @@map("certificates")
 }

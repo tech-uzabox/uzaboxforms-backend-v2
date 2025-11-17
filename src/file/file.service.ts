@@ -88,13 +88,24 @@ export class FileService {
           'S3 GetObjectCommand response body is not a readable stream.',
         );
       }
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Unknown error';
+      const errorCode = error?.$metadata?.httpStatusCode || error?.Code || 'N/A';
+      
+      if (errorCode === 404 || error?.Code === 'NoSuchKey' || error?.Code === 'NoSuchBucket') {
+        this.logger.error(
+          `File not found in storage - Bucket: ${folder}, Key: ${key}`,
+        );
+        throw new InternalServerErrorException(
+          `File not found in storage. Bucket: ${folder}, Key: ${key}. Please verify the file exists in MinIO.`,
+        );
+      }
+      
       this.logger.error(
-        `Error retrieving file stream from S3 for key ${key}:`,
-        error instanceof Error ? error.message : 'Unknown error',
+        `Error retrieving file stream from S3 - Bucket: ${folder}, Key: ${key}, Error: ${errorMessage}`,
       );
       throw new InternalServerErrorException(
-        'Failed to retrieve file stream from storage.',
+        `Failed to retrieve file stream from storage. Bucket: ${folder}, Key: ${key}, Error: ${errorMessage}`,
       );
     }
   }
@@ -241,6 +252,40 @@ export class FileService {
     );
 
     return key;
+  }
+
+  async uploadBuffer(
+    buffer: Buffer,
+    fileName: string,
+    contentType: string,
+    bucket: 'private' | 'public',
+  ): Promise<string> {
+    const key = `${randomUUID()}${extname(fileName)}`;
+
+    try {
+      await this.s3Client.send(
+        new PutObjectCommand({
+          Bucket: bucket,
+          Key: key,
+          Body: buffer,
+          ContentType: contentType,
+        }),
+      );
+
+      this.logger.log(
+        `Buffer uploaded successfully: ${key} to bucket: ${bucket}`,
+      );
+
+      return key;
+    } catch (error) {
+      this.logger.error(
+        `Error uploading buffer ${key} to S3:`,
+        error instanceof Error ? error.stack : 'Unknown error',
+      );
+      throw new InternalServerErrorException(
+        'Failed to upload buffer to storage.',
+      );
+    }
   }
   async uploadImagePublic(file: Express.Multer.File): Promise<string> {
     const { fileKey } = await this.uploadFile(file, 'public');
