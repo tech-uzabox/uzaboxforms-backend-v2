@@ -324,6 +324,7 @@ export class FilesController {
       'Content-Type': file.fileType,
       'Content-Disposition': `attachment; filename="${escapedFilename}"`,
       'Content-Length': file.size.toString(),
+      'Access-Control-Expose-Headers': 'Content-Disposition',
     };
 
     res.set(headers);
