@@ -40,7 +40,7 @@ EXPOSE 3000
 # COPY entrypoint.sh .
 # RUN chmod +x entrypoint.sh
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
+CMD ["sh", "-c", "npx prisma@v6 migrate deploy && node dist/src/main.js"]
 
 
 
