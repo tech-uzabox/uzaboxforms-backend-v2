@@ -422,7 +422,10 @@ export const ModelName = {
   Document: 'Document',
   Suggestion: 'Suggestion',
   ProcessSave: 'ProcessSave',
-  FormGenerationProgress: 'FormGenerationProgress'
+  FormGenerationProgress: 'FormGenerationProgress',
+  CertificateTemplate: 'CertificateTemplate',
+  CertificateFieldMapping: 'CertificateFieldMapping',
+  Certificate: 'Certificate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -438,7 +441,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "processFolder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "widgetSandbox" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress"
+    modelProps: "user" | "role" | "userRole" | "file" | "auditLog" | "group" | "groupRole" | "process" | "processRole" | "folder" | "processFolder" | "form" | "formResponse" | "processForm" | "applicantProcess" | "processedApplication" | "aPCompletedForm" | "processComment" | "organizationUser" | "dashboard" | "widget" | "widgetSandbox" | "qrCodeDocument" | "otp" | "management" | "addToDatabase" | "addToDatabaseTreeItem" | "chat" | "message" | "vote" | "document" | "suggestion" | "processSave" | "formGenerationProgress" | "certificateTemplate" | "certificateFieldMapping" | "certificate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2958,6 +2961,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CertificateTemplate: {
+      payload: Prisma.$CertificateTemplatePayload<ExtArgs>
+      fields: Prisma.CertificateTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CertificateTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CertificateTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.CertificateTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CertificateTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.CertificateTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.CertificateTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.CertificateTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CertificateTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.CertificateTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>
+        }
+        update: {
+          args: Prisma.CertificateTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.CertificateTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CertificateTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CertificateTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.CertificateTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.CertificateTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCertificateTemplate>
+        }
+        groupBy: {
+          args: Prisma.CertificateTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CertificateTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
+    CertificateFieldMapping: {
+      payload: Prisma.$CertificateFieldMappingPayload<ExtArgs>
+      fields: Prisma.CertificateFieldMappingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CertificateFieldMappingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CertificateFieldMappingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>
+        }
+        findFirst: {
+          args: Prisma.CertificateFieldMappingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CertificateFieldMappingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>
+        }
+        findMany: {
+          args: Prisma.CertificateFieldMappingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>[]
+        }
+        create: {
+          args: Prisma.CertificateFieldMappingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>
+        }
+        createMany: {
+          args: Prisma.CertificateFieldMappingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CertificateFieldMappingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>[]
+        }
+        delete: {
+          args: Prisma.CertificateFieldMappingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>
+        }
+        update: {
+          args: Prisma.CertificateFieldMappingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>
+        }
+        deleteMany: {
+          args: Prisma.CertificateFieldMappingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CertificateFieldMappingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CertificateFieldMappingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>[]
+        }
+        upsert: {
+          args: Prisma.CertificateFieldMappingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificateFieldMappingPayload>
+        }
+        aggregate: {
+          args: Prisma.CertificateFieldMappingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCertificateFieldMapping>
+        }
+        groupBy: {
+          args: Prisma.CertificateFieldMappingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateFieldMappingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CertificateFieldMappingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateFieldMappingCountAggregateOutputType> | number
+        }
+      }
+    }
+    Certificate: {
+      payload: Prisma.$CertificatePayload<ExtArgs>
+      fields: Prisma.CertificateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CertificateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CertificateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>
+        }
+        findFirst: {
+          args: Prisma.CertificateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CertificateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>
+        }
+        findMany: {
+          args: Prisma.CertificateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>[]
+        }
+        create: {
+          args: Prisma.CertificateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>
+        }
+        createMany: {
+          args: Prisma.CertificateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CertificateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>[]
+        }
+        delete: {
+          args: Prisma.CertificateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>
+        }
+        update: {
+          args: Prisma.CertificateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>
+        }
+        deleteMany: {
+          args: Prisma.CertificateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CertificateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CertificateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>[]
+        }
+        upsert: {
+          args: Prisma.CertificateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CertificatePayload>
+        }
+        aggregate: {
+          args: Prisma.CertificateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCertificate>
+        }
+        groupBy: {
+          args: Prisma.CertificateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CertificateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CertificateCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3463,6 +3688,65 @@ export const FormGenerationProgressScalarFieldEnum = {
 export type FormGenerationProgressScalarFieldEnum = (typeof FormGenerationProgressScalarFieldEnum)[keyof typeof FormGenerationProgressScalarFieldEnum]
 
 
+export const CertificateTemplateScalarFieldEnum = {
+  id: 'id',
+  processId: 'processId',
+  name: 'name',
+  templateFileUrl: 'templateFileUrl',
+  certificateNumberFormat: 'certificateNumberFormat',
+  approvalCondition: 'approvalCondition',
+  enableCertificateGeneration: 'enableCertificateGeneration',
+  validityType: 'validityType',
+  validityYears: 'validityYears',
+  customValidityDays: 'customValidityDays',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CertificateTemplateScalarFieldEnum = (typeof CertificateTemplateScalarFieldEnum)[keyof typeof CertificateTemplateScalarFieldEnum]
+
+
+export const CertificateFieldMappingScalarFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  fieldType: 'fieldType',
+  x: 'x',
+  y: 'y',
+  width: 'width',
+  height: 'height',
+  fontSize: 'fontSize',
+  fontFamily: 'fontFamily',
+  color: 'color',
+  alignment: 'alignment',
+  sourceFormId: 'sourceFormId',
+  sourceQuestionId: 'sourceQuestionId',
+  label: 'label',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CertificateFieldMappingScalarFieldEnum = (typeof CertificateFieldMappingScalarFieldEnum)[keyof typeof CertificateFieldMappingScalarFieldEnum]
+
+
+export const CertificateScalarFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  applicantProcessId: 'applicantProcessId',
+  certificateNumber: 'certificateNumber',
+  verificationCode: 'verificationCode',
+  fileUrl: 'fileUrl',
+  fileSize: 'fileSize',
+  issueDate: 'issueDate',
+  expiryDate: 'expiryDate',
+  isExpired: 'isExpired',
+  generatedAt: 'generatedAt',
+  generatedBy: 'generatedBy'
+} as const
+
+export type CertificateScalarFieldEnum = (typeof CertificateScalarFieldEnum)[keyof typeof CertificateScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3866,6 +4150,43 @@ export const FormGenerationProgressOrderByRelevanceFieldEnum = {
 export type FormGenerationProgressOrderByRelevanceFieldEnum = (typeof FormGenerationProgressOrderByRelevanceFieldEnum)[keyof typeof FormGenerationProgressOrderByRelevanceFieldEnum]
 
 
+export const CertificateTemplateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  processId: 'processId',
+  name: 'name',
+  templateFileUrl: 'templateFileUrl'
+} as const
+
+export type CertificateTemplateOrderByRelevanceFieldEnum = (typeof CertificateTemplateOrderByRelevanceFieldEnum)[keyof typeof CertificateTemplateOrderByRelevanceFieldEnum]
+
+
+export const CertificateFieldMappingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  fontFamily: 'fontFamily',
+  color: 'color',
+  alignment: 'alignment',
+  sourceFormId: 'sourceFormId',
+  sourceQuestionId: 'sourceQuestionId',
+  label: 'label'
+} as const
+
+export type CertificateFieldMappingOrderByRelevanceFieldEnum = (typeof CertificateFieldMappingOrderByRelevanceFieldEnum)[keyof typeof CertificateFieldMappingOrderByRelevanceFieldEnum]
+
+
+export const CertificateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  certificateTemplateId: 'certificateTemplateId',
+  applicantProcessId: 'applicantProcessId',
+  certificateNumber: 'certificateNumber',
+  verificationCode: 'verificationCode',
+  fileUrl: 'fileUrl',
+  generatedBy: 'generatedBy'
+} as const
+
+export type CertificateOrderByRelevanceFieldEnum = (typeof CertificateOrderByRelevanceFieldEnum)[keyof typeof CertificateOrderByRelevanceFieldEnum]
+
+
 
 /**
  * Field references
@@ -4104,6 +4425,34 @@ export type ListEnumFormGenerationStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
+ * Reference to a field of type 'CertificateValidityType'
+ */
+export type EnumCertificateValidityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CertificateValidityType'>
+    
+
+
+/**
+ * Reference to a field of type 'CertificateValidityType[]'
+ */
+export type ListEnumCertificateValidityTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CertificateValidityType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CertificateFieldType'
+ */
+export type EnumCertificateFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CertificateFieldType'>
+    
+
+
+/**
+ * Reference to a field of type 'CertificateFieldType[]'
+ */
+export type ListEnumCertificateFieldTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CertificateFieldType[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4237,6 +4586,9 @@ export type GlobalOmitConfig = {
   suggestion?: Prisma.SuggestionOmit
   processSave?: Prisma.ProcessSaveOmit
   formGenerationProgress?: Prisma.FormGenerationProgressOmit
+  certificateTemplate?: Prisma.CertificateTemplateOmit
+  certificateFieldMapping?: Prisma.CertificateFieldMappingOmit
+  certificate?: Prisma.CertificateOmit
 }
 
 /* Types for Logging */

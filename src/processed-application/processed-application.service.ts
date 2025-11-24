@@ -4,6 +4,7 @@ import { AuditLogService } from '../audit-log/audit-log.service';
 import { PrismaService } from '../db/prisma.service';
 import { EmailService } from '../email/email.service';
 import { NotificationService } from '../notification/notification.service';
+import { CertificateService } from '../certificate/certificate.service';
 import { CreateProcessedApplicationDto } from './dto/create-processed-application.dto';
 
 @Injectable()
@@ -13,6 +14,7 @@ export class ProcessedApplicationService {
     private auditLogService: AuditLogService,
     private emailService: EmailService,
     private notificationService: NotificationService,
+    private certificateService: CertificateService,
   ) {}
 
   async create(data: CreateProcessedApplicationDto) {
@@ -111,6 +113,31 @@ export class ProcessedApplicationService {
 
     // 6. Send email notifications
     await this.sendEmailNotifications(processForm, applicantProcess, reviewer);
+
+    // 7. Generate certificate if conditions are met
+    try {
+      const applicantName = `${applicantProcess.applicant.firstName || ''} ${applicantProcess.applicant.lastName || ''}`.trim() || applicantProcess.applicant.email;
+      await this.certificateService.generateCertificateIfEligible(
+        applicantProcess.processId,
+        formId,
+        applicantProcessId,
+        responses,
+        applicantName,
+        reviewerId,
+      );
+    } catch (error) {
+      // Log error but don't fail the process
+      console.error('Error generating certificate:', error);
+      await this.auditLogService.log({
+        userId: reviewerId,
+        action: 'CERTIFICATE_GENERATION_FAILED',
+        resource: 'Certificate',
+        resourceId: applicantProcessId,
+        status: 'FAILURE',
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        details: { formId, applicantProcessId },
+      });
+    }
 
     await this.auditLogService.log({
       userId: reviewerId,

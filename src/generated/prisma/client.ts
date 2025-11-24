@@ -208,3 +208,18 @@ export type ProcessSave = Prisma.ProcessSaveModel
  * 
  */
 export type FormGenerationProgress = Prisma.FormGenerationProgressModel
+/**
+ * Model CertificateTemplate
+ * 
+ */
+export type CertificateTemplate = Prisma.CertificateTemplateModel
+/**
+ * Model CertificateFieldMapping
+ * 
+ */
+export type CertificateFieldMapping = Prisma.CertificateFieldMappingModel
+/**
+ * Model Certificate
+ * 
+ */
+export type Certificate = Prisma.CertificateModel

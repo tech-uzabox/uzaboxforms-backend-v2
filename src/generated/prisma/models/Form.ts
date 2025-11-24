@@ -222,6 +222,7 @@ export type FormWhereInput = {
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
   processForms?: Prisma.ProcessFormListRelationFilter
   formGenerationProgress?: Prisma.FormGenerationProgressListRelationFilter
+  certificateFieldMappings?: Prisma.CertificateFieldMappingListRelationFilter
 }
 
 export type FormOrderByWithRelationInput = {
@@ -240,6 +241,7 @@ export type FormOrderByWithRelationInput = {
   folder?: Prisma.FolderOrderByWithRelationInput
   processForms?: Prisma.ProcessFormOrderByRelationAggregateInput
   formGenerationProgress?: Prisma.FormGenerationProgressOrderByRelationAggregateInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingOrderByRelationAggregateInput
   _relevance?: Prisma.FormOrderByRelevanceInput
 }
 
@@ -262,6 +264,7 @@ export type FormWhereUniqueInput = Prisma.AtLeast<{
   folder?: Prisma.XOR<Prisma.FolderNullableScalarRelationFilter, Prisma.FolderWhereInput> | null
   processForms?: Prisma.ProcessFormListRelationFilter
   formGenerationProgress?: Prisma.FormGenerationProgressListRelationFilter
+  certificateFieldMappings?: Prisma.CertificateFieldMappingListRelationFilter
 }, "id">
 
 export type FormOrderByWithAggregationInput = {
@@ -310,6 +313,7 @@ export type FormCreateInput = {
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUncheckedCreateInput = {
@@ -326,6 +330,7 @@ export type FormUncheckedCreateInput = {
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUpdateInput = {
@@ -342,6 +347,7 @@ export type FormUpdateInput = {
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateInput = {
@@ -358,6 +364,7 @@ export type FormUncheckedUpdateInput = {
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormCreateManyInput = {
@@ -596,6 +603,22 @@ export type FormUpdateOneWithoutFormGenerationProgressNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.FormUpdateToOneWithWhereWithoutFormGenerationProgressInput, Prisma.FormUpdateWithoutFormGenerationProgressInput>, Prisma.FormUncheckedUpdateWithoutFormGenerationProgressInput>
 }
 
+export type FormCreateNestedOneWithoutCertificateFieldMappingsInput = {
+  create?: Prisma.XOR<Prisma.FormCreateWithoutCertificateFieldMappingsInput, Prisma.FormUncheckedCreateWithoutCertificateFieldMappingsInput>
+  connectOrCreate?: Prisma.FormCreateOrConnectWithoutCertificateFieldMappingsInput
+  connect?: Prisma.FormWhereUniqueInput
+}
+
+export type FormUpdateOneWithoutCertificateFieldMappingsNestedInput = {
+  create?: Prisma.XOR<Prisma.FormCreateWithoutCertificateFieldMappingsInput, Prisma.FormUncheckedCreateWithoutCertificateFieldMappingsInput>
+  connectOrCreate?: Prisma.FormCreateOrConnectWithoutCertificateFieldMappingsInput
+  upsert?: Prisma.FormUpsertWithoutCertificateFieldMappingsInput
+  disconnect?: Prisma.FormWhereInput | boolean
+  delete?: Prisma.FormWhereInput | boolean
+  connect?: Prisma.FormWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.FormUpdateToOneWithWhereWithoutCertificateFieldMappingsInput, Prisma.FormUpdateWithoutCertificateFieldMappingsInput>, Prisma.FormUncheckedUpdateWithoutCertificateFieldMappingsInput>
+}
+
 export type FormCreateWithoutCreatorInput = {
   id?: string
   name: string
@@ -609,6 +632,7 @@ export type FormCreateWithoutCreatorInput = {
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUncheckedCreateWithoutCreatorInput = {
@@ -624,6 +648,7 @@ export type FormUncheckedCreateWithoutCreatorInput = {
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormCreateOrConnectWithoutCreatorInput = {
@@ -681,6 +706,7 @@ export type FormCreateWithoutFolderInput = {
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUncheckedCreateWithoutFolderInput = {
@@ -696,6 +722,7 @@ export type FormUncheckedCreateWithoutFolderInput = {
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormCreateOrConnectWithoutFolderInput = {
@@ -737,6 +764,7 @@ export type FormCreateWithoutResponsesInput = {
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUncheckedCreateWithoutResponsesInput = {
@@ -752,6 +780,7 @@ export type FormUncheckedCreateWithoutResponsesInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormCreateOrConnectWithoutResponsesInput = {
@@ -783,6 +812,7 @@ export type FormUpdateWithoutResponsesInput = {
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutResponsesInput = {
@@ -798,6 +828,7 @@ export type FormUncheckedUpdateWithoutResponsesInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormCreateWithoutProcessFormsInput = {
@@ -813,6 +844,7 @@ export type FormCreateWithoutProcessFormsInput = {
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUncheckedCreateWithoutProcessFormsInput = {
@@ -828,6 +860,7 @@ export type FormUncheckedCreateWithoutProcessFormsInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormCreateOrConnectWithoutProcessFormsInput = {
@@ -859,6 +892,7 @@ export type FormUpdateWithoutProcessFormsInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutProcessFormsInput = {
@@ -874,6 +908,7 @@ export type FormUncheckedUpdateWithoutProcessFormsInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormCreateWithoutFormGenerationProgressInput = {
@@ -889,6 +924,7 @@ export type FormCreateWithoutFormGenerationProgressInput = {
   creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
   folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
   processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormUncheckedCreateWithoutFormGenerationProgressInput = {
@@ -904,6 +940,7 @@ export type FormUncheckedCreateWithoutFormGenerationProgressInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
   processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedCreateNestedManyWithoutSourceFormInput
 }
 
 export type FormCreateOrConnectWithoutFormGenerationProgressInput = {
@@ -935,6 +972,7 @@ export type FormUpdateWithoutFormGenerationProgressInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutFormGenerationProgressInput = {
@@ -950,6 +988,87 @@ export type FormUncheckedUpdateWithoutFormGenerationProgressInput = {
   design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedUpdateManyWithoutSourceFormNestedInput
+}
+
+export type FormCreateWithoutCertificateFieldMappingsInput = {
+  id?: string
+  name: string
+  type?: $Enums.FormType
+  status?: $Enums.FormStatus
+  archived?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseCreateNestedManyWithoutFormInput
+  creator: Prisma.UserCreateNestedOneWithoutCreatedFormsInput
+  folder?: Prisma.FolderCreateNestedOneWithoutFormsInput
+  processForms?: Prisma.ProcessFormCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressCreateNestedManyWithoutFormInput
+}
+
+export type FormUncheckedCreateWithoutCertificateFieldMappingsInput = {
+  id?: string
+  name: string
+  type?: $Enums.FormType
+  status?: $Enums.FormStatus
+  archived?: boolean
+  creatorId: string
+  folderId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseUncheckedCreateNestedManyWithoutFormInput
+  processForms?: Prisma.ProcessFormUncheckedCreateNestedManyWithoutFormInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedCreateNestedManyWithoutFormInput
+}
+
+export type FormCreateOrConnectWithoutCertificateFieldMappingsInput = {
+  where: Prisma.FormWhereUniqueInput
+  create: Prisma.XOR<Prisma.FormCreateWithoutCertificateFieldMappingsInput, Prisma.FormUncheckedCreateWithoutCertificateFieldMappingsInput>
+}
+
+export type FormUpsertWithoutCertificateFieldMappingsInput = {
+  update: Prisma.XOR<Prisma.FormUpdateWithoutCertificateFieldMappingsInput, Prisma.FormUncheckedUpdateWithoutCertificateFieldMappingsInput>
+  create: Prisma.XOR<Prisma.FormCreateWithoutCertificateFieldMappingsInput, Prisma.FormUncheckedCreateWithoutCertificateFieldMappingsInput>
+  where?: Prisma.FormWhereInput
+}
+
+export type FormUpdateToOneWithWhereWithoutCertificateFieldMappingsInput = {
+  where?: Prisma.FormWhereInput
+  data: Prisma.XOR<Prisma.FormUpdateWithoutCertificateFieldMappingsInput, Prisma.FormUncheckedUpdateWithoutCertificateFieldMappingsInput>
+}
+
+export type FormUpdateWithoutCertificateFieldMappingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
+  status?: Prisma.EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseUpdateManyWithoutFormNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
+  folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
+  processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
+}
+
+export type FormUncheckedUpdateWithoutCertificateFieldMappingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumFormTypeFieldUpdateOperationsInput | $Enums.FormType
+  status?: Prisma.EnumFormStatusFieldUpdateOperationsInput | $Enums.FormStatus
+  archived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  creatorId?: Prisma.StringFieldUpdateOperationsInput | string
+  folderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  design?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
+  processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
+  formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
 }
 
 export type FormCreateManyCreatorInput = {
@@ -977,6 +1096,7 @@ export type FormUpdateWithoutCreatorInput = {
   folder?: Prisma.FolderUpdateOneWithoutFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutCreatorInput = {
@@ -992,6 +1112,7 @@ export type FormUncheckedUpdateWithoutCreatorInput = {
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateManyWithoutCreatorInput = {
@@ -1031,6 +1152,7 @@ export type FormUpdateWithoutFolderInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutCreatedFormsNestedInput
   processForms?: Prisma.ProcessFormUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateWithoutFolderInput = {
@@ -1046,6 +1168,7 @@ export type FormUncheckedUpdateWithoutFolderInput = {
   responses?: Prisma.FormResponseUncheckedUpdateManyWithoutFormNestedInput
   processForms?: Prisma.ProcessFormUncheckedUpdateManyWithoutFormNestedInput
   formGenerationProgress?: Prisma.FormGenerationProgressUncheckedUpdateManyWithoutFormNestedInput
+  certificateFieldMappings?: Prisma.CertificateFieldMappingUncheckedUpdateManyWithoutSourceFormNestedInput
 }
 
 export type FormUncheckedUpdateManyWithoutFolderInput = {
@@ -1069,12 +1192,14 @@ export type FormCountOutputType = {
   responses: number
   processForms: number
   formGenerationProgress: number
+  certificateFieldMappings: number
 }
 
 export type FormCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   responses?: boolean | FormCountOutputTypeCountResponsesArgs
   processForms?: boolean | FormCountOutputTypeCountProcessFormsArgs
   formGenerationProgress?: boolean | FormCountOutputTypeCountFormGenerationProgressArgs
+  certificateFieldMappings?: boolean | FormCountOutputTypeCountCertificateFieldMappingsArgs
 }
 
 /**
@@ -1108,6 +1233,13 @@ export type FormCountOutputTypeCountFormGenerationProgressArgs<ExtArgs extends r
   where?: Prisma.FormGenerationProgressWhereInput
 }
 
+/**
+ * FormCountOutputType without action
+ */
+export type FormCountOutputTypeCountCertificateFieldMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CertificateFieldMappingWhereInput
+}
+
 
 export type FormSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1125,6 +1257,7 @@ export type FormSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   folder?: boolean | Prisma.Form$folderArgs<ExtArgs>
   processForms?: boolean | Prisma.Form$processFormsArgs<ExtArgs>
   formGenerationProgress?: boolean | Prisma.Form$formGenerationProgressArgs<ExtArgs>
+  certificateFieldMappings?: boolean | Prisma.Form$certificateFieldMappingsArgs<ExtArgs>
   _count?: boolean | Prisma.FormCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["form"]>
 
@@ -1178,6 +1311,7 @@ export type FormInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   folder?: boolean | Prisma.Form$folderArgs<ExtArgs>
   processForms?: boolean | Prisma.Form$processFormsArgs<ExtArgs>
   formGenerationProgress?: boolean | Prisma.Form$formGenerationProgressArgs<ExtArgs>
+  certificateFieldMappings?: boolean | Prisma.Form$certificateFieldMappingsArgs<ExtArgs>
   _count?: boolean | Prisma.FormCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type FormIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1197,6 +1331,7 @@ export type $FormPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     folder: Prisma.$FolderPayload<ExtArgs> | null
     processForms: Prisma.$ProcessFormPayload<ExtArgs>[]
     formGenerationProgress: Prisma.$FormGenerationProgressPayload<ExtArgs>[]
+    certificateFieldMappings: Prisma.$CertificateFieldMappingPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1608,6 +1743,7 @@ export interface Prisma__FormClient<T, Null = never, ExtArgs extends runtime.Typ
   folder<T extends Prisma.Form$folderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$folderArgs<ExtArgs>>): Prisma.Prisma__FolderClient<runtime.Types.Result.GetResult<Prisma.$FolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   processForms<T extends Prisma.Form$processFormsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$processFormsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProcessFormPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   formGenerationProgress<T extends Prisma.Form$formGenerationProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$formGenerationProgressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FormGenerationProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  certificateFieldMappings<T extends Prisma.Form$certificateFieldMappingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Form$certificateFieldMappingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificateFieldMappingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2140,6 +2276,30 @@ export type Form$formGenerationProgressArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.FormGenerationProgressScalarFieldEnum | Prisma.FormGenerationProgressScalarFieldEnum[]
+}
+
+/**
+ * Form.certificateFieldMappings
+ */
+export type Form$certificateFieldMappingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CertificateFieldMapping
+   */
+  select?: Prisma.CertificateFieldMappingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CertificateFieldMapping
+   */
+  omit?: Prisma.CertificateFieldMappingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CertificateFieldMappingInclude<ExtArgs> | null
+  where?: Prisma.CertificateFieldMappingWhereInput
+  orderBy?: Prisma.CertificateFieldMappingOrderByWithRelationInput | Prisma.CertificateFieldMappingOrderByWithRelationInput[]
+  cursor?: Prisma.CertificateFieldMappingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CertificateFieldMappingScalarFieldEnum | Prisma.CertificateFieldMappingScalarFieldEnum[]
 }
 
 /**

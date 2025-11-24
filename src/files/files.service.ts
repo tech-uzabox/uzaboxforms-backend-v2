@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -16,6 +17,8 @@ import { Readable } from 'stream';
 
 @Injectable()
 export class FilesService {
+  private readonly logger = new Logger(FilesService.name);
+
   constructor(
     private prisma: PrismaService,
     private s3Service: FileService,
@@ -65,18 +68,62 @@ export class FilesService {
 
   async getPresignedUrlByFileUrl(
     fileUrl: string,
+    bucket?: 'private' | 'public',
   ): Promise<{ presignedUrl: string }> {
-    const file = await this.prisma.file.findFirst({ where: { fileUrl } });
+    let file = await this.prisma.file.findFirst({
+      where: { fileUrl },
+    });
+
     if (!file) {
+      file = await this.prisma.file.findFirst({
+        where: {
+          OR: [
+            { fileUrl: { endsWith: fileUrl } },
+            { fileUrl: { contains: fileUrl } },
+            { thumbnailUrl: { endsWith: fileUrl } },
+            { thumbnailUrl: { contains: fileUrl } },
+          ],
+        },
+      });
+    }
+
+    if (!file) {
+      const bucketsToTry = bucket ? [bucket] : ['private', 'public'];
+      let lastError: any = null;
+      
+      for (const tryBucket of bucketsToTry) {
+        try {
+          const presignedUrl = await this.s3Service.getPresignedUrl(
+            tryBucket,
+            fileUrl,
+          );
+          await this.auditLogService.log({
+            action: 'GET_PRESIGNED_URL_BY_FILE_URL_DIRECT',
+            resource: 'File',
+            resourceId: fileUrl,
+            status: 'SUCCESS',
+            details: { bucket: tryBucket, fileUrl },
+          });
+          return { presignedUrl };
+        } catch (error: any) {
+          lastError = error;
+          continue;
+        }
+      }
+
       await this.auditLogService.log({
-        action: 'GET_PRESIGNED_URL_BY_FILE_URL',
+        action: 'GET_PRESIGNED_URL_BY_FILE_URL_DIRECT',
         resource: 'File',
         resourceId: fileUrl,
         status: 'FAILURE',
-        errorMessage: 'File not found.',
+        errorMessage: lastError?.message || 'File not found in any bucket',
+        details: { bucketsTried: bucketsToTry, fileUrl },
       });
-      throw new NotFoundException('File not found');
+      throw new NotFoundException(
+        `File not found in MinIO storage. Tried buckets: ${bucketsToTry.join(', ')}, Key: ${fileUrl}. Error: ${lastError?.message || 'File not found in any bucket'}`,
+      );
     }
+
     await this.auditLogService.log({
       action: 'GET_PRESIGNED_URL_BY_FILE_URL',
       resource: 'File',
@@ -307,9 +354,11 @@ export class FilesService {
         resource: 'File',
         resourceId: fileUrl,
         status: 'FAILURE',
-        errorMessage: 'File not found.',
+        errorMessage: `File with URL ${fileUrl} not found in database.`,
       });
-      throw new NotFoundException(`File with URL ${fileUrl} not found.`);
+      throw new NotFoundException(
+        `File with URL ${fileUrl} not found in database. The file may exist in storage but not be registered in the database.`,
+      );
     }
 
     if (file.isPrivate) {
@@ -336,11 +385,14 @@ export class FilesService {
       });
       throw new NotFoundException(`Thumbnail for file not found.`);
     }
+    const actualFileUrl = file.fileUrl === fileUrl ? file.fileUrl : (file.thumbnailUrl ?? '');
+    const bucket = file.isPrivate ? 'private' : 'public';
+    
     let fileStream: Readable;
     try {
       fileStream = await this.s3Service.getFileStream(
-        file.isPrivate ? 'private' : 'public',
-        file.fileUrl === fileUrl ? file.fileUrl : (file.thumbnailUrl ?? ''),
+        bucket,
+        actualFileUrl,
       );
       await this.auditLogService.log({
         userId: actor?.id,
@@ -349,18 +401,16 @@ export class FilesService {
         resourceId: fileUrl,
         status: 'SUCCESS',
       });
-    } catch (error) {
+    } catch (error: any) {
       await this.auditLogService.log({
         userId: actor?.id,
         action: 'GET_FILE_BY_URL',
         resource: 'File',
         resourceId: fileUrl,
         status: 'FAILURE',
-        errorMessage: error.message,
+        errorMessage: error?.message || 'Unknown error',
       });
-      throw new InternalServerErrorException(
-        'Failed to retrieve file content from storage.',
-      );
+      throw error;
     }
 
     return { file, stream: fileStream };
