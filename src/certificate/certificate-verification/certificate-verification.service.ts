@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../db/prisma.service';
 
 @Injectable()
@@ -6,39 +6,53 @@ export class CertificateVerificationService {
   constructor(private prisma: PrismaService) {}
 
   /**
+   * Validate UUID format
+   */
+  private isValidUUID(uuid: string): boolean {
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return uuidRegex.test(uuid);
+  }
+
+  /**
    * Verify certificate by verification code (public endpoint)
    */
   async verifyCertificate(verificationCode: string) {
-    const certificate = await this.prisma.certificate.findUnique({
-      where: { verificationCode },
-      include: {
-        certificateTemplate: {
-          select: {
-            name: true,
-          },
-        },
-        applicantProcess: {
-          include: {
-            applicant: {
-              select: {
-                firstName: true,
-                lastName: true,
-                email: true,
-              },
-            },
-            process: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    });
-
-    if (!certificate) {
-      throw new NotFoundException('Certificate not found');
+    // Validate UUID format before querying
+    if (!this.isValidUUID(verificationCode)) {
+      throw new BadRequestException('Invalid certificate verification code');
     }
+
+    try {
+      const certificate = await this.prisma.certificate.findUnique({
+        where: { verificationCode },
+        include: {
+          certificateTemplate: {
+            select: {
+              name: true,
+            },
+          },
+          applicantProcess: {
+            include: {
+              applicant: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                  email: true,
+                },
+              },
+              process: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!certificate) {
+        throw new NotFoundException('Certificate not found');
+      }
 
     // Check if expired
     const now = new Date();
@@ -77,6 +91,14 @@ export class CertificateVerificationService {
         templateName: certificate.certificateTemplate?.name || 'Unknown Template',
       },
     };
+    } catch (error: any) {
+      // Handle Prisma UUID validation errors
+      if (error.code === '22P02' || error.message?.includes('invalid input syntax for type uuid')) {
+        throw new BadRequestException('Invalid certificate verification code');
+      }
+      // Re-throw other errors
+      throw error;
+    }
   }
 }
 
