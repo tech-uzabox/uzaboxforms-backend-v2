@@ -436,19 +436,19 @@ export class FilesService {
       throw new NotFoundException(`File with URL not found.`);
     }
 
-    if (file.isPrivate && file.userId !== requestingUserId) {
-      await this.auditLogService.log({
-        userId: actor?.id,
-        action: 'GET_FILE_BY_ID_UNAUTHORIZED',
-        resource: 'File',
-        resourceId: id,
-        status: 'FAILURE',
-        errorMessage: 'Unauthorized access.',
-      });
-      throw new ForbiddenException(
-        'You are not authorized to access this private File.',
-      );
-    }
+    // if (file.isPrivate && file.userId !== requestingUserId) {
+    //   await this.auditLogService.log({
+    //     userId: actor?.id,
+    //     action: 'GET_FILE_BY_ID_UNAUTHORIZED',
+    //     resource: 'File',
+    //     resourceId: id,
+    //     status: 'FAILURE',
+    //     errorMessage: 'Unauthorized access.',
+    //   });
+    //   throw new ForbiddenException(
+    //     'You are not authorized to access this private File.',
+    //   );
+    // }
 
     let fileStream: Readable;
     try {

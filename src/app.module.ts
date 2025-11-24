@@ -59,6 +59,7 @@ import { ReportingModule } from './reporting/reporting.module';
 import { WidgetModule } from './widget/widget.module';
 import { SeedingModule } from './seeds/seeding.module';
 import { CertificateModule } from './certificate/certificate.module';
+import { HealthModule } from './health/health.module';
 
 @Catch(HttpException)
 class HttpExceptionFilter extends BaseExceptionFilter {
@@ -120,6 +121,7 @@ class HttpExceptionFilter extends BaseExceptionFilter {
     AddToDatabaseTreeItemModule,
     ReportingModule,
     SeedingModule,
+    HealthModule,
   ],
   providers: [
     {

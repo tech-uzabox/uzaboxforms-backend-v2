@@ -290,4 +290,48 @@ export class FilesController {
 
     stream.pipe(res);
   }
+
+  @Get('download/:id')
+  @UseGuards(OptionalJwtAuthGuard)
+  @ApiOperation({ summary: 'Download a file by ID with original filename' })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    description: 'The ID of the file to download.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'File downloaded successfully.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User not authorized to access this private File.',
+  })
+  @ApiResponse({ status: 404, description: 'File not found.' })
+  async downloadFileById(
+    @Param('id') id: string,
+    @GetUser() user: AuthenticatedUser | undefined,
+    @Res() res: Response,
+  ) {
+    const { file, stream } = await this.filesService.getFileById(
+      id,
+      user?.id,
+      user,
+    );
+
+    // Escape filename for Content-Disposition header
+    const escapedFilename = file.title.replace(/"/g, '\\"');
+
+    const headers = {
+      'Content-Type': file.fileType,
+      'Content-Disposition': `attachment; filename="${escapedFilename}"`,
+      'Content-Length': file.size.toString(),
+      'Access-Control-Expose-Headers': 'Content-Disposition',
+    };
+
+    res.set(headers);
+
+    stream.pipe(res);
+  }
 }
