@@ -50,6 +50,7 @@ export const SystemFieldSchema = z.enum(['$responseId$', '$submissionDate$']);
 export const MetricModeSchema = z.enum(['aggregation', 'value']);
 
 export const DateRangePresetSchema = z.enum([
+  'all-time',
   'last-7-days',
   'last-30-days',
   'last-3-months',

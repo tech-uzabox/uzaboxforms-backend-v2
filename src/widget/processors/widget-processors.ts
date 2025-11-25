@@ -1310,6 +1310,11 @@ function resolveDateRange(dateRange: any): { startDate: Date; endDate: Date } {
   }
   endDate = now;
   switch (dateRange.preset) {
+    case 'all-time':
+    case 'all': // Backward compatibility
+      // Set a very early date to include all data
+      startDate = new Date(0); // January 1, 1970
+      break;
     case 'last-7-days':
       startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       break;
