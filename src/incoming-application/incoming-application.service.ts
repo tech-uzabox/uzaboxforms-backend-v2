@@ -143,7 +143,6 @@ export class IncomingApplicationService {
     actor: AuthenticatedUser,
     isAdminView: boolean = false,
   ): Promise<any[]> {
-    // 1) Load processes (enabled) with forms and group once
     const processes = await this.prisma.process.findMany({
       where: { status: ProcessStatus.ENABLED },
       include: {
@@ -152,50 +151,112 @@ export class IncomingApplicationService {
       },
     });
 
-    // Build lookup maps for quick access
     const processById = new Map<string, any>();
     const processIds: string[] = [];
+    const processFormCounts = new Map<string, number>();
+    
     for (const p of processes) {
       if (!p.forms || p.forms.length === 0) continue;
       processById.set(p.id, p);
       processIds.push(p.id);
+      processFormCounts.set(p.id, p.forms.length);
     }
 
     if (processIds.length === 0) {
-      await this.auditLogService.log({
+      this.auditLogService.log({
         userId: actor.id,
         action: `GET_${type.toUpperCase()}_APPLICATIONS`,
         resource: 'IncomingApplication',
         status: 'SUCCESS',
         details: { count: 0 },
-      });
+      }).catch(() => {});
       return [];
     }
 
-    // Determine status filter for applicant processes
     const statusFilter =
       type === 'disabled' ? ProcessStatus.DISABLED : ProcessStatus.ENABLED;
 
-    // 2) Batch fetch applicant processes across all processes
+    const isCompletedType = type === 'completed' || type === 'processed';
+    const isPendingType = type === 'pending' || type === 'disabled';
+
+    const applicantProcessesWithCounts = await this.prisma.applicantProcess.findMany({
+      where: {
+        processId: { in: processIds },
+        status: statusFilter,
+      },
+      select: {
+        id: true,
+        processId: true,
+        _count: {
+          select: {
+            completedForms: true,
+          },
+        },
+      },
+    });
+
+    const filteredApplicantProcessIds = applicantProcessesWithCounts
+      .filter((ap) => {
+        const totalForms = processFormCounts.get(ap.processId) || 0;
+        const completedCount = ap._count.completedForms;
+
+        if (isCompletedType) {
+          return completedCount >= totalForms && totalForms > 0;
+        } else if (isPendingType) {
+          return completedCount < totalForms;
+        }
+        return true;
+      })
+      .map((ap) => ap.id);
+
+    if (filteredApplicantProcessIds.length === 0) {
+      this.auditLogService.log({
+        userId: actor.id,
+        action: `GET_${type.toUpperCase()}_APPLICATIONS`,
+        resource: 'IncomingApplication',
+        status: 'SUCCESS',
+        details: { count: 0 },
+      }).catch(() => {});
+      return [];
+    }
+
     const applicantProcesses = await this.prisma.applicantProcess.findMany({
-      where: { processId: { in: processIds }, status: statusFilter },
+      where: {
+        id: { in: filteredApplicantProcessIds },
+        status: statusFilter,
+      },
       include: {
         applicant: {
           select: { id: true, firstName: true, lastName: true, email: true },
         },
-        completedForms: {
-          orderBy: { createdAt: 'asc' },
-          select: {
-            formId: true,
-            reviewerId: true,
-            nextStepType: true,
-            nextStaffId: true,
-            nextStepRoles: true,
-            nextStepSpecifiedTo: true,
-            applicantProcessId: true,
-            createdAt: true,
-          },
-        },
+        completedForms: isPendingType
+          ? {
+              take: 1,
+              orderBy: { createdAt: 'desc' },
+              select: {
+                formId: true,
+                reviewerId: true,
+                nextStepType: true,
+                nextStaffId: true,
+                nextStepRoles: true,
+                nextStepSpecifiedTo: true,
+                applicantProcessId: true,
+                createdAt: true,
+              },
+            }
+          : {
+              orderBy: { createdAt: 'asc' },
+              select: {
+                formId: true,
+                reviewerId: true,
+                nextStepType: true,
+                nextStaffId: true,
+                nextStepRoles: true,
+                nextStepSpecifiedTo: true,
+                applicantProcessId: true,
+                createdAt: true,
+              },
+            },
       },
     });
 
@@ -238,35 +299,33 @@ export class IncomingApplicationService {
       }
     >();
 
+    const applicantProcessCountsMap = new Map(
+      applicantProcessesWithCounts.map((ap) => [ap.id, ap._count.completedForms]),
+    );
+
     for (const ap of applicantProcesses) {
       const process = processById.get(ap.processId);
       if (!process) continue;
 
       const totalForms = process.forms.length;
       const completedForms = ap.completedForms || [];
-      const currentLevel = completedForms.length;
-
-      // Type-based filtering
-      if (
-        (type === 'completed' || type === 'processed') &&
-        currentLevel < totalForms
-      ) {
-        continue;
-      }
-      if (
-        (type === 'pending' || type === 'disabled') &&
-        currentLevel >= totalForms
-      ) {
-        continue;
-      }
+      const completedCount = applicantProcessCountsMap.get(ap.id) || 0;
+      const currentLevel = isPendingType
+        ? completedCount
+        : completedForms.length;
 
       const nextForm = process.forms[currentLevel];
       if (!nextForm && (type === 'pending' || type === 'disabled')) {
         continue;
       }
 
-      const lastCompletedForm =
-        currentLevel > 0 ? completedForms[currentLevel - 1] : undefined;
+      const lastCompletedForm = isPendingType
+        ? completedForms.length > 0
+          ? completedForms[0]
+          : undefined
+        : currentLevel > 0
+          ? completedForms[currentLevel - 1]
+          : undefined;
 
       // Access control
       let shouldInclude = false;
@@ -290,12 +349,18 @@ export class IncomingApplicationService {
       }
       if (!shouldInclude) continue;
 
+      const completedFormIds = isPendingType
+        ? completedForms.length > 0
+          ? [completedForms[0].formId]
+          : []
+        : completedForms.map((cf: any) => cf.formId);
+
       const applicationData: any = {
         applicantProcessId: ap.id,
         applicantId: ap.applicantId,
         applicant: ap.applicant,
         status: ap.status,
-        completedForms: completedForms.map((cf: any) => cf.formId),
+        completedForms: completedFormIds,
         processLevel: `${currentLevel}/${totalForms}`,
       };
 
@@ -333,7 +398,6 @@ export class IncomingApplicationService {
       procEntry.applicantProcesses.push(applicationData);
     }
 
-    // 5) Materialize result
     const groupedApplications: any[] = [];
     for (const groupEntry of groupAgg.values()) {
       groupedApplications.push({
@@ -343,13 +407,13 @@ export class IncomingApplicationService {
       });
     }
 
-    await this.auditLogService.log({
+    this.auditLogService.log({
       userId: actor.id,
       action: `GET_${type.toUpperCase()}_APPLICATIONS`,
       resource: 'IncomingApplication',
       status: 'SUCCESS',
       details: { count: groupedApplications.length },
-    });
+    }).catch(() => {});
 
     return groupedApplications;
   }
@@ -385,26 +449,95 @@ export class IncomingApplicationService {
         ? ProcessStatus.DISABLED
         : ProcessStatus.ENABLED;
 
-    const applicantProcesses = await this.prisma.applicantProcess.findMany({
+    const isCompletedType = type === 'completed' || type === 'processed';
+    const isPendingType = type === 'pending' || type === 'disabled';
+    const totalForms = process.forms.length;
+
+    const applicantProcessesWithCounts = await this.prisma.applicantProcess.findMany({
       where: { processId: process.id, status: statusFilter },
-      include: {
-        applicant: true,
-        completedForms: {
-          orderBy: { createdAt: 'asc' },
+      select: {
+        id: true,
+        _count: {
           select: {
-            formId: true,
-            reviewerId: true,
-            nextStepType: true,
-            nextStaffId: true,
-            nextStepRoles: true,
-            nextStepSpecifiedTo: true,
-            applicantProcessId: true,
-            createdAt: true,
+            completedForms: true,
           },
         },
-        _count: { select: { completedForms: true } },
       },
     });
+
+    const filteredApplicantProcessIds = applicantProcessesWithCounts
+      .filter((ap) => {
+        const completedCount = ap._count.completedForms;
+        if (isCompletedType) {
+          return completedCount >= totalForms && totalForms > 0;
+        } else if (isPendingType) {
+          return completedCount < totalForms;
+        }
+        return true;
+      })
+      .map((ap) => ap.id);
+
+    if (filteredApplicantProcessIds.length === 0) {
+      this.auditLogService.log({
+        userId: actor.id,
+        action: `GET_${type.toUpperCase()}_APPLICATIONS_FOR_PROCESS`,
+        resource: 'IncomingApplication',
+        resourceId: processId,
+        status: 'SUCCESS',
+        details: { count: 0 },
+      }).catch(() => {});
+      return {
+        process: {
+          processId: process.id,
+          name: process.name,
+          groupId: process.groupId,
+          status: process.status,
+        },
+        applicantProcesses: [],
+      };
+    }
+
+    const applicantProcesses = await this.prisma.applicantProcess.findMany({
+      where: {
+        id: { in: filteredApplicantProcessIds },
+        status: statusFilter,
+      },
+      include: {
+        applicant: true,
+        completedForms: isPendingType
+          ? {
+              take: 1,
+              orderBy: { createdAt: 'desc' },
+              select: {
+                formId: true,
+                reviewerId: true,
+                nextStepType: true,
+                nextStaffId: true,
+                nextStepRoles: true,
+                nextStepSpecifiedTo: true,
+                applicantProcessId: true,
+                createdAt: true,
+              },
+            }
+          : {
+              orderBy: { createdAt: 'asc' },
+              select: {
+                formId: true,
+                reviewerId: true,
+                nextStepType: true,
+                nextStaffId: true,
+                nextStepRoles: true,
+                nextStepSpecifiedTo: true,
+                applicantProcessId: true,
+                createdAt: true,
+              },
+            },
+      },
+    });
+
+    const applicantProcessCountsMap = new Map(
+      applicantProcessesWithCounts.map((ap) => [ap.id, ap._count.completedForms]),
+    );
 
     // Preload access context (roles and org chart) once to avoid N+1 queries
     const [actorRoleIds, actorOrgUser] = await Promise.all([
@@ -435,31 +568,20 @@ export class IncomingApplicationService {
     const applicantProcessesForProcess: any[] = [];
 
     for (const ap of applicantProcesses) {
-      // Use already loaded completedForms instead of querying again
       const completedForms = ap.completedForms || [];
-
-      const currentLevel = completedForms.length;
-
-      // For completed/processed: only include if all forms are completed
-      if (
-        (type === 'completed' || type === 'processed') &&
-        currentLevel < process.forms.length
-      ) {
-        continue;
-      }
-
-      // For pending/disabled: only include if not all forms are completed
-      if (
-        (type === 'pending' || type === 'disabled') &&
-        currentLevel >= process.forms.length
-      ) {
-        continue;
-      }
+      const completedCount = applicantProcessCountsMap.get(ap.id) || 0;
+      const currentLevel = isPendingType ? completedCount : completedForms.length;
 
       const nextForm = process.forms[currentLevel];
       if (!nextForm && (type === 'pending' || type === 'disabled')) continue;
 
-      const lastCompletedForm = completedForms[currentLevel - 1];
+      const lastCompletedForm = isPendingType
+        ? completedForms.length > 0
+          ? completedForms[0]
+          : undefined
+        : currentLevel > 0
+          ? completedForms[currentLevel - 1]
+          : undefined;
 
       let shouldInclude = false;
 
@@ -489,12 +611,18 @@ export class IncomingApplicationService {
         (form) => form.formId === nextForm?.formId,
       )?.editApplicationStatus;
 
+      const completedFormIds = isPendingType
+        ? completedForms.length > 0
+          ? [completedForms[0].formId]
+          : []
+        : completedForms.map((cf) => cf.formId);
+
       const applicationData: any = {
         applicantProcessId: ap.id,
         applicantId: ap.applicantId,
         applicant: ap.applicant,
         status: ap.status,
-        completedForms: completedForms.map((cf) => cf.formId),
+        completedForms: completedFormIds,
         editApplicationStatus,
         processLevel: `${currentLevel}/${process.forms.length}`,
       };
@@ -522,14 +650,14 @@ export class IncomingApplicationService {
       applicantProcesses: applicantProcessesForProcess,
     };
 
-    await this.auditLogService.log({
+    this.auditLogService.log({
       userId: actor.id,
       action: `GET_${type.toUpperCase()}_APPLICATIONS_FOR_PROCESS`,
       resource: 'IncomingApplication',
       resourceId: processId,
       status: 'SUCCESS',
       details: { count: applicantProcessesForProcess.length },
-    });
+    }).catch(() => {});
 
     return response;
   }
@@ -558,25 +686,22 @@ export class IncomingApplicationService {
     });
 
     if (!applicantProcess) {
-      await this.auditLogService.log({
+      this.auditLogService.log({
         userId: actor.id,
         action: 'GET_SINGLE_APPLICATION',
         resource: 'IncomingApplication',
         resourceId: applicantProcessId,
         status: 'FAILURE',
         errorMessage: 'Applicant process not found.',
-      });
+      }).catch(() => {});
       throw new NotFoundException('Applicant process not found.');
     }
 
     const lastCompletedForm = applicantProcess.completedForms[0];
     const processForm = lastCompletedForm
-      ? await this.prisma.processForm.findFirst({
-          where: {
-            processId: applicantProcess.processId,
-            formId: lastCompletedForm.formId,
-          },
-        })
+      ? applicantProcess.process.forms.find(
+          (pf) => pf.formId === lastCompletedForm.formId,
+        )
       : null;
 
     const hasAccess = await this.userHasAccess(actor, {
@@ -589,14 +714,14 @@ export class IncomingApplicationService {
     });
 
     if (!hasAccess && applicantProcess.applicantId !== userId) {
-      await this.auditLogService.log({
+      this.auditLogService.log({
         userId: actor.id,
         action: 'GET_SINGLE_APPLICATION',
         resource: 'IncomingApplication',
         resourceId: applicantProcessId,
         status: 'FAILURE',
         errorMessage: 'Unauthorized access.',
-      });
+      }).catch(() => {});
       throw new ForbiddenException(
         'You are not authorized to access this application.',
       );
@@ -716,13 +841,13 @@ export class IncomingApplicationService {
       },
     };
 
-    await this.auditLogService.log({
+    this.auditLogService.log({
       userId: actor.id,
       action: 'GET_SINGLE_APPLICATION',
       resource: 'IncomingApplication',
       resourceId: applicantProcessId,
       status: 'SUCCESS',
-    });
+    }).catch(() => {});
 
     return response;
   }

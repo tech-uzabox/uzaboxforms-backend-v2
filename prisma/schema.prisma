@@ -12,34 +12,34 @@ datasource db {
 }
 
 model User {
-  id                    String                 @id @default(uuid()) @db.Uuid
-  email                 String                 @unique @db.VarChar(255)
-  password              String                 @db.VarChar(255)
-  firstName             String?
-  lastName              String?
-  photo                 String?
-  googleId              String?                @unique
-  status                UserStatus             @default(ENABLED)
-  failedLoginAttempts   Int                    @default(0)
-  lockedUntil           DateTime?
-  isLocked              Boolean                @default(false)
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  applicantProcesses    ApplicantProcess[]
-  auditLogs             AuditLog[]
-  files                 File[]
-  createdForms          Form[]                 @relation("FormCreator")
-  createdFolders        Folder[]               @relation("FolderCreator")
-  createdProcessFolders ProcessFolder[]        @relation("ProcessFolderCreator")
-  createdGroups         Group[]                @relation("GroupCreator")
-  organization          OrganizationUser?
-  createdProcesses      Process[]              @relation("ProcessCreator")
-  processedApplications ProcessedApplication[]
-  qrCodeDocuments       QrCodeDocument[]
-  roles                 UserRole[]
-  ownedDashboards       Dashboard[]
+  id                     String                   @id @default(uuid()) @db.Uuid
+  email                  String                   @unique @db.VarChar(255)
+  password               String                   @db.VarChar(255)
+  firstName              String?
+  lastName               String?
+  photo                  String?
+  googleId               String?                  @unique
+  status                 UserStatus               @default(ENABLED)
+  failedLoginAttempts    Int                      @default(0)
+  lockedUntil            DateTime?
+  isLocked               Boolean                  @default(false)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  applicantProcesses     ApplicantProcess[]
+  auditLogs              AuditLog[]
+  files                  File[]
+  createdForms           Form[]                   @relation("FormCreator")
+  createdFolders         Folder[]                 @relation("FolderCreator")
+  createdProcessFolders  ProcessFolder[]          @relation("ProcessFolderCreator")
+  createdGroups          Group[]                  @relation("GroupCreator")
+  organization           OrganizationUser?
+  createdProcesses       Process[]                @relation("ProcessCreator")
+  processedApplications  ProcessedApplication[]
+  qrCodeDocuments        QrCodeDocument[]
+  roles                  UserRole[]
+  ownedDashboards        Dashboard[]
   formGenerationProgress FormGenerationProgress[]
-  generatedCertificates Certificate[]
+  generatedCertificates  Certificate[]
 
   @@index([email])
   @@map("users")
@@ -146,7 +146,7 @@ model Process {
   forms                     ProcessForm[]
   processedApplications     ProcessedApplication[]
   roles                     ProcessRole[]
-  certificateTemplates       CertificateTemplate[]
+  certificateTemplates      CertificateTemplate[]
   creator                   User                   @relation("ProcessCreator", fields: [creatorId], references: [id])
   group                     Group                  @relation(fields: [groupId], references: [id])
   processFolder             ProcessFolder?         @relation(fields: [processFolderId], references: [id], onDelete: SetNull)
@@ -171,13 +171,13 @@ model ProcessRole {
 }
 
 model Folder {
-  id          String    @id @default(uuid()) @db.Uuid
+  id          String   @id @default(uuid()) @db.Uuid
   name        String
   description String?
-  creatorId   String    @db.Uuid
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  creator     User      @relation("FolderCreator", fields: [creatorId], references: [id])
+  creatorId   String   @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  creator     User     @relation("FolderCreator", fields: [creatorId], references: [id])
   forms       Form[]
 
   @@index([creatorId])
@@ -199,21 +199,21 @@ model ProcessFolder {
 }
 
 model Form {
-  id           String         @id @default(uuid()) @db.Uuid
-  name         String
-  type         FormType       @default(INTERNAL)
-  status       FormStatus     @default(ENABLED)
-  archived     Boolean        @default(false)
-  creatorId    String         @db.Uuid
-  folderId     String?        @db.Uuid
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  design       Json?
-  responses    FormResponse[]
-  creator      User           @relation("FormCreator", fields: [creatorId], references: [id])
-  folder       Folder?        @relation(fields: [folderId], references: [id], onDelete: SetNull)
-  processForms ProcessForm[]
-  formGenerationProgress FormGenerationProgress[]
+  id                       String                    @id @default(uuid()) @db.Uuid
+  name                     String
+  type                     FormType                  @default(INTERNAL)
+  status                   FormStatus                @default(ENABLED)
+  archived                 Boolean                   @default(false)
+  creatorId                String                    @db.Uuid
+  folderId                 String?                   @db.Uuid
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  design                   Json?
+  responses                FormResponse[]
+  creator                  User                      @relation("FormCreator", fields: [creatorId], references: [id])
+  folder                   Folder?                   @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  processForms             ProcessForm[]
+  formGenerationProgress   FormGenerationProgress[]
   certificateFieldMappings CertificateFieldMapping[]
 
   @@index([creatorId])
@@ -328,6 +328,8 @@ model APCompletedForm {
   @@index([applicantProcessId])
   @@index([reviewerId])
   @@index([formId])
+  @@index([applicantProcessId, createdAt])
+  @@index([applicantProcessId, formId])
   @@map("ap_completed_forms")
 }
 
@@ -353,6 +355,7 @@ model OrganizationUser {
   subordinates OrganizationUser[] @relation("Hierarchy")
   user         User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId, superiorId])
   @@map("organization_users")
 }
 
@@ -389,18 +392,17 @@ model Widget {
 }
 
 model WidgetSandbox {
-  id                String    @id @default(uuid()) @db.Uuid
-  chatId            String    @db.Uuid
+  id                String   @id @default(uuid()) @db.Uuid
+  chatId            String   @db.Uuid
   description       String?
   title             String
   visualizationType String
   config            Json
   order             Int
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  chat              Chat      @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  isCommited        Boolean   @default(false)
-
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  chat              Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  isCommited        Boolean  @default(false)
 
   @@index([chatId])
   @@map("widget_sandboxes")
@@ -446,8 +448,8 @@ model AddToDatabase {
   name      String
   status    AddToDatabaseStatus @default(ENABLED)
   parentId  String?             @db.Uuid
-  parent    AddToDatabase?     @relation("Hierarchy", fields: [parentId], references: [id])
-  children  AddToDatabase[]    @relation("Hierarchy")
+  parent    AddToDatabase?      @relation("Hierarchy", fields: [parentId], references: [id])
+  children  AddToDatabase[]     @relation("Hierarchy")
   createdAt DateTime            @default(now())
   updatedAt DateTime            @updatedAt
 
@@ -458,21 +460,21 @@ model AddToDatabase {
 }
 
 model AddToDatabaseTreeItem {
-  id        String              @id @default(uuid()) @db.Uuid
-  name      String
-  status    AddToDatabaseStatus @default(ENABLED)
-  parentId  String?             @db.Uuid
-  addToDatabaseId String        @db.Uuid
+  id              String              @id @default(uuid()) @db.Uuid
+  name            String
+  status          AddToDatabaseStatus @default(ENABLED)
+  parentId        String?             @db.Uuid
+  addToDatabaseId String              @db.Uuid
 
   // Tree relationships
-  parent    AddToDatabaseTreeItem? @relation("TreeHierarchy", fields: [parentId], references: [id])
-  children  AddToDatabaseTreeItem[] @relation("TreeHierarchy")
+  parent   AddToDatabaseTreeItem?  @relation("TreeHierarchy", fields: [parentId], references: [id])
+  children AddToDatabaseTreeItem[] @relation("TreeHierarchy")
 
   // Belongs to an AddToDatabase group
   addToDatabase AddToDatabase @relation(fields: [addToDatabaseId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("add_to_database_tree_items")
 }
@@ -556,14 +558,15 @@ enum ChatAIType {
   DASHBOARD
   FORM
 }
+
 model Chat {
-  id         String    @id @default(uuid()) @db.Uuid
-  createdAt  DateTime  @default(now())
-  title      String
-  userId     String    @db.Uuid
-  visibility String    @default("private")
-  type       ChatAIType @default(FORM)
-  messages   Message[]
+  id              String          @id @default(uuid()) @db.Uuid
+  createdAt       DateTime        @default(now())
+  title           String
+  userId          String          @db.Uuid
+  visibility      String          @default("private")
+  type            ChatAIType      @default(FORM)
+  messages        Message[]
   widgetSandboxes WidgetSandbox[]
 
   @@map("chats")
@@ -655,22 +658,22 @@ model FormGenerationProgress {
 }
 
 model CertificateTemplate {
-  id                        String                  @id @default(uuid()) @db.Uuid
-  processId                 String                  @db.Uuid
-  name                      String
-  templateFileUrl           String                  @db.VarChar(255)
-  certificateNumberFormat   Json
-  approvalCondition         Json
-  enableCertificateGeneration Boolean               @default(false)
-  validityType              CertificateValidityType @default(FOREVER)
-  validityYears             Int?
-  customValidityDays         Int?
-  isActive                  Boolean                 @default(true)
-  createdAt                 DateTime                @default(now())
-  updatedAt                 DateTime                @updatedAt
-  process                   Process                 @relation(fields: [processId], references: [id], onDelete: Cascade)
-  fieldMappings              CertificateFieldMapping[]
-  certificates              Certificate[]
+  id                          String                    @id @default(uuid()) @db.Uuid
+  processId                   String                    @db.Uuid
+  name                        String
+  templateFileUrl             String                    @db.VarChar(255)
+  certificateNumberFormat     Json
+  approvalCondition           Json
+  enableCertificateGeneration Boolean                   @default(false)
+  validityType                CertificateValidityType   @default(FOREVER)
+  validityYears               Int?
+  customValidityDays          Int?
+  isActive                    Boolean                   @default(true)
+  createdAt                   DateTime                  @default(now())
+  updatedAt                   DateTime                  @updatedAt
+  process                     Process                   @relation(fields: [processId], references: [id], onDelete: Cascade)
+  fieldMappings               CertificateFieldMapping[]
+  certificates                Certificate[]
 
   @@unique([processId])
   @@index([processId])
@@ -678,24 +681,24 @@ model CertificateTemplate {
 }
 
 model CertificateFieldMapping {
-  id                  String              @id @default(uuid()) @db.Uuid
-  certificateTemplateId String            @db.Uuid
-  fieldType           CertificateFieldType
-  x                   Float
-  y                   Float
-  width               Float?
-  height              Float?
-  fontSize            Float?
-  fontFamily          String?
-  color               String?
-  alignment           String?
-  sourceFormId        String?             @db.Uuid
-  sourceQuestionId    String?
-  label               String?
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-  certificateTemplate CertificateTemplate @relation(fields: [certificateTemplateId], references: [id], onDelete: Cascade)
-  sourceForm          Form?               @relation(fields: [sourceFormId], references: [id], onDelete: SetNull)
+  id                    String               @id @default(uuid()) @db.Uuid
+  certificateTemplateId String               @db.Uuid
+  fieldType             CertificateFieldType
+  x                     Float
+  y                     Float
+  width                 Float?
+  height                Float?
+  fontSize              Float?
+  fontFamily            String?
+  color                 String?
+  alignment             String?
+  sourceFormId          String?              @db.Uuid
+  sourceQuestionId      String?
+  label                 String?
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+  certificateTemplate   CertificateTemplate  @relation(fields: [certificateTemplateId], references: [id], onDelete: Cascade)
+  sourceForm            Form?                @relation(fields: [sourceFormId], references: [id], onDelete: SetNull)
 
   @@index([certificateTemplateId])
   @@index([sourceFormId])
@@ -703,21 +706,21 @@ model CertificateFieldMapping {
 }
 
 model Certificate {
-  id                  String              @id @default(uuid()) @db.Uuid
-  certificateTemplateId String            @db.Uuid
-  applicantProcessId String              @db.Uuid
-  certificateNumber  String
-  verificationCode   String              @unique @db.Uuid
-  fileUrl             String              @db.VarChar(255)
-  fileSize            Int
-  issueDate           DateTime            @default(now())
-  expiryDate          DateTime?
-  isExpired           Boolean             @default(false)
-  generatedAt         DateTime            @default(now())
-  generatedBy         String              @db.Uuid
-  certificateTemplate CertificateTemplate @relation(fields: [certificateTemplateId], references: [id], onDelete: Cascade)
-  applicantProcess    ApplicantProcess    @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
-  generatedByUser     User                @relation(fields: [generatedBy], references: [id], onDelete: Cascade)
+  id                    String              @id @default(uuid()) @db.Uuid
+  certificateTemplateId String              @db.Uuid
+  applicantProcessId    String              @db.Uuid
+  certificateNumber     String
+  verificationCode      String              @unique @db.Uuid
+  fileUrl               String              @db.VarChar(255)
+  fileSize              Int
+  issueDate             DateTime            @default(now())
+  expiryDate            DateTime?
+  isExpired             Boolean             @default(false)
+  generatedAt           DateTime            @default(now())
+  generatedBy           String              @db.Uuid
+  certificateTemplate   CertificateTemplate @relation(fields: [certificateTemplateId], references: [id], onDelete: Cascade)
+  applicantProcess      ApplicantProcess    @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
+  generatedByUser       User                @relation(fields: [generatedBy], references: [id], onDelete: Cascade)
 
   @@index([certificateTemplateId])
   @@index([applicantProcessId])
