@@ -154,6 +154,8 @@ model Process {
   @@index([groupId])
   @@index([creatorId])
   @@index([processFolderId])
+  @@index([status])
+  @@index([groupId, status])
   @@map("processes")
 }
 
@@ -279,6 +281,8 @@ model ApplicantProcess {
 
   @@index([applicantId])
   @@index([processId])
+  @@index([processId, status])
+  @@index([status])
   @@map("applicant_processes")
 }
 
@@ -322,6 +326,8 @@ model APCompletedForm {
   applicantProcess                 ApplicantProcess @relation(fields: [applicantProcessId], references: [id], onDelete: Cascade)
 
   @@index([applicantProcessId])
+  @@index([reviewerId])
+  @@index([formId])
   @@map("ap_completed_forms")
 }
 

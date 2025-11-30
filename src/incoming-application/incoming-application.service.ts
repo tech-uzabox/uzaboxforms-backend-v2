@@ -389,18 +389,54 @@ export class IncomingApplicationService {
       where: { processId: process.id, status: statusFilter },
       include: {
         applicant: true,
-        completedForms: { orderBy: { createdAt: 'asc' } },
+        completedForms: {
+          orderBy: { createdAt: 'asc' },
+          select: {
+            formId: true,
+            reviewerId: true,
+            nextStepType: true,
+            nextStaffId: true,
+            nextStepRoles: true,
+            nextStepSpecifiedTo: true,
+            applicantProcessId: true,
+            createdAt: true,
+          },
+        },
         _count: { select: { completedForms: true } },
       },
     });
 
+    // Preload access context (roles and org chart) once to avoid N+1 queries
+    const [actorRoleIds, actorOrgUser] = await Promise.all([
+      this.getUserRoleIds(actor.roles),
+      this.prisma.organizationUser.findFirst({
+        where: { userId: actor.id },
+        select: { id: true },
+      }),
+    ]);
+
+    const applicantIds = Array.from(
+      new Set(applicantProcesses.map((ap) => ap.applicantId)),
+    );
+
+    const applicantOrgUsers =
+      applicantIds.length > 0
+        ? await this.prisma.organizationUser.findMany({
+            where: { userId: { in: applicantIds } },
+            select: { userId: true, superiorId: true },
+          })
+        : [];
+
+    const applicantOrgUserByUserId = new Map<string, { superiorId?: string | null }>();
+    for (const ou of applicantOrgUsers) {
+      applicantOrgUserByUserId.set(ou.userId, { superiorId: ou.superiorId });
+    }
+
     const applicantProcessesForProcess: any[] = [];
 
     for (const ap of applicantProcesses) {
-      const completedForms = await this.prisma.aPCompletedForm.findMany({
-        where: { applicantProcessId: ap.id },
-        orderBy: { createdAt: 'asc' },
-      });
+      // Use already loaded completedForms instead of querying again
+      const completedForms = ap.completedForms || [];
 
       const currentLevel = completedForms.length;
 
@@ -433,14 +469,17 @@ export class IncomingApplicationService {
         if (currentLevel === 0) {
           shouldInclude = true;
         } else if (lastCompletedForm) {
-          shouldInclude = await this.userHasAccess(actor, {
-            reviewerId: lastCompletedForm.reviewerId || '',
-            nextStepType: lastCompletedForm.nextStepType,
-            nextStaffId: lastCompletedForm.nextStaffId || '',
-            nextStepRoles: lastCompletedForm.nextStepRoles,
-            formId: lastCompletedForm.formId,
-            applicantProcessId: lastCompletedForm.applicantProcessId,
-          });
+          // Use preloaded context to avoid N+1 queries
+          shouldInclude = this.computeAccessWithContext(
+            actor,
+            lastCompletedForm as any,
+            {
+              actorRoleIds,
+              actorOrgUser,
+              applicantOrgUser:
+                applicantOrgUserByUserId.get(ap.applicantId) || null,
+            },
+          );
         }
       }
 
@@ -570,35 +609,50 @@ export class IncomingApplicationService {
       (form) => form.formId === nextForm?.formId,
     )?.editApplicationStatus;
 
-    // Create completed forms array with reviewer information
-    const completedForms = await Promise.all(
-      applicantProcess.completedForms.map(async (completedForm) => {
-        const processForm = applicantProcess.process.forms.find(
-          (pf) => pf.formId === completedForm.formId,
-        );
-
-        let reviewer: any = null;
-        if (completedForm.reviewerId) {
-          reviewer = await this.prisma.user.findUnique({
-            where: { id: completedForm.reviewerId },
-            select: { id: true, firstName: true, lastName: true, email: true },
-          });
-        }
-
-        return {
-          id: completedForm.formId,
-          formName: processForm?.form.name || 'Unknown Form',
-          order: processForm?.order || 0,
-          completedAt: completedForm.createdAt,
-          reviewerId: completedForm.reviewerId,
-          reviewer: reviewer,
-          nextStepType: processForm?.nextStepType || 'NOT_APPLICABLE',
-          nextStepRoles: processForm?.nextStepRoles || [],
-          nextStepSpecifiedTo: processForm?.nextStepSpecifiedTo,
-          notificationComment: processForm?.notificationComment,
-        };
-      }),
+    // Batch fetch all reviewers to avoid N+1 queries
+    const reviewerIds = Array.from(
+      new Set(
+        applicantProcess.completedForms
+          .map((cf) => cf.reviewerId)
+          .filter((id): id is string => !!id),
+      ),
     );
+
+    const reviewers =
+      reviewerIds.length > 0
+        ? await this.prisma.user.findMany({
+            where: { id: { in: reviewerIds } },
+            select: { id: true, firstName: true, lastName: true, email: true },
+          })
+        : [];
+
+    const reviewerById = new Map(
+      reviewers.map((r) => [r.id, r]),
+    );
+
+    // Create completed forms array with reviewer information
+    const completedForms = applicantProcess.completedForms.map((completedForm) => {
+      const processForm = applicantProcess.process.forms.find(
+        (pf) => pf.formId === completedForm.formId,
+      );
+
+      const reviewer = completedForm.reviewerId
+        ? reviewerById.get(completedForm.reviewerId) || null
+        : null;
+
+      return {
+        id: completedForm.formId,
+        formName: processForm?.form.name || 'Unknown Form',
+        order: processForm?.order || 0,
+        completedAt: completedForm.createdAt,
+        reviewerId: completedForm.reviewerId,
+        reviewer: reviewer,
+        nextStepType: processForm?.nextStepType || 'NOT_APPLICABLE',
+        nextStepRoles: processForm?.nextStepRoles || [],
+        nextStepSpecifiedTo: processForm?.nextStepSpecifiedTo,
+        notificationComment: processForm?.notificationComment,
+      };
+    });
 
     // Create pending form only for ENABLED applications
     const pendingForm =
