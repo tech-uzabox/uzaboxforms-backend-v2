@@ -61,7 +61,9 @@ export class WidgetDataService {
       const data = await this.processWidgetData(widget);
 
       // Cache the result for 1 hour (3600000 ms)
-      await this.cacheManager.set(cacheKey, data, 3600000);
+      if (!data?.empty) {
+        await this.cacheManager.set(cacheKey, data, 3600000);
+      }
 
       return data;
     } catch (error) {

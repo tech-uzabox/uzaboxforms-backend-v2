@@ -164,6 +164,7 @@ export interface IWidgetMapAppearance {
 
 export interface IWidgetDateRange {
   preset?:
+    | 'all-time'
     | 'custom'
     | 'last-7-days'
     | 'last-30-days'

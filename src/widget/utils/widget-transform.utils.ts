@@ -86,7 +86,7 @@ export function transformWidgetPayload(payload: any) {
 
   // Transform dateRange
   const transformedDateRange = {
-    preset: payload.dateRange.preset || "all",
+    preset: payload.dateRange.preset || "all-time",
     ...(payload.dateRange.from && { from: new Date(payload.dateRange.from) }),
     ...(payload.dateRange.to && { to: new Date(payload.dateRange.to) }),
     ...(payload.dateRange.startDate && { startDate: new Date(payload.dateRange.startDate) }),
@@ -292,7 +292,7 @@ export function transformWidgetPayloadSpecial(payload: any) {
 
   // Transform dateRange
   const transformedDateRange = {
-    preset: payload.dateRange.preset || "all",
+    preset: payload.dateRange.preset || "all-time",
     ...(payload.dateRange.from && { from: new Date(payload.dateRange.from) }),
     ...(payload.dateRange.to && { to: new Date(payload.dateRange.to) }),
     ...(payload.dateRange.startDate && { startDate: new Date(payload.dateRange.startDate) }),

@@ -417,7 +417,7 @@ interface IWidgetGroupBy {
 ### Date Range Configuration
 '''typescript
 interface IWidgetDateRange {
-  preset: 'last-7-days' | 'last-30-days' | 'last-3-months' |
+  preset: 'all-time' | 'last-7-days' | 'last-30-days' | 'last-3-months' |
           'last-6-months' | 'last-12-months' | 'custom',
   from?: Date,   // Only when preset is 'custom'
   to?: Date      // Only when preset is 'custom'
