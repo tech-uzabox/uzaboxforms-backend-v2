@@ -253,7 +253,7 @@ export class GroupService {
           processes.map(async (process) => {
             const firstForm = await this.prisma.processForm.findFirst({
               where: { processId: process.id },
-              orderBy: { createdAt: 'asc' },
+              orderBy: { order: 'asc' },
               select: { formId: true },
             });
 
