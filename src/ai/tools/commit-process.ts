@@ -292,6 +292,16 @@ export const createProcessTool = (
             formMappings.length,
           );
 
+          // Create process folder
+          console.log('DEBUG: Creating process folder:', processData.name);
+          const processFolder = await tx.processFolder.create({
+            data: {
+              name: processData.name,
+              creatorId: currentUserId,
+            },
+          });
+          console.log('DEBUG: Process folder created with ID:', processFolder.id);
+
           // Create process
           console.log('DEBUG: Creating process:', processData.name);
           const process = await tx.process.create({
@@ -300,6 +310,7 @@ export const createProcessTool = (
               type: processData.type,
               groupId: processData.groupId,
               creatorId: currentUserId,
+              processFolderId: processFolder.id,
               staffViewForms: processData.staffViewForms === 'YES',
               applicantViewProcessLevel:
                 processData.applicantViewProcessLevel === 'YES',
