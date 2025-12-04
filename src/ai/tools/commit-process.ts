@@ -18,6 +18,15 @@ const FormDataSchema = z.object({
   sections: z.array(SectionSchemaV2), // Keep flexible for now
 });
 
+const uuidOrEmptySchema = z.preprocess(
+  (val) => {
+    if (val === undefined || val === null) return null;
+    if (typeof val === 'string' && val.trim() === '') return null;
+    return val;
+  },
+  z.union([z.string().uuid(), z.null()]).optional(),
+);
+
 export const StepDataSchema = z.object({
   formId: z.string(),
   nextStepType: z.enum([
@@ -27,15 +36,15 @@ export const StepDataSchema = z.object({
     'NOT_APPLICABLE',
   ]),
   nextStepRoles: z.array(z.string()).optional(),
-  nextStaff: z.string().optional(),
+  nextStaff: uuidOrEmptySchema,
   notificationType: z.enum([
     'STATIC',
     'DYNAMIC',
     'FOLLOW_ORGANIZATION_CHART',
     'NOT_APPLICABLE',
   ]),
-  notificationTo: z.string().optional(),
-  notificationToRoles: z.array(z.string()).optional(), // Fixed: was notificationRoles
+  notificationTo: uuidOrEmptySchema,
+  notificationToRoles: z.array(z.string()).optional(),
   notificationComment: z.string().optional(),
   editApplicationStatus: z.boolean(),
   applicantViewFormAfterCompletion: z.boolean(),
@@ -292,6 +301,16 @@ export const createProcessTool = (
             formMappings.length,
           );
 
+          // Create process folder
+          console.log('DEBUG: Creating process folder:', processData.name);
+          const processFolder = await tx.processFolder.create({
+            data: {
+              name: processData.name,
+              creatorId: currentUserId,
+            },
+          });
+          console.log('DEBUG: Process folder created with ID:', processFolder.id);
+
           // Create process
           console.log('DEBUG: Creating process:', processData.name);
           const process = await tx.process.create({
@@ -300,6 +319,7 @@ export const createProcessTool = (
               type: processData.type,
               groupId: processData.groupId,
               creatorId: currentUserId,
+              processFolderId: processFolder.id,
               staffViewForms: processData.staffViewForms === 'YES',
               applicantViewProcessLevel:
                 processData.applicantViewProcessLevel === 'YES',
@@ -351,26 +371,66 @@ export const createProcessTool = (
               notificationRoleIds.length,
             );
 
-            await tx.processForm.create({
-              data: {
-                processId: process.id,
-                formId: realFormId,
-                order: i,
-                nextStepType: step.nextStepType,
-                nextStepRoles: nextStepRoleIds,
-                nextStaffId: step.nextStaff,
-                notificationType: step.notificationType,
-                notificationRoles: notificationRoleIds,
-                notificationToId: step.notificationTo,
-                notificationComment: step.notificationComment,
-                notifyApplicant: step.notifyApplicant,
-                applicantNotificationContent: step.applicantNotificationContent,
-                editApplicationStatus: step.editApplicationStatus,
-                applicantViewFormAfterCompletion:
-                  step.applicantViewFormAfterCompletion,
-              },
-            });
-            console.log('DEBUG: Step created successfully');
+            // Validate and sanitize UUID fields
+            let nextStaffId: string | null = null;
+            if (step.nextStaff) {
+              const trimmed = step.nextStaff.trim();
+              if (trimmed !== '') {
+                const uuidValidation = z.string().uuid().safeParse(trimmed);
+                if (uuidValidation.success) {
+                  nextStaffId = trimmed;
+                } else {
+                  return {
+                    message: `Invalid nextStaff UUID in step ${i + 1} (formId: ${step.formId}): "${step.nextStaff}". Must be a valid UUID or empty.`,
+                    success: false,
+                  };
+                }
+              }
+            }
+
+            let notificationToId: string | null = null;
+            if (step.notificationTo) {
+              const trimmed = step.notificationTo.trim();
+              if (trimmed !== '') {
+                const uuidValidation = z.string().uuid().safeParse(trimmed);
+                if (uuidValidation.success) {
+                  notificationToId = trimmed;
+                } else {
+                  return {
+                    message: `Invalid notificationTo UUID in step ${i + 1} (formId: ${step.formId}): "${step.notificationTo}". Must be a valid UUID or empty.`,
+                    success: false,
+                  };
+                }
+              }
+            }
+
+            try {
+              await tx.processForm.create({
+                data: {
+                  processId: process.id,
+                  formId: realFormId,
+                  order: i,
+                  nextStepType: step.nextStepType,
+                  nextStepRoles: nextStepRoleIds,
+                  nextStaffId: nextStaffId,
+                  notificationType: step.notificationType,
+                  notificationRoles: notificationRoleIds,
+                  notificationToId: notificationToId,
+                  notificationComment: step.notificationComment,
+                  notifyApplicant: step.notifyApplicant,
+                  applicantNotificationContent: step.applicantNotificationContent,
+                  editApplicationStatus: step.editApplicationStatus,
+                  applicantViewFormAfterCompletion:
+                    step.applicantViewFormAfterCompletion,
+                },
+              });
+              console.log('DEBUG: Step created successfully');
+            } catch (error: any) {
+              return {
+                message: `Error creating step ${i + 1} (formId: ${step.formId}): ${error?.message || 'Unknown error'}`,
+                success: false,
+              };
+            }
           }
           console.log('DEBUG: All steps created');
 

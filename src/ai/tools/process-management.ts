@@ -131,14 +131,32 @@ export const createSaveStepTool = (prisma: PrismaService, chatId: string) => {
         'NOT_APPLICABLE',
       ]),
       nextStepRoles: z.array(z.string()).optional(),
-      nextStaff: z.string().optional(),
+      nextStaff: z
+        .union([z.string().uuid(), z.literal(''), z.null()])
+        .optional()
+        .nullable()
+        .transform((val) => (val === '' ? null : val))
+        .describe(
+          'User ID (UUID) for STATIC routing. Must be a valid UUID from available users, or empty/null if not applicable.',
+        ),
       notificationType: z.enum([
         'STATIC',
         'DYNAMIC',
         'FOLLOW_ORGANIZATION_CHART',
         'NOT_APPLICABLE',
       ]),
-      notificationTo: z.string().optional(),
+      notificationTo: z
+        .union([z.string().uuid(), z.literal(''), z.null()])
+        .optional()
+        .nullable()
+        .transform((val) => (val === '' ? null : val))
+        .describe(
+          'User ID (UUID) to notify. Must be a valid UUID from available users, or empty/null if not applicable.',
+        ),
+      notificationToRoles: z
+        .array(z.string())
+        .optional()
+        .describe('Array of role names to notify for DYNAMIC notification type'),
       notificationComment: z.string().optional(),
       editApplicationStatus: z.boolean(),
       applicantViewFormAfterCompletion: z.boolean(),

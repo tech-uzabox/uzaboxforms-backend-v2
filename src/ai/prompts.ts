@@ -131,15 +131,16 @@ STEP 4: Link Forms and Define Step Logic
     - FOLLOW_ORGANIZATION_CHART: assigns to the supervisor of the current responder
     - NOT_APPLICABLE: end of process (use for the final step)
   - nextStepRoles (optional): list of roleNames for DYNAMIC routing
-  - nextStaff (optional): staff name for STATIC routing; if unspecified, select from available users with the appropriate role
+  - nextStaff (optional): user ID (UUID) for STATIC routing; must be a valid UUID from the available users list, or leave empty/null if not applicable
 - Notification settings (default to notifying next step handlers):
   - notificationType:
     - STATIC: notify a specific user (notificationTo)
     - DYNAMIC: notify users with specified roles (notificationToRoles)
     - NOT_APPLICABLE: no notification
-  - notificationTo (optional): specific staff name
+  - notificationTo (optional): user ID (UUID) from the available users list; must be a valid UUID, or leave empty/null if not applicable
   - notificationToRoles (optional): roles to notify
   - notificationComment (optional): concise instruction for the recipient
+- IMPORTANT: nextStaff and notificationTo must be user UUIDs (not names, not role names, not emails). Use the _id field from the available users list. If you don't have a specific user, leave these fields empty/null.
 - Applicant experience settings:
   - editApplicationStatus: whether current user can update application status
   - applicantViewFormAfterCompletion: whether applicant can view the form after processing
